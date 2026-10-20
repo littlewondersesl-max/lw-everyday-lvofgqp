@@ -1,0 +1,365 @@
+{
+ "frame_px": [
+  1264,
+  709
+ ],
+ "bu_per_px": 0.01,
+ "origin": "top-left of the 1264x709 concept frame; +x right, +y up, +z toward camera (Blender XY plane; glTF exported Z-up as-is)",
+ "camera": {
+  "type": "orthographic",
+  "width_bu": 12.64,
+  "height_bu": 7.09,
+  "center_bu": [
+   6.32,
+   -3.545
+  ],
+  "pitch_up_deg": 14.999999999999998,
+  "hud_group_scale_y": 1.035276180410083
+ },
+ "light": {
+  "key_dir_to_light": [
+   -0.2999962568283081,
+   0.3799952268600464,
+   0.8749890327453613
+  ],
+  "key_intensity_blender_sun": 2.1500000953674316,
+  "ambient_strength": 0.699999988079071
+ },
+ "consts": {
+  "TILT_deg": 14.999999999999998,
+  "TT": 0.27,
+  "DOME": 0.025,
+  "ICON_Z": 0.28500000000000003,
+  "RH": 0.165,
+  "PT": 0.21826960983276367,
+  "PCX": 6.220605306625367,
+  "PCY": -1.484229245185852,
+  "BW": 2.57,
+  "BH": 3.56,
+  "BT": 0.2,
+  "PW": 2.13,
+  "PH": 0.67,
+  "PTk": 0.12,
+  "L": [
+   -0.2999962568283081,
+   0.3799952268600464,
+   0.8749890327453613
+  ],
+  "sun": 2.1500000953674316,
+  "amb": 0.699999988079071
+ },
+ "items": {
+  "camtoken_frame": {
+   "pos_bu": [
+    11.734,
+    -6.2815,
+    -0.2
+   ],
+   "scale": [
+    1.0102,
+    1.0102,
+    1.0102
+   ],
+   "mesh": "token"
+  },
+  "camtoken_minus": {
+   "pos_bu": [
+    10.4746,
+    -6.278,
+    -0.2
+   ],
+   "scale": [
+    1.0036,
+    1.0036,
+    1.0036
+   ],
+   "mesh": "token"
+  },
+  "camtoken_plus": {
+   "pos_bu": [
+    9.2318,
+    -6.2852,
+    -0.2
+   ],
+   "scale": [
+    1.0098,
+    1.0098,
+    1.0098
+   ],
+   "mesh": "token"
+  },
+  "camtoken_rotate_left": {
+   "pos_bu": [
+    10.458,
+    -5.0032,
+    -0.2
+   ],
+   "scale": [
+    1.0242,
+    1.0242,
+    1.0242
+   ],
+   "mesh": "token"
+  },
+  "camtoken_rotate_right": {
+   "pos_bu": [
+    11.736,
+    -5.0116,
+    -0.2
+   ],
+   "scale": [
+    1.0224,
+    1.0224,
+    1.0224
+   ],
+   "mesh": "token"
+  },
+  "dropdown_board": {
+   "pos_bu": [
+    4.095,
+    -4.6696,
+    -0.04
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "mesh": "dropdown_board"
+  },
+  "label_Build": {
+   "pos_bu": [
+    1.855,
+    -2.2878,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "mesh": "label_Build"
+  },
+  "label_Decorate": {
+   "pos_bu": [
+    4.11,
+    -2.2878,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "mesh": "label_Decorate"
+  },
+  "label_Help": {
+   "pos_bu": [
+    8.515,
+    -2.2878,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "mesh": "label_Help"
+  },
+  "label_Menu": {
+   "pos_bu": [
+    10.605,
+    -2.2878,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "mesh": "label_Menu"
+  },
+  "label_View": {
+   "pos_bu": [
+    6.36,
+    -2.2878,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "mesh": "label_View"
+  },
+  "pill_floors": {
+   "pos_bu": [
+    4.085,
+    -4.3611,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "mesh": "pill_button"
+  },
+  "pill_outside": {
+   "pos_bu": [
+    4.085,
+    -5.1511,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "mesh": "pill_button"
+  },
+  "pill_roof": {
+   "pos_bu": [
+    4.085,
+    -5.9361,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "mesh": "pill_button"
+  },
+  "pill_walls": {
+   "pos_bu": [
+    4.085,
+    -3.5761,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "mesh": "pill_button"
+  },
+  "ring_Decorate": {
+   "pos_bu": [
+    4.075,
+    -1.2901,
+    0.0
+   ],
+   "scale": [
+    1.29,
+    1.29,
+    1.29
+   ],
+   "mesh": "select_ring"
+  },
+  "rope_left": {
+   "pos_bu": [
+    1.43,
+    -0.52,
+    0.11
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "mesh": "rope_left"
+  },
+  "rope_right": {
+   "pos_bu": [
+    10.98,
+    -0.52,
+    0.11
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "mesh": "rope_right"
+  },
+  "sign_plank": {
+   "pos_bu": [
+    6.2206,
+    -1.4842,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "mesh": "sign_plank"
+  },
+  "token_Build": {
+   "pos_bu": [
+    1.8627,
+    -1.3288,
+    0.0
+   ],
+   "scale": [
+    1.29,
+    1.29,
+    1.29
+   ],
+   "mesh": "token"
+  },
+  "token_Decorate": {
+   "pos_bu": [
+    4.075,
+    -1.3251,
+    0.0
+   ],
+   "scale": [
+    1.29,
+    1.29,
+    1.29
+   ],
+   "mesh": "token"
+  },
+  "token_Help": {
+   "pos_bu": [
+    8.5094,
+    -1.3207,
+    0.0
+   ],
+   "scale": [
+    1.2838,
+    1.2838,
+    1.2838
+   ],
+   "mesh": "token"
+  },
+  "token_Menu": {
+   "pos_bu": [
+    10.5889,
+    -1.3431,
+    0.0
+   ],
+   "scale": [
+    1.2756,
+    1.2756,
+    1.2756
+   ],
+   "mesh": "token"
+  },
+  "token_View": {
+   "pos_bu": [
+    6.3511,
+    -1.3106,
+    0.0
+   ],
+   "scale": [
+    1.3102,
+    1.3102,
+    1.3102
+   ],
+   "mesh": "token"
+  }
+ }
+}

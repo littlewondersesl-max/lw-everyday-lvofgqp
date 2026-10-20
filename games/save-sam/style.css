@@ -1,0 +1,1048 @@
+
+@font-face {
+  font-family: "Luckiest Guy";
+  src: url("fonts/LuckiestGuy-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Bangers";
+  src: url("fonts/Bangers-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Patrick Hand";
+  src: url("fonts/PatrickHand-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lilita One";
+  src: url("fonts/LilitaOne-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #1c1108;
+  --ink2: #2a1a0c;
+  --cream: #fff3d2;
+  --paper: #f3e0b0;
+  --gold: #ffe15a;
+  --orange: #ff7a1a;
+  --leather: #6b3a1c;
+  --wood: #5a3a1c;
+  --safe: env(safe-area-inset-top, 0px);
+  --safeb: env(safe-area-inset-bottom, 0px);
+  --safel: env(safe-area-inset-left, 0px);
+  --safer: env(safe-area-inset-right, 0px);
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+  background: #140c06;
+  color: var(--cream);
+  font-family: "Patrick Hand", "Comic Sans MS", "Chalkboard SE", cursive;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#app, .screen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hidden { display: none !important; }
+
+.bleed {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  pointer-events: none;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 40%, transparent 28%, rgba(10,6,2,.55) 100%),
+    linear-gradient(180deg, rgba(12,8,4,.15) 0%, transparent 22%, transparent 58%, rgba(12,8,4,.62) 100%);
+}
+
+.dust {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("tex/grain.png");
+  background-size: 180px 180px;
+  opacity: .28;
+  mix-blend-mode: multiply;
+}
+
+/* ========== TITLE ========== */
+.title-screen { background: #1a2a14; }
+
+.title-block {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(18px + var(--safe)) 18px calc(28px + var(--safeb));
+  gap: 18px;
+}
+.title-block .paint { margin-top: 4px; }
+.title-block .patch { margin-bottom: 8px; }
+
+.paint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: .82;
+  filter: drop-shadow(0 18px 0 rgba(10,6,2,.35));
+}
+
+.paint-row {
+  display: flex;
+  gap: .02em;
+}
+
+.paint b {
+  display: inline-block;
+  font-family: "Luckiest Guy", "Lilita One", "Arial Black", Impact, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: clamp(64px, 18vw, 140px);
+  color: var(--gold);
+  -webkit-text-stroke: 10px var(--ink);
+  paint-order: stroke fill;
+  text-shadow:
+    5px 8px 0 #0c0804,
+    0 16px 22px rgba(0,0,0,.4);
+  animation: letterIdle 3.4s ease-in-out infinite;
+}
+
+.paint b:nth-child(1) { transform: rotate(-6deg) translateY(6px); animation-delay: 0s; }
+.paint b:nth-child(2) { transform: rotate(3deg) translateY(-4px); animation-delay: .15s; color: #ffe99a; }
+.paint b:nth-child(3) { transform: rotate(-2deg) translateY(2px); animation-delay: .3s; }
+.paint b:nth-child(4) { transform: rotate(5deg) translateY(-2px); animation-delay: .45s; color: #ffc94a; }
+.paint b:nth-child(5) { transform: rotate(-4deg); animation-delay: .6s; }
+
+.paint-sam b { font-size: clamp(76px, 22vw, 168px); color: #ff8a1a; }
+.paint-sam b:nth-child(1) { color: #ff9a2a; }
+.paint-sam b:nth-child(2) { color: #ffe15a; }
+.paint-sam b:nth-child(3) { color: #ff7a14; }
+
+.paint-small b { font-size: clamp(40px, 10vw, 72px); color: #fff3d2; }
+
+@keyframes letterIdle {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -6px; }
+}
+
+.patch {
+  appearance: none;
+  position: relative;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  color: #2a1408;
+  min-width: 196px;
+  min-height: 78px;
+  padding: 14px 42px 18px;
+  background:
+    url("tex/leather.png"),
+    linear-gradient(180deg, #e07a28 0%, #c44e10 55%, #9a3a0c 100%);
+  background-blend-mode: multiply, normal;
+  background-size: 90px 90px, auto;
+  clip-path: polygon(4% 10%, 10% 3%, 88% 5%, 97% 14%, 96% 86%, 88% 97%, 10% 95%, 3% 84%);
+  box-shadow:
+    0 10px 0 #4a1c06,
+    0 18px 28px rgba(0,0,0,.45);
+  transform: rotate(-2deg);
+  transition: transform .08s ease;
+}
+
+.patch-holes {
+  position: absolute;
+  inset: 8px;
+  border: 3px dashed #3a1c08;
+  opacity: .85;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 210, 140, .25);
+}
+
+.patch-label {
+  position: relative;
+  font-family: "Luckiest Guy", "Lilita One", Impact, sans-serif;
+  font-size: 34px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #2a1408;
+  text-shadow: 0 2px 0 #f4c48a, 0 -1px 0 #7a2e08;
+}
+
+.patch:active {
+  transform: rotate(-2deg) translateY(7px);
+  box-shadow: 0 3px 0 #4a1c06, 0 8px 14px rgba(0,0,0,.4);
+}
+
+/* ========== PLAY ========== */
+.play-screen { background: #0c0a06; }
+
+#scene {
+  position: absolute;
+  inset: 0;
+  background: #0c0a06;
+}
+
+.scene-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms linear;
+}
+
+.scene-layer.on { opacity: 1; }
+.scene-layer.cut { transition: none; }
+
+.scene-layer.smash-zoom {
+  animation: smashzoom 680ms cubic-bezier(.12, .72, .18, 1) forwards;
+}
+
+@keyframes smashzoom {
+  0% { transform: scale(1); }
+  70% { transform: scale(1.72); }
+  100% { transform: scale(1.58); }
+}
+
+.placeholder { display: none; background: #163526; }
+.placeholder.on { display: block; opacity: 1; }
+
+.marks {
+  position: absolute;
+  top: calc(10px + var(--safe));
+  left: calc(12px + var(--safel));
+  z-index: 8;
+  display: flex;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.marks i {
+  width: 18px;
+  height: 18px;
+  background: #5a3a18;
+  box-shadow: inset 0 2px 0 #2a1808, 0 2px 0 #e0b86a;
+  transform: rotate(12deg);
+  clip-path: polygon(20% 0, 100% 18%, 82% 100%, 0 78%);
+  opacity: .7;
+}
+
+.marks i.on {
+  background: #ffb03a;
+  opacity: 1;
+  box-shadow: inset 0 2px 0 #ffe566, 0 2px 0 #6a3a10;
+}
+
+/* ========== LITTLE WORD BOX ========== */
+.word-box {
+  position: absolute;
+  left: calc(10px + var(--safel));
+  bottom: calc(148px + var(--safeb));
+  z-index: 22;
+  width: min(220px, 46vw);
+  padding: 8px 8px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  background:
+    url("tex/paper.png"),
+    linear-gradient(180deg, #f6e4b4 0%, #d8b46a 100%);
+  background-blend-mode: multiply, normal;
+  border: 4px solid #1c1008;
+  border-radius: 16px;
+  box-shadow:
+    4px 6px 0 rgba(20,10,4,.28),
+    inset 0 1px 0 #fff6d8;
+}
+
+.zero-g {
+  position: relative;
+  inset: auto;
+  z-index: 12;
+  pointer-events: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  justify-items: stretch;
+}
+
+.chip {
+  position: relative;
+  left: auto;
+  top: auto;
+  z-index: 12;
+  pointer-events: auto;
+  touch-action: none;
+  min-width: 0;
+  min-height: 40px;
+  padding: 6px 8px 8px;
+  font-family: "Patrick Hand", cursive;
+  font-size: 24px;
+  line-height: 1;
+  text-align: center;
+  color: var(--ink);
+  background:
+    url("tex/paper.png"),
+    linear-gradient(180deg, #fff8e4, #efd8a0);
+  background-blend-mode: multiply, normal;
+  border: 3px solid var(--ink2);
+  border-radius: 10px;
+  box-shadow: 3px 5px 0 rgba(20,10,4,.28), 0 1px 0 #fff8e8 inset;
+  cursor: grab;
+  transform: none;
+}
+
+.chip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("tex/grain.png");
+  opacity: .18;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+.chip.wild {
+  box-shadow: 4px 8px 0 rgba(20,10,4,.22), 0 0 0 3px #ffe15a;
+}
+
+.chip.held {
+  position: fixed;
+  cursor: grabbing;
+  z-index: 40;
+  box-shadow: 6px 12px 0 rgba(20,10,4,.3), 0 0 0 4px #ffe15a;
+  transform: none;
+}
+
+.chip.chip-the,
+.chip.home-the {
+  background:
+    url("tex/paper.png"),
+    linear-gradient(180deg, #ffe15a, #f0c020);
+  background-blend-mode: multiply, normal;
+}
+
+/* ========== SCOOP (put chips back in the box) ========== */
+.scoop {
+  appearance: none;
+  position: relative;
+  left: auto;
+  bottom: auto;
+  z-index: 22;
+  width: 36px;
+  height: 42px;
+  align-self: flex-end;
+  margin: -2px 0 0 auto;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  filter: drop-shadow(2px 3px 0 rgba(20,10,4,.28));
+  transition: transform .12s cubic-bezier(.2,1.4,.3,1);
+}
+
+.scoop:active { transform: rotate(-18deg) scale(.92); }
+.scoop.whoosh { animation: scoopToss .45s cubic-bezier(.2,1.3,.3,1); }
+
+@keyframes scoopToss {
+  0% { transform: rotate(0) scale(1); }
+  40% { transform: rotate(-28deg) scale(1.12) translateY(-10px); }
+  100% { transform: rotate(0) scale(1); }
+}
+
+/* ========== TRAY ========== */
+.tray {
+  position: absolute;
+  left: 50%;
+  bottom: calc(10px + var(--safeb));
+  transform: translateX(-50%);
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 16px 22px 18px;
+  min-width: min(92vw, 520px);
+  background:
+    url("tex/leather.png"),
+    linear-gradient(180deg, #7a4a22 0%, #4a2a12 100%);
+  background-blend-mode: multiply, normal;
+  background-size: 120px 120px, auto;
+  border: 5px solid #1c1008;
+  box-shadow:
+    0 10px 0 #2a160c,
+    0 18px 28px rgba(0,0,0,.45),
+    inset 0 2px 0 #c48a4a;
+  clip-path: polygon(2% 10%, 6% 0, 94% 2%, 99% 14%, 98% 92%, 92% 100%, 8% 98%, 1% 86%);
+}
+
+.tray-lip {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 6px;
+  height: 8px;
+  background: repeating-linear-gradient(90deg, #2a1a0c 0 6px, transparent 6px 16px);
+  opacity: .35;
+  pointer-events: none;
+}
+
+.well {
+  position: relative;
+  width: 108px;
+  height: 86px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #1c1008;
+  border-radius: 16px;
+  transform: none;
+  clip-path: none;
+  box-shadow:
+    inset 0 8px 14px rgba(0,0,0,.35),
+    inset 0 -2px 0 rgba(255,255,255,.12);
+  cursor: pointer;
+}
+
+.well-verb {
+  background: radial-gradient(circle at 40% 30%, #ffb056, #e06010 62%, #a83808);
+}
+
+.well-little {
+  width: 64px;
+  height: 56px;
+  border-radius: 12px;
+  background: radial-gradient(circle at 40% 30%, #ffe566, #f0c020 60%, #c49010);
+}
+
+.well-noun {
+  background: radial-gradient(circle at 40% 30%, #7ee06a, #2f9a3e 62%, #176628);
+}
+
+.well[data-empty="true"]::after {
+  content: "";
+  width: 36px;
+  height: 6px;
+  background: rgba(20,10,4,.28);
+  border-radius: 3px;
+}
+
+.well-little[data-empty="true"]::after {
+  content: "the";
+  width: auto;
+  height: auto;
+  background: none;
+  border-radius: 0;
+  font-family: "Luckiest Guy", "Lilita One", Impact, sans-serif;
+  font-size: 18px;
+  line-height: 1;
+  color: #ffe15a;
+  -webkit-text-stroke: 3px #1c1108;
+  paint-order: stroke fill;
+  text-shadow: 0 1px 0 #6a4a10;
+}
+
+.well.pulse {
+  animation: wellPulse 1.3s ease-in-out infinite;
+}
+
+@keyframes wellPulse {
+  0%, 100% { filter: brightness(1); transform: scale(1); }
+  50% { filter: brightness(1.12); transform: scale(1.05); }
+}
+
+.well-mini {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  pointer-events: none;
+}
+
+.well-mini img, .well-mini svg {
+  width: 40px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.well-mini .w {
+  font-family: "Luckiest Guy", "Lilita One", Impact, sans-serif;
+  font-size: 15px;
+  color: #1c1108;
+  -webkit-text-stroke: 3px #fff3d2;
+  paint-order: stroke fill;
+  line-height: 1;
+}
+
+.well-chip {
+  font-family: "Patrick Hand", cursive;
+  font-size: 22px;
+  color: #1c1108;
+  pointer-events: none;
+}
+.well-little .well-chip {
+  font-size: 18px;
+}
+
+/* ========== BACKPACK (scene prop later — not the card deck) ========== */
+.pack {
+  display: none;
+  appearance: none;
+  position: absolute;
+  right: calc(8px + var(--safer));
+  bottom: calc(150px + var(--safeb));
+  z-index: 4;
+  width: 108px;
+  height: 132px;
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+.pack:active { transform: scale(.94) rotate(3deg); }
+.pack.open { transform: rotate(-6deg) translateY(-4px); }
+.pack.nudge { animation: packNudge 1.1s ease-in-out 2; }
+
+@keyframes packNudge {
+  0%, 100% { transform: rotate(0); }
+  30% { transform: rotate(-8deg) scale(1.04); }
+  60% { transform: rotate(6deg); }
+}
+
+/* ========== ICON RAIL / CARDS ========== */
+.deck {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.flashcard {
+  position: absolute;
+  width: 78px;
+  height: 104px;
+  left: 0;
+  top: 0;
+  pointer-events: auto;
+  perspective: 1100px;
+  transform-origin: 0 0;
+  will-change: transform;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.card-spin {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 560ms cubic-bezier(.2,.8,.2,1);
+}
+
+.flashcard.is-flipped .card-spin { transform: rotateY(180deg); }
+.flashcard.flip-flourish .card-spin {
+  animation: flip360 720ms cubic-bezier(.2,.7,.2,1);
+}
+
+@keyframes flip360 {
+  0% { transform: rotateY(0); }
+  45% { transform: rotateY(180deg); }
+  100% { transform: rotateY(360deg); }
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 10px 13px 9px 12px;
+  overflow: hidden;
+}
+
+.face.back {
+  background:
+    repeating-linear-gradient(45deg, #3a2212 0 8px, #2a180c 8px 16px),
+    #2a180c;
+  transform: rotateY(180deg);
+  box-shadow:
+    inset 0 0 0 8px #f0d8a0,
+    inset 0 0 0 12px #1c1008,
+    8px 14px 0 rgba(16,8,4,.28),
+    12px 22px 26px rgba(0,0,0,.4);
+}
+
+.face.back::before {
+  content: "";
+  position: absolute;
+  inset: 16px;
+  border: 3px solid #c4a060;
+  opacity: .7;
+}
+
+.face.back::after {
+  content: "SS";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: "Luckiest Guy", Impact, sans-serif;
+  font-size: 42px;
+  color: #c4a060;
+  opacity: .85;
+  transform: rotate(-18deg);
+}
+
+.face.front {
+  transform: rotateY(0deg);
+  background:
+    url("tex/paper.png"),
+    linear-gradient(180deg, #fff8e6 0%, #f0d8a4 100%);
+  background-blend-mode: multiply, normal;
+  box-shadow:
+    inset 0 0 0 4px #f6e4b8,
+    inset 0 0 0 7px #1c1008,
+    4px 7px 0 rgba(16,8,4,.28),
+    6px 12px 16px rgba(0,0,0,.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 4px 4px;
+}
+
+.face.front::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("tex/grain.png");
+  opacity: .22;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.art {
+  width: 100%;
+  height: 58%;
+  display: grid;
+  place-items: center;
+  flex: 1 1 auto;
+  pointer-events: none;
+}
+
+.art img, .art svg {
+  width: 92%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 0 rgba(28,17,8,.15));
+}
+
+.word {
+  font-family: "Luckiest Guy", "Lilita One", Impact, sans-serif;
+  font-size: 13px;
+  line-height: .9;
+  color: #1c1108;
+  -webkit-text-stroke: 2px #fff3d2;
+  paint-order: stroke fill;
+  text-align: center;
+  pointer-events: none;
+  letter-spacing: .02em;
+  padding: 0 2px 3px;
+}
+
+.say {
+  display: none;
+  font-family: "Patrick Hand", cursive;
+  font-size: 20px;
+  line-height: 1.1;
+  color: #3a2410;
+  text-align: center;
+  padding: 4px 8px 0;
+  pointer-events: none;
+}
+
+.speaker {
+  appearance: none;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border: 3px solid #1c1008;
+  border-radius: 50%;
+  background: #ffe15a;
+  color: #1c1008;
+  cursor: pointer;
+  display: none;
+  place-items: center;
+  clip-path: none;
+  transform: none;
+  box-shadow: 0 2px 0 #1c1008;
+}
+
+.speaker svg { width: 16px; height: 16px; display: block; margin: 0; }
+.speaker:active { transform: none; filter: brightness(.92); }
+
+.use-hit {
+  appearance: none;
+  display: none;
+  margin-top: 6px;
+  border: 3px solid #1c1008;
+  border-radius: 12px;
+  background: #ff7a1a;
+  color: #1c1008;
+  font-family: "Luckiest Guy", Impact, sans-serif;
+  font-size: 16px;
+  letter-spacing: .08em;
+  padding: 6px 16px 7px;
+  cursor: pointer;
+  clip-path: none;
+  box-shadow: 0 3px 0 #1c1008;
+}
+
+.use-hit:active { transform: translateY(2px); }
+
+.flashcard.in-rail {
+  transition: transform 420ms cubic-bezier(.2,1.1,.3,1);
+}
+
+.flashcard.is-inspect {
+  z-index: 80 !important;
+  width: min(64vw, 280px);
+  height: min(48vh, 340px);
+  cursor: grab;
+}
+
+.flashcard.is-inspect .face.front {
+  padding: 14px 12px 12px;
+  box-shadow:
+    inset 0 0 0 7px #f6e4b8,
+    inset 0 0 0 12px #1c1008,
+    8px 14px 0 rgba(16,8,4,.28),
+    12px 22px 26px rgba(0,0,0,.4);
+}
+.flashcard.is-inspect .art {
+  height: auto;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #fffdf4, #f3e2b0);
+  box-shadow: inset 0 0 0 2px rgba(28,16,8,.1);
+}
+.flashcard.is-inspect .art img,
+.flashcard.is-inspect .art svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+}
+.flashcard.is-inspect .word {
+  font-size: clamp(32px, 7vw, 52px);
+  -webkit-text-stroke: 4px #fff3d2;
+  padding: 6px 6px 0;
+}
+.flashcard.is-inspect .say { display: block; }
+.flashcard.is-inspect .speaker { display: grid; place-items: center; border-radius: 50%; transform: none; }
+.flashcard.is-inspect .use-hit { display: inline-block; }
+
+.flashcard.is-inspect.dragging { cursor: grabbing; z-index: 88 !important; }
+.flashcard.is-inspect.dragging .card-spin { transition: none; }
+
+.flashcard.used-ghost { opacity: 0; pointer-events: none; }
+
+.inspect-dim {
+  position: absolute;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 36%, transparent 22%, rgba(8,4,2,.42) 100%);
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.play-screen.holding .inspect-dim { opacity: 1; pointer-events: none; }
+.play-screen.holding .word-box { opacity: .4; pointer-events: none; }
+.play-screen.holding .zero-g { opacity: 1; }
+.play-screen.holding .chip { pointer-events: none; }
+.play-screen.holding .deck { z-index: 80; }
+.play-screen.holding .tray {
+  z-index: 85;
+  filter: none;
+}
+.play-screen.holding .well.pulse { animation-duration: .9s; }
+.well.drop-ok {
+  filter: brightness(1.18);
+  box-shadow:
+    inset 0 8px 14px rgba(0,0,0,.35),
+    0 0 0 4px #ffe15a,
+    0 0 18px #ffe15a;
+}
+.well.drop-no { filter: brightness(.78); }
+
+.play-screen.cinema .word-box,
+.play-screen.cinema .zero-g,
+.play-screen.cinema .tray,
+.play-screen.cinema .scoop,
+.play-screen.cinema .pack,
+.play-screen.cinema .deck,
+.play-screen.cinema .marks {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+/* ========== STAMP ========== */
+.stamp {
+  position: absolute;
+  left: 50%;
+  top: 16%;
+  z-index: 90;
+  transform: translateX(-50%) rotate(-8deg);
+  font-family: "Bangers", "Luckiest Guy", Impact, sans-serif;
+  font-size: clamp(42px, 10vw, 84px);
+  letter-spacing: .04em;
+  color: #c02018;
+  -webkit-text-stroke: 6px #1c1008;
+  paint-order: stroke fill;
+  text-shadow: 5px 6px 0 #1c1008;
+  pointer-events: none;
+  animation: stampIn .34s cubic-bezier(.2,1.5,.3,1);
+}
+
+.stamp.yes {
+  color: #1f9a3a;
+  transform: translateX(-50%) rotate(-6deg);
+}
+
+.stamp.hidden { display: none; }
+
+@keyframes stampIn {
+  0% { transform: translateX(-50%) rotate(-18deg) scale(1.6); opacity: 0; }
+  100% { transform: translateX(-50%) rotate(-8deg) scale(1); opacity: 1; }
+}
+
+/* ========== SAFE ========== */
+.safe-screen { background: #163526; }
+.safe-block { justify-content: center; padding-bottom: 8vh; }
+
+/* ========== SQUASH / FLY HELPERS ========== */
+.squash { animation: squash .28s cubic-bezier(.2,1.4,.3,1); }
+@keyframes squash {
+  0% { transform: scale(1.12, .86); }
+  60% { transform: scale(.94, 1.08); }
+  100% { transform: scale(1, 1); }
+}
+
+@media (max-width: 720px) {
+  .flashcard { width: 70px; height: 94px; }
+  .flashcard.is-inspect { width: min(70vw, 260px); height: min(46vh, 320px); }
+  .well { width: 86px; height: 74px; }
+  .well-little { width: 52px; height: 46px; }
+  .word-box { width: min(196px, 48vw); bottom: calc(128px + var(--safeb)); }
+  .scoop { width: 32px; height: 36px; }
+  .chip { font-size: 20px; min-width: 0; padding: 5px 6px 6px; }
+  .paint b { -webkit-text-stroke: 7px var(--ink); }
+}
+
+@media (max-height: 540px) {
+  .tray { padding: 10px 16px 12px; gap: 10px; z-index: 85; }
+  .well { width: 78px; height: 62px; }
+  .well-little { width: 48px; height: 42px; }
+  .word-box { bottom: calc(108px + var(--safeb)); }
+  .flashcard { width: 62px; height: 84px; }
+  .flashcard.is-inspect { width: min(42vw, 220px); height: min(62vh, 260px); }
+}
+
+
+/* ========== JOURNEY (stage 1) ========== */
+.play-screen.journey .word-box,
+.play-screen.journey .tray,
+.play-screen.journey .scoop,
+.play-screen.journey .pack {
+  display: none !important;
+}
+
+.hotspots {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+.hotspots.hidden { display: none !important; }
+
+.hotspot {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.bird-bob {
+  position: absolute;
+  z-index: 7;
+  pointer-events: none;
+  object-fit: cover;
+  object-position: center 40%;
+  border-radius: 22px;
+  box-shadow:
+    0 0 0 4px #1c1008,
+    6px 10px 0 rgba(16,8,4,.28),
+    0 14px 22px rgba(0,0,0,.35);
+  animation: birdBob 1.1s ease-in-out infinite;
+}
+.bird-bob.hidden { display: none !important; }
+
+@keyframes birdBob {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(10px) rotate(2deg); }
+}
+
+.hover-pop {
+  position: fixed;
+  z-index: 55;
+  width: 92px;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 6px 8px;
+  background:
+    url("tex/paper.png"),
+    linear-gradient(180deg, #fff8e6 0%, #f0d8a4 100%);
+  background-blend-mode: multiply, normal;
+  border: 4px solid #1c1008;
+  border-radius: 12px;
+  box-shadow: 4px 7px 0 rgba(16,8,4,.28), 6px 12px 16px rgba(0,0,0,.3);
+  transform: translate(14px, 14px);
+}
+.hover-pop.hidden { display: none !important; }
+.hover-pop .hp-art {
+  width: 100%;
+  height: 58px;
+  display: grid;
+  place-items: center;
+}
+.hover-pop .hp-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.hover-pop .hp-word {
+  font-family: "Luckiest Guy", "Lilita One", Impact, sans-serif;
+  font-size: 15px;
+  line-height: .95;
+  color: #1c1108;
+  -webkit-text-stroke: 2px #fff3d2;
+  paint-order: stroke fill;
+  text-align: center;
+}
+
+.fwd {
+  appearance: none;
+  position: absolute;
+  right: calc(14px + var(--safer));
+  bottom: calc(16px + var(--safeb));
+  z-index: 42;
+  width: 74px;
+  height: 74px;
+  border: 4px solid #1c1008;
+  border-radius: 50%;
+  background:
+    url("tex/leather.png"),
+    linear-gradient(180deg, #ffe15a 0%, #f0a020 100%);
+  background-blend-mode: multiply, normal;
+  background-size: 80px 80px, auto;
+  color: #1c1008;
+  font-size: 34px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 7px 0 #1c1008, 0 12px 18px rgba(0,0,0,.35);
+  text-shadow: 0 1px 0 #fff3d2;
+}
+.fwd:active {
+  transform: translateY(5px);
+  box-shadow: 0 2px 0 #1c1008, 0 6px 10px rgba(0,0,0,.3);
+}
+.fwd.hidden { display: none !important; }
+
+.flashcard.journey-card .face.front {
+  padding: 5px 4px 4px;
+}
+.flashcard.journey-card .speaker,
+.flashcard.journey-card .use-hit,
+.flashcard.journey-card .say {
+  display: none !important;
+}
+.flashcard.journey-card.is-inspect .speaker,
+.flashcard.journey-card.is-inspect .use-hit,
+.flashcard.journey-card.is-inspect .say {
+  display: none !important;
+}
+.flashcard.journey-card.is-inspect {
+  cursor: pointer;
+}
+
+.play-screen.journey.holding .inspect-dim {
+  opacity: 1;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.play-screen.journey.holding .hotspots,
+.play-screen.journey.holding .fwd,
+.play-screen.journey.holding .hover-pop {
+  pointer-events: none;
+}
+
+.play-screen.cinema .hotspots,
+.play-screen.cinema .fwd,
+.play-screen.cinema .hover-pop,
+.play-screen.cinema .bird-bob {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.play-screen.grab-on,
+.play-screen.grab-on .hotspot,
+.play-screen.grab-on .fwd,
+.play-screen.grab-on .flashcard.journey-card {
+  cursor: url("img/journey/grab-32.png") 16 16, pointer;
+}
+
+@media (max-width: 720px) {
+  .hover-pop { width: 80px; }
+  .hover-pop .hp-art { height: 48px; }
+  .fwd { width: 64px; height: 64px; font-size: 30px; }
+}

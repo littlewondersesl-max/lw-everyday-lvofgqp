@@ -1,0 +1,407 @@
+{
+ "note": "512x512 seamless JPG textures. repeat_m = metres covered by one texture repeat; the house UVs are already scaled to these (walls/floors/exteriors 1 m), so the game can swap a texture onto the matching material as-is (texture.wrapS = wrapT = RepeatWrapping, flipY = false for glTF materials). Roofs (v3) are NOT a texture swap: each roof finish is a modelled, instanced tile roof. Load models[<stage>] (paths relative to the package root), remove the house glb node \"roof\" and add the loaded file's node \"roof\" (same coordinates, no offset). For stage 1f use stage4. \"file\"/\"thumb\" of roof entries are UI swatches only.",
+ "materials": {
+  "walls": "mat_wall_inside",
+  "floors": "mat_floor",
+  "exteriors": "mat_wall_outside",
+  "roofs": {
+   "swap": "model",
+   "node": "roof",
+   "tile_material": "mat_roof_tile",
+   "cap_material": "mat_roof_cap",
+   "underlay_material": "mat_roof_under"
+  }
+ },
+ "textures": [
+  {
+   "category": "walls",
+   "id": "cream",
+   "name": "Cream",
+   "file": "textures/walls_cream.jpg",
+   "thumb": "thumbs/walls_cream.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "walls",
+   "id": "sage",
+   "name": "Sage leaves",
+   "file": "textures/walls_sage.jpg",
+   "thumb": "thumbs/walls_sage.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "walls",
+   "id": "sky",
+   "name": "Sky clouds",
+   "file": "textures/walls_sky.jpg",
+   "thumb": "thumbs/walls_sky.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "walls",
+   "id": "blush",
+   "name": "Blush hearts",
+   "file": "textures/walls_blush.jpg",
+   "thumb": "thumbs/walls_blush.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "walls",
+   "id": "butter",
+   "name": "Butter",
+   "file": "textures/walls_butter.jpg",
+   "thumb": "thumbs/walls_butter.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "walls",
+   "id": "stripe",
+   "name": "Teal stripe",
+   "file": "textures/walls_stripe.jpg",
+   "thumb": "thumbs/walls_stripe.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "walls",
+   "id": "dot",
+   "name": "Coral polka",
+   "file": "textures/walls_dot.jpg",
+   "thumb": "thumbs/walls_dot.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "walls",
+   "id": "tile",
+   "name": "Cream tile",
+   "file": "textures/walls_tile.jpg",
+   "thumb": "thumbs/walls_tile.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "floors",
+   "id": "oak",
+   "name": "Oak planks",
+   "file": "textures/floors_oak.jpg",
+   "thumb": "thumbs/floors_oak.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "floors",
+   "id": "honey",
+   "name": "Honey planks",
+   "file": "textures/floors_honey.jpg",
+   "thumb": "thumbs/floors_honey.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "floors",
+   "id": "walnut",
+   "name": "Walnut planks",
+   "file": "textures/floors_walnut.jpg",
+   "thumb": "thumbs/floors_walnut.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "floors",
+   "id": "checker",
+   "name": "Checker",
+   "file": "textures/floors_checker.jpg",
+   "thumb": "thumbs/floors_checker.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "floors",
+   "id": "terra",
+   "name": "Terracotta tile",
+   "file": "textures/floors_terra.jpg",
+   "thumb": "thumbs/floors_terra.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "floors",
+   "id": "mint",
+   "name": "Mint tile",
+   "file": "textures/floors_mint.jpg",
+   "thumb": "thumbs/floors_mint.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "exteriors",
+   "id": "brick",
+   "name": "Red brick",
+   "file": "textures/exteriors_brick.jpg",
+   "thumb": "thumbs/exteriors_brick.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "exteriors",
+   "id": "whitebrick",
+   "name": "White brick",
+   "file": "textures/exteriors_whitebrick.jpg",
+   "thumb": "thumbs/exteriors_whitebrick.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "exteriors",
+   "id": "clapboard",
+   "name": "Clapboard",
+   "file": "textures/exteriors_clapboard.jpg",
+   "thumb": "thumbs/exteriors_clapboard.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "exteriors",
+   "id": "shingle",
+   "name": "Cedar shingle",
+   "file": "textures/exteriors_shingle.jpg",
+   "thumb": "thumbs/exteriors_shingle.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "exteriors",
+   "id": "stone",
+   "name": "Stone",
+   "file": "textures/exteriors_stone.jpg",
+   "thumb": "thumbs/exteriors_stone.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "exteriors",
+   "id": "stucco",
+   "name": "Stucco",
+   "file": "textures/exteriors_stucco.jpg",
+   "thumb": "thumbs/exteriors_stucco.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "exteriors",
+   "id": "siding",
+   "name": "Blue siding",
+   "file": "textures/exteriors_siding.jpg",
+   "thumb": "thumbs/exteriors_siding.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "exteriors",
+   "id": "timber",
+   "name": "Half-timber",
+   "file": "textures/exteriors_timber.jpg",
+   "thumb": "thumbs/exteriors_timber.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "exteriors",
+   "id": "teal",
+   "name": "Teal paint",
+   "file": "textures/exteriors_teal.jpg",
+   "thumb": "thumbs/exteriors_teal.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "exteriors",
+   "id": "goldbrick",
+   "name": "Yellow brick",
+   "file": "textures/exteriors_goldbrick.jpg",
+   "thumb": "thumbs/exteriors_goldbrick.jpg",
+   "repeat_m": 1.0
+  },
+  {
+   "category": "roofs",
+   "id": "coral",
+   "name": "Coral tile",
+   "thumb": "thumbs/roofs_coral.jpg",
+   "swap": "model",
+   "swatch": "textures/roofs_coral.jpg",
+   "models": {
+    "stage1": "roofs/stage1_coral.glb",
+    "stage2": "roofs/stage2_coral.glb",
+    "stage3": "roofs/stage3_coral.glb",
+    "stage4": "roofs/stage4_coral.glb",
+    "2f": "roofs/2f_coral.glb",
+    "1f": "roofs/stage4_coral.glb"
+   },
+   "rendered_tris": {
+    "stage1": 12576,
+    "stage2": 21816,
+    "stage3": 36740,
+    "stage4": 45024,
+    "2f": 45024
+   },
+   "bytes": {
+    "stage1": 129740,
+    "stage2": 135292,
+    "stage3": 275732,
+    "stage4": 426996,
+    "2f": 426824
+   },
+   "color": "#E88072",
+   "cap_color": "#E07466",
+   "kind": "tile"
+  },
+  {
+   "category": "roofs",
+   "id": "tile",
+   "name": "Red barrel tile",
+   "thumb": "thumbs/roofs_tile.jpg",
+   "swap": "model",
+   "swatch": "textures/roofs_tile.jpg",
+   "models": {
+    "stage1": "roofs/stage1_tile.glb",
+    "stage2": "roofs/stage2_tile.glb",
+    "stage3": "roofs/stage3_tile.glb",
+    "stage4": "roofs/stage4_tile.glb",
+    "2f": "roofs/2f_tile.glb",
+    "1f": "roofs/stage4_tile.glb"
+   },
+   "rendered_tris": {
+    "stage1": 9664,
+    "stage2": 15656,
+    "stage3": 27060,
+    "stage4": 38816,
+    "2f": 38816
+   },
+   "bytes": {
+    "stage1": 129968,
+    "stage2": 136080,
+    "stage3": 254412,
+    "stage4": 504488,
+    "2f": 504484
+   },
+   "color": "#A23C34",
+   "cap_color": "#943229",
+   "kind": "tile"
+  },
+  {
+   "category": "roofs",
+   "id": "terra",
+   "name": "Terracotta tile",
+   "thumb": "thumbs/roofs_terra.jpg",
+   "swap": "model",
+   "swatch": "textures/roofs_terra.jpg",
+   "models": {
+    "stage1": "roofs/stage1_terra.glb",
+    "stage2": "roofs/stage2_terra.glb",
+    "stage3": "roofs/stage3_terra.glb",
+    "stage4": "roofs/stage4_terra.glb",
+    "2f": "roofs/2f_terra.glb",
+    "1f": "roofs/stage4_terra.glb"
+   },
+   "rendered_tris": {
+    "stage1": 13528,
+    "stage2": 22768,
+    "stage3": 38740,
+    "stage4": 50144,
+    "2f": 50144
+   },
+   "bytes": {
+    "stage1": 130296,
+    "stage2": 135848,
+    "stage3": 281800,
+    "stage4": 481368,
+    "2f": 481364
+   },
+   "color": "#D97A55",
+   "cap_color": "#CC6C48",
+   "kind": "tile"
+  },
+  {
+   "category": "roofs",
+   "id": "black",
+   "name": "Charcoal tile",
+   "thumb": "thumbs/roofs_black.jpg",
+   "swap": "model",
+   "swatch": "textures/roofs_black.jpg",
+   "models": {
+    "stage1": "roofs/stage1_black.glb",
+    "stage2": "roofs/stage2_black.glb",
+    "stage3": "roofs/stage3_black.glb",
+    "stage4": "roofs/stage4_black.glb",
+    "2f": "roofs/2f_black.glb",
+    "1f": "roofs/stage4_black.glb"
+   },
+   "rendered_tris": {
+    "stage1": 11712,
+    "stage2": 19424,
+    "stage3": 34742,
+    "stage4": 48232,
+    "2f": 48232
+   },
+   "bytes": {
+    "stage1": 131364,
+    "stage2": 138280,
+    "stage3": 274468,
+    "stage4": 537636,
+    "2f": 537628
+   },
+   "color": "#47464B",
+   "cap_color": "#3A393E",
+   "kind": "tile"
+  },
+  {
+   "category": "roofs",
+   "id": "metal",
+   "name": "Green metal",
+   "thumb": "thumbs/roofs_metal.jpg",
+   "swap": "model",
+   "swatch": "textures/roofs_metal.jpg",
+   "models": {
+    "stage1": "roofs/stage1_metal.glb",
+    "stage2": "roofs/stage2_metal.glb",
+    "stage3": "roofs/stage3_metal.glb",
+    "stage4": "roofs/stage4_metal.glb",
+    "2f": "roofs/2f_metal.glb",
+    "1f": "roofs/stage4_metal.glb"
+   },
+   "rendered_tris": {
+    "stage1": 1752,
+    "stage2": 2840,
+    "stage3": 6520,
+    "stage4": 8992,
+    "2f": 8992
+   },
+   "bytes": {
+    "stage1": 119968,
+    "stage2": 121360,
+    "stage3": 211828,
+    "stage4": 287732,
+    "2f": 287728
+   },
+   "color": "#6F8256",
+   "cap_color": "#64764D",
+   "kind": "panel"
+  },
+  {
+   "category": "roofs",
+   "id": "shingle",
+   "name": "Grey shingle",
+   "thumb": "thumbs/roofs_shingle.jpg",
+   "swap": "model",
+   "swatch": "textures/roofs_shingle.jpg",
+   "models": {
+    "stage1": "roofs/stage1_shingle.glb",
+    "stage2": "roofs/stage2_shingle.glb",
+    "stage3": "roofs/stage3_shingle.glb",
+    "stage4": "roofs/stage4_shingle.glb",
+    "2f": "roofs/2f_shingle.glb",
+    "1f": "roofs/stage4_shingle.glb"
+   },
+   "rendered_tris": {
+    "stage1": 16384,
+    "stage2": 26848,
+    "stage3": 45740,
+    "stage4": 59120,
+    "2f": 59120
+   },
+   "bytes": {
+    "stage1": 131972,
+    "stage2": 138248,
+    "stage3": 303792,
+    "stage4": 522744,
+    "2f": 522740
+   },
+   "color": "#AEB0B4",
+   "cap_color": "#A1A3A8",
+   "kind": "tile"
+  }
+ ]
+}

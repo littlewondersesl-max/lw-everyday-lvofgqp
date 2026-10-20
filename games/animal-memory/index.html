@@ -1,0 +1,107 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Animal Memory</title><style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:#fdf8f3}
+body{font-family:"Baloo 2","Nunito","Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif;color:#5a4670;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px 0}
+#card{--w:min(94vw,calc(100vh - 320px),600px);width:var(--w);padding:calc(var(--w)*.035);border-radius:calc(var(--w)*.11);
+ background:linear-gradient(180deg,#ffc2d4 0%,#ffe9a8 38%,#bfeccd 64%,#b5dcf7 100%);
+ box-shadow:0 10px 26px #b08ab033, inset 0 3px 6px #fff9, inset 0 -4px 8px #0001}
+#inner{background:#fff6e8;border-radius:calc(var(--w)*.08);padding:calc(var(--w)*.035) calc(var(--w)*.05) calc(var(--w)*.05);box-shadow:inset 0 3px 8px #c9a98a33}
+#title{text-align:center;font-weight:800;font-size:calc(var(--w)*.085);line-height:1.15;letter-spacing:.01em;margin:0 0 calc(var(--w)*.03);
+ background:linear-gradient(90deg,#f28bb0,#f5b14c 30%,#5fc29a 55%,#6aaee8 78%,#a785e0);-webkit-background-clip:text;background-clip:text;color:transparent;
+ filter:drop-shadow(0 2px 0 #fff) drop-shadow(0 3px 3px #0002)}
+#grid{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(var(--w)*.03)}
+.cell{aspect-ratio:1;border-radius:18%;padding:6%;box-shadow:inset 0 3px 6px #0000001f, 0 2px 0 #fff}
+.t{touch-action:manipulation;width:100%;height:100%;border:0;padding:0;border-radius:16%;overflow:hidden;cursor:pointer;background:none;display:block;transition:transform .18s,box-shadow .18s;box-shadow:0 3px 6px #0002}
+.t img{width:100%;height:100%;display:block;pointer-events:none}
+.t.lit{transform:scale(1.13);box-shadow:0 0 0 4px #fff,0 0 0 9px #ffc93c,0 10px 24px #ffb30099;position:relative;z-index:3}
+.t.ok{box-shadow:0 0 0 4px #fff,0 0 0 10px #2fbf5b,0 0 24px 10px #2fbf5bb0;position:relative;z-index:3}
+.t.bad{box-shadow:0 0 0 4px #fff,0 0 0 10px #e5394a,0 0 24px 10px #e5394ab0;position:relative;z-index:3}
+.locked .t.a{cursor:default}
+#star{position:relative;overflow:visible}
+#star img{border-radius:16%}
+#star::before{content:"";position:absolute;inset:-35%;border-radius:50%;background:radial-gradient(circle,#fff6b0 0%,#ffd84d88 35%,#ffc40000 70%);opacity:0;transition:opacity .3s;pointer-events:none;z-index:-1}
+#star::after{content:"";position:absolute;inset:-28%;border-radius:50%;background:repeating-conic-gradient(#ffe36e66 0 8deg,#0000 8deg 24deg);-webkit-mask:radial-gradient(circle,#0000 30%,#000 45%,#0000 70%);mask:radial-gradient(circle,#0000 30%,#000 45%,#0000 70%);opacity:0;pointer-events:none;z-index:-1}
+#star.glow{animation:pulse 1.1s ease-in-out infinite;z-index:4}
+#star.glow::before{opacity:1}#star.glow::after{opacity:1;animation:spin 6s linear infinite}
+#star.glow img{filter:brightness(1.12) saturate(1.15)}
+@keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 0 18px 6px #ffd84d99}50%{transform:scale(1.07);box-shadow:0 0 38px 16px #ffd84dcc}}
+@keyframes spin{to{transform:rotate(360deg)}}
+#cap{min-height:1.25em;font-size:clamp(34px,9vw,60px);font-weight:800;color:#c84678;text-align:center;line-height:1.2;margin-top:6px}
+#bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;margin:2px 0 10px}
+#level{font-size:clamp(18px,4.5vw,26px);font-weight:800;background:#fff;border-radius:20px;padding:6px 16px;box-shadow:0 3px 8px #0001}
+button.ctl{font:inherit;font-size:clamp(17px,4vw,24px);font-weight:800;border:0;border-radius:22px;padding:8px 20px;min-height:54px;background:#9cc8f0;color:#fff;cursor:pointer;box-shadow:0 4px 0 #6fa3d6}
+button.ctl:active{transform:translateY(3px);box-shadow:0 1px 0 #6fa3d6}
+#opts{display:flex;gap:10px 16px;align-items:center;flex-wrap:wrap;justify-content:center;margin:0 8px 8px;font-weight:800}
+#mode{display:flex;background:#fff;border-radius:22px;padding:4px;box-shadow:0 3px 8px #0001}
+#mode button{font:inherit;font-size:clamp(14px,3.4vw,18px);font-weight:800;border:0;border-radius:18px;padding:8px 12px;min-height:44px;background:none;color:#8a76a0;cursor:pointer;touch-action:manipulation}
+#mode button.on{background:#c7a8f0;color:#fff;box-shadow:0 3px 0 #a785e0}
+#spd{display:flex;align-items:center;gap:8px;background:#fff;border-radius:22px;padding:6px 14px;min-height:52px;box-shadow:0 3px 8px #0001;font-size:clamp(14px,3.4vw,18px)}
+#speed{width:clamp(110px,30vw,170px);height:32px;accent-color:#f28bb0;touch-action:pan-x}
+#spdv{min-width:6.5em;color:#9a86a8;font-size:.9em}
+#hint{text-align:center;padding:0 10px;font-size:clamp(15px,3.6vw,20px);color:#9a86a8;font-weight:700}
+#party{position:fixed;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px;background:#fff9;z-index:9;font-size:clamp(34px,8vw,66px);font-weight:800;color:#7854a0;text-align:center}
+.c{position:fixed;top:-20px;width:14px;height:20px;border-radius:4px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+</style></head><body>
+<div id="card"><div id="inner"><div id="title">Animal Memory</div><div id="grid"></div></div></div>
+<div id="cap">Tap the star to start!</div>
+<div id="bar"><div id="level">Level 1 / 12</div><button class="ctl" id="mix">&#128256; New game</button></div>
+<div id="opts"><div id="mode" role="group" aria-label="Game mode"><button type="button" data-m="grow" class="on">Same sequence grows</button><button type="button" data-m="fresh">New sequence every level</button></div><label id="spd" title="How fast the earlier animals play back. The last 3 always play at normal speed.">&#128034;<input type="range" id="speed" min="0" max="4" step="1" value="2" aria-label="Playback speed of the earlier animals">&#128007;<span id="spdv"></span></label></div>
+<div id="hint">&#11088; Tap the star to start / hear it again &middot; the last 3 animals always play at normal speed</div>
+<div id="party"><div>&#127881; Well done! &#127881;<br>You remembered all 14!</div><button class="ctl" id="again">Play again</button></div>
+<script>
+const ANIMALS=[["cat","01-cat"],["dog","02-dog"],["bird","03-bird-budgie"],["goldfish","04-goldfish"],["rabbit","05-rabbit"],["hamster","06-hamster"],["cow","07-cow"],["duck","10-duck"]];
+const SEQ_LEN=14, LEVELS=12;
+function makeSequence(n=SEQ_LEN,k=ANIMALS.length,rnd=Math.random){const s=[];while(s.length<n){const x=Math.floor(rnd()*k);const L=s.length;if(L>=2&&s[L-1]===x&&s[L-2]===x)continue;s.push(x)}return s}
+function levelLength(level){return level+2}
+const NORMAL_ON=1000,NORMAL_OFF=300,STEADY_TAIL=3,SPEEDS=[0,.5,1,1.5,2];
+// how much faster the earlier part plays: grows with level, scaled by the slider (0 = steady, 2 = default)
+function earlyFactor(level,slider){const m=SPEEDS[Math.max(0,Math.min(4,slider|0))];return 1+0.18*(level-1)*m}
+function stepTiming(level,i,len,slider){if(i>=len-STEADY_TAIL)return{on:NORMAL_ON,off:NORMAL_OFF,f:1};const f=earlyFactor(level,slider);return{on:Math.max(180,Math.round(NORMAL_ON/f)),off:Math.max(70,Math.round(NORMAL_OFF/f)),f}}
+function extendSequence(s,n=SEQ_LEN,k=ANIMALS.length,rnd=Math.random){s=s.slice();while(s.length<n){const x=Math.floor(rnd()*k);const L=s.length;if(L>=2&&s[L-1]===x&&s[L-2]===x)continue;s.push(x)}return s}
+function sequenceFor(mode,level,prev,rnd=Math.random){return mode==="fresh"?makeSequence(levelLength(level),ANIMALS.length,rnd):(prev&&prev.length>=SEQ_LEN?prev:extendSequence(prev||[],SEQ_LEN,ANIMALS.length,rnd))}
+function checkTap(seq,level,pos,idx){if(seq[pos]!==idx)return"wrong";return pos+1===levelLength(level)?(level===LEVELS?"win":"levelDone"):"ok"}
+if(typeof module!=="undefined"){module.exports={makeSequence,levelLength,checkTap,ANIMALS,SEQ_LEN,LEVELS,earlyFactor,stepTiming,extendSequence,sequenceFor,STEADY_TAIL}}
+
+
+if(typeof document!=="undefined"){
+const grid=document.getElementById("grid"),cap=document.getElementById("cap"),lv=document.getElementById("level");
+const CELLC=["#ffd0dc","#cfe6fb","#cdeedb","#bfe6e3","#fff0b3","#e3d6fb","#d7e8c8","#ead7f5","#ffdcc4"];
+const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let mode=store.get("lw-mem-mode","grow")==="fresh"?"fresh":"grow",speed=+store.get("lw-mem-speed","2");if(!(speed>=0&&speed<=4))speed=2;
+let seq=sequenceFor(mode,1,null),level=1,pos=0,busy=false,playing=false;const btns=[];let starBtn;
+let ai=0;for(let c=0;c<9;c++){const cell=document.createElement("div");cell.className="cell";cell.style.background=CELLC[c];grid.appendChild(cell);
+ if(c===4){starBtn=document.createElement("button");starBtn.className="t";starBtn.id="star";starBtn.setAttribute("aria-label","Start");starBtn.innerHTML='<img src="star.jpg" alt="">';cell.appendChild(starBtn);continue}
+ const i=ai++;const [name,file]=ANIMALS[i];const b=document.createElement("button");b.className="t a";b.setAttribute("aria-label",name);b.innerHTML=`<img src="${file}.jpg" alt="">`;b.onclick=()=>tap(i);cell.appendChild(b);btns.push(b)}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+let voice=null;function pickVoice(){const v=speechSynthesis.getVoices();voice=v.find(x=>/^en-(GB|US)/.test(x.lang))||v.find(x=>/^en/.test(x.lang))||null}
+if("speechSynthesis"in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+function say(t,f=1){if(!("speechSynthesis"in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-GB";if(voice)u.voice=voice;u.rate=Math.min(2,.85*f);speechSynthesis.speak(u)}
+function setLocked(x){busy=x;grid.classList.toggle("locked",x)}
+const speedEl=document.getElementById("speed"),spdv=document.getElementById("spdv"),modeBtns=[...document.querySelectorAll("#mode button")];
+function showSpeed(){const f=earlyFactor(level,speed);spdv.textContent=levelLength(level)<=STEADY_TAIL?"normal speed":(f<1.05?"steady":`${f.toFixed(1)}\u00d7 faster`)}
+function show(){lv.textContent=`Level ${level} / ${LEVELS}`;showSpeed()}
+function showMode(){modeBtns.forEach(b=>{const on=b.dataset.m===mode;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on)})}
+speedEl.value=speed;speedEl.oninput=()=>{speed=+speedEl.value;store.set("lw-mem-speed",speed);showSpeed()};
+// a mode change applies from the next level (the current level keeps its sequence)
+modeBtns.forEach(b=>b.onclick=()=>{if(b.dataset.m===mode)return;mode=b.dataset.m;store.set("lw-mem-mode",mode);if(mode==="grow")seq=extendSequence(seq);showMode()});showMode();
+setLocked(true);
+async function playLevel(){if(playing)return;playing=true;setLocked(true);pos=0;show();starBtn.classList.add("glow");cap.textContent="Watch and listen\u2026";await wait(900);starBtn.classList.remove("glow");
+ const len=levelLength(level);for(let i=0;i<len;i++){const t=stepTiming(level,i,len,speed);const b=btns[seq[i]];b.classList.add("lit");cap.textContent=ANIMALS[seq[i]][0];say(ANIMALS[seq[i]][0],t.f);await wait(t.on);b.classList.remove("lit");cap.textContent="\u00a0";await wait(t.off)}
+ cap.textContent="Your turn!";playing=false;setLocked(false)}
+function flash(b,c,ms=450){clearTimeout(b._ft);b.classList.remove("ok","bad");void b.offsetWidth;b.classList.add(c);b._ft=setTimeout(()=>b.classList.remove(c),ms)}
+async function tap(i){if(busy)return;const b=btns[i];say(ANIMALS[i][0]);cap.textContent=ANIMALS[i][0];const r=checkTap(seq,level,pos,i);
+ if(r==="wrong"){flash(b,"bad",1100);setLocked(true);cap.textContent="Try again \ud83d\ude42";await wait(1400);return playLevel()}
+ flash(b,"ok");pos++;
+ if(r==="levelDone"){setLocked(true);await wait(500);cap.textContent="Great! \u2b50";await wait(1000);level++;seq=sequenceFor(mode,level,seq);playLevel()}
+ if(r==="win"){setLocked(true);celebrate()}}
+function celebrate(){say("Well done! You did it!");starBtn.classList.add("glow");const p=document.getElementById("party");p.style.display="flex";const cols=["#f7a8c4","#9cc8f0","#ffd23f","#7ccf8a","#c7a8f0"];
+ for(let i=0;i<80;i++){const c=document.createElement("div");c.className="c";c.style.left=Math.random()*100+"vw";c.style.background=cols[i%5];c.style.animationDuration=2+Math.random()*2+"s";c.style.animationDelay=Math.random()*1.5+"s";p.appendChild(c)}}
+function newGame(){document.getElementById("party").style.display="none";starBtn.classList.remove("glow");document.querySelectorAll(".c").forEach(c=>c.remove());level=1;seq=sequenceFor(mode,1,null);playing=false;playLevel()}
+// the star replays the current level's sequence (same sequence, same level)
+starBtn.onclick=()=>{if(!playing)playLevel()};
+document.getElementById("mix").onclick=newGame;document.getElementById("again").onclick=newGame;
+if(location.hash==="#demo"){btns[2].classList.add("lit");cap.textContent="bird";starBtn.classList.add("glow")}
+show();}
+</script></body></html>

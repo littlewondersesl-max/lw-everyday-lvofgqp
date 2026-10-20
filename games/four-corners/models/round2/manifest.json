@@ -1,0 +1,1904 @@
+{
+ "fridge": [
+  {
+   "key": "a",
+   "file": "glb/fridge_a.glb",
+   "thumb": "thumbs-web/fridge_a.webp",
+   "label": "Teal enamel fridge",
+   "desc": "Glossy teal enamel single fridge, freezer on top, polished chrome bar handles, cream inside.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Kitchen Fridge)",
+   "licence": "CC0 1.0",
+   "bytes": 33696,
+   "size_m": {
+    "w": 0.91,
+    "d": 0.745,
+    "h": 1.8
+   },
+   "nodes": [
+    "body",
+    "door",
+    "door_top"
+   ],
+   "door": {
+    "hinge_three": [
+     0.455,
+     0.0161,
+     0.2395
+    ],
+    "axis": "y",
+    "open_angle": 1.75,
+    "z_range": [
+     0.016,
+     1.046
+    ]
+   },
+   "door_top": {
+    "hinge_three": [
+     0.4457,
+     1.1626,
+     0.2416
+    ],
+    "axis": "y",
+    "open_angle": 1.75,
+    "z_range": [
+     1.163,
+     1.791
+    ]
+   },
+   "thumb_png": "thumbs/fridge_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/fridge_b.glb",
+   "thumb": "thumbs-web/fridge_b.webp",
+   "label": "Chubby round fridge",
+   "desc": "Rounder, shorter and fatter cartoon fridge with soft rounded corners, coral enamel, cream rounded handles, freezer on top.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Fridge)",
+   "licence": "CC0 1.0",
+   "bytes": 45404,
+   "size_m": {
+    "w": 0.98,
+    "d": 0.74,
+    "h": 1.58
+   },
+   "nodes": [
+    "body",
+    "door",
+    "door_top"
+   ],
+   "door": {
+    "hinge_three": [
+     0.49,
+     0.0,
+     0.1006
+    ],
+    "axis": "y",
+    "open_angle": 1.75,
+    "z_range": [
+     0.0,
+     0.969
+    ]
+   },
+   "door_top": {
+    "hinge_three": [
+     0.49,
+     1.0179,
+     0.1006
+    ],
+    "axis": "y",
+    "open_angle": 1.75,
+    "z_range": [
+     1.018,
+     1.58
+    ]
+   },
+   "thumb_png": "thumbs/fridge_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/fridge_c.glb",
+   "thumb": "thumbs-web/fridge_c.webp",
+   "label": "Cream retro fridge on legs",
+   "desc": "Cream enamel fridge standing on teal legs, coral freezer door, chunky horizontal teal bar handles, freezer on top.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Kitchen Fridge) + added legs/handles",
+   "licence": "CC0 1.0",
+   "bytes": 44048,
+   "size_m": {
+    "w": 0.91,
+    "d": 0.742,
+    "h": 1.8
+   },
+   "nodes": [
+    "body",
+    "door",
+    "door_top"
+   ],
+   "door": {
+    "hinge_three": [
+     0.455,
+     0.1351,
+     0.2395
+    ],
+    "axis": "y",
+    "open_angle": 1.75,
+    "z_range": [
+     0.135,
+     1.096
+    ]
+   },
+   "door_top": {
+    "hinge_three": [
+     0.4457,
+     1.2051,
+     0.2416
+    ],
+    "axis": "y",
+    "open_angle": 1.75,
+    "z_range": [
+     1.205,
+     1.792
+    ]
+   },
+   "thumb_png": "thumbs/fridge_c.png"
+  }
+ ],
+ "stove": [
+  {
+   "key": "a",
+   "file": "glb/stove_a.glb",
+   "thumb": "thumbs-web/stove_a.webp",
+   "label": "Cream stove",
+   "desc": "Cream enamel oven with a teal front, charcoal hob with four burners, coral knobs and a chrome bar handle.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Oven)",
+   "licence": "CC0 1.0",
+   "bytes": 25792,
+   "size_m": {
+    "w": 0.9,
+    "d": 0.72,
+    "h": 0.9
+   },
+   "nodes": [
+    "body",
+    "door"
+   ],
+   "door": {
+    "hinge_three": [
+     0,
+     0.2328,
+     0.3032
+    ],
+    "axis": "x",
+    "open_angle": 1.3,
+    "z_range": [
+     0.233,
+     0.744
+    ]
+   },
+   "thumb_png": "thumbs/stove_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/stove_b.glb",
+   "thumb": "thumbs-web/stove_b.webp",
+   "label": "Coral chef stove",
+   "desc": "Chunky coral oven with a big cream window band, chrome rail handle, black grates and teal knobs.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Oven)",
+   "licence": "CC0 1.0",
+   "bytes": 68192,
+   "size_m": {
+    "w": 0.9,
+    "d": 0.72,
+    "h": 0.9
+   },
+   "nodes": [
+    "body",
+    "door"
+   ],
+   "door": {
+    "hinge_three": [
+     0,
+     0.1317,
+     0.2544
+    ],
+    "axis": "x",
+    "open_angle": 1.3,
+    "z_range": [
+     0.132,
+     0.561
+    ]
+   },
+   "thumb_png": "thumbs/stove_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/stove_c.glb",
+   "thumb": "thumbs-web/stove_c.webp",
+   "label": "Mint retro range",
+   "desc": "Mint enamel retro range on little cream legs with a tall back panel, cream oven door and chrome handle.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Oven) + legs/back panel",
+   "licence": "CC0 1.0",
+   "bytes": 47588,
+   "size_m": {
+    "w": 0.9,
+    "d": 0.72,
+    "h": 1.06
+   },
+   "nodes": [
+    "body",
+    "door"
+   ],
+   "door": {
+    "hinge_three": [
+     0,
+     0.2995,
+     0.308
+    ],
+    "axis": "x",
+    "open_angle": 1.3,
+    "z_range": [
+     0.3,
+     0.759
+    ]
+   },
+   "thumb_png": "thumbs/stove_c.png"
+  }
+ ],
+ "dishwasher": [
+  {
+   "key": "a",
+   "file": "glb/dishwasher_a.glb",
+   "thumb": "thumbs-web/dishwasher_a.webp",
+   "label": "Cream panel dishwasher",
+   "desc": "Cream panel-front dishwasher with a teal control strip and a long chrome bar handle.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Counter End) + handle/control strip",
+   "licence": "CC0 1.0",
+   "bytes": 47116,
+   "size_m": {
+    "w": 0.6,
+    "d": 0.694,
+    "h": 0.84
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/dishwasher_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/dishwasher_b.glb",
+   "thumb": "thumbs-web/dishwasher_b.webp",
+   "label": "Window dishwasher",
+   "desc": "Rounded mint dishwasher with a peek-in window (see the plates!), cream knobs and a chrome handle.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Oven) body reworked (hob removed)",
+   "licence": "CC0 1.0",
+   "bytes": 46152,
+   "size_m": {
+    "w": 0.6,
+    "d": 0.64,
+    "h": 0.88
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/dishwasher_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/dishwasher_c.glb",
+   "thumb": "thumbs-web/dishwasher_c.webp",
+   "label": "Coral plank dishwasher",
+   "desc": "Coral dishwasher with a painted-wood plank front, a cream push-button strip and a teal bar handle.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Counter Straight) + handle/control strip",
+   "licence": "CC0 1.0",
+   "bytes": 81584,
+   "size_m": {
+    "w": 0.6,
+    "d": 0.676,
+    "h": 0.88
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/dishwasher_c.png"
+  }
+ ],
+ "sink": [
+  {
+   "key": "a",
+   "file": "glb/sink_a.glb",
+   "thumb": "thumbs-web/sink_a.webp",
+   "label": "Teal sink cabinet",
+   "desc": "Teal cabinet sink with a white terrazzo-free top, chrome tap and basin.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Kitchen Sink)",
+   "licence": "CC0 1.0",
+   "bytes": 66376,
+   "size_m": {
+    "w": 0.9,
+    "d": 0.64,
+    "h": 1.25
+   },
+   "nodes": [
+    "Kitchen_Sink"
+   ],
+   "thumb_png": "thumbs/sink_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/sink_b.glb",
+   "thumb": "thumbs-web/sink_b.webp",
+   "label": "Wooden double-door sink",
+   "desc": "Honey painted-wood counter sink with two cream doors, a cream terrazzo top and a chrome basin.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Counter Sink)",
+   "licence": "CC0 1.0",
+   "bytes": 97460,
+   "size_m": {
+    "w": 0.9,
+    "d": 0.64,
+    "h": 1.06
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/sink_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/sink_c.glb",
+   "thumb": "thumbs-web/sink_c.webp",
+   "label": "Washstand sink",
+   "desc": "Cute washstand: round cream basin with a chrome tap on a coral cabinet with a drawer and little legs.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Bathroom Sink) on Quaternius 'Ultimate House Interior Pack' (poly.pizza, Night Stand)",
+   "licence": "CC0 1.0",
+   "bytes": 38076,
+   "size_m": {
+    "w": 0.9,
+    "d": 0.64,
+    "h": 1.053
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/sink_c.png"
+  }
+ ],
+ "cabinet": [
+  {
+   "key": "a",
+   "file": "glb/cabinet_a.glb",
+   "thumb": "thumbs-web/cabinet_a.webp",
+   "label": "Two-door cupboard",
+   "desc": "Cream two-door base cupboard with teal door panels, wooden knobs and a honey-wood top.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Counter Doors)",
+   "licence": "CC0 1.0",
+   "bytes": 59796,
+   "size_m": {
+    "w": 0.8,
+    "d": 0.62,
+    "h": 0.92
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/cabinet_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/cabinet_b.glb",
+   "thumb": "thumbs-web/cabinet_b.webp",
+   "label": "Drawer cupboard",
+   "desc": "Coral cupboard with two wide drawers, cream handles and a cartoon terrazzo top.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Counter Drawers)",
+   "licence": "CC0 1.0",
+   "bytes": 75468,
+   "size_m": {
+    "w": 0.8,
+    "d": 0.62,
+    "h": 0.92
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/cabinet_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/cabinet_c.glb",
+   "thumb": "thumbs-web/cabinet_c.webp",
+   "label": "Leggy cupboard",
+   "desc": "Mid-century style teal cupboard on wooden legs with one big drawer and a chrome knob.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Night Stand)",
+   "licence": "CC0 1.0",
+   "bytes": 47984,
+   "size_m": {
+    "w": 0.8,
+    "d": 0.62,
+    "h": 0.92
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/cabinet_c.png"
+  }
+ ],
+ "island": [
+  {
+   "key": "a",
+   "file": "glb/island_a.glb",
+   "thumb": "thumbs-web/island_a.webp",
+   "label": "Plank island",
+   "desc": "Teal plank-front island with a big overhanging honey-wood top.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Counter Straight (deep))",
+   "licence": "CC0 1.0",
+   "bytes": 58516,
+   "size_m": {
+    "w": 1.55,
+    "d": 0.86,
+    "h": 0.92
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/island_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/island_b.glb",
+   "thumb": "thumbs-web/island_b.webp",
+   "label": "Cupboard island",
+   "desc": "Cream island with two coral cupboard doors and a cartoon terrazzo top.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Counter Doors)",
+   "licence": "CC0 1.0",
+   "bytes": 74888,
+   "size_m": {
+    "w": 1.55,
+    "d": 0.86,
+    "h": 0.92
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/island_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/island_c.glb",
+   "thumb": "thumbs-web/island_c.webp",
+   "label": "Sideboard island",
+   "desc": "Low-leg sideboard island: coral drawers, light painted-wood top and wooden legs.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Drawer)",
+   "licence": "CC0 1.0",
+   "bytes": 36872,
+   "size_m": {
+    "w": 1.55,
+    "d": 0.86,
+    "h": 0.92
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/island_c.png"
+  }
+ ],
+ "pantry": [
+  {
+   "key": "a",
+   "file": "glb/pantry_a.glb",
+   "thumb": "thumbs-web/pantry_a.webp",
+   "label": "Tall teal pantry",
+   "desc": "Tall teal pantry cupboard with two doors, cream panels, gold knobs and fancy feet.",
+   "source": "Quaternius 'Furniture Pack' (poly.pizza, Closet)",
+   "licence": "CC0 1.0",
+   "bytes": 165948,
+   "size_m": {
+    "w": 0.64,
+    "d": 0.56,
+    "h": 2.05
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/pantry_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/pantry_b.glb",
+   "thumb": "thumbs-web/pantry_b.webp",
+   "label": "Pantry with drawers",
+   "desc": "Coral pantry with two doors over two drawers, cream trim and gold handles.",
+   "source": "Quaternius 'Furniture Pack' (poly.pizza, Short Closet)",
+   "licence": "CC0 1.0",
+   "bytes": 227276,
+   "size_m": {
+    "w": 0.64,
+    "d": 0.56,
+    "h": 2.05
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/pantry_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/pantry_c.glb",
+   "thumb": "thumbs-web/pantry_c.webp",
+   "label": "Open pantry shelf",
+   "desc": "Open cream shelf unit with a ladder of little shelves, painted honey-wood shelf tops.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Shelf Large)",
+   "licence": "CC0 1.0",
+   "bytes": 34368,
+   "size_m": {
+    "w": 0.64,
+    "d": 0.56,
+    "h": 2.05
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/pantry_c.png"
+  }
+ ],
+ "bin": [
+  {
+   "key": "a",
+   "file": "glb/bin_a.glb",
+   "thumb": "thumbs-web/bin_a.webp",
+   "label": "Teal round bin",
+   "desc": "Round glossy teal bin with a cream rim.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Trashcan)",
+   "licence": "CC0 1.0",
+   "bytes": 13536,
+   "size_m": {
+    "w": 0.34,
+    "d": 0.3,
+    "h": 0.56
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/bin_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/bin_b.glb",
+   "thumb": "thumbs-web/bin_b.webp",
+   "label": "Wheelie bin",
+   "desc": "Little coral wheelie bin with a lid and black wheels.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Trashcan (wheelie))",
+   "licence": "CC0 1.0",
+   "bytes": 23712,
+   "size_m": {
+    "w": 0.34,
+    "d": 0.3,
+    "h": 0.56
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/bin_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/bin_c.glb",
+   "thumb": "thumbs-web/bin_c.webp",
+   "label": "Pedal bin",
+   "desc": "Slim cream pedal bin with a mustard lid.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Trashcan Small)",
+   "licence": "CC0 1.0",
+   "bytes": 11084,
+   "size_m": {
+    "w": 0.34,
+    "d": 0.3,
+    "h": 0.56
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/bin_c.png"
+  }
+ ],
+ "table": [
+  {
+   "key": "a",
+   "file": "glb/table_a.glb",
+   "thumb": "thumbs-web/table_a.webp",
+   "label": "Square table",
+   "desc": "Normal square table: chunky honey painted-wood top and sturdy legs.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Table)",
+   "licence": "CC0 1.0",
+   "bytes": 35176,
+   "size_m": {
+    "w": 0.92,
+    "d": 0.92,
+    "h": 0.75
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/table_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/table_b.glb",
+   "thumb": "thumbs-web/table_b.webp",
+   "label": "Medium rectangle table",
+   "desc": "Medium rectangle table (seats four, not a long dining table): light wood top and coral cross legs.",
+   "source": "Quaternius 'Furniture Pack' (poly.pizza, Table) shortened",
+   "licence": "CC0 1.0",
+   "bytes": 82388,
+   "size_m": {
+    "w": 1.26,
+    "d": 0.86,
+    "h": 0.75
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/table_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/table_c.glb",
+   "thumb": "thumbs-web/table_c.webp",
+   "label": "Chubby round table",
+   "desc": "Round chubby cartoon table: thick soft-edged cream top, fat teal pedestal and round foot.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Table Round Small) pedestal + new chubby top",
+   "licence": "CC0 1.0",
+   "bytes": 63640,
+   "size_m": {
+    "w": 1.0,
+    "d": 1.0,
+    "h": 0.72
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/table_c.png"
+  }
+ ],
+ "chair": [
+  {
+   "key": "a",
+   "file": "glb/chair_a.glb",
+   "thumb": "thumbs-web/chair_a.webp",
+   "label": "Ladder-back chair",
+   "desc": "One teal painted ladder-back chair with a honey wood seat.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Chair)",
+   "licence": "CC0 1.0",
+   "bytes": 34288,
+   "size_m": {
+    "w": 0.45,
+    "d": 0.45,
+    "h": 0.9
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/chair_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/chair_b.glb",
+   "thumb": "thumbs-web/chair_b.webp",
+   "label": "Bentwood cafe chair",
+   "desc": "One curly bentwood cafe chair in cream with a round coral seat.",
+   "source": "Quaternius 'Furniture Pack' (poly.pizza, Chair)",
+   "licence": "CC0 1.0",
+   "bytes": 41156,
+   "size_m": {
+    "w": 0.45,
+    "d": 0.45,
+    "h": 0.9
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/chair_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/chair_c.glb",
+   "thumb": "thumbs-web/chair_c.webp",
+   "label": "Slat-back chair",
+   "desc": "One coral painted chair with a tall slatted back and a cream seat.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Chair (slat back))",
+   "licence": "CC0 1.0",
+   "bytes": 13784,
+   "size_m": {
+    "w": 0.45,
+    "d": 0.45,
+    "h": 0.9
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/chair_c.png"
+  }
+ ],
+ "stool": [
+  {
+   "key": "a",
+   "file": "glb/stool_a.glb",
+   "thumb": "thumbs-web/stool_a.webp",
+   "label": "Bar stool",
+   "desc": "Round coral seat on a tall cream stool frame with a foot ring.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Stool)",
+   "licence": "CC0 1.0",
+   "bytes": 17508,
+   "size_m": {
+    "w": 0.36,
+    "d": 0.36,
+    "h": 0.62
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/stool_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/stool_b.glb",
+   "thumb": "thumbs-web/stool_b.webp",
+   "label": "Cushion stool",
+   "desc": "Teal stool with a puffy cream cushion and curved legs.",
+   "source": "Quaternius 'Furniture Pack' (poly.pizza, Stool)",
+   "licence": "CC0 1.0",
+   "bytes": 29608,
+   "size_m": {
+    "w": 0.36,
+    "d": 0.36,
+    "h": 0.62
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/stool_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/stool_c.glb",
+   "thumb": "thumbs-web/stool_c.webp",
+   "label": "Round wood stool",
+   "desc": "Chunky round stool: mint seat on honey painted-wood legs.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Stool)",
+   "licence": "CC0 1.0",
+   "bytes": 36404,
+   "size_m": {
+    "w": 0.36,
+    "d": 0.36,
+    "h": 0.62
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/stool_c.png"
+  }
+ ],
+ "rug": [
+  {
+   "key": "a",
+   "file": "glb/rug_a.glb",
+   "thumb": "thumbs-web/rug_a.webp",
+   "label": "Striped rug",
+   "desc": "Rectangle rug with cream, teal and coral stripes and a cream fringe.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Rug)",
+   "licence": "CC0 1.0",
+   "bytes": 30632,
+   "size_m": {
+    "w": 1.8,
+    "d": 1.2,
+    "h": 0.02
+   },
+   "nodes": [
+    "Carpet_1"
+   ],
+   "thumb_png": "thumbs/rug_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/rug_b.glb",
+   "thumb": "thumbs-web/rug_b.webp",
+   "label": "Oval rug",
+   "desc": "Soft oval teal rug with a coral border.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Round Rug) stretched to an oval",
+   "licence": "CC0 1.0",
+   "bytes": 5724,
+   "size_m": {
+    "w": 1.8,
+    "d": 1.2,
+    "h": 0.02
+   },
+   "nodes": [
+    "Carpet_Round"
+   ],
+   "thumb_png": "thumbs/rug_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/rug_c.glb",
+   "thumb": "thumbs-web/rug_c.webp",
+   "label": "Zigzag rug",
+   "desc": "Cream rug with a happy teal, coral and mustard zigzag pattern and mustard fringe.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Rug)",
+   "licence": "CC0 1.0",
+   "bytes": 66980,
+   "size_m": {
+    "w": 1.8,
+    "d": 1.2,
+    "h": 0.02
+   },
+   "nodes": [
+    "Carpet_1"
+   ],
+   "thumb_png": "thumbs/rug_c.png"
+  }
+ ],
+ "lamp": [
+  {
+   "key": "a",
+   "file": "glb/lamp_a.glb",
+   "thumb": "thumbs-web/lamp_a.webp",
+   "label": "Cone table lamp",
+   "desc": "Coral cone shade on a cream bobbin base.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Table Lamp)",
+   "licence": "CC0 1.0",
+   "bytes": 10016,
+   "size_m": {
+    "w": 0.26,
+    "d": 0.26,
+    "h": 0.52
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/lamp_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/lamp_b.glb",
+   "thumb": "thumbs-web/lamp_b.webp",
+   "label": "Desk lamp",
+   "desc": "Bendy teal desk lamp with a cream inside.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Light Desk)",
+   "licence": "CC0 1.0",
+   "bytes": 11656,
+   "size_m": {
+    "w": 0.222,
+    "d": 0.4,
+    "h": 0.506
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/lamp_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/lamp_c.glb",
+   "thumb": "thumbs-web/lamp_c.webp",
+   "label": "Drum lamp",
+   "desc": "Wide mustard drum shade on a round teal base.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Lamp)",
+   "licence": "CC0 1.0",
+   "bytes": 10308,
+   "size_m": {
+    "w": 0.26,
+    "d": 0.26,
+    "h": 0.52
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/lamp_c.png"
+  }
+ ],
+ "microwave": [
+  {
+   "key": "a",
+   "file": "glb/microwave_a.glb",
+   "thumb": "thumbs-web/microwave_a.webp",
+   "label": "Cream microwave",
+   "desc": "Cream microwave with a teal door frame, dark window and coral buttons.",
+   "source": "Kenney Furniture Kit 'kitchenMicrowave' (kenney.nl)",
+   "licence": "CC0 1.0",
+   "bytes": 9356,
+   "size_m": {
+    "w": 0.52,
+    "d": 0.38,
+    "h": 0.32
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/microwave_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/microwave_b.glb",
+   "thumb": "thumbs-web/microwave_b.webp",
+   "label": "Coral microwave on feet",
+   "desc": "Coral microwave on little cream feet with a chrome bar handle.",
+   "source": "Kenney Furniture Kit 'kitchenMicrowave' (kenney.nl) + feet/handle",
+   "licence": "CC0 1.0",
+   "bytes": 40752,
+   "size_m": {
+    "w": 0.52,
+    "d": 0.417,
+    "h": 0.32
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/microwave_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/microwave_c.glb",
+   "thumb": "thumbs-web/microwave_c.webp",
+   "label": "Retro dial microwave",
+   "desc": "Mint retro microwave with two big cream dials and a teal top.",
+   "source": "Kenney Furniture Kit 'kitchenMicrowave' (kenney.nl) + dials",
+   "licence": "CC0 1.0",
+   "bytes": 36528,
+   "size_m": {
+    "w": 0.52,
+    "d": 0.405,
+    "h": 0.32
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/microwave_c.png"
+  }
+ ],
+ "toaster": [
+  {
+   "key": "a",
+   "file": "glb/toaster_a.glb",
+   "thumb": "thumbs-web/toaster_a.webp",
+   "label": "Teal toaster",
+   "desc": "Teal toaster with cream sides and a coral lever.",
+   "source": "Kenney Furniture Kit 'toaster' (kenney.nl)",
+   "licence": "CC0 1.0",
+   "bytes": 11776,
+   "size_m": {
+    "w": 0.3,
+    "d": 0.18,
+    "h": 0.2
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/toaster_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/toaster_b.glb",
+   "thumb": "thumbs-web/toaster_b.webp",
+   "label": "Coral toaster on feet",
+   "desc": "Rounder coral toaster on chrome feet with a big cream lever knob.",
+   "source": "Kenney Furniture Kit 'toaster' (kenney.nl) + feet/knob",
+   "licence": "CC0 1.0",
+   "bytes": 35684,
+   "size_m": {
+    "w": 0.33,
+    "d": 0.18,
+    "h": 0.2
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/toaster_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/toaster_c.glb",
+   "thumb": "thumbs-web/toaster_c.webp",
+   "label": "Toast-pop toaster",
+   "desc": "Cream toaster with a mustard stripe and a slice of toast popping up.",
+   "source": "Kenney Furniture Kit 'toaster' (kenney.nl) + Quaternius 'Ultimate Food Pack' (poly.pizza, Bread Slice)",
+   "licence": "CC0 1.0",
+   "bytes": 33832,
+   "size_m": {
+    "w": 0.3,
+    "d": 0.18,
+    "h": 0.22
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/toaster_c.png"
+  }
+ ],
+ "kettle": [
+  {
+   "key": "a",
+   "file": "glb/kettle_a.glb",
+   "thumb": "thumbs-web/kettle_a.webp",
+   "label": "Round teal kettle",
+   "desc": "Round glossy teal kettle with a cream arched handle and spout lid.",
+   "source": "Own design (Blender primitives, made for Four Corners)",
+   "licence": "CC0 1.0",
+   "bytes": 37372,
+   "size_m": {
+    "w": 0.212,
+    "d": 0.18,
+    "h": 0.277
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/kettle_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/kettle_b.glb",
+   "thumb": "thumbs-web/kettle_b.webp",
+   "label": "Dome coral kettle",
+   "desc": "Wide dome coral kettle with a chrome side handle and a long curved spout.",
+   "source": "Own design (Blender primitives, made for Four Corners)",
+   "licence": "CC0 1.0",
+   "bytes": 36572,
+   "size_m": {
+    "w": 0.22,
+    "d": 0.147,
+    "h": 0.132
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/kettle_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/kettle_c.glb",
+   "thumb": "thumbs-web/kettle_c.webp",
+   "label": "Jug kettle",
+   "desc": "Tall cream jug kettle with a teal handle, coral switch and a little window stripe.",
+   "source": "Own design (Blender primitives, made for Four Corners)",
+   "licence": "CC0 1.0",
+   "bytes": 40176,
+   "size_m": {
+    "w": 0.24,
+    "d": 0.17,
+    "h": 0.246
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/kettle_c.png"
+  }
+ ],
+ "coffee": [
+  {
+   "key": "a",
+   "file": "glb/coffee_a.glb",
+   "thumb": "thumbs-web/coffee_a.webp",
+   "label": "Teal coffee maker",
+   "desc": "Teal coffee maker with a cream drip tray.",
+   "source": "Kenney Furniture Kit 'kitchenCoffeeMachine' (kenney.nl)",
+   "licence": "CC0 1.0",
+   "bytes": 10212,
+   "size_m": {
+    "w": 0.22,
+    "d": 0.3,
+    "h": 0.36
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/coffee_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/coffee_b.glb",
+   "thumb": "thumbs-web/coffee_b.webp",
+   "label": "Coral coffee maker + mug",
+   "desc": "Coral coffee maker with a little cream mug under the spout.",
+   "source": "Kenney Furniture Kit 'kitchenCoffeeMachine' (kenney.nl) + Kenney Food Kit 'mug' (kenney.nl)",
+   "licence": "CC0 1.0",
+   "bytes": 20428,
+   "size_m": {
+    "w": 0.22,
+    "d": 0.3,
+    "h": 0.36
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/coffee_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/coffee_c.glb",
+   "thumb": "thumbs-web/coffee_c.webp",
+   "label": "Cream coffee maker on feet",
+   "desc": "Cream coffee maker on mustard feet with a chrome top and teal buttons.",
+   "source": "Kenney Furniture Kit 'kitchenCoffeeMachine' (kenney.nl) + feet",
+   "licence": "CC0 1.0",
+   "bytes": 34684,
+   "size_m": {
+    "w": 0.22,
+    "d": 0.3,
+    "h": 0.362
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/coffee_c.png"
+  }
+ ],
+ "blender": [
+  {
+   "key": "a",
+   "file": "glb/blender_a.glb",
+   "thumb": "thumbs-web/blender_a.webp",
+   "label": "Teal blender",
+   "desc": "Teal blender base with a clear jug and cream lid.",
+   "source": "Kenney Furniture Kit 'kitchenBlender' (kenney.nl)",
+   "licence": "CC0 1.0",
+   "bytes": 13636,
+   "size_m": {
+    "w": 0.2,
+    "d": 0.2,
+    "h": 0.42
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/blender_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/blender_b.glb",
+   "thumb": "thumbs-web/blender_b.webp",
+   "label": "Smoothie blender",
+   "desc": "Coral blender with a pink smoothie inside the jug.",
+   "source": "Kenney Furniture Kit 'kitchenBlender' (kenney.nl) + smoothie",
+   "licence": "CC0 1.0",
+   "bytes": 17068,
+   "size_m": {
+    "w": 0.2,
+    "d": 0.2,
+    "h": 0.42
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/blender_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/blender_c.glb",
+   "thumb": "thumbs-web/blender_c.webp",
+   "label": "Chubby cream blender",
+   "desc": "Chubby cream blender on a round mustard foot with a teal lid.",
+   "source": "Kenney Furniture Kit 'kitchenBlender' (kenney.nl) + round foot",
+   "licence": "CC0 1.0",
+   "bytes": 22400,
+   "size_m": {
+    "w": 0.2,
+    "d": 0.2,
+    "h": 0.42
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/blender_c.png"
+  }
+ ],
+ "fruit": [
+  {
+   "key": "a",
+   "file": "glb/fruit_a.glb",
+   "thumb": "thumbs-web/fruit_a.webp",
+   "label": "Teal fruit bowl",
+   "desc": "Deep teal bowl heaped with red apples and a banana.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Bowl) + Quaternius 'Ultimate Food Pack' (poly.pizza, Apple / Banana)",
+   "licence": "CC0 1.0",
+   "bytes": 110496,
+   "size_m": {
+    "w": 0.28,
+    "d": 0.28,
+    "h": 0.24
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/fruit_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/fruit_b.glb",
+   "thumb": "thumbs-web/fruit_b.webp",
+   "label": "Fruit platter",
+   "desc": "Flat cream platter with an orange, a green pear-pepper and red tomatoes.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Plate) + Quaternius 'Ultimate Food Pack' (poly.pizza, Tomato / Pepper / Apple)",
+   "licence": "CC0 1.0",
+   "bytes": 119712,
+   "size_m": {
+    "w": 0.28,
+    "d": 0.28,
+    "h": 0.102
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/fruit_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/fruit_c.glb",
+   "thumb": "thumbs-web/fruit_c.webp",
+   "label": "Square fruit dish",
+   "desc": "Square coral dish with bananas, a green apple and an avocado.",
+   "source": "Quaternius 'Ultimate Food Pack' (poly.pizza, Plate Square) + Quaternius 'Ultimate Food Pack' (poly.pizza, Banana / Apple / Avocado)",
+   "licence": "CC0 1.0",
+   "bytes": 72812,
+   "size_m": {
+    "w": 0.26,
+    "d": 0.26,
+    "h": 0.17
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/fruit_c.png"
+  }
+ ],
+ "plant": [
+  {
+   "key": "a",
+   "file": "glb/plant_a.glb",
+   "thumb": "thumbs-web/plant_a.webp",
+   "label": "Snake plant",
+   "desc": "Tall spiky snake plant in a coral pot.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Houseplant)",
+   "licence": "CC0 1.0",
+   "bytes": 13256,
+   "size_m": {
+    "w": 0.211,
+    "d": 0.211,
+    "h": 0.58
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/plant_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/plant_b.glb",
+   "thumb": "thumbs-web/plant_b.webp",
+   "label": "Cactus",
+   "desc": "Friendly round cactus with a mustard flower in a teal pot.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Cactus)",
+   "licence": "CC0 1.0",
+   "bytes": 21816,
+   "size_m": {
+    "w": 0.235,
+    "d": 0.232,
+    "h": 0.58
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/plant_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/plant_c.glb",
+   "thumb": "thumbs-web/plant_c.webp",
+   "label": "Leafy plant",
+   "desc": "Bushy big-leaf plant in a cream pot.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Houseplant)",
+   "licence": "CC0 1.0",
+   "bytes": 15488,
+   "size_m": {
+    "w": 0.287,
+    "d": 0.3,
+    "h": 0.217
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/plant_c.png"
+  }
+ ],
+ "board": [
+  {
+   "key": "a",
+   "file": "glb/board_a.glb",
+   "thumb": "thumbs-web/board_a.webp",
+   "label": "Wooden board",
+   "desc": "Plain chunky honey painted-wood chopping board.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Wooden Board)",
+   "licence": "CC0 1.0",
+   "bytes": 22004,
+   "size_m": {
+    "w": 0.4,
+    "d": 0.26,
+    "h": 0.03
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/board_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/board_b.glb",
+   "thumb": "thumbs-web/board_b.webp",
+   "label": "Mint board with handle",
+   "desc": "Mint chopping board with a teal handle.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Chopping board) (knife removed)",
+   "licence": "CC0 1.0",
+   "bytes": 21072,
+   "size_m": {
+    "w": 0.4,
+    "d": 0.26,
+    "h": 0.026
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/board_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/board_c.glb",
+   "thumb": "thumbs-web/board_c.webp",
+   "label": "Mint terrazzo board",
+   "desc": "Mint terrazzo serving board with soft square corners.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Square Plate)",
+   "licence": "CC0 1.0",
+   "bytes": 39164,
+   "size_m": {
+    "w": 0.4,
+    "d": 0.26,
+    "h": 0.03
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/board_c.png"
+  }
+ ],
+ "knives": [
+  {
+   "key": "a",
+   "file": "glb/knives_a.glb",
+   "thumb": "thumbs-web/knives_a.webp",
+   "label": "Knife block",
+   "desc": "Honey wood knife block with teal knife handles.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Kitchen Knives)",
+   "licence": "CC0 1.0",
+   "bytes": 51012,
+   "size_m": {
+    "w": 0.14,
+    "d": 0.12,
+    "h": 0.22
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/knives_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/knives_b.glb",
+   "thumb": "thumbs-web/knives_b.webp",
+   "label": "Utensil pot",
+   "desc": "Round coral utensil pot holding wooden spoons and chopsticks.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Trashcan) as a pot + Quaternius 'Ultimate Food Pack' (poly.pizza, Spoon / Chopsticks)",
+   "licence": "CC0 1.0",
+   "bytes": 92252,
+   "size_m": {
+    "w": 0.12,
+    "d": 0.12,
+    "h": 0.229
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/knives_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/knives_c.glb",
+   "thumb": "thumbs-web/knives_c.webp",
+   "label": "Chunky knife block",
+   "desc": "Chunky rounded teal knife block with cream handles.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Kitchen Knives) + rounded block",
+   "licence": "CC0 1.0",
+   "bytes": 31388,
+   "size_m": {
+    "w": 0.14,
+    "d": 0.12,
+    "h": 0.22
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/knives_c.png"
+  }
+ ],
+ "pot": [
+  {
+   "key": "a",
+   "file": "glb/pot_a.glb",
+   "thumb": "thumbs-web/pot_a.webp",
+   "label": "Teal soup pot",
+   "desc": "Glossy teal cooking pot with side handles.",
+   "source": "Quaternius 'Ultimate Food Pack' (poly.pizza, Cooking Pot)",
+   "licence": "CC0 1.0",
+   "bytes": 15860,
+   "size_m": {
+    "w": 0.24,
+    "d": 0.24,
+    "h": 0.16
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/pot_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/pot_b.glb",
+   "thumb": "thumbs-web/pot_b.webp",
+   "label": "Coral casserole",
+   "desc": "Low coral casserole pot with cream handles.",
+   "source": "Quaternius 'Survival pack' (poly.pizza, Pot)",
+   "licence": "CC0 1.0",
+   "bytes": 19348,
+   "size_m": {
+    "w": 0.24,
+    "d": 0.24,
+    "h": 0.16
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/pot_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/pot_c.glb",
+   "thumb": "thumbs-web/pot_c.webp",
+   "label": "Soup pot",
+   "desc": "Cream pot full of yummy orange soup with a teal rim.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Pot Filled)",
+   "licence": "CC0 1.0",
+   "bytes": 25068,
+   "size_m": {
+    "w": 0.24,
+    "d": 0.24,
+    "h": 0.16
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/pot_c.png"
+  }
+ ],
+ "upper": [
+  {
+   "key": "a",
+   "file": "glb/upper_a.glb",
+   "thumb": "thumbs-web/upper_a.webp",
+   "label": "Wall cupboard",
+   "desc": "Cream wall cupboard with teal sliding doors and mustard pulls.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Cabinet Doors)",
+   "licence": "CC0 1.0",
+   "bytes": 35052,
+   "size_m": {
+    "w": 0.9,
+    "d": 0.36,
+    "h": 0.72
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/upper_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/upper_b.glb",
+   "thumb": "thumbs-web/upper_b.webp",
+   "label": "Cubby shelf",
+   "desc": "Coral wall shelf with little cubby holes and honey-wood shelves.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Cabinet Shelves)",
+   "licence": "CC0 1.0",
+   "bytes": 34072,
+   "size_m": {
+    "w": 0.9,
+    "d": 0.36,
+    "h": 0.72
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/upper_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/upper_c.glb",
+   "thumb": "thumbs-web/upper_c.webp",
+   "label": "Open wall shelf",
+   "desc": "Long open teal wall shelf with light wood shelves.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Cabinet Shelves)",
+   "licence": "CC0 1.0",
+   "bytes": 29432,
+   "size_m": {
+    "w": 0.9,
+    "d": 0.36,
+    "h": 0.72
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/upper_c.png"
+  }
+ ],
+ "clock": [
+  {
+   "key": "a",
+   "file": "glb/clock_a.glb",
+   "thumb": "thumbs-web/clock_a.webp",
+   "label": "Round teal clock",
+   "desc": "Round wall clock with a chunky teal rim and a cream face.",
+   "source": "Own design (Blender primitives, made for Four Corners)",
+   "licence": "CC0 1.0",
+   "bytes": 36648,
+   "size_m": {
+    "w": 0.4,
+    "d": 0.076,
+    "h": 0.4
+   },
+   "nodes": [
+    "cyl",
+    "cyl.001"
+   ],
+   "thumb_png": "thumbs/clock_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/clock_b.glb",
+   "thumb": "thumbs-web/clock_b.webp",
+   "label": "Sunshine clock",
+   "desc": "Mustard sunshine clock with little rays and a cream face.",
+   "source": "Own design (Blender primitives, made for Four Corners)",
+   "licence": "CC0 1.0",
+   "bytes": 44684,
+   "size_m": {
+    "w": 0.4,
+    "d": 0.076,
+    "h": 0.4
+   },
+   "nodes": [
+    "body",
+    "cyl"
+   ],
+   "thumb_png": "thumbs/clock_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/clock_c.glb",
+   "thumb": "thumbs-web/clock_c.webp",
+   "label": "Square coral clock",
+   "desc": "Soft square coral clock with a mint face.",
+   "source": "Own design (Blender primitives, made for Four Corners)",
+   "licence": "CC0 1.0",
+   "bytes": 29492,
+   "size_m": {
+    "w": 0.36,
+    "d": 0.086,
+    "h": 0.36
+   },
+   "nodes": [
+    "box",
+    "cyl"
+   ],
+   "thumb_png": "thumbs/clock_c.png"
+  }
+ ],
+ "poster": [
+  {
+   "key": "a",
+   "file": "glb/poster_a.glb",
+   "thumb": "thumbs-web/poster_a.webp",
+   "label": "Sunny hills poster",
+   "desc": "Painted sunny hills picture in a teal frame.",
+   "source": "Own design (Blender primitives, made for Four Corners)",
+   "licence": "CC0 1.0",
+   "bytes": 25012,
+   "size_m": {
+    "w": 0.66,
+    "d": 0.032,
+    "h": 0.86
+   },
+   "nodes": [
+    "box",
+    "pic"
+   ],
+   "thumb_png": "thumbs/poster_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/poster_b.glb",
+   "thumb": "thumbs-web/poster_b.webp",
+   "label": "Fruit poster",
+   "desc": "Happy fruit picture in a chunky honey-wood frame.",
+   "source": "Own design (Blender primitives, made for Four Corners)",
+   "licence": "CC0 1.0",
+   "bytes": 50476,
+   "size_m": {
+    "w": 0.66,
+    "d": 0.032,
+    "h": 0.86
+   },
+   "nodes": [
+    "box",
+    "pic"
+   ],
+   "thumb_png": "thumbs/poster_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/poster_c.glb",
+   "thumb": "thumbs-web/poster_c.webp",
+   "label": "Rainbow house poster",
+   "desc": "Rainbow and little house picture in a soft rounded coral frame.",
+   "source": "Own design (Blender primitives, made for Four Corners)",
+   "licence": "CC0 1.0",
+   "bytes": 51700,
+   "size_m": {
+    "w": 0.66,
+    "d": 0.032,
+    "h": 0.86
+   },
+   "nodes": [
+    "box",
+    "pic"
+   ],
+   "thumb_png": "thumbs/poster_c.png"
+  }
+ ],
+ "curtains": [
+  {
+   "key": "a",
+   "file": "glb/curtains_a.glb",
+   "thumb": "thumbs-web/curtains_a.webp",
+   "label": "Teal curtains",
+   "desc": "Two teal curtains on a chrome rail.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Curtains Double)",
+   "licence": "CC0 1.0",
+   "bytes": 12536,
+   "size_m": {
+    "w": 1.9,
+    "d": 0.1,
+    "h": 1.16
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/curtains_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/curtains_b.glb",
+   "thumb": "thumbs-web/curtains_b.webp",
+   "label": "Gingham curtains",
+   "desc": "Coral gingham curtains on a wooden rail.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Curtains Double)",
+   "licence": "CC0 1.0",
+   "bytes": 21860,
+   "size_m": {
+    "w": 1.9,
+    "d": 0.1,
+    "h": 1.16
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/curtains_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/curtains_c.glb",
+   "thumb": "thumbs-web/curtains_c.webp",
+   "label": "Cream curtains with pelmet",
+   "desc": "Cream curtains under a scalloped coral pelmet.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Curtains Double) + pelmet",
+   "licence": "CC0 1.0",
+   "bytes": 94132,
+   "size_m": {
+    "w": 1.94,
+    "d": 0.143,
+    "h": 1.16
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/curtains_c.png"
+  }
+ ],
+ "plates": [
+  {
+   "key": "a",
+   "file": "glb/plates_a.glb",
+   "thumb": "thumbs-web/plates_a.webp",
+   "label": "Round plate",
+   "desc": "One round cream plate with a teal rim.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Plate)",
+   "licence": "CC0 1.0",
+   "bytes": 11172,
+   "size_m": {
+    "w": 0.18,
+    "d": 0.18,
+    "h": 0.025
+   },
+   "nodes": [
+    "Environment_Plate"
+   ],
+   "thumb_png": "thumbs/plates_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/plates_b.glb",
+   "thumb": "thumbs-web/plates_b.webp",
+   "label": "Square plate",
+   "desc": "One flat square coral plate.",
+   "source": "Quaternius 'Ultimate House Interior Pack' (poly.pizza, Square Plate)",
+   "licence": "CC0 1.0",
+   "bytes": 5744,
+   "size_m": {
+    "w": 0.18,
+    "d": 0.18,
+    "h": 0.02
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/plates_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/plates_c.glb",
+   "thumb": "thumbs-web/plates_c.webp",
+   "label": "Deep dotty plate",
+   "desc": "One deep square plate with coral polka dots.",
+   "source": "Quaternius 'Ultimate Food Pack' (poly.pizza, Plate Square)",
+   "licence": "CC0 1.0",
+   "bytes": 47028,
+   "size_m": {
+    "w": 0.18,
+    "d": 0.18,
+    "h": 0.035
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/plates_c.png"
+  }
+ ],
+ "bowls": [
+  {
+   "key": "a",
+   "file": "glb/bowls_a.glb",
+   "thumb": "thumbs-web/bowls_a.webp",
+   "label": "Coral bowl",
+   "desc": "One deep round coral bowl.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Bowl)",
+   "licence": "CC0 1.0",
+   "bytes": 13124,
+   "size_m": {
+    "w": 0.16,
+    "d": 0.16,
+    "h": 0.08
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/bowls_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/bowls_b.glb",
+   "thumb": "thumbs-web/bowls_b.webp",
+   "label": "Wide teal bowl",
+   "desc": "One wide, shallow teal bowl.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Bowl) reshaped",
+   "licence": "CC0 1.0",
+   "bytes": 12692,
+   "size_m": {
+    "w": 0.18,
+    "d": 0.18,
+    "h": 0.06
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/bowls_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/bowls_c.glb",
+   "thumb": "thumbs-web/bowls_c.webp",
+   "label": "Footed dotty bowl",
+   "desc": "One cream bowl with coral dots on a little mustard foot.",
+   "source": "Quaternius 'Japanese/Sushi kitchen pack' (poly.pizza, Bowl) + foot",
+   "licence": "CC0 1.0",
+   "bytes": 55432,
+   "size_m": {
+    "w": 0.16,
+    "d": 0.16,
+    "h": 0.08
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/bowls_c.png"
+  }
+ ],
+ "cutlery": [
+  {
+   "key": "a",
+   "file": "glb/cutlery_a.glb",
+   "thumb": "thumbs-web/cutlery_a.webp",
+   "label": "Spoon",
+   "desc": "One shiny chrome spoon.",
+   "source": "Quaternius 'Ultimate Food Pack' (poly.pizza, Spoon)",
+   "licence": "CC0 1.0",
+   "bytes": 9764,
+   "size_m": {
+    "w": 0.18,
+    "d": 0.038,
+    "h": 0.008
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/cutlery_a.png"
+  },
+  {
+   "key": "b",
+   "file": "glb/cutlery_b.glb",
+   "thumb": "thumbs-web/cutlery_b.webp",
+   "label": "Chopsticks",
+   "desc": "One pair of honey-wood chopsticks with coral tips.",
+   "source": "Quaternius 'Ultimate Food Pack' (poly.pizza, Chopsticks)",
+   "licence": "CC0 1.0",
+   "bytes": 51204,
+   "size_m": {
+    "w": 0.18,
+    "d": 0.014,
+    "h": 0.006
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/cutlery_b.png"
+  },
+  {
+   "key": "c",
+   "file": "glb/cutlery_c.glb",
+   "thumb": "thumbs-web/cutlery_c.webp",
+   "label": "Fork",
+   "desc": "One chunky silver fork with a teal handle (no Quaternius fork exists, so this one is our own simple model).",
+   "source": "Own design (Blender primitives, made for Four Corners)",
+   "licence": "CC0 1.0",
+   "bytes": 16760,
+   "size_m": {
+    "w": 0.19,
+    "d": 0.032,
+    "h": 0.008
+   },
+   "nodes": [
+    "body"
+   ],
+   "thumb_png": "thumbs/cutlery_c.png"
+  }
+ ]
+}

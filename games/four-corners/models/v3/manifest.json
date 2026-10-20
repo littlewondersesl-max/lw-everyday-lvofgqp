@@ -1,0 +1,2665 @@
+{
+  "fridge": [
+    {
+      "key": "a",
+      "file": "glb/fridge_a.glb",
+      "thumb": "thumbs-web/fridge_a.webp",
+      "label": "Teal enamel fridge",
+      "desc": "Glossy teal enamel fridge, freezer on top and fridge below, chrome C-handles on the left, little hinge bumps on the right, cream inside.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 262724,
+      "size_m": {
+        "w": 0.812,
+        "d": 0.796,
+        "h": 1.72
+      },
+      "nodes": [
+        "body",
+        "door",
+        "door_top"
+      ],
+      "door": {
+        "hinge_three": [
+          0.394,
+          0.04,
+          0.252
+        ],
+        "axis": "y",
+        "open_angle": 1.75,
+        "z_range": [
+          0.046,
+          1.005
+        ]
+      },
+      "door_top": {
+        "hinge_three": [
+          0.394,
+          1.0234,
+          0.252
+        ],
+        "axis": "y",
+        "open_angle": 1.75,
+        "z_range": [
+          1.023,
+          1.714
+        ]
+      },
+      "thumb_png": "thumbs/fridge_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/fridge_b.glb",
+      "thumb": "thumbs-web/fridge_b.webp",
+      "label": "Chubby round fridge",
+      "desc": "A short, fat, marshmallow-round coral fridge with a freezer on top, cream stubby handles and four tiny cream feet.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 197168,
+      "size_m": {
+        "w": 0.98,
+        "d": 0.834,
+        "h": 1.32
+      },
+      "nodes": [
+        "body",
+        "door",
+        "door_top"
+      ],
+      "door": {
+        "hinge_three": [
+          0.49,
+          0.06,
+          0.183
+        ],
+        "axis": "y",
+        "open_angle": 1.75,
+        "z_range": [
+          0.074,
+          0.681
+        ]
+      },
+      "door_top": {
+        "hinge_three": [
+          0.49,
+          0.699,
+          0.183
+        ],
+        "axis": "y",
+        "open_angle": 1.75,
+        "z_range": [
+          0.699,
+          1.306
+        ]
+      },
+      "thumb_png": "thumbs/fridge_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/fridge_c.glb",
+      "thumb": "thumbs-web/fridge_c.webp",
+      "label": "Cream retro fridge",
+      "desc": "Cream retro fridge with a coral freezer door, cream fridge door, teal bar handles and stubby teal legs.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 242720,
+      "size_m": {
+        "w": 0.8,
+        "d": 0.798,
+        "h": 1.72
+      },
+      "nodes": [
+        "body",
+        "door",
+        "door_top"
+      ],
+      "door": {
+        "hinge_three": [
+          0.334,
+          0.206,
+          0.351
+        ],
+        "axis": "y",
+        "open_angle": 1.75,
+        "z_range": [
+          0.206,
+          0.999
+        ]
+      },
+      "door_top": {
+        "hinge_three": [
+          0.334,
+          1.0508,
+          0.351
+        ],
+        "axis": "y",
+        "open_angle": 1.75,
+        "z_range": [
+          1.051,
+          1.634
+        ]
+      },
+      "thumb_png": "thumbs/fridge_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "stove": [
+    {
+      "key": "a",
+      "file": "glb/stove_a.glb",
+      "thumb": "thumbs-web/stove_a.webp",
+      "label": "Cream stove",
+      "desc": "Cream stove with a thick charcoal hob and four burners, coral knobs, and a teal oven door with an oval window and chrome handle.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 243264,
+      "size_m": {
+        "w": 0.77,
+        "d": 0.742,
+        "h": 0.932
+      },
+      "nodes": [
+        "body",
+        "door"
+      ],
+      "door": {
+        "hinge_three": [
+          0,
+          0.0756,
+          0.324
+        ],
+        "axis": "x",
+        "open_angle": 1.3,
+        "z_range": [
+          0.076,
+          0.634
+        ]
+      },
+      "thumb_png": "thumbs/stove_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/stove_b.glb",
+      "thumb": "thumbs-web/stove_b.webp",
+      "label": "Coral chef stove",
+      "desc": "Puffy coral stove with a sunken hob and four burners, teal knobs, and a cream oven door with a see-through window.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 241544,
+      "size_m": {
+        "w": 0.76,
+        "d": 0.737,
+        "h": 0.916
+      },
+      "nodes": [
+        "body",
+        "door"
+      ],
+      "door": {
+        "hinge_three": [
+          0,
+          0.076,
+          0.3215
+        ],
+        "axis": "x",
+        "open_angle": 1.3,
+        "z_range": [
+          0.076,
+          0.674
+        ]
+      },
+      "thumb_png": "thumbs/stove_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/stove_c.glb",
+      "thumb": "thumbs-web/stove_c.webp",
+      "label": "Teal retro range",
+      "desc": "Teal retro range on cream feet with a rounded back panel, four burners, cream knobs and a round porthole window.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 242184,
+      "size_m": {
+        "w": 0.759,
+        "d": 0.736,
+        "h": 1.16
+      },
+      "nodes": [
+        "body",
+        "door"
+      ],
+      "door": {
+        "hinge_three": [
+          0,
+          0.1759,
+          0.3221
+        ],
+        "axis": "x",
+        "open_angle": 1.3,
+        "z_range": [
+          0.176,
+          0.654
+        ]
+      },
+      "thumb_png": "thumbs/stove_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "sink": [
+    {
+      "key": "a",
+      "file": "glb/sink_a.glb",
+      "thumb": "thumbs-web/sink_a.webp",
+      "label": "Teal sink cupboard",
+      "desc": "Teal two-door sink cupboard with a thick cream top, a deep rounded basin and a chrome tap.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 239768,
+      "size_m": {
+        "w": 0.96,
+        "d": 0.714,
+        "h": 1.178
+      },
+      "nodes": [
+        "body",
+        "door_l",
+        "door_r"
+      ],
+      "door_l": {
+        "hinge_three": [
+          -0.374,
+          0.076,
+          0.298
+        ],
+        "axis": "y",
+        "open_angle": -1.75,
+        "z_range": [
+          0.076,
+          0.724
+        ]
+      },
+      "door_r": {
+        "hinge_three": [
+          0.374,
+          0.076,
+          0.298
+        ],
+        "axis": "y",
+        "open_angle": 1.75,
+        "z_range": [
+          0.076,
+          0.724
+        ]
+      },
+      "thumb_png": "thumbs/sink_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/sink_b.glb",
+      "thumb": "thumbs-web/sink_b.webp",
+      "label": "Coral one-door sink",
+      "desc": "Coral sink cupboard with one wide door and a cream bar handle, a honey wood top with a round basin and a chrome tap.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 233836,
+      "size_m": {
+        "w": 0.88,
+        "d": 0.704,
+        "h": 1.178
+      },
+      "nodes": [
+        "body",
+        "door"
+      ],
+      "door": {
+        "hinge_three": [
+          -0.334,
+          0.076,
+          0.303
+        ],
+        "axis": "y",
+        "open_angle": -1.75,
+        "z_range": [
+          0.076,
+          0.714
+        ]
+      },
+      "thumb_png": "thumbs/sink_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/sink_c.glb",
+      "thumb": "thumbs-web/sink_c.webp",
+      "label": "Washstand sink",
+      "desc": "Cream sink cupboard on teal ball feet, with a lilac door, cream knob, a round basin and a tall chrome tap.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 238832,
+      "size_m": {
+        "w": 0.78,
+        "d": 0.659,
+        "h": 1.158
+      },
+      "nodes": [
+        "body",
+        "door"
+      ],
+      "door": {
+        "hinge_three": [
+          -0.284,
+          0.196,
+          0.2657
+        ],
+        "axis": "y",
+        "open_angle": -1.75,
+        "z_range": [
+          0.196,
+          0.694
+        ]
+      },
+      "thumb_png": "thumbs/sink_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "cabinet": [
+    {
+      "key": "a",
+      "file": "glb/cabinet_a.glb",
+      "thumb": "thumbs-web/cabinet_a.webp",
+      "label": "Two-door cupboard",
+      "desc": "Cream cupboard with two puffy teal doors, honey wood knobs and a thick honey wood top.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 132928,
+      "size_m": {
+        "w": 0.86,
+        "d": 0.699,
+        "h": 0.905
+      },
+      "nodes": [
+        "body",
+        "door_l",
+        "door_r"
+      ],
+      "door_l": {
+        "hinge_three": [
+          -0.324,
+          0.086,
+          0.2857
+        ],
+        "axis": "y",
+        "open_angle": -1.75,
+        "z_range": [
+          0.086,
+          0.764
+        ]
+      },
+      "door_r": {
+        "hinge_three": [
+          0.324,
+          0.086,
+          0.2857
+        ],
+        "axis": "y",
+        "open_angle": 1.75,
+        "z_range": [
+          0.086,
+          0.764
+        ]
+      },
+      "thumb_png": "thumbs/cabinet_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/cabinet_b.glb",
+      "thumb": "thumbs-web/cabinet_b.webp",
+      "label": "Drawer cupboard",
+      "desc": "Coral cupboard with three fat puffy drawers, cream handles and a thick cream top.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 204840,
+      "size_m": {
+        "w": 0.86,
+        "d": 0.698,
+        "h": 0.905
+      },
+      "nodes": [
+        "body",
+        "drawer_3",
+        "drawer_2",
+        "drawer_1"
+      ],
+      "drawer_3": {
+        "hinge_three": [
+          0,
+          0.096,
+          0.301
+        ],
+        "axis": "z",
+        "kind": "slide",
+        "open_distance": 0.336,
+        "z_range": [
+          0.096,
+          0.309
+        ]
+      },
+      "drawer_2": {
+        "hinge_three": [
+          0,
+          0.3373,
+          0.301
+        ],
+        "axis": "z",
+        "kind": "slide",
+        "open_distance": 0.336,
+        "z_range": [
+          0.337,
+          0.543
+        ]
+      },
+      "drawer_1": {
+        "hinge_three": [
+          0,
+          0.5707,
+          0.301
+        ],
+        "axis": "z",
+        "kind": "slide",
+        "open_distance": 0.336,
+        "z_range": [
+          0.571,
+          0.776
+        ]
+      },
+      "thumb_png": "thumbs/cabinet_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/cabinet_c.glb",
+      "thumb": "thumbs-web/cabinet_c.webp",
+      "label": "Two-drawer cupboard",
+      "desc": "Teal cupboard with a small top drawer and a big bottom drawer, coral knobs, cream ball feet and a cream top.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 214144,
+      "size_m": {
+        "w": 0.86,
+        "d": 0.699,
+        "h": 0.905
+      },
+      "nodes": [
+        "body",
+        "drawer_1",
+        "drawer_2"
+      ],
+      "drawer_1": {
+        "hinge_three": [
+          0,
+          0.5946,
+          0.2857
+        ],
+        "axis": "z",
+        "kind": "slide",
+        "open_distance": 0.336,
+        "z_range": [
+          0.595,
+          0.764
+        ]
+      },
+      "drawer_2": {
+        "hinge_three": [
+          0,
+          0.176,
+          0.2857
+        ],
+        "axis": "z",
+        "kind": "slide",
+        "open_distance": 0.336,
+        "z_range": [
+          0.176,
+          0.563
+        ]
+      },
+      "thumb_png": "thumbs/cabinet_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "island": [
+    {
+      "key": "a",
+      "file": "glb/island_a.glb",
+      "thumb": "thumbs-web/island_a.webp",
+      "label": "Teal cupboard island",
+      "desc": "Teal kitchen island with thick rounded end panels, two doors with cream knobs and a thick cream top.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 175076,
+      "size_m": {
+        "w": 1.54,
+        "d": 0.979,
+        "h": 0.925
+      },
+      "nodes": [
+        "body",
+        "door_l",
+        "door_r"
+      ],
+      "door_l": {
+        "hinge_three": [
+          -0.414,
+          0.096,
+          0.4305
+        ],
+        "axis": "y",
+        "open_angle": -1.75,
+        "z_range": [
+          0.096,
+          0.774
+        ]
+      },
+      "door_r": {
+        "hinge_three": [
+          0.414,
+          0.096,
+          0.4305
+        ],
+        "axis": "y",
+        "open_angle": 1.75,
+        "z_range": [
+          0.096,
+          0.774
+        ]
+      },
+      "thumb_png": "thumbs/island_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/island_b.glb",
+      "thumb": "thumbs-web/island_b.webp",
+      "label": "Drawer island",
+      "desc": "Cream island with six coral drawers, thick teal end panels and a honey wood top.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 263868,
+      "size_m": {
+        "w": 1.54,
+        "d": 0.966,
+        "h": 0.925
+      },
+      "nodes": [
+        "body",
+        "drawer_11",
+        "drawer_12",
+        "drawer_13",
+        "drawer_21",
+        "drawer_22",
+        "drawer_23"
+      ],
+      "drawer_11": {
+        "hinge_three": [
+          -0.3933,
+          0.4559,
+          0.437
+        ],
+        "axis": "z",
+        "kind": "slide",
+        "open_distance": 0.492,
+        "z_range": [
+          0.456,
+          0.774
+        ]
+      },
+      "drawer_12": {
+        "hinge_three": [
+          0,
+          0.4559,
+          0.437
+        ],
+        "axis": "z",
+        "kind": "slide",
+        "open_distance": 0.492,
+        "z_range": [
+          0.456,
+          0.774
+        ]
+      },
+      "drawer_13": {
+        "hinge_three": [
+          0.3933,
+          0.4559,
+          0.437
+        ],
+        "axis": "z",
+        "kind": "slide",
+        "open_distance": 0.492,
+        "z_range": [
+          0.456,
+          0.774
+        ]
+      },
+      "drawer_21": {
+        "hinge_three": [
+          -0.3933,
+          0.0959,
+          0.437
+        ],
+        "axis": "z",
+        "kind": "slide",
+        "open_distance": 0.492,
+        "z_range": [
+          0.096,
+          0.404
+        ]
+      },
+      "drawer_22": {
+        "hinge_three": [
+          0,
+          0.0959,
+          0.437
+        ],
+        "axis": "z",
+        "kind": "slide",
+        "open_distance": 0.492,
+        "z_range": [
+          0.096,
+          0.404
+        ]
+      },
+      "drawer_23": {
+        "hinge_three": [
+          0.3933,
+          0.0959,
+          0.437
+        ],
+        "axis": "z",
+        "kind": "slide",
+        "open_distance": 0.492,
+        "z_range": [
+          0.096,
+          0.404
+        ]
+      },
+      "thumb_png": "thumbs/island_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/island_c.glb",
+      "thumb": "thumbs-web/island_c.webp",
+      "label": "Coral island with shelf",
+      "desc": "Coral island with two doors, an open cubby shelf on the right, thick end panels and a cream top.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 182548,
+      "size_m": {
+        "w": 1.54,
+        "d": 0.979,
+        "h": 0.925
+      },
+      "nodes": [
+        "body",
+        "door_l",
+        "door_r"
+      ],
+      "door_l": {
+        "hinge_three": [
+          -0.584,
+          0.096,
+          0.4305
+        ],
+        "axis": "y",
+        "open_angle": -1.75,
+        "z_range": [
+          0.096,
+          0.774
+        ]
+      },
+      "door_r": {
+        "hinge_three": [
+          0.1607,
+          0.096,
+          0.4305
+        ],
+        "axis": "y",
+        "open_angle": 1.75,
+        "z_range": [
+          0.096,
+          0.774
+        ]
+      },
+      "thumb_png": "thumbs/island_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "pantry": [
+    {
+      "key": "a",
+      "file": "glb/pantry_a.glb",
+      "thumb": "thumbs-web/pantry_a.webp",
+      "label": "Tall teal pantry",
+      "desc": "Teal pantry with two tall doors, cream bar handles, a teal top cap and a cream base.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 142140,
+      "size_m": {
+        "w": 0.84,
+        "d": 0.673,
+        "h": 1.85
+      },
+      "nodes": [
+        "body",
+        "door_l",
+        "door_r"
+      ],
+      "door_l": {
+        "hinge_three": [
+          -0.324,
+          0.166,
+          0.2885
+        ],
+        "axis": "y",
+        "open_angle": -1.75,
+        "z_range": [
+          0.166,
+          1.714
+        ]
+      },
+      "door_r": {
+        "hinge_three": [
+          0.324,
+          0.166,
+          0.2885
+        ],
+        "axis": "y",
+        "open_angle": 1.75,
+        "z_range": [
+          0.166,
+          1.714
+        ]
+      },
+      "thumb_png": "thumbs/pantry_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/pantry_b.glb",
+      "thumb": "thumbs-web/pantry_b.webp",
+      "label": "Pantry with drawers",
+      "desc": "Coral pantry with one big upper door and two drawers below, all with cream handles.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 219596,
+      "size_m": {
+        "w": 0.8,
+        "d": 0.653,
+        "h": 1.86
+      },
+      "nodes": [
+        "body",
+        "door",
+        "drawer_1",
+        "drawer_2"
+      ],
+      "door": {
+        "hinge_three": [
+          -0.329,
+          0.636,
+          0.2785
+        ],
+        "axis": "y",
+        "open_angle": -1.75,
+        "z_range": [
+          0.636,
+          1.794
+        ]
+      },
+      "drawer_1": {
+        "hinge_three": [
+          0,
+          0.346,
+          0.2785
+        ],
+        "axis": "z",
+        "kind": "slide",
+        "open_distance": 0.324,
+        "z_range": [
+          0.346,
+          0.594
+        ]
+      },
+      "drawer_2": {
+        "hinge_three": [
+          0,
+          0.076,
+          0.2785
+        ],
+        "axis": "z",
+        "kind": "slide",
+        "open_distance": 0.324,
+        "z_range": [
+          0.076,
+          0.304
+        ]
+      },
+      "thumb_png": "thumbs/pantry_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/pantry_c.glb",
+      "thumb": "thumbs-web/pantry_c.webp",
+      "label": "Cream arch pantry",
+      "desc": "Cream pantry with a rounded arch top, two lilac doors with teal knobs and a teal base.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 133672,
+      "size_m": {
+        "w": 0.84,
+        "d": 0.689,
+        "h": 1.86
+      },
+      "nodes": [
+        "body",
+        "door_top",
+        "door"
+      ],
+      "door_top": {
+        "hinge_three": [
+          -0.319,
+          0.9323,
+          0.2807
+        ],
+        "axis": "y",
+        "open_angle": -1.75,
+        "z_range": [
+          0.933,
+          1.778
+        ]
+      },
+      "door": {
+        "hinge_three": [
+          -0.319,
+          0.136,
+          0.2807
+        ],
+        "axis": "y",
+        "open_angle": -1.75,
+        "z_range": [
+          0.136,
+          0.89
+        ]
+      },
+      "thumb_png": "thumbs/pantry_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "upper": [
+    {
+      "key": "a",
+      "file": "glb/upper_a.glb",
+      "thumb": "thumbs-web/upper_a.webp",
+      "label": "Two-door wall cupboard",
+      "desc": "Puffy cream wall cupboard with two teal doors and coral knobs.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 112240,
+      "size_m": {
+        "w": 0.9,
+        "d": 0.464,
+        "h": 0.66
+      },
+      "nodes": [
+        "body",
+        "door_l",
+        "door_r"
+      ],
+      "door_l": {
+        "hinge_three": [
+          -0.354,
+          0.076,
+          0.173
+        ],
+        "axis": "y",
+        "open_angle": -1.75,
+        "z_range": [
+          0.076,
+          0.584
+        ]
+      },
+      "door_r": {
+        "hinge_three": [
+          0.354,
+          0.076,
+          0.173
+        ],
+        "axis": "y",
+        "open_angle": 1.75,
+        "z_range": [
+          0.076,
+          0.584
+        ]
+      },
+      "thumb_png": "thumbs/upper_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/upper_b.glb",
+      "thumb": "thumbs-web/upper_b.webp",
+      "label": "Lift-up wall cupboard",
+      "desc": "Coral wall cupboard with one lift-up door and a long cream handle.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 71064,
+      "size_m": {
+        "w": 0.9,
+        "d": 0.439,
+        "h": 0.6
+      },
+      "nodes": [
+        "body",
+        "door"
+      ],
+      "door": {
+        "hinge_three": [
+          0,
+          0.534,
+          0.1705
+        ],
+        "axis": "x",
+        "open_angle": -1.3,
+        "z_range": [
+          0.066,
+          0.534
+        ]
+      },
+      "thumb_png": "thumbs/upper_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/upper_c.glb",
+      "thumb": "thumbs-web/upper_c.webp",
+      "label": "Door and cubby wall cupboard",
+      "desc": "Teal wall cupboard with a cream door, a coral knob and an open cubby with a shelf.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 82576,
+      "size_m": {
+        "w": 0.9,
+        "d": 0.478,
+        "h": 0.6
+      },
+      "nodes": [
+        "body",
+        "door"
+      ],
+      "door": {
+        "hinge_three": [
+          -0.394,
+          0.056,
+          0.171
+        ],
+        "axis": "y",
+        "open_angle": -1.75,
+        "z_range": [
+          0.056,
+          0.544
+        ]
+      },
+      "thumb_png": "thumbs/upper_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "dishwasher": [
+    {
+      "key": "a",
+      "file": "glb/dishwasher_a.glb",
+      "thumb": "thumbs-web/dishwasher_a.webp",
+      "label": "Cream dishwasher",
+      "desc": "Cream dishwasher with a teal top band, three teal buttons and a chrome handle.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 188892,
+      "size_m": {
+        "w": 0.612,
+        "d": 0.704,
+        "h": 0.846
+      },
+      "nodes": [
+        "body",
+        "door"
+      ],
+      "door": {
+        "hinge_three": [
+          0,
+          0.066,
+          0.296
+        ],
+        "axis": "x",
+        "open_angle": 1.3,
+        "z_range": [
+          0.066,
+          0.664
+        ]
+      },
+      "thumb_png": "thumbs/dishwasher_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/dishwasher_b.glb",
+      "thumb": "thumbs-web/dishwasher_b.webp",
+      "label": "Window dishwasher",
+      "desc": "Teal dishwasher with lilac buttons, a cream handle and a window that shows the wire rack.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 212168,
+      "size_m": {
+        "w": 0.6,
+        "d": 0.694,
+        "h": 0.84
+      },
+      "nodes": [
+        "body",
+        "door"
+      ],
+      "door": {
+        "hinge_three": [
+          0,
+          0.066,
+          0.295
+        ],
+        "axis": "x",
+        "open_angle": 1.3,
+        "z_range": [
+          0.066,
+          0.664
+        ]
+      },
+      "thumb_png": "thumbs/dishwasher_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/dishwasher_c.glb",
+      "thumb": "thumbs-web/dishwasher_c.webp",
+      "label": "Coral dishwasher",
+      "desc": "Coral dishwasher with a cream control band, teal knobs and a fat teal handle.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 194184,
+      "size_m": {
+        "w": 0.6,
+        "d": 0.713,
+        "h": 0.84
+      },
+      "nodes": [
+        "body",
+        "door"
+      ],
+      "door": {
+        "hinge_three": [
+          0,
+          0.066,
+          0.2855
+        ],
+        "axis": "x",
+        "open_angle": 1.3,
+        "z_range": [
+          0.066,
+          0.664
+        ]
+      },
+      "thumb_png": "thumbs/dishwasher_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "table": [
+    {
+      "key": "a",
+      "file": "glb/table_a.glb",
+      "thumb": "thumbs-web/table_a.webp",
+      "label": "Square table",
+      "desc": "Square table with a thick puffy teal top on four fat cream legs.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 138040,
+      "size_m": {
+        "w": 0.9,
+        "d": 0.9,
+        "h": 0.75
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/table_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/table_b.glb",
+      "thumb": "thumbs-web/table_b.webp",
+      "label": "Medium rectangle table",
+      "desc": "Medium rectangle table with a thick puffy cream top on four fat coral legs.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 138032,
+      "size_m": {
+        "w": 1.2,
+        "d": 0.8,
+        "h": 0.75
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/table_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/table_c.glb",
+      "thumb": "thumbs-web/table_c.webp",
+      "label": "Chubby round table",
+      "desc": "Round coral table on a chubby cream pedestal with a round base.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 160468,
+      "size_m": {
+        "w": 0.995,
+        "d": 0.995,
+        "h": 0.75
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/table_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "chair": [
+    {
+      "key": "a",
+      "file": "glb/chair_a.glb",
+      "thumb": "thumbs-web/chair_a.webp",
+      "label": "Puffy teal chair",
+      "desc": "Puffy mint chair with a big cushion seat and back on fat cream legs.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 154280,
+      "size_m": {
+        "w": 0.48,
+        "d": 0.548,
+        "h": 0.854
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/chair_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/chair_b.glb",
+      "thumb": "thumbs-web/chair_b.webp",
+      "label": "Coral round-back chair",
+      "desc": "Coral chair with a round puffy seat, a curved back rail on three posts and fat legs.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 163504,
+      "size_m": {
+        "w": 0.525,
+        "d": 0.516,
+        "h": 0.812
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/chair_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/chair_c.glb",
+      "thumb": "thumbs-web/chair_c.webp",
+      "label": "Cream chair with lilac cushion",
+      "desc": "Cream chair with a lilac cushion, a round back and fat legs.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 164112,
+      "size_m": {
+        "w": 0.46,
+        "d": 0.48,
+        "h": 0.89
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/chair_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "microwave": [
+    {
+      "key": "a",
+      "file": "glb/microwave_a.glb",
+      "thumb": "thumbs-web/microwave_a.webp",
+      "label": "Cream microwave",
+      "desc": "Cream microwave with a teal-framed window and four teal buttons.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 167032,
+      "size_m": {
+        "w": 0.5,
+        "d": 0.394,
+        "h": 0.3
+      },
+      "nodes": [
+        "body",
+        "door"
+      ],
+      "door": {
+        "hinge_three": [
+          -0.25,
+          0,
+          0.151
+        ],
+        "axis": "y",
+        "open_angle": -1.75,
+        "z_range": [
+          0.005,
+          0.295
+        ]
+      },
+      "thumb_png": "thumbs/microwave_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/microwave_b.glb",
+      "thumb": "thumbs-web/microwave_b.webp",
+      "label": "Coral microwave on feet",
+      "desc": "Coral microwave on cream feet with a dark window and two cream dials.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 202572,
+      "size_m": {
+        "w": 0.5,
+        "d": 0.413,
+        "h": 0.32
+      },
+      "nodes": [
+        "body",
+        "door"
+      ],
+      "door": {
+        "hinge_three": [
+          -0.25,
+          0.025,
+          0.1415
+        ],
+        "axis": "y",
+        "open_angle": -1.75,
+        "z_range": [
+          0.038,
+          0.307
+        ]
+      },
+      "thumb_png": "thumbs/microwave_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/microwave_c.glb",
+      "thumb": "thumbs-web/microwave_c.webp",
+      "label": "Teal retro microwave",
+      "desc": "Teal retro microwave with a round-cornered window and two cream dials.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 147508,
+      "size_m": {
+        "w": 0.5,
+        "d": 0.405,
+        "h": 0.3
+      },
+      "nodes": [
+        "body",
+        "door"
+      ],
+      "door": {
+        "hinge_three": [
+          -0.25,
+          0,
+          0.1455
+        ],
+        "axis": "y",
+        "open_angle": -1.75,
+        "z_range": [
+          0.009,
+          0.291
+        ]
+      },
+      "thumb_png": "thumbs/microwave_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "toaster": [
+    {
+      "key": "a",
+      "file": "glb/toaster_a.glb",
+      "thumb": "thumbs-web/toaster_a.webp",
+      "label": "Teal toaster",
+      "desc": "Chubby teal two-slice toaster with a cream lever.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 52032,
+      "size_m": {
+        "w": 0.315,
+        "d": 0.18,
+        "h": 0.25
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/toaster_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/toaster_b.glb",
+      "thumb": "thumbs-web/toaster_b.webp",
+      "label": "Coral toaster on feet",
+      "desc": "Coral toaster on four little feet with a teal knob.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 94556,
+      "size_m": {
+        "w": 0.325,
+        "d": 0.21,
+        "h": 0.252
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/toaster_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/toaster_c.glb",
+      "thumb": "thumbs-web/toaster_c.webp",
+      "label": "Cream toaster",
+      "desc": "Cream toaster with a lilac bottom band and a lilac lever.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 55812,
+      "size_m": {
+        "w": 0.315,
+        "d": 0.18,
+        "h": 0.25
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/toaster_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "kettle": [
+    {
+      "key": "a",
+      "file": "glb/kettle_a.glb",
+      "thumb": "thumbs-web/kettle_a.webp",
+      "label": "Teal stovetop kettle",
+      "desc": "Round teal stovetop kettle with a cream arched handle over the top, sitting on a cream base.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 128288,
+      "size_m": {
+        "w": 0.29,
+        "d": 0.24,
+        "h": 0.337
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/kettle_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/kettle_b.glb",
+      "thumb": "thumbs-web/kettle_b.webp",
+      "label": "Dome coral kettle",
+      "desc": "Round coral kettle with a teal arched handle.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 111896,
+      "size_m": {
+        "w": 0.306,
+        "d": 0.244,
+        "h": 0.303
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/kettle_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/kettle_c.glb",
+      "thumb": "thumbs-web/kettle_c.webp",
+      "label": "Cream jug kettle",
+      "desc": "Cream jug kettle with a teal lid and a teal base.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 128252,
+      "size_m": {
+        "w": 0.298,
+        "d": 0.23,
+        "h": 0.26
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/kettle_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "coffee": [
+    {
+      "key": "a",
+      "file": "glb/coffee_a.glb",
+      "thumb": "thumbs-web/coffee_a.webp",
+      "label": "Teal coffee maker",
+      "desc": "Teal drip coffee maker with a cream jug.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 129052,
+      "size_m": {
+        "w": 0.212,
+        "d": 0.268,
+        "h": 0.36
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/coffee_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/coffee_b.glb",
+      "thumb": "thumbs-web/coffee_b.webp",
+      "label": "Coral espresso maker",
+      "desc": "Coral espresso maker with a cream cup.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 129896,
+      "size_m": {
+        "w": 0.256,
+        "d": 0.292,
+        "h": 0.32
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/coffee_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/coffee_c.glb",
+      "thumb": "thumbs-web/coffee_c.webp",
+      "label": "Cream coffee maker",
+      "desc": "Cream coffee maker with a teal top and jug.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 129848,
+      "size_m": {
+        "w": 0.212,
+        "d": 0.268,
+        "h": 0.36
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/coffee_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "blender": [
+    {
+      "key": "a",
+      "file": "glb/blender_a.glb",
+      "thumb": "thumbs-web/blender_a.webp",
+      "label": "Teal blender",
+      "desc": "Mint blender with a clear jug, cream lid and a cream dial.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 128984,
+      "size_m": {
+        "w": 0.246,
+        "d": 0.21,
+        "h": 0.432
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/blender_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/blender_b.glb",
+      "thumb": "thumbs-web/blender_b.webp",
+      "label": "Coral smoothie blender",
+      "desc": "Coral blender with a cream jug, mint lid and a cream dial.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 129188,
+      "size_m": {
+        "w": 0.246,
+        "d": 0.21,
+        "h": 0.432
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/blender_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/blender_c.glb",
+      "thumb": "thumbs-web/blender_c.webp",
+      "label": "Chubby cream blender",
+      "desc": "Chubby blender with a round cream base and a lilac jug and lid.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 124260,
+      "size_m": {
+        "w": 0.272,
+        "d": 0.252,
+        "h": 0.412
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/blender_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "stool": [
+    {
+      "key": "a",
+      "file": "glb/stool_a.glb",
+      "thumb": "thumbs-web/stool_a.webp",
+      "label": "Teal round stool",
+      "desc": "Low stool with a puffy teal seat on four fat cream legs with a ring.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 123752,
+      "size_m": {
+        "w": 0.421,
+        "d": 0.421,
+        "h": 0.466
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/stool_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/stool_b.glb",
+      "thumb": "thumbs-web/stool_b.webp",
+      "label": "Coral pouf stool",
+      "desc": "Coral pumpkin pouf on a cream ring with little ball feet.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 128096,
+      "size_m": {
+        "w": 0.434,
+        "d": 0.434,
+        "h": 0.405
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/stool_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/stool_c.glb",
+      "thumb": "thumbs-web/stool_c.webp",
+      "label": "Mushroom stool",
+      "desc": "Fat cream mushroom-shaped stool with a lilac top.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 90680,
+      "size_m": {
+        "w": 0.432,
+        "d": 0.432,
+        "h": 0.475
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/stool_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "bin": [
+    {
+      "key": "a",
+      "file": "glb/bin_a.glb",
+      "thumb": "thumbs-web/bin_a.webp",
+      "label": "Teal pedal bin",
+      "desc": "Round teal bin with a cream lid and pedal.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 120284,
+      "size_m": {
+        "w": 0.386,
+        "d": 0.44,
+        "h": 0.519
+      },
+      "nodes": [
+        "body",
+        "lid"
+      ],
+      "lid": {
+        "hinge_three": [
+          0,
+          0.42,
+          -0.205
+        ],
+        "axis": "x",
+        "open_angle": -1.4,
+        "z_range": [
+          0.412,
+          0.519
+        ]
+      },
+      "thumb_png": "thumbs/bin_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/bin_b.glb",
+      "thumb": "thumbs-web/bin_b.webp",
+      "label": "Coral swing bin",
+      "desc": "Coral bin with a rounded lid.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 53292,
+      "size_m": {
+        "w": 0.34,
+        "d": 0.31,
+        "h": 0.555
+      },
+      "nodes": [
+        "body",
+        "lid"
+      ],
+      "lid": {
+        "hinge_three": [
+          0,
+          0.44,
+          -0.155
+        ],
+        "axis": "x",
+        "open_angle": -1.4,
+        "z_range": [
+          0.434,
+          0.555
+        ]
+      },
+      "thumb_png": "thumbs/bin_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/bin_c.glb",
+      "thumb": "thumbs-web/bin_c.webp",
+      "label": "Cream bin",
+      "desc": "Cream bin with a lilac lid and teal pedal.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 121068,
+      "size_m": {
+        "w": 0.386,
+        "d": 0.44,
+        "h": 0.519
+      },
+      "nodes": [
+        "body",
+        "lid"
+      ],
+      "lid": {
+        "hinge_three": [
+          0,
+          0.42,
+          -0.205
+        ],
+        "axis": "x",
+        "open_angle": -1.4,
+        "z_range": [
+          0.412,
+          0.519
+        ]
+      },
+      "thumb_png": "thumbs/bin_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "rug": [
+    {
+      "key": "a",
+      "file": "glb/rug_a.glb",
+      "thumb": "thumbs-web/rug_a.webp",
+      "label": "Teal rug",
+      "desc": "Rounded teal rug with a cream border.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 32876,
+      "size_m": {
+        "w": 1.8,
+        "d": 1.2,
+        "h": 0.037
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/rug_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/rug_b.glb",
+      "thumb": "thumbs-web/rug_b.webp",
+      "label": "Oval coral rug",
+      "desc": "Oval coral rug with a cream ring.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 64752,
+      "size_m": {
+        "w": 1.8,
+        "d": 1.2,
+        "h": 0.037
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/rug_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/rug_c.glb",
+      "thumb": "thumbs-web/rug_c.webp",
+      "label": "Round ring rug",
+      "desc": "Round cream rug with teal and coral rings.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 92908,
+      "size_m": {
+        "w": 1.401,
+        "d": 1.401,
+        "h": 0.038
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/rug_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "curtains": [
+    {
+      "key": "a",
+      "file": "glb/curtains_a.glb",
+      "thumb": "thumbs-web/curtains_a.webp",
+      "label": "Teal curtains",
+      "desc": "Two puffy teal curtains on a cream rail.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 151132,
+      "size_m": {
+        "w": 1.92,
+        "d": 0.198,
+        "h": 1.19
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/curtains_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/curtains_b.glb",
+      "thumb": "thumbs-web/curtains_b.webp",
+      "label": "Coral tied curtains",
+      "desc": "Coral curtains held back by cream ties.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 182956,
+      "size_m": {
+        "w": 1.92,
+        "d": 0.214,
+        "h": 1.19
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/curtains_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/curtains_c.glb",
+      "thumb": "thumbs-web/curtains_c.webp",
+      "label": "Cream curtains with pelmet",
+      "desc": "Cream curtains under a scalloped lilac pelmet.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 182248,
+      "size_m": {
+        "w": 1.92,
+        "d": 0.229,
+        "h": 1.2
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/curtains_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "lamp": [
+    {
+      "key": "a",
+      "file": "glb/lamp_a.glb",
+      "thumb": "thumbs-web/lamp_a.webp",
+      "label": "Teal table lamp",
+      "desc": "Round teal lamp base with a cream drum shade.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 108008,
+      "size_m": {
+        "w": 0.317,
+        "d": 0.317,
+        "h": 0.452
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/lamp_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/lamp_b.glb",
+      "thumb": "thumbs-web/lamp_b.webp",
+      "label": "Mushroom lamp",
+      "desc": "Coral mushroom lamp with a cream stem.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 90676,
+      "size_m": {
+        "w": 0.342,
+        "d": 0.342,
+        "h": 0.41
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/lamp_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/lamp_c.glb",
+      "thumb": "thumbs-web/lamp_c.webp",
+      "label": "Bobbin lamp",
+      "desc": "Cream bobbin lamp with a lilac shade.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 128100,
+      "size_m": {
+        "w": 0.326,
+        "d": 0.326,
+        "h": 0.49
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/lamp_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "clock": [
+    {
+      "key": "a",
+      "file": "glb/clock_a.glb",
+      "thumb": "thumbs-web/clock_a.webp",
+      "label": "Round teal clock",
+      "desc": "Round wall clock with a chunky teal rim and a cream face.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 92988,
+      "size_m": {
+        "w": 0.4,
+        "d": 0.065,
+        "h": 0.4
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/clock_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/clock_b.glb",
+      "thumb": "thumbs-web/clock_b.webp",
+      "label": "Square coral clock",
+      "desc": "Soft square coral clock with a cream face.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 60684,
+      "size_m": {
+        "w": 0.36,
+        "d": 0.069,
+        "h": 0.36
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/clock_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/clock_c.glb",
+      "thumb": "thumbs-web/clock_c.webp",
+      "label": "Lilac flower clock",
+      "desc": "Flower-shaped clock with a puffy lilac rim, cream face and teal hands.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 93068,
+      "size_m": {
+        "w": 0.394,
+        "d": 0.08,
+        "h": 0.38
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/clock_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "poster": [
+    {
+      "key": "a",
+      "file": "glb/poster_a.glb",
+      "thumb": "thumbs-web/poster_a.webp",
+      "label": "Sunny hills poster",
+      "desc": "Picture of sunny hills in a teal frame.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 61768,
+      "size_m": {
+        "w": 0.6,
+        "d": 0.051,
+        "h": 0.76
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/poster_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/poster_b.glb",
+      "thumb": "thumbs-web/poster_b.webp",
+      "label": "Rainbow poster",
+      "desc": "Picture of a rainbow in a coral frame.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 79352,
+      "size_m": {
+        "w": 0.6,
+        "d": 0.051,
+        "h": 0.76
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/poster_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/poster_c.glb",
+      "thumb": "thumbs-web/poster_c.webp",
+      "label": "Little house poster",
+      "desc": "Cream frame with a little coral house with a teal roof on mint.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 49304,
+      "size_m": {
+        "w": 0.6,
+        "d": 0.051,
+        "h": 0.76
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/poster_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "fruit": [
+    {
+      "key": "a",
+      "file": "glb/fruit_a.glb",
+      "thumb": "thumbs-web/fruit_a.webp",
+      "label": "Teal fruit bowl",
+      "desc": "Round teal fruit bowl on a little foot.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 91144,
+      "size_m": {
+        "w": 0.304,
+        "d": 0.304,
+        "h": 0.19
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/fruit_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/fruit_b.glb",
+      "thumb": "thumbs-web/fruit_b.webp",
+      "label": "Coral fruit platter",
+      "desc": "Wide shallow coral fruit platter.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 80620,
+      "size_m": {
+        "w": 0.366,
+        "d": 0.366,
+        "h": 0.11
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/fruit_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/fruit_c.glb",
+      "thumb": "thumbs-web/fruit_c.webp",
+      "label": "Cream basket bowl",
+      "desc": "Deep cream fruit bowl with lilac rim.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 81404,
+      "size_m": {
+        "w": 0.292,
+        "d": 0.292,
+        "h": 0.145
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/fruit_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "board": [
+    {
+      "key": "a",
+      "file": "glb/board_a.glb",
+      "thumb": "thumbs-web/board_a.webp",
+      "label": "Honey wood board",
+      "desc": "Rounded honey wood chopping board with a handle hole.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 23664,
+      "size_m": {
+        "w": 0.39,
+        "d": 0.26,
+        "h": 0.035
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/board_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/board_b.glb",
+      "thumb": "thumbs-web/board_b.webp",
+      "label": "Teal board",
+      "desc": "Rounded teal chopping board with a handle.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 23660,
+      "size_m": {
+        "w": 0.39,
+        "d": 0.26,
+        "h": 0.035
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/board_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/board_c.glb",
+      "thumb": "thumbs-web/board_c.webp",
+      "label": "Coral round board",
+      "desc": "Round coral chopping board.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 32376,
+      "size_m": {
+        "w": 0.36,
+        "d": 0.3,
+        "h": 0.035
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/board_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "knives": [
+    {
+      "key": "a",
+      "file": "glb/knives_a.glb",
+      "thumb": "thumbs-web/knives_a.webp",
+      "label": "Teal knife block",
+      "desc": "Teal knife block with cream knife handles.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 62548,
+      "size_m": {
+        "w": 0.17,
+        "d": 0.12,
+        "h": 0.249
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/knives_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/knives_b.glb",
+      "thumb": "thumbs-web/knives_b.webp",
+      "label": "Coral utensil pot",
+      "desc": "Coral pot holding a wooden spoon and spatula.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 89940,
+      "size_m": {
+        "w": 0.133,
+        "d": 0.133,
+        "h": 0.277
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/knives_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/knives_c.glb",
+      "thumb": "thumbs-web/knives_c.webp",
+      "label": "Cream knife block",
+      "desc": "Cream knife block with lilac handles.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 62548,
+      "size_m": {
+        "w": 0.17,
+        "d": 0.12,
+        "h": 0.249
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/knives_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "pot": [
+    {
+      "key": "a",
+      "file": "glb/pot_a.glb",
+      "thumb": "thumbs-web/pot_a.webp",
+      "label": "Teal soup pot",
+      "desc": "Teal soup pot with a cream lid and handles.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 110236,
+      "size_m": {
+        "w": 0.302,
+        "d": 0.231,
+        "h": 0.184
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/pot_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/pot_b.glb",
+      "thumb": "thumbs-web/pot_b.webp",
+      "label": "Coral casserole",
+      "desc": "Wide coral casserole dish with a lid.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 101380,
+      "size_m": {
+        "w": 0.332,
+        "d": 0.251,
+        "h": 0.149
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/pot_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/pot_c.glb",
+      "thumb": "thumbs-web/pot_c.webp",
+      "label": "Cream saucepan",
+      "desc": "Cream saucepan with a long teal handle.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 96560,
+      "size_m": {
+        "w": 0.51,
+        "d": 0.189,
+        "h": 0.142
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/pot_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "plates": [
+    {
+      "key": "a",
+      "file": "glb/plates_a.glb",
+      "thumb": "thumbs-web/plates_a.webp",
+      "label": "Teal plate",
+      "desc": "Flat teal dinner plate with a slim rim and a cream well.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 26132,
+      "size_m": {
+        "w": 0.22,
+        "d": 0.22,
+        "h": 0.016
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/plates_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/plates_b.glb",
+      "thumb": "thumbs-web/plates_b.webp",
+      "label": "Coral plate",
+      "desc": "Flat coral dinner plate with a slim rim and a cream well.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 26132,
+      "size_m": {
+        "w": 0.22,
+        "d": 0.22,
+        "h": 0.016
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/plates_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/plates_c.glb",
+      "thumb": "thumbs-web/plates_c.webp",
+      "label": "Lilac plate",
+      "desc": "Flat lilac dinner plate with a slim rim and a cream well.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 29200,
+      "size_m": {
+        "w": 0.216,
+        "d": 0.216,
+        "h": 0.016
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/plates_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "bowls": [
+    {
+      "key": "a",
+      "file": "glb/bowls_a.glb",
+      "thumb": "thumbs-web/bowls_a.webp",
+      "label": "Coral bowl",
+      "desc": "Chubby coral bowl.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 66796,
+      "size_m": {
+        "w": 0.175,
+        "d": 0.175,
+        "h": 0.104
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/bowls_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/bowls_b.glb",
+      "thumb": "thumbs-web/bowls_b.webp",
+      "label": "Wide teal bowl",
+      "desc": "Teal bowl, cream inside.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 69892,
+      "size_m": {
+        "w": 0.185,
+        "d": 0.185,
+        "h": 0.099
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/bowls_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/bowls_c.glb",
+      "thumb": "thumbs-web/bowls_c.webp",
+      "label": "Footed cream bowl",
+      "desc": "Cream bowl on a lilac foot.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 73940,
+      "size_m": {
+        "w": 0.174,
+        "d": 0.174,
+        "h": 0.093
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/bowls_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "cutlery": [
+    {
+      "key": "a",
+      "file": "glb/cutlery_a.glb",
+      "thumb": "thumbs-web/cutlery_a.webp",
+      "label": "Spoon",
+      "desc": "Chunky spoon with a teal handle.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 39504,
+      "size_m": {
+        "w": 0.2,
+        "d": 0.052,
+        "h": 0.038
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/cutlery_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/cutlery_b.glb",
+      "thumb": "thumbs-web/cutlery_b.webp",
+      "label": "Fork",
+      "desc": "Chunky fork with a coral handle.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 73776,
+      "size_m": {
+        "w": 0.194,
+        "d": 0.044,
+        "h": 0.038
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/cutlery_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/cutlery_c.glb",
+      "thumb": "thumbs-web/cutlery_c.webp",
+      "label": "Butter knife",
+      "desc": "Chunky butter knife with a cream handle.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 23372,
+      "size_m": {
+        "w": 0.19,
+        "d": 0.038,
+        "h": 0.038
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/cutlery_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "sofa": [
+    {
+      "key": "a",
+      "file": "glb/sofa_a.glb",
+      "thumb": "thumbs-web/sofa_a.webp",
+      "label": "Lilac puff sofa",
+      "desc": "Chubby lilac two-seater sofa with puffy cushions.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 199252,
+      "size_m": {
+        "w": 1.6,
+        "d": 0.845,
+        "h": 0.76
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/sofa_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/sofa_b.glb",
+      "thumb": "thumbs-web/sofa_b.webp",
+      "label": "Teal puff sofa",
+      "desc": "Chubby teal two-seater sofa with puffy cushions.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 199252,
+      "size_m": {
+        "w": 1.6,
+        "d": 0.845,
+        "h": 0.76
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/sofa_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/sofa_c.glb",
+      "thumb": "thumbs-web/sofa_c.webp",
+      "label": "Coral puff sofa",
+      "desc": "Chubby coral two-seater sofa with puffy cushions.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 199256,
+      "size_m": {
+        "w": 1.6,
+        "d": 0.845,
+        "h": 0.76
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/sofa_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ]
+}

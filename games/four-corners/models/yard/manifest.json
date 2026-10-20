@@ -1,0 +1,1631 @@
+{
+ "kit": "four-corners-yard-kit",
+ "version": 2,
+ "date": "2026-10-11",
+ "licence": "CC0 1.0",
+ "source": "Own procedural Blender 4.2.3 models (scripts/)",
+ "units": "metres",
+ "axes": "glTF / three.js: x right, y up, front = +z; origin at the bottom centre (fences: module centre, x in [-1, 1])",
+ "pivot_format": "node origin = hinge; {hinge_three:[x,y,z], axis:\"x\"|\"y\", open_angle:rad} (rotate the node about its local axis by open_angle to open)",
+ "vertex_colors": "COLOR_0 (multiplies the flat material colour; GLTFLoader enables vertexColors automatically; keep vertexColors:true if you swap materials)",
+ "changes_v2": [
+  "trees (8) + bush-round + bush-flowering rebuilt as crisp stacked scalloped clumps with clean vertex-colour bands; all meshes closed and manifold",
+  "hedge-long / hedge-short rebuilt: crisp bumped rounded box, seamless leaf-scale texture, clean bands",
+  "lawn-tile rebuilt: clean soft green, crisp 1 m blade texture, gentle 4 m gradient; new grass-tuft-clover and grass-tuft-flowers; grass-tuft rebuilt",
+  "birdbath REMOVED and replaced by 'fountain' (2-tier scalloped fountain, mat_water node 'water')"
+ ],
+ "retired_ids": {
+  "birdbath": "fountain"
+ },
+ "items": [
+  {
+   "id": "round-tree-large",
+   "name": "Round tree (large)",
+   "category": "trees",
+   "file": "glb/round-tree-large.glb",
+   "thumb": "thumbs/round-tree-large.png",
+   "turntable": "turntables/round-tree-large.png",
+   "size_m": {
+    "w": 3.469,
+    "d": 3.518,
+    "h": 5.747
+   },
+   "bbox_three": [
+    [
+     -1.734,
+     -0.027,
+     -1.759
+    ],
+    [
+     1.734,
+     5.72,
+     1.759
+    ]
+   ],
+   "tris": 5030,
+   "bytes": 114708,
+   "nodes": [
+    "body",
+    "base_disc"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_grass_disc",
+    "lw_leaf_lt",
+    "lw_trunk"
+   ],
+   "concept_box_px": [
+    31,
+    6,
+    200,
+    243
+   ],
+   "compare": "compare/round-tree-large.png"
+  },
+  {
+   "id": "round-tree-medium",
+   "name": "Round tree (medium)",
+   "category": "trees",
+   "file": "glb/round-tree-medium.glb",
+   "thumb": "thumbs/round-tree-medium.png",
+   "turntable": "turntables/round-tree-medium.png",
+   "size_m": {
+    "w": 2.609,
+    "d": 2.609,
+    "h": 4.382
+   },
+   "bbox_three": [
+    [
+     -1.304,
+     -0.014,
+     -1.304
+    ],
+    [
+     1.304,
+     4.368,
+     1.304
+    ]
+   ],
+   "tris": 4148,
+   "bytes": 95184,
+   "nodes": [
+    "body",
+    "base_disc"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_grass_disc",
+    "lw_leaf_lt",
+    "lw_trunk"
+   ],
+   "concept_box_px": [
+    31,
+    247,
+    185,
+    460
+   ],
+   "compare": "compare/round-tree-medium.png"
+  },
+  {
+   "id": "round-tree-small",
+   "name": "Round tree (small)",
+   "category": "trees",
+   "file": "glb/round-tree-small.glb",
+   "thumb": "thumbs/round-tree-small.png",
+   "turntable": "turntables/round-tree-small.png",
+   "size_m": {
+    "w": 1.664,
+    "d": 1.663,
+    "h": 2.733
+   },
+   "bbox_three": [
+    [
+     -0.827,
+     0.0,
+     -0.839
+    ],
+    [
+     0.837,
+     2.733,
+     0.824
+    ]
+   ],
+   "tris": 4022,
+   "bytes": 92580,
+   "nodes": [
+    "body",
+    "base_disc"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_grass_disc",
+    "lw_leaf_lt",
+    "lw_trunk"
+   ],
+   "concept_box_px": [
+    187,
+    318,
+    302,
+    477
+   ],
+   "compare": "compare/round-tree-small.png"
+  },
+  {
+   "id": "layered-tree",
+   "name": "Layered tree",
+   "category": "trees",
+   "file": "glb/layered-tree.glb",
+   "thumb": "thumbs/layered-tree.png",
+   "turntable": "turntables/layered-tree.png",
+   "size_m": {
+    "w": 3.281,
+    "d": 3.472,
+    "h": 4.635
+   },
+   "bbox_three": [
+    [
+     -1.627,
+     -0.017,
+     -1.688
+    ],
+    [
+     1.654,
+     4.618,
+     1.783
+    ]
+   ],
+   "tris": 4760,
+   "bytes": 109100,
+   "nodes": [
+    "body",
+    "base_disc"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_grass_disc",
+    "lw_lay_lt",
+    "lw_trunk"
+   ],
+   "concept_box_px": [
+    327,
+    243,
+    490,
+    490
+   ],
+   "compare": "compare/layered-tree.png"
+  },
+  {
+   "id": "cypress-tall",
+   "name": "Cypress (tall)",
+   "category": "trees",
+   "file": "glb/cypress-tall.glb",
+   "thumb": "thumbs/cypress-tall.png",
+   "turntable": "turntables/cypress-tall.png",
+   "size_m": {
+    "w": 1.152,
+    "d": 1.152,
+    "h": 3.6
+   },
+   "bbox_three": [
+    [
+     -0.576,
+     0.0,
+     -0.576
+    ],
+    [
+     0.576,
+     3.6,
+     0.576
+    ]
+   ],
+   "tris": 4640,
+   "bytes": 106248,
+   "nodes": [
+    "body",
+    "base_disc"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_cyp_lt",
+    "lw_grass_disc",
+    "lw_trunk"
+   ],
+   "concept_box_px": [
+    193,
+    68,
+    300,
+    306
+   ],
+   "compare": "compare/cypress-tall.png"
+  },
+  {
+   "id": "cypress-short",
+   "name": "Cypress (short)",
+   "category": "trees",
+   "file": "glb/cypress-short.glb",
+   "thumb": "thumbs/cypress-short.png",
+   "turntable": "turntables/cypress-short.png",
+   "size_m": {
+    "w": 0.857,
+    "d": 0.864,
+    "h": 2.5
+   },
+   "bbox_three": [
+    [
+     -0.437,
+     0.0,
+     -0.431
+    ],
+    [
+     0.42,
+     2.5,
+     0.433
+    ]
+   ],
+   "tris": 3320,
+   "bytes": 77128,
+   "nodes": [
+    "body",
+    "base_disc"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_cyp_lt",
+    "lw_grass_disc",
+    "lw_trunk"
+   ],
+   "concept_box_px": [
+    510,
+    210,
+    610,
+    440
+   ],
+   "compare": "compare/cypress-short.png"
+  },
+  {
+   "id": "pine-tree",
+   "name": "Pine tree",
+   "category": "trees",
+   "file": "glb/pine-tree.glb",
+   "thumb": "thumbs/pine-tree.png",
+   "turntable": "turntables/pine-tree.png",
+   "size_m": {
+    "w": 2.601,
+    "d": 2.509,
+    "h": 4.633
+   },
+   "bbox_three": [
+    [
+     -1.3,
+     -0.016,
+     -1.254
+    ],
+    [
+     1.3,
+     4.617,
+     1.254
+    ]
+   ],
+   "tris": 4028,
+   "bytes": 92408,
+   "nodes": [
+    "body",
+    "base_disc"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_grass_disc",
+    "lw_pine_lt",
+    "lw_trunk"
+   ],
+   "concept_box_px": [
+    300,
+    6,
+    450,
+    243
+   ],
+   "compare": "compare/pine-tree.png"
+  },
+  {
+   "id": "apple-tree",
+   "name": "Apple tree",
+   "category": "trees",
+   "file": "glb/apple-tree.glb",
+   "thumb": "thumbs/apple-tree.png",
+   "turntable": "turntables/apple-tree.png",
+   "size_m": {
+    "w": 2.702,
+    "d": 2.538,
+    "h": 3.7
+   },
+   "bbox_three": [
+    [
+     -1.333,
+     -0.011,
+     -1.389
+    ],
+    [
+     1.369,
+     3.688,
+     1.148
+    ]
+   ],
+   "tris": 5462,
+   "bytes": 128928,
+   "nodes": [
+    "body",
+    "base_disc"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_app_lt",
+    "lw_apple",
+    "lw_fl_leaf",
+    "lw_grass_disc",
+    "lw_stem",
+    "lw_trunk"
+   ],
+   "concept_box_px": [
+    606,
+    25,
+    790,
+    272
+   ],
+   "compare": "compare/apple-tree.png"
+  },
+  {
+   "id": "bush-round",
+   "name": "Round bush",
+   "category": "bushes",
+   "file": "glb/bush-round.glb",
+   "thumb": "thumbs/bush-round.png",
+   "turntable": "turntables/bush-round.png",
+   "size_m": {
+    "w": 1.24,
+    "d": 1.24,
+    "h": 1.065
+   },
+   "bbox_three": [
+    [
+     -0.62,
+     0.0,
+     -0.62
+    ],
+    [
+     0.62,
+     1.065,
+     0.62
+    ]
+   ],
+   "tris": 2172,
+   "bytes": 50364,
+   "nodes": [
+    "body",
+    "base_disc"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_bush_lt",
+    "lw_grass_disc"
+   ],
+   "concept_box_px": [
+    460,
+    31,
+    590,
+    202
+   ],
+   "compare": "compare/bush-round.png",
+   "concept_note": "nearest: the fine-leaf round crown (row 1); no bush tile in the concept"
+  },
+  {
+   "id": "bush-flowering",
+   "name": "Flowering bush",
+   "category": "bushes",
+   "file": "glb/bush-flowering.glb",
+   "thumb": "thumbs/bush-flowering.png",
+   "turntable": "turntables/bush-flowering.png",
+   "size_m": {
+    "w": 1.055,
+    "d": 1.055,
+    "h": 1.55
+   },
+   "bbox_three": [
+    [
+     -0.528,
+     -0.0,
+     -0.528
+    ],
+    [
+     0.528,
+     1.55,
+     0.528
+    ]
+   ],
+   "tris": 2988,
+   "bytes": 73724,
+   "nodes": [
+    "body",
+    "base_disc"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_bush_lt",
+    "lw_f_centre",
+    "lw_f_pink",
+    "lw_f_white",
+    "lw_grass_disc",
+    "lw_trunk"
+   ],
+   "concept_box_px": [
+    652,
+    297,
+    772,
+    460
+   ],
+   "compare": "compare/bush-flowering.png"
+  },
+  {
+   "id": "hedge-long",
+   "name": "Hedge (2 m)",
+   "category": "bushes",
+   "file": "glb/hedge-long.glb",
+   "thumb": "thumbs/hedge-long.png",
+   "turntable": "turntables/hedge-long.png",
+   "size_m": {
+    "w": 2.0,
+    "d": 0.88,
+    "h": 0.933
+   },
+   "bbox_three": [
+    [
+     -1.0,
+     0.0,
+     -0.44
+    ],
+    [
+     1.0,
+     0.933,
+     0.44
+    ]
+   ],
+   "tris": 3088,
+   "bytes": 115936,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_grass_disc",
+    "lw_hedge_tex"
+   ],
+   "concept_box_px": [
+    793,
+    27,
+    972,
+    177
+   ],
+   "compare": "compare/hedge-long.png"
+  },
+  {
+   "id": "hedge-short",
+   "name": "Hedge (1 m)",
+   "category": "bushes",
+   "file": "glb/hedge-short.glb",
+   "thumb": "thumbs/hedge-short.png",
+   "turntable": "turntables/hedge-short.png",
+   "size_m": {
+    "w": 1.0,
+    "d": 0.88,
+    "h": 0.933
+   },
+   "bbox_three": [
+    [
+     -0.5,
+     0.0,
+     -0.44
+    ],
+    [
+     0.5,
+     0.933,
+     0.44
+    ]
+   ],
+   "tris": 1616,
+   "bytes": 75100,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_grass_disc",
+    "lw_hedge_tex"
+   ],
+   "concept_box_px": [
+    397,
+    497,
+    585,
+    672
+   ],
+   "compare": "compare/hedge-short.png"
+  },
+  {
+   "id": "fence-picket-cream",
+   "name": "Picket fence, cream (2 m)",
+   "category": "fences",
+   "file": "glb/fence-picket-cream.glb",
+   "thumb": "thumbs/fence-picket-cream.png",
+   "turntable": "turntables/fence-picket-cream.png",
+   "size_m": {
+    "w": 2.085,
+    "d": 0.17,
+    "h": 1.13
+   },
+   "bbox_three": [
+    [
+     -1.085,
+     0.0,
+     -0.085
+    ],
+    [
+     1.0,
+     1.13,
+     0.085
+    ]
+   ],
+   "tris": 988,
+   "bytes": 23792,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_picket_cream"
+   ],
+   "tiling": {
+    "module_m": 2.0,
+    "run_axis": "x",
+    "span_x": [
+     -1.0,
+     1.0
+    ],
+    "owns_post_at_x": -1.0,
+    "end_post_id": "fence-picket-cream-post",
+    "rule": "place modules every 2.0 m along local +x; each module owns the post at its -x end; finish a run (and any open corner) with one end post at the last +x end"
+   },
+   "concept_box_px": [
+    47,
+    452,
+    210,
+    602
+   ],
+   "compare": "compare/fence-picket-cream.png"
+  },
+  {
+   "id": "fence-picket-honey",
+   "name": "Picket fence, honey (2 m)",
+   "category": "fences",
+   "file": "glb/fence-picket-honey.glb",
+   "thumb": "thumbs/fence-picket-honey.png",
+   "turntable": "turntables/fence-picket-honey.png",
+   "size_m": {
+    "w": 2.085,
+    "d": 0.17,
+    "h": 1.13
+   },
+   "bbox_three": [
+    [
+     -1.085,
+     0.0,
+     -0.085
+    ],
+    [
+     1.0,
+     1.13,
+     0.085
+    ]
+   ],
+   "tris": 988,
+   "bytes": 23792,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_picket_honey"
+   ],
+   "tiling": {
+    "module_m": 2.0,
+    "run_axis": "x",
+    "span_x": [
+     -1.0,
+     1.0
+    ],
+    "owns_post_at_x": -1.0,
+    "end_post_id": "fence-picket-honey-post",
+    "rule": "place modules every 2.0 m along local +x; each module owns the post at its -x end; finish a run (and any open corner) with one end post at the last +x end"
+   },
+   "concept_box_px": [
+    187,
+    452,
+    347,
+    602
+   ],
+   "compare": "compare/fence-picket-honey.png"
+  },
+  {
+   "id": "fence-rail-grey",
+   "name": "Rail fence, grey (2 m)",
+   "category": "fences",
+   "file": "glb/fence-rail-grey.glb",
+   "thumb": "thumbs/fence-rail-grey.png",
+   "turntable": "turntables/fence-rail-grey.png",
+   "size_m": {
+    "w": 2.095,
+    "d": 0.19,
+    "h": 1.098
+   },
+   "bbox_three": [
+    [
+     -1.095,
+     0.0,
+     -0.095
+    ],
+    [
+     1.0,
+     1.098,
+     0.095
+    ]
+   ],
+   "tris": 528,
+   "bytes": 14160,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_grey",
+    "lw_grey_lt"
+   ],
+   "tiling": {
+    "module_m": 2.0,
+    "run_axis": "x",
+    "span_x": [
+     -1.0,
+     1.0
+    ],
+    "owns_post_at_x": -1.0,
+    "end_post_id": "fence-rail-grey-post",
+    "rule": "place modules every 2.0 m along local +x; each module owns the post at its -x end; finish a run (and any open corner) with one end post at the last +x end"
+   },
+   "concept_box_px": [
+    35,
+    552,
+    272,
+    710
+   ],
+   "compare": "compare/fence-rail-grey.png"
+  },
+  {
+   "id": "gate-teal",
+   "name": "Garden gate, teal (2 m module)",
+   "category": "fences",
+   "file": "glb/gate-teal.glb",
+   "thumb": "thumbs/gate-teal.png",
+   "turntable": "turntables/gate-teal.png",
+   "size_m": {
+    "w": 2.095,
+    "d": 0.194,
+    "h": 1.198
+   },
+   "bbox_three": [
+    [
+     -1.095,
+     0.0,
+     -0.097
+    ],
+    [
+     1.0,
+     1.198,
+     0.097
+    ]
+   ],
+   "tris": 1494,
+   "bytes": 38872,
+   "nodes": [
+    "body",
+    "gate_door"
+   ],
+   "pivots": {
+    "gate_door": {
+     "hinge_three": [
+      -0.515,
+      0.08,
+      -0.0
+     ],
+     "axis": "y",
+     "open_angle": 1.6,
+     "z_range": [
+      0.083,
+      1.12
+     ]
+    }
+   },
+   "materials": [
+    "lw_grey",
+    "lw_grey_dk",
+    "lw_grey_lt",
+    "lw_teal_y"
+   ],
+   "tiling": {
+    "module_m": 2.0,
+    "run_axis": "x",
+    "span_x": [
+     -1.0,
+     1.0
+    ],
+    "owns_post_at_x": -1.0,
+    "opening_m": 1.01,
+    "rule": "drop in place of any 2 m fence module; front (+Z) faces the street"
+   },
+   "notes": "gate_door swings into the yard (-Z) with +open_angle; module tiles with the fence modules (2 m, owns the post at x=-1).",
+   "concept_box_px": [
+    245,
+    552,
+    377,
+    685
+   ],
+   "compare": "compare/gate-teal.png"
+  },
+  {
+   "id": "fence-picket-cream-post",
+   "name": "Picket fence end/corner post, cream",
+   "category": "fences",
+   "file": "glb/fence-picket-cream-post.glb",
+   "thumb": "thumbs/fence-picket-cream-post.png",
+   "turntable": "turntables/fence-picket-cream-post.png",
+   "size_m": {
+    "w": 0.17,
+    "d": 0.17,
+    "h": 1.13
+   },
+   "bbox_three": [
+    [
+     -0.085,
+     0.0,
+     -0.085
+    ],
+    [
+     0.085,
+     1.13,
+     0.085
+    ]
+   ],
+   "tris": 216,
+   "bytes": 6116,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_picket_cream"
+   ],
+   "tiling": {
+    "role": "end or corner post",
+    "centre": [
+     0,
+     0
+    ],
+    "note": "put it at the open +x end of a run or at a corner"
+   }
+  },
+  {
+   "id": "fence-picket-honey-post",
+   "name": "Picket fence end/corner post, honey",
+   "category": "fences",
+   "file": "glb/fence-picket-honey-post.glb",
+   "thumb": "thumbs/fence-picket-honey-post.png",
+   "turntable": "turntables/fence-picket-honey-post.png",
+   "size_m": {
+    "w": 0.17,
+    "d": 0.17,
+    "h": 1.13
+   },
+   "bbox_three": [
+    [
+     -0.085,
+     0.0,
+     -0.085
+    ],
+    [
+     0.085,
+     1.13,
+     0.085
+    ]
+   ],
+   "tris": 216,
+   "bytes": 6120,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_picket_honey"
+   ],
+   "tiling": {
+    "role": "end or corner post",
+    "centre": [
+     0,
+     0
+    ],
+    "note": "put it at the open +x end of a run or at a corner"
+   }
+  },
+  {
+   "id": "fence-rail-grey-post",
+   "name": "Rail fence end/corner post, grey",
+   "category": "fences",
+   "file": "glb/fence-rail-grey-post.glb",
+   "thumb": "thumbs/fence-rail-grey-post.png",
+   "turntable": "turntables/fence-rail-grey-post.png",
+   "size_m": {
+    "w": 0.19,
+    "d": 0.19,
+    "h": 1.098
+   },
+   "bbox_three": [
+    [
+     -0.095,
+     0.0,
+     -0.095
+    ],
+    [
+     0.095,
+     1.098,
+     0.095
+    ]
+   ],
+   "tris": 400,
+   "bytes": 11228,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_grey",
+    "lw_grey_lt"
+   ],
+   "tiling": {
+    "role": "end or corner post",
+    "centre": [
+     0,
+     0
+    ],
+    "note": "put it at the open +x end of a run or at a corner"
+   }
+  },
+  {
+   "id": "flower-bed",
+   "name": "Flower bed",
+   "category": "garden",
+   "file": "glb/flower-bed.glb",
+   "thumb": "thumbs/flower-bed.png",
+   "turntable": "turntables/flower-bed.png",
+   "size_m": {
+    "w": 1.545,
+    "d": 1.432,
+    "h": 0.76
+   },
+   "bbox_three": [
+    [
+     -0.766,
+     0.0,
+     -0.709
+    ],
+    [
+     0.779,
+     0.76,
+     0.722
+    ]
+   ],
+   "tris": 1794,
+   "bytes": 49476,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_f_centre",
+    "lw_f_coral",
+    "lw_f_lilac",
+    "lw_f_yellow",
+    "lw_fl_leaf",
+    "lw_rock",
+    "lw_soil"
+   ],
+   "concept_box_px": [
+    777,
+    315,
+    985,
+    485
+   ],
+   "compare": "compare/flower-bed.png"
+  },
+  {
+   "id": "rocks-cluster",
+   "name": "Rock cluster",
+   "category": "garden",
+   "file": "glb/rocks-cluster.glb",
+   "thumb": "thumbs/rocks-cluster.png",
+   "turntable": "turntables/rocks-cluster.png",
+   "size_m": {
+    "w": 1.695,
+    "d": 1.22,
+    "h": 0.5
+   },
+   "bbox_three": [
+    [
+     -0.82,
+     0.0,
+     -0.57
+    ],
+    [
+     0.875,
+     0.5,
+     0.65
+    ]
+   ],
+   "tris": 1280,
+   "bytes": 30004,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_rock"
+   ],
+   "concept_box_px": [
+    812,
+    177,
+    1035,
+    302
+   ],
+   "compare": "compare/rocks-cluster.png"
+  },
+  {
+   "id": "rock-single",
+   "name": "Rock",
+   "category": "garden",
+   "file": "glb/rock-single.glb",
+   "thumb": "thumbs/rock-single.png",
+   "turntable": "turntables/rock-single.png",
+   "size_m": {
+    "w": 0.7,
+    "d": 0.58,
+    "h": 0.48
+   },
+   "bbox_three": [
+    [
+     -0.35,
+     0.0,
+     -0.29
+    ],
+    [
+     0.35,
+     0.48,
+     0.29
+    ]
+   ],
+   "tris": 320,
+   "bytes": 8332,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_rock"
+   ],
+   "concept_box_px": [
+    812,
+    177,
+    1035,
+    302
+   ],
+   "compare": "compare/rock-single.png",
+   "concept_note": "nearest: one rock of the cluster"
+  },
+  {
+   "id": "pond",
+   "name": "Pond",
+   "category": "garden",
+   "file": "glb/pond.glb",
+   "thumb": "thumbs/pond.png",
+   "turntable": "turntables/pond.png",
+   "size_m": {
+    "w": 2.545,
+    "d": 1.82,
+    "h": 0.25
+   },
+   "bbox_three": [
+    [
+     -1.259,
+     -0.004,
+     -0.908
+    ],
+    [
+     1.286,
+     0.246,
+     0.912
+    ]
+   ],
+   "tris": 1490,
+   "bytes": 36300,
+   "nodes": [
+    "water",
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_rock",
+    "mat_water"
+   ],
+   "notes": "water is its own node 'water' with material 'mat_water' (swap for an animated shader in three.js)",
+   "concept_box_px": [
+    987,
+    40,
+    1250,
+    185
+   ],
+   "compare": "compare/pond.png"
+  },
+  {
+   "id": "stepping-stones",
+   "name": "Stepping stones",
+   "category": "garden",
+   "file": "glb/stepping-stones.glb",
+   "thumb": "thumbs/stepping-stones.png",
+   "turntable": "turntables/stepping-stones.png",
+   "size_m": {
+    "w": 1.062,
+    "d": 1.641,
+    "h": 0.085
+   },
+   "bbox_three": [
+    [
+     -0.56,
+     0.0,
+     -0.861
+    ],
+    [
+     0.502,
+     0.085,
+     0.781
+    ]
+   ],
+   "tris": 1176,
+   "bytes": 28888,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_grass_disc",
+    "lw_rock"
+   ],
+   "concept_box_px": [
+    697,
+    510,
+    865,
+    690
+   ],
+   "compare": "compare/stepping-stones.png"
+  },
+  {
+   "id": "fountain",
+   "name": "Garden fountain",
+   "category": "garden",
+   "file": "glb/fountain.glb",
+   "thumb": "thumbs/fountain.png",
+   "turntable": "turntables/fountain.png",
+   "size_m": {
+    "w": 1.9,
+    "d": 1.9,
+    "h": 1.27
+   },
+   "bbox_three": [
+    [
+     -0.95,
+     0.0,
+     -0.95
+    ],
+    [
+     0.95,
+     1.27,
+     0.95
+    ]
+   ],
+   "tris": 4056,
+   "bytes": 106452,
+   "nodes": [
+    "body",
+    "water",
+    "base_disc"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_cream_y",
+    "lw_grass_disc",
+    "lw_teal_y",
+    "mat_water"
+   ],
+   "notes": "replaces the birdbath (id 'birdbath' retired): 2-tier fountain; all water surfaces, jet and drips are node 'water' with mat_water",
+   "concept_box_px": [
+    1110,
+    527,
+    1235,
+    677
+   ],
+   "compare": "compare/fountain.png",
+   "concept_note": "replaces the birdbath tile (Pip asked for a 2-tier fountain instead)"
+  },
+  {
+   "id": "bench-wood",
+   "name": "Wooden bench",
+   "category": "garden",
+   "file": "glb/bench-wood.glb",
+   "thumb": "thumbs/bench-wood.png",
+   "turntable": "turntables/bench-wood.png",
+   "size_m": {
+    "w": 1.481,
+    "d": 0.47,
+    "h": 0.46
+   },
+   "bbox_three": [
+    [
+     -0.75,
+     0.0,
+     -0.235
+    ],
+    [
+     0.731,
+     0.46,
+     0.235
+    ]
+   ],
+   "tris": 1232,
+   "bytes": 30992,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_grey",
+    "lw_grey_dk",
+    "lw_wood"
+   ],
+   "concept_box_px": [
+    1065,
+    197,
+    1247,
+    340
+   ],
+   "compare": "compare/bench-wood.png"
+  },
+  {
+   "id": "bench-backed",
+   "name": "Bench with back",
+   "category": "garden",
+   "file": "glb/bench-backed.glb",
+   "thumb": "thumbs/bench-backed.png",
+   "turntable": "turntables/bench-backed.png",
+   "size_m": {
+    "w": 1.6,
+    "d": 0.647,
+    "h": 0.918
+   },
+   "bbox_three": [
+    [
+     -0.8,
+     -0.003,
+     -0.397
+    ],
+    [
+     0.8,
+     0.916,
+     0.25
+    ]
+   ],
+   "tris": 912,
+   "bytes": 23020,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_grey_dk",
+    "lw_wood"
+   ],
+   "concept_box_px": [
+    1035,
+    325,
+    1227,
+    510
+   ],
+   "compare": "compare/bench-backed.png"
+  },
+  {
+   "id": "lamp-post",
+   "name": "Twin lamp post",
+   "category": "garden",
+   "file": "glb/lamp-post.glb",
+   "thumb": "thumbs/lamp-post.png",
+   "turntable": "turntables/lamp-post.png",
+   "size_m": {
+    "w": 1.22,
+    "d": 0.392,
+    "h": 2.725
+   },
+   "bbox_three": [
+    [
+     -0.61,
+     -0.0,
+     -0.196
+    ],
+    [
+     0.61,
+     2.725,
+     0.196
+    ]
+   ],
+   "tris": 1488,
+   "bytes": 37200,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_grey",
+    "lw_grey_dk",
+    "mat_lamp_glow"
+   ],
+   "notes": "the two globes use the emissive material 'mat_lamp_glow' (turn emissiveIntensity up at night)",
+   "concept_box_px": [
+    585,
+    427,
+    690,
+    690
+   ],
+   "compare": "compare/lamp-post.png"
+  },
+  {
+   "id": "mailbox",
+   "name": "Mailbox",
+   "category": "garden",
+   "file": "glb/mailbox.glb",
+   "thumb": "thumbs/mailbox.png",
+   "turntable": "turntables/mailbox.png",
+   "size_m": {
+    "w": 0.272,
+    "d": 0.559,
+    "h": 1.35
+   },
+   "bbox_three": [
+    [
+     -0.127,
+     0.0,
+     -0.25
+    ],
+    [
+     0.145,
+     1.35,
+     0.309
+    ]
+   ],
+   "tris": 690,
+   "bytes": 20696,
+   "nodes": [
+    "body",
+    "mailbox_door"
+   ],
+   "pivots": {
+    "mailbox_door": {
+     "hinge_three": [
+      0.0,
+      0.988,
+      0.262
+     ],
+     "axis": "x",
+     "open_angle": 1.5,
+     "z_range": [
+      0.988,
+      1.285
+     ]
+    }
+   },
+   "materials": [
+    "lw_coral_y",
+    "lw_cream_y",
+    "lw_teal_y",
+    "lw_teal_ylt",
+    "lw_wood_dk"
+   ]
+  },
+  {
+   "id": "wheelie-bin",
+   "name": "Wheelie bin",
+   "category": "garden",
+   "file": "glb/wheelie-bin.glb",
+   "thumb": "thumbs/wheelie-bin.png",
+   "turntable": "turntables/wheelie-bin.png",
+   "size_m": {
+    "w": 0.636,
+    "d": 0.809,
+    "h": 1.005
+   },
+   "bbox_three": [
+    [
+     -0.318,
+     0.0,
+     -0.409
+    ],
+    [
+     0.318,
+     1.005,
+     0.4
+    ]
+   ],
+   "tris": 1496,
+   "bytes": 39864,
+   "nodes": [
+    "body",
+    "bin_lid"
+   ],
+   "pivots": {
+    "bin_lid": {
+     "hinge_three": [
+      0.0,
+      0.97,
+      -0.36
+     ],
+     "axis": "x",
+     "open_angle": -1.9,
+     "z_range": [
+      0.92,
+      1.005
+     ]
+    }
+   },
+   "materials": [
+    "lw_grey_dk",
+    "lw_grey_lt",
+    "lw_label",
+    "lw_teal_y",
+    "lw_teal_ylt",
+    "lw_tire"
+   ],
+   "notes": "outside bin for the bin-bag chore; bin_lid hinges at the back top edge (negative open_angle tips it up and back).",
+   "concept_box_px": [
+    972,
+    290,
+    1065,
+    397
+   ],
+   "compare": "compare/wheelie-bin.png"
+  },
+  {
+   "id": "shed",
+   "name": "Garden shed",
+   "category": "garden",
+   "file": "glb/shed.glb",
+   "thumb": "thumbs/shed.png",
+   "turntable": "turntables/shed.png",
+   "size_m": {
+    "w": 2.4,
+    "d": 2.2,
+    "h": 2.15
+   },
+   "bbox_three": [
+    [
+     -1.2,
+     0.0,
+     -1.1
+    ],
+    [
+     1.2,
+     2.15,
+     1.1
+    ]
+   ],
+   "tris": 2300,
+   "bytes": 86556,
+   "nodes": [
+    "body",
+    "shed_door"
+   ],
+   "pivots": {
+    "shed_door": {
+     "hinge_three": [
+      -0.42,
+      0.13,
+      0.92
+     ],
+     "axis": "y",
+     "open_angle": -1.6,
+     "z_range": [
+      0.13,
+      1.89
+     ]
+    }
+   },
+   "materials": [
+    "lw_cream_y",
+    "lw_glass_y",
+    "lw_grey_dk",
+    "lw_shed",
+    "lw_shed_dk"
+   ],
+   "notes": "shed_door hinges on its left edge and swings out toward the viewer (+Z) with the negative open_angle.",
+   "concept_box_px": [
+    885,
+    465,
+    1097,
+    702
+   ],
+   "compare": "compare/shed.png"
+  },
+  {
+   "id": "lawn-tile",
+   "name": "Lawn tile (4 m)",
+   "category": "lawn",
+   "file": "glb/lawn-tile.glb",
+   "thumb": "thumbs/lawn-tile.png",
+   "turntable": "turntables/lawn-tile.png",
+   "size_m": {
+    "w": 4.0,
+    "d": 4.0,
+    "h": 0.05
+   },
+   "bbox_three": [
+    [
+     -2.0,
+     -0.05,
+     -2.0
+    ],
+    [
+     2.0,
+     0.0,
+     2.0
+    ]
+   ],
+   "tris": 702,
+   "bytes": 55272,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_lawn"
+   ],
+   "tiling": {
+    "tile_m": 4.0,
+    "top_y": 0.0,
+    "thickness_m": 0.05,
+    "texture": "textures/lawn_blades.png (embedded, 1 m repeat)",
+    "rule": "seamless 4 m x 4 m tile, origin at its centre, top surface at y=0; grid it at 4 m"
+   },
+   "notes": "clean soft green; fine blade texture repeats every 1 m and the gentle gradient every 4 m, so tiles join without seams"
+  },
+  {
+   "id": "grass-tuft",
+   "name": "Grass tuft",
+   "category": "lawn",
+   "file": "glb/grass-tuft.glb",
+   "thumb": "thumbs/grass-tuft.png",
+   "turntable": "turntables/grass-tuft.png",
+   "size_m": {
+    "w": 0.233,
+    "d": 0.212,
+    "h": 0.281
+   },
+   "bbox_three": [
+    [
+     -0.123,
+     -0.005,
+     -0.095
+    ],
+    [
+     0.11,
+     0.276,
+     0.117
+    ]
+   ],
+   "tris": 330,
+   "bytes": 9216,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_tuft"
+   ],
+   "notes": "scatter/instance freely on the lawn (InstancedMesh); bottom sits just below y=0"
+  },
+  {
+   "id": "grass-tuft-clover",
+   "name": "Grass tuft with clover",
+   "category": "lawn",
+   "file": "glb/grass-tuft-clover.glb",
+   "thumb": "thumbs/grass-tuft-clover.png",
+   "turntable": "turntables/grass-tuft-clover.png",
+   "size_m": {
+    "w": 0.226,
+    "d": 0.225,
+    "h": 0.192
+   },
+   "bbox_three": [
+    [
+     -0.104,
+     -0.006,
+     -0.109
+    ],
+    [
+     0.121,
+     0.187,
+     0.116
+    ]
+   ],
+   "tris": 884,
+   "bytes": 24008,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_clover",
+    "lw_tuft",
+    "lw_tuft_dk"
+   ],
+   "notes": "clover patch: a few short blades and four three-leaf clovers (crisp heart leaflets)"
+  },
+  {
+   "id": "grass-tuft-flowers",
+   "name": "Grass tuft with tiny flowers",
+   "category": "lawn",
+   "file": "glb/grass-tuft-flowers.glb",
+   "thumb": "thumbs/grass-tuft-flowers.png",
+   "turntable": "turntables/grass-tuft-flowers.png",
+   "size_m": {
+    "w": 0.232,
+    "d": 0.217,
+    "h": 0.261
+   },
+   "bbox_three": [
+    [
+     -0.112,
+     -0.005,
+     -0.128
+    ],
+    [
+     0.12,
+     0.256,
+     0.089
+    ]
+   ],
+   "tris": 732,
+   "bytes": 24144,
+   "nodes": [
+    "body"
+   ],
+   "pivots": {},
+   "materials": [
+    "lw_f_centre",
+    "lw_f_centre_dk",
+    "lw_f_lilac",
+    "lw_f_white",
+    "lw_f_yellow",
+    "lw_tuft",
+    "lw_tuft_dk"
+   ],
+   "notes": "blades with three tiny flowers (white daisy, buttercup yellow, lilac)"
+  }
+ ]
+}
