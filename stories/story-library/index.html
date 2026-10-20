@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>The Story Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- TITLE / KID PICKER -->
+    <section id="screen-title" class="screen screen-title">
+      <div class="lamp lamp-l" aria-hidden="true"></div>
+      <div class="lamp lamp-r" aria-hidden="true"></div>
+      <div class="title-card">
+        <p class="eyebrow">Welcome, reader</p>
+        <h1>The Story Library</h1>
+        <div class="flourish" aria-hidden="true"></div>
+        <p class="lead">Choose who you are today. Then walk inside.</p>
+        <div id="kid-grid" class="kid-grid" role="list"></div>
+      </div>
+    </section>
+
+    <!-- LIBRARY -->
+    <section id="screen-library" class="screen screen-library" hidden>
+      <div id="lib-bg" class="lib-bg" aria-hidden="true"></div>
+      <div class="lib-vignette" aria-hidden="true"></div>
+
+      <header class="lib-top">
+        <button type="button" id="btn-change-kid" class="chip-btn">Change reader</button>
+        <h2 class="lib-title">The Story Library</h2>
+        <div class="mode-toggle" role="group" aria-label="Reading mode">
+          <button type="button" id="mode-student" class="mode-btn is-on" data-mode="student">I read</button>
+          <button type="button" id="mode-librarian" class="mode-btn" data-mode="librarian">Librarian reads</button>
+        </div>
+      </header>
+
+      <div class="lib-stage">
+        <button type="button" id="librarian" class="sprite librarian" aria-label="Ask the librarian to read">
+          <span class="sprite-art" data-src="assets/librarian.png"></span>
+          <span class="sprite-fallback librarian-fallback" aria-hidden="true"></span>
+          <span class="speech">Shall I read to you?</span>
+        </button>
+
+        <div id="reader-kid" class="sprite reader-kid" aria-hidden="true">
+          <span class="sprite-art"></span>
+          <span class="sprite-fallback kid-fallback"></span>
+        </div>
+      </div>
+
+      <div class="shelf-wrap">
+        <p class="shelf-label">Today’s shelf</p>
+        <div class="shelf-ledge" aria-hidden="true"></div>
+        <div id="book-shelf" class="book-shelf" role="list"></div>
+      </div>
+    </section>
+
+    <!-- OPEN BOOK -->
+    <section id="screen-book" class="screen screen-book" hidden>
+      <div class="book-room">
+        <header class="book-top">
+          <button type="button" id="btn-library" class="chip-btn chip-back">← Library</button>
+          <div class="book-heading">
+            <h2>Jack and the Beanstalk</h2>
+            <p id="page-progress" class="page-progress">Page 1 of 10</p>
+          </div>
+          <div class="book-top-right">
+            <div id="lib-inset" class="lib-inset" hidden>
+              <span class="inset-art" data-src="assets/librarian.png"></span>
+              <span class="inset-label">Librarian reads</span>
+            </div>
+            <button type="button" id="btn-wordcard" class="wordcard-btn" disabled>Word card</button>
+          </div>
+        </header>
+
+        <div id="book" class="book">
+          <div class="book-fit">
+          <div class="book-cloth" aria-hidden="true"></div>
+          <div id="book-frame" class="book-frame"></div>
+          <div class="book-spread">
+            <button type="button" id="page-art" class="page page-left" aria-label="Story illustration, click to enlarge">
+              <span id="art-img" class="art-img"></span>
+              <span id="art-ph" class="art-ph"></span>
+            </button>
+            <div class="gutter" aria-hidden="true"></div>
+            <div class="page page-right">
+              <div id="story-text" class="story-text"></div>
+              <div id="hopper" class="hopper" aria-hidden="true"></div>
+            </div>
+          </div>
+          </div>
+        </div>
+
+        <div class="book-bottom">
+          <div class="page-nav">
+            <button type="button" id="btn-prev" class="page-btn">Previous page</button>
+            <button type="button" id="btn-next" class="page-btn">Next page</button>
+          </div>
+
+          <div class="dpad" role="group" aria-label="Word hopper">
+            <span class="dpad-label dpad-label-up">line</span>
+            <span class="dpad-label dpad-label-down">line</span>
+            <span class="dpad-label dpad-label-left">word</span>
+            <span class="dpad-label dpad-label-right">word</span>
+            <button type="button" class="dpad-btn dpad-up" data-dir="up" aria-label="Word on the line above">▲</button>
+            <button type="button" class="dpad-btn dpad-left" data-dir="left" aria-label="Previous word">◀</button>
+            <button type="button" class="dpad-btn dpad-right" data-dir="right" aria-label="Next word">▶</button>
+            <button type="button" class="dpad-btn dpad-down" data-dir="down" aria-label="Word on the line below">▼</button>
+            <span class="dpad-hub" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <!-- WORD CARD -->
+  <div id="card-overlay" class="overlay" hidden>
+    <div class="word-card" role="dialog" aria-modal="true" aria-labelledby="card-word">
+      <p class="card-kicker">Word card</p>
+      <h3 id="card-word"></h3>
+      <p id="card-def" class="card-def"></p>
+      <p id="card-ex" class="card-ex"></p>
+      <button type="button" id="btn-close-card" class="chip-btn">Keep reading</button>
+    </div>
+  </div>
+
+  <!-- ART LIGHTBOX -->
+  <div id="art-overlay" class="overlay art-overlay" hidden>
+    <figure class="art-full">
+      <div id="art-full-img" class="art-full-img"></div>
+      <figcaption id="art-full-cap"></figcaption>
+    </figure>
+    <button type="button" id="btn-close-art" class="chip-btn">Close picture</button>
+  </div>
+
+  <script src="story.js"></script>
+  <script src="cutouts.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
