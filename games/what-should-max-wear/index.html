@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>What should Max wear? · Little Wonders</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}html{background:#eef4ff}
+body{font-family:"Trebuchet MS","Comic Sans MS",system-ui,sans-serif;background:linear-gradient(#dff1ff,#fdf3ff) fixed;min-height:100vh;color:#334;display:flex;flex-direction:column;align-items:center;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+header{width:100%;max-width:1100px;display:flex;align-items:center;justify-content:space-between;padding:10px 16px 4px}
+h1{font-size:clamp(20px,3.2vw,32px);margin:0;color:#3b5bab}
+.dots{display:flex;gap:10px}.dots span{width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid #b9c7e6}
+.dots span.on{background:#ffd34d;border-color:#f0a500}.dots span.cur{border-color:#3b5bab;transform:scale(1.15)}
+#q{font-size:clamp(20px,3.4vw,34px);font-weight:bold;text-align:center;margin:4px 12px 8px;min-height:1.3em;color:#2b3a67}
+#q.ok{color:#1f8a3a}
+.wrap{width:min(96vw,calc((74vh - 230px)*16/9),1000px);min-width:300px}
+#stage{position:relative;width:100%;aspect-ratio:16/9;border-radius:22px;overflow:hidden;background:#000;box-shadow:0 8px 24px #0003;border:6px solid #fff;transition:box-shadow .3s,border-color .3s}
+#stage.win{border-color:#4cd964;box-shadow:0 0 0 6px #4cd96488,0 0 40px 12px #4cd964aa}
+#stage video,#stage img.poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#play{position:absolute;left:50%;top:50%;width:min(24%,150px);aspect-ratio:1;transform:translate(-50%,-50%);border:none;border-radius:50%;background:#ffffffe6;box-shadow:0 6px 20px #0004;cursor:pointer;animation:pulse 1.2s infinite}
+#play:after{content:"";position:absolute;left:38%;top:27%;border-left:solid 40px #ff7a59;border-top:solid 23px transparent;border-bottom:solid 23px transparent;transform:scale(var(--s,1));transform-origin:0 50%}
+@keyframes pulse{50%{transform:translate(-50%,-50%) scale(1.08)}}
+#cross{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:#ff000022}
+#cross svg{width:45%;height:auto;filter:drop-shadow(0 6px 10px #0006)}
+#cross.show{display:flex;animation:blink .5s steps(1) 2}
+@keyframes blink{50%{opacity:0}}
+#star{position:absolute;left:0;top:0;width:34%;height:60%;display:none;align-items:center;justify-content:center;pointer-events:none}
+#star.show{display:flex}
+#star svg{width:70%;animation:pop 1s ease-out both;filter:drop-shadow(0 6px 12px #0005)}
+@keyframes pop{0%{transform:scale(.1) rotate(-90deg)}60%{transform:scale(1.2) rotate(10deg)}100%{transform:scale(1)}}
+.spark{position:absolute;width:18px;height:18px;border-radius:50%;animation:fly 1.2s ease-out forwards}
+@keyframes fly{to{transform:translate(var(--x),var(--y)) scale(.2);opacity:0}}
+#next{position:absolute;right:3%;bottom:5%;display:none;font:inherit;font-size:clamp(18px,3vw,30px);font-weight:bold;padding:.5em 1.1em;border:none;border-radius:40px;background:#4cd964;color:#fff;box-shadow:0 5px 0 #2a9d47;cursor:pointer;animation:pulse2 1s infinite}
+@keyframes pulse2{50%{transform:scale(1.08)}}
+.cards{display:flex;gap:3%;justify-content:center;margin:14px 0 6px}
+.card{flex:1;max-width:220px;background:#fff;border-radius:18px;border:6px solid #ffd34d;padding:6px;cursor:pointer;text-align:center;font-size:clamp(13px,1.8vw,18px);font-weight:bold;color:#556;transition:transform .15s,opacity .3s}
+.card img{width:100%;height:min(26vh,calc((96vw - 60px)/3*4/3));object-fit:contain;background:#c9e6fb;border-radius:12px;display:block;pointer-events:none}
+.card.glow{animation:glow 1s infinite}
+@keyframes glow{0%,100%{border-color:#ffd34d;box-shadow:0 0 0 0 #ffd34d00}50%{border-color:#ff8a3d;box-shadow:0 0 22px 8px #ffb34dcc}}
+.card:active{transform:scale(.95)}
+.card.off{opacity:.45;pointer-events:none;animation:none}
+.card.picked{border-color:#3b5bab;opacity:1}
+#end{position:fixed;inset:0;background:#fffdf3f2;display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center;z-index:9}
+#end h2{font-size:clamp(28px,6vw,60px);color:#3b5bab;margin:0}
+#end button{font:inherit;font-size:28px;font-weight:bold;padding:.5em 1.4em;border:none;border-radius:40px;background:#ff7a59;color:#fff;box-shadow:0 5px 0 #c9553a;cursor:pointer}
+.teach{font-size:13px;color:#889;margin:4px 0 10px}
+</style></head>
+<body>
+<header><h1>What should Max wear?</h1><div class="dots" id="dots"><span></span><span></span><span></span></div></header>
+<div id="q"></div>
+<div class="wrap">
+  <div id="stage">
+    <img class="poster" id="poster" alt="">
+    <video id="vid" playsinline webkit-playsinline preload="auto"></video>
+    <button id="play" aria-label="Play"></button>
+    <div id="cross"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#fff"/><path d="M28 28L72 72M72 28L28 72" stroke="#e53935" stroke-width="15" stroke-linecap="round"/></svg></div>
+    <div id="star"><svg viewBox="0 0 100 100"><path d="M50 4l13.5 29 31.5 3.5-23.5 21.5 6.5 31L50 73 21.5 89l6.5-31L4.5 36.5 36.5 33z" fill="#ffd34d" stroke="#f0a500" stroke-width="4" stroke-linejoin="round"/></svg></div>
+    <button id="next">Next &#9654;</button>
+  </div>
+  <div class="cards" id="cards">
+    <div class="card" data-o="a"><img src="assets/outfit-a.jpg" alt="raincoat and umbrella">raincoat &amp; umbrella</div>
+    <div class="card" data-o="b"><img src="assets/outfit-b.jpg" alt="T-shirt, sunglasses and flip-flops">T-shirt &amp; sunglasses</div>
+    <div class="card" data-o="c"><img src="assets/outfit-c.jpg" alt="coat, scarf and hat">coat, scarf &amp; hat</div>
+  </div>
+  <div class="teach">Teacher: press play, ask "What's the weather like?", then let the children choose.</div>
+</div>
+<div id="end"><h2>Well done!</h2><div id="endstar"></div><p style="font-size:24px">Max is ready for every weather.</p><button id="again">Play again</button></div>
+<script>
+(function(){
+var W=[
+ {k:'rainy',ok:'a',q:'It is rainy. What should Max wear?',yes:'It is rainy, so Max wears his raincoat.',
+  no:{b:'Oh no! Max is all wet!',c:'Oh no! Max is all wet!'}},
+ {k:'snowy',ok:'c',q:'It is snowy. What should Max wear?',yes:'It is snowy, so Max wears his coat, scarf and hat.',
+  no:{a:'Brrr! Max is cold!',b:'Brrr! Max is very cold!'}},
+ {k:'sunny',ok:'b',q:'It is sunny. What should Max wear?',yes:'It is sunny, so Max wears his T-shirt and sunglasses.',
+  no:{a:'Huh? There is no rain!',c:'Phew! Max is too hot!'}}
+];
+var $=function(i){return document.getElementById(i)};
+var vid=$('vid'),poster=$('poster'),play=$('play'),q=$('q'),stage=$('stage'),cards=[].slice.call(document.querySelectorAll('.card'));
+var i=0,busy=false,mode='';
+// ---- sounds (Web Audio)
+var AC=null;function ac(){if(!AC){var C=window.AudioContext||window.webkitAudioContext;if(C)AC=new C()}if(AC&&AC.state==='suspended')AC.resume();return AC}
+function tone(f,t0,d,type,vol){var a=ac();if(!a)return;var o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(0,a.currentTime+t0);g.gain.linearRampToValueAtTime(vol||.3,a.currentTime+t0+.01);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+t0+d);o.connect(g).connect(a.destination);o.start(a.currentTime+t0);o.stop(a.currentTime+t0+d+.05)}
+function bip(){tone(220,0,.22,'square',.25);tone(220,.5,.22,'square',.25)}
+function chime(){[784,988,1175,1568].forEach(function(f,n){tone(f,n*.12,.7,'triangle',.25)})}
+function thunder(){var a=ac();if(!a)return;var len=a.sampleRate*2.5,b=a.createBuffer(1,len,a.sampleRate),d=b.getChannelData(0),last=0;
+ for(var n=0;n<len;n++){last=(last+.02*(Math.random()*2-1))/1.02;d[n]=last*3.5*Math.pow(1-n/len,1.5)*(n<a.sampleRate*.05?n/(a.sampleRate*.05):1)}
+ var s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();s.buffer=b;f.type='lowpass';f.frequency.value=400;g.gain.value=1.2;s.connect(f).connect(g).connect(a.destination);s.start()}
+function wind(){var a=ac();if(!a)return;tone(330,0,.15,'sine',.12);tone(440,.12,.2,'sine',.12)}
+// ---- flow
+function dots(){[].forEach.call($('dots').children,function(s,n){s.className=n<i?'on':(n===i?'cur':'')})}
+function setCards(on){cards.forEach(function(c){c.classList.toggle('off',!on);c.classList.toggle('glow',on);c.classList.remove('picked')})}
+function showPoster(src){poster.src=src;poster.style.display='block';vid.style.display='none'}
+function load(){var w=W[i];stage.classList.remove('win');$('star').classList.remove('show');$('next').style.display='none';
+ q.className='';q.textContent=w.q;showPoster('assets/env-'+w.k+'.jpg');play.style.display='block';mode='prompt';busy=false;setCards(true);dots()}
+function playClip(src,m){mode=m;busy=true;play.style.display='none';vid.src=src;vid.style.display='block';
+ var p=vid.play();if(p&&p.catch)p.catch(function(){vid.muted=true;vid.play()});
+ setTimeout(function(){poster.style.display='none'},120)}
+play.onclick=function(){ac();var w=W[i];if(w.k==='rainy')setTimeout(thunder,2200);if(w.k==='sunny')wind();
+ setCards(false);playClip('assets/prompt-'+w.k+'.mp4','prompt')};
+cards.forEach(function(c){c.onclick=function(){if(busy)return;ac();var w=W[i],o=c.dataset.o;
+ setCards(false);c.classList.add('picked');c.classList.remove('off');
+ q.textContent=w.q;showPoster('assets/start-'+w.k+'-'+o+'.jpg');
+ if(w.k==='rainy'&&o==='a')setTimeout(thunder,600);
+ playClip('assets/'+w.k+'-'+o+'.mp4',o===w.ok?'right':'wrong')}});
+vid.addEventListener('ended',function(){var w=W[i];
+ if(mode==='prompt'){busy=false;setCards(true);play.style.display='block'}
+ else if(mode==='wrong'){var o=cards.filter(function(c){return c.classList.contains('picked')})[0].dataset.o;q.textContent=w.no[o]||'Oops!';
+  var x=$('cross');x.classList.remove('show');void x.offsetWidth;x.classList.add('show');bip();
+  setTimeout(function(){x.classList.remove('show');load()},1300)}
+ else if(mode==='right'){stage.classList.add('win');$('star').classList.add('show');chime();sparks();q.className='ok';q.textContent=w.yes;
+  $('next').style.display='block';busy=true}
+});
+function sparks(){var cols=['#ffd34d','#4cd964','#ff7a59','#5ac8fa','#ff6fb5'];for(var n=0;n<24;n++){var s=document.createElement('div');s.className='spark';
+ var a=Math.random()*Math.PI*2,r=120+Math.random()*220;s.style.left='50%';s.style.top='50%';s.style.background=cols[n%5];s.style.setProperty('--x',Math.cos(a)*r+'px');s.style.setProperty('--y',Math.sin(a)*r+'px');
+ $('star').appendChild(s);setTimeout(function(e){e.remove()}.bind(null,s),1300)}}
+$('next').onclick=function(){i++;if(i>=W.length){dots();$('end').style.display='flex';chime()}else load()};
+$('again').onclick=function(){$('end').style.display='none';i=0;load()};
+load();
+// keyboard for teachers: space = play
+document.addEventListener('keydown',function(e){if(e.code==='Space'&&play.style.display!=='none'){e.preventDefault();play.onclick()}});
+})();
+</script>
+</body></html>
