@@ -1,0 +1,62 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Everyday English · Little Wonders</title>
+<link rel="stylesheet" href="https://fonts.bunny.net/css?family=fraunces:600,700|nunito:600,700,800&display=swap">
+<style>
+:root{--ink:#1f2a33;--spruce:#2f6f62;--paper:#fffaf0;--bg:#f4ecd8;--good:#2e9b57;--bad:#d9534f}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,sans-serif}
+main{max-width:860px;margin:0 auto;padding:16px}h1,h2{font-family:Fraunces,Georgia,serif;margin:.2em 0}
+a.back,button.link{color:var(--spruce);font-weight:800;background:none;border:0;font-size:15px;cursor:pointer;text-decoration:none;padding:0}
+.hub{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;list-style:none;padding:0}
+.hub button{width:100%;border:3px solid var(--spruce);border-radius:18px;background:var(--paper);padding:0;overflow:hidden;cursor:pointer;font:800 16px Nunito;color:var(--ink);text-align:left}
+.hub img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}.hub span{display:block;padding:8px 10px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.stage{position:relative;border-radius:18px;overflow:hidden;border:4px solid var(--spruce);background:#000;aspect-ratio:848/480}
+.stage.right{border-color:var(--good)}.stage.wrong{border-color:var(--bad)}
+.stage video{width:100%;height:100%;object-fit:cover;display:block}
+.play{position:absolute;inset:0;margin:auto;width:96px;height:96px;border-radius:50%;border:0;background:rgba(255,255,255,.92);cursor:pointer;font-size:42px;color:var(--spruce)}
+.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.choices button{border:3px solid var(--spruce);border-radius:16px;background:var(--paper);padding:0;overflow:hidden;cursor:pointer;font:800 17px Nunito;color:var(--ink)}
+.choices button img{width:100%;aspect-ratio:1;object-fit:cover;object-position:top;display:block}
+.choices button span{display:block;padding:6px}
+.choices button:disabled{opacity:.45;cursor:not-allowed}
+.choices button.sel{outline:4px solid #f2b705}
+.msg{min-height:2.4em;font-weight:800;font-size:20px;margin:10px 0 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{border:0;border-radius:999px;background:var(--spruce);color:#fff;font:800 18px Nunito;padding:10px 22px;cursor:pointer}
+.btn.alt{background:var(--paper);color:var(--spruce);border:2px solid var(--spruce)}
+.dots{font-weight:800}.hint{color:#556;font-weight:700}
+.done li{background:var(--paper);border-radius:14px;padding:10px;margin:8px 0;list-style:none;font:600 20px Fraunces}
+</style></head><body><main id="app"></main>
+<script src="games.js"></script>
+<script>
+const G=window.EE_GAMES,app=document.getElementById('app');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function hub(){history.replaceState(null,'','#');app.innerHTML=`<a class="back" href="../../index.html">← Little Wonders home</a>
+<p style="font-weight:800;margin:.8em 0 0">WITH MAX</p><h1>Everyday English</h1><p style="font-weight:700">Watch. Tap. See what happens.</p>
+<ul class="hub">${G.map(g=>`<li><button data-id="${g.id}"><img src="${g.card}" loading="lazy" alt="" onerror="this.src='media/max.jpg'"><span>${esc(g.title)}</span></button></li>`).join('')}</ul>`;
+app.querySelectorAll('.hub button').forEach(b=>b.onclick=()=>start(b.dataset.id));}
+function start(id){const g=G.find(x=>x.id===id);if(!g)return hub();history.replaceState(null,'','#'+id);let i=0;
+ function done(){app.innerHTML=`<button class="link" id="home">All games</button><h1 style="text-align:center">Well done!</h1><ul class="done">${g.situations.map(s=>`<li>${esc(s.before)} <b style="color:var(--spruce)">so</b> ${esc(s.after)}</li>`).join('')}</ul><p style="text-align:center"><button class="btn" id="again">Play again</button></p>`;
+  home.onclick=hub;again.onclick=()=>{i=0;show()};}
+ function show(){const s=g.situations[i];let played=false,solved=false;
+  app.innerHTML=`<div class="top"><button class="link" id="home">All games</button><span class="dots">${i+1} / ${g.situations.length}</span></div>
+  <h2>${esc(s.prompt)}</h2>
+  <div class="stage" id="stage"><video id="v" muted playsinline preload="none" poster="${s.poster}"></video><button class="play" id="play" aria-label="Play">▶</button></div>
+  <div class="choices">${g.choices.map(c=>`<button data-c="${c.id}" disabled><img src="${c.image}" alt="${esc(c.alt||c.label)}"><span>${esc(c.label)}</span></button>`).join('')}</div>
+  <div class="msg" id="msg"><span class="hint">Press ▶ to watch, then pick any time.</span></div>`;
+  const v=document.getElementById('v'),play=document.getElementById('play'),msg=document.getElementById('msg'),btns=[...app.querySelectorAll('.choices button')],stage=document.getElementById('stage');
+  home.onclick=()=>{v.pause();hub()};
+  function load(src,poster){v.poster=poster;v.src=src;v.play().catch(()=>{play.style.display='';});}
+  play.onclick=()=>{play.style.display='none';if(v.src&&!v.ended&&v.currentTime>0){v.play();return}
+   if(!played){played=true;btns.forEach(b=>b.disabled=false);msg.innerHTML='<span class="hint">Pick one any time — you don\'t have to wait!</span>';}
+   if(!v.getAttribute('src'))load(s.situation,s.poster);else v.play();};
+  v.onended=()=>{play.style.display='';play.textContent='↻';play.onclick=()=>{play.style.display='none';v.currentTime=0;v.play();};};
+  v.onpause=()=>{if(!v.ended)play.style.display='';};v.onplay=()=>play.style.display='none';
+  btns.forEach(b=>b.onclick=()=>{if(!played)return;const c=b.dataset.c,o=s.outcomes[c];btns.forEach(x=>x.classList.toggle('sel',x===b));
+   load(o.video,o.poster);stage.className='stage '+(c===s.correct?'right':'wrong');
+   if(c===s.correct){solved=true;msg.innerHTML=`<span style="color:var(--good)">Yes! ${esc(s.before)} ${esc(s.after)}</span> <button class="btn" id="next">${i+1<g.situations.length?'Next ▶':'Finish'}</button> <button class="btn alt" id="rs">Watch the scene again</button>`;
+    next.onclick=()=>{v.pause();i++;i<g.situations.length?show():done()};}
+   else{msg.innerHTML=`<span style="color:var(--bad)">${esc(o.wrong||'Oh no!')}</span> <span class="hint">Try another one.</span> <button class="btn alt" id="rs">Watch the scene again</button>`;}
+   rs.onclick=()=>{stage.className='stage';btns.forEach(x=>x.classList.remove('sel'));load(s.situation,s.poster)};});}
+ show();}
+const h=location.hash.slice(1);h?start(h):hub();
+</script></body></html>

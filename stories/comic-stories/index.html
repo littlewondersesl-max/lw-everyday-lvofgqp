@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Little Wonders comic stories</title><link rel="icon" href="favicon.svg">
+<style>
+:root{--ink:#2a1f2a;--plum:#6b3a5a;--card:#fffaf3;--line:#e3d3dc;--sun:#ffd25a}
+*{box-sizing:border-box}body{margin:0;background:#f7efe9;color:var(--ink);font-family:system-ui,"Nunito",sans-serif}
+main{max-width:1150px;margin:0 auto;padding:12px 16px;display:flex;flex-direction:column;gap:12px}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px}
+h1{font-family:Georgia,serif;margin:0;font-size:30px}.k{color:var(--plum);font-weight:800;font-size:14px;margin:0}.sub{opacity:.7;font-size:14px;margin:0}
+select,.b{min-height:44px;border-radius:999px;border:1px solid var(--line);background:var(--card);padding:0 16px;font-weight:800;color:var(--ink);font-size:15px;cursor:pointer}
+select{border-radius:12px}.bar{display:flex;flex-wrap:wrap;gap:8px}
+.grid{display:grid;gap:12px;grid-template-columns:3fr 1fr}@media(max-width:800px){.grid{grid-template-columns:1fr}.side{grid-template-columns:repeat(3,1fr)!important}}
+.stage{position:relative;aspect-ratio:16/9;border:4px solid var(--plum);border-radius:22px;overflow:hidden;background:var(--plum)}
+.stage img,.stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.end{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4)}
+.end button{background:var(--sun);border:0;border-radius:999px;padding:12px 20px;font-weight:800;font-size:16px;cursor:pointer}
+.cap{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 16px;margin-top:12px;font-size:21px;font-weight:800}
+.side{display:grid;gap:8px;grid-template-columns:1fr}
+.opt{border:2px solid var(--line);border-radius:16px;background:var(--card);overflow:hidden}
+.opt button.img{display:block;width:100%;aspect-ratio:16/9;position:relative;border:0;padding:0;cursor:pointer;background:#ddd}
+.opt img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tag{position:absolute;left:8px;top:8px;background:var(--sun);border-radius:999px;padding:3px 8px;font-size:12px;font-weight:800}
+.opt p,.q{margin:0;padding:8px;font-size:14px;font-weight:700}.q{border:0;background:none;color:var(--plum);font-size:22px;font-weight:800;cursor:pointer;width:100%;text-align:left}
+details{background:var(--card);border:1px solid var(--line);border-radius:16px}summary{padding:12px 16px;font-weight:800;cursor:pointer}
+details div{padding:0 16px 14px;font-size:14px;line-height:1.55}a.home{color:var(--plum);font-weight:800;text-decoration:none}
+</style></head><body><main id="app"></main>
+<script src="stories.js"></script>
+<script>
+const S=window.LW_STORIES,app=document.getElementById('app');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const img=(s,i)=>`comics/${s}/img/f${i+1}.jpg`,vid=(s,i)=>`comics/${s}/vid/f${i+1}.mp4`;
+let st,cur=0,mode='still',auto=true,showWords=true,peek=null,timer=null,ended=false;
+function pick(){const q=new URLSearchParams(location.search).get('story');st=S.find(x=>x.slug===q)||S[0];document.title=st.title+' · Little Wonders';cur=0;mode='still';ended=false;peek=null;clearTimeout(timer);
+ auto=!matchMedia('(prefers-reduced-motion: reduce)').matches;render();if(auto)timer=setTimeout(()=>go(0),2000);}
+function go(i){clearTimeout(timer);cur=i;mode='playing';ended=false;peek=null;render();}
+function onEnd(){mode='still';if(!auto){render();return}const n=cur+1;if(n>=6){ended=true;render()}else{render();timer=setTimeout(()=>go(n),600)}}
+function nav(d){auto=false;go((cur+d+6)%6)}
+function toggle(){const v=app.querySelector('video');if(mode==='playing'){v&&v.pause();clearTimeout(timer);mode='paused';render(true)}else if(mode==='paused'){mode='playing';v&&v.play();render(true)}else go(cur)}
+function render(keep){const f=st.frames,opts=[1,2,3].map(t=>(cur+t)%6),w=i=>showWords||peek===i;
+ if(keep){app.querySelector('#pp').textContent=mode==='playing'?'Pause':'Play';return}
+ app.innerHTML=`<header><div><a class="home" href="../../index.html">← Home</a><p class="k">Little Wonders</p><h1>${esc(st.title)}</h1><p class="sub">Ages ${esc(st.ages)} · ${esc(st.level)} · Frame ${cur+1} of 6</p></div>
+ <label style="font-weight:800">Story <select id="sel">${['Little','Growing','Readers'].map(b=>`<optgroup label="${b}">${S.filter(x=>x.band===b).map(x=>`<option value="${x.slug}"${x.slug===st.slug?' selected':''}>${esc(x.title)}</option>`).join('')}</optgroup>`).join('')}</select></label></header>
+ <div class="bar"><button class="b" id="pp">${mode==='playing'?'Pause':'Play'}</button><button class="b" id="bk">Back</button><button class="b" id="nx">Next</button><button class="b" id="rp">Replay</button><button class="b" id="pa">Play all</button><button class="b" id="hw">${showWords?'Hide words':'Show words'}</button></div>
+ <div class="grid"><section><div class="stage">${mode==='still'?`<img src="${img(st.slug,cur)}" alt="">`:`<video src="${vid(st.slug,cur)}" poster="${img(st.slug,cur)}" muted playsinline autoplay preload="metadata"></video>`}${ended&&mode==='still'?'<div class="end"><button id="again">The end. Play again?</button></div>':''}</div>
+ <div class="cap">${w(cur)?esc(f[cur].caption):`<button class="q" data-p="${cur}">?</button>`}</div></section>
+ <aside class="side">${opts.map((e,t)=>`<div class="opt"><button class="img" data-go="${e}"><img src="${img(st.slug,e)}" alt="${esc(f[e].caption)}">${t===0?`<span class="tag">${cur===5?'Again':'Next'}</span>`:''}</button>${w(e)?`<p>${esc(f[e].caption)}</p>`:`<button class="q" data-p="${e}">?</button>`}</div>`).join('')}</aside></div>
+ <p class="sub">${st.words.map(esc).join(' · ')}</p>
+ <details><summary>Teacher notes</summary><div><p><b>Aim. </b>${esc(st.teaches)} Pattern: ${esc(st.pattern)}</p><p><b>Warm-up. </b>${esc(st.warmUp)}</p><p><b>Predict. </b>${esc(st.predict)}</p><ul>${st.questions.map(q=>`<li>${esc(q)}</li>`).join('')}</ul><p><b>Activity. </b>${esc(st.activity)}</p><p class="sub">${esc(st.timing)}</p></div></details>`;
+ const $=id=>document.getElementById(id);const v=app.querySelector('video');if(v)v.onended=onEnd;
+ $('sel').onchange=e=>{history.pushState(null,'','?story='+e.target.value);pick()};
+ $('pp').onclick=toggle;$('bk').onclick=()=>nav(-1);$('nx').onclick=()=>nav(1);$('rp').onclick=()=>go(cur);$('pa').onclick=()=>{auto=true;go(0)};
+ $('hw').onclick=()=>{showWords=!showWords;peek=null;render()};if($('again'))$('again').onclick=()=>{auto=true;go(0)};
+ app.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{auto=false;go(+b.dataset.go)});app.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{peek=+b.dataset.p;render(mode!=='still'&&false)});}
+addEventListener('popstate',pick);
+addEventListener('keydown',e=>{if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;if(e.key===' '){e.preventDefault();toggle()}else if(e.key==='ArrowRight')nav(1);else if(e.key==='ArrowLeft')nav(-1);else if(/^c$/i.test(e.key)){showWords=!showWords;render()}else if(/^r$/i.test(e.key))go(cur)});
+pick();
+</script></body></html>
