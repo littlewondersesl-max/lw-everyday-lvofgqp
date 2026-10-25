@@ -1,0 +1,158 @@
+{
+ "level": "b1",
+ "title": "B1 - Do you have to hand in your project?",
+ "light": "night",
+ "video": "media/b1_dialogue.mp4",
+ "poster": "media/b1_poster.jpg",
+ "duration": 58.0,
+ "bubble": {
+  "on_after_cut_start": 0.3,
+  "visible_s": 5.0
+ },
+ "cuts": [
+  {
+   "n": 1,
+   "speaker": "Demi",
+   "shot": "demi",
+   "text": "Do you have to hand in your project tomorrow?",
+   "start": 0.0,
+   "end": 7.0,
+   "on": 0.3,
+   "off": 5.3,
+   "layout": [
+    60,
+    3,
+    37,
+    30
+   ],
+   "mirror": false,
+   "take": "t1"
+  },
+  {
+   "n": 2,
+   "speaker": "Wanda",
+   "shot": "wanda",
+   "text": "Yes, I do. But I haven't finished it yet.",
+   "start": 7.0,
+   "end": 14.0,
+   "on": 7.3,
+   "off": 12.3,
+   "layout": [
+    3,
+    3,
+    37,
+    30
+   ],
+   "mirror": true,
+   "take": "t1"
+  },
+  {
+   "n": 3,
+   "speaker": "Demi",
+   "shot": "demi",
+   "text": "Oh no. What do you still need to do?",
+   "start": 14.0,
+   "end": 21.0,
+   "on": 14.3,
+   "off": 19.3,
+   "layout": [
+    60,
+    3,
+    37,
+    30
+   ],
+   "mirror": false,
+   "take": "t1"
+  },
+  {
+   "n": 4,
+   "speaker": "Wanda",
+   "shot": "wanda",
+   "text": "I need to add some pictures and write the ending.",
+   "start": 21.0,
+   "end": 29.0,
+   "on": 21.3,
+   "off": 26.3,
+   "layout": [
+    3,
+    3,
+    37,
+    30
+   ],
+   "mirror": true,
+   "take": "t1"
+  },
+  {
+   "n": 5,
+   "speaker": "Demi",
+   "shot": "demi",
+   "text": "If you want, I can help you after dinner.",
+   "start": 29.0,
+   "end": 36.0,
+   "on": 29.3,
+   "off": 34.3,
+   "layout": [
+    60,
+    3,
+    37,
+    30
+   ],
+   "mirror": false,
+   "take": "t1"
+  },
+  {
+   "n": 6,
+   "speaker": "Wanda",
+   "shot": "wanda",
+   "text": "Really? That would be great. Thank you!",
+   "start": 36.0,
+   "end": 43.0,
+   "on": 36.3,
+   "off": 41.3,
+   "layout": [
+    3,
+    3,
+    37,
+    30
+   ],
+   "mirror": true,
+   "take": "t1"
+  },
+  {
+   "n": 7,
+   "speaker": "Demi",
+   "shot": "demi",
+   "text": "No problem. Let's start at seven, okay?",
+   "start": 43.0,
+   "end": 50.0,
+   "on": 43.3,
+   "off": 48.3,
+   "layout": [
+    60,
+    3,
+    37,
+    30
+   ],
+   "mirror": false,
+   "take": "t1"
+  },
+  {
+   "n": 8,
+   "speaker": "Wanda",
+   "shot": "two",
+   "text": "Okay. I'll get my laptop.",
+   "start": 50.0,
+   "end": 58.0,
+   "on": 50.3,
+   "off": 55.3,
+   "layout": [
+    35.5,
+    2,
+    29,
+    25
+   ],
+   "mirror": true,
+   "take": "t1"
+  }
+ ]
+}

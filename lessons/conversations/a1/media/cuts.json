@@ -1,0 +1,140 @@
+{
+ "level": "a1",
+ "title": "A1 - Can you pass the butter?",
+ "light": "night",
+ "video": "media/a1_dialogue.mp4",
+ "poster": "media/a1_poster.jpg",
+ "duration": 50.0,
+ "bubble": {
+  "on_after_cut_start": 0.3,
+  "visible_s": 5.0
+ },
+ "cuts": [
+  {
+   "n": 1,
+   "speaker": "Demi",
+   "shot": "demi",
+   "text": "Hi, Wanda! I'm hungry.",
+   "start": 0.0,
+   "end": 7.0,
+   "on": 0.3,
+   "off": 5.3,
+   "layout": [
+    60,
+    3,
+    37,
+    30
+   ],
+   "mirror": false,
+   "take": "t1"
+  },
+  {
+   "n": 2,
+   "speaker": "Wanda",
+   "shot": "wanda",
+   "text": "Me too. Let's eat!",
+   "start": 7.0,
+   "end": 14.0,
+   "on": 7.3,
+   "off": 12.3,
+   "layout": [
+    3,
+    3,
+    37,
+    30
+   ],
+   "mirror": true,
+   "take": "t1"
+  },
+  {
+   "n": 3,
+   "speaker": "Demi",
+   "shot": "demi",
+   "text": "Can you pass the butter, please?",
+   "start": 14.0,
+   "end": 21.0,
+   "on": 14.3,
+   "off": 19.3,
+   "layout": [
+    60,
+    3,
+    37,
+    30
+   ],
+   "mirror": false,
+   "take": "t1"
+  },
+  {
+   "n": 4,
+   "speaker": "Wanda",
+   "shot": "two",
+   "text": "Sure. Here you go.",
+   "start": 21.0,
+   "end": 29.0,
+   "on": 21.3,
+   "off": 26.3,
+   "layout": [
+    35.5,
+    2,
+    29,
+    25
+   ],
+   "mirror": true,
+   "take": "t3"
+  },
+  {
+   "n": 5,
+   "speaker": "Demi",
+   "shot": "demi",
+   "text": "Thanks! What time is it?",
+   "start": 29.0,
+   "end": 36.0,
+   "on": 29.3,
+   "off": 34.3,
+   "layout": [
+    60,
+    3,
+    37,
+    30
+   ],
+   "mirror": false,
+   "take": "t1"
+  },
+  {
+   "n": 6,
+   "speaker": "Wanda",
+   "shot": "wanda",
+   "text": "It's eight o'clock.",
+   "start": 36.0,
+   "end": 43.0,
+   "on": 36.3,
+   "off": 41.3,
+   "layout": [
+    3,
+    3,
+    37,
+    30
+   ],
+   "mirror": true,
+   "take": "t1"
+  },
+  {
+   "n": 7,
+   "speaker": "Demi",
+   "shot": "demi",
+   "text": "Oh! It's time for bed.",
+   "start": 43.0,
+   "end": 50.0,
+   "on": 43.3,
+   "off": 48.3,
+   "layout": [
+    60,
+    3,
+    37,
+    30
+   ],
+   "mirror": false,
+   "take": "t1"
+  }
+ ]
+}

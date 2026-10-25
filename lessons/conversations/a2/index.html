@@ -4,42 +4,47 @@
 header{max-width:1100px;margin:0 auto;padding:14px 16px 6px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
 h1{font-family:Fraunces,Georgia,serif;font-weight:700;margin:0;font-size:clamp(20px,4vw,32px)}
 header a{color:#e8b77a;font-weight:700;text-decoration:none}
-#stage{position:relative;max-width:1100px;margin:0 auto;aspect-ratio:16/9;background:#000;overflow:hidden;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+#stage{position:relative;max-width:1100px;margin:0 auto;aspect-ratio:16/9;background:#000;overflow:hidden;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;container-type:inline-size}
 #stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-#bub{position:absolute;background-size:100% 100%;opacity:0;transition:opacity .25s;pointer-events:none;display:flex;align-items:flex-start;justify-content:center}
-#bub.on{opacity:1}#bub span{display:block;margin-top:0;width:74%;text-align:center;font-weight:800;color:#221e28;line-height:1.2;font-size:clamp(14px,3.6cqw,44px)}
-#stage{container-type:inline-size}
-#next{position:absolute;right:2.5%;bottom:5%;width:clamp(48px,9cqw,96px);height:clamp(48px,9cqw,96px);border-radius:50%;border:0;background:#e8b77a;color:#221e28;font-size:0;opacity:0;transform:scale(.8);transition:.3s;box-shadow:0 4px 18px #0008}
-#next svg{width:55%;height:55%}#next.show{opacity:1;transform:scale(1)}
+#bub{position:absolute;background-size:100% 100%;background-repeat:no-repeat;opacity:0;transition:opacity .25s;pointer-events:none;filter:drop-shadow(0 .4cqw .8cqw rgba(0,0,0,.35))}
+#bub.on{opacity:1}
+#bub span{position:absolute;left:15%;right:15%;top:43%;transform:translateY(-50%);text-align:center;font-weight:800;color:#342216;line-height:1.18;font-size:2.75cqw}
+#next{position:absolute;right:2.5%;bottom:5%;width:clamp(44px,8cqw,88px);height:clamp(44px,8cqw,88px);border-radius:50%;border:0;background:#e8b77a;opacity:.0;transition:opacity .3s;box-shadow:0 4px 18px #0008;display:flex;align-items:center;justify-content:center;cursor:pointer}
+#next svg{width:55%;height:55%}#next.show{opacity:.92}
 #start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#0006;font:800 clamp(18px,4cqw,40px) Nunito;color:#fff}
 nav{max-width:1100px;margin:10px auto;padding:0 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 nav button{font:700 17px Nunito;padding:10px 18px;border-radius:999px;border:2px solid #e8b77a;background:transparent;color:#f3e9da;cursor:pointer}
 nav button:disabled{opacity:.35}#count{margin-left:auto;font-weight:700;color:#cdbca5}
-#script{max-width:1100px;margin:6px auto 30px;padding:0 16px 0 40px;color:#cdbca5}#script li{margin:4px 0}#script li.cur{color:#fff;font-weight:800}
+#script{max-width:1100px;margin:6px auto 30px;padding:0 16px 0 40px;color:#cdbca5}#script li{margin:4px 0;cursor:pointer}#script li.cur{color:#fff;font-weight:800}
 </style></head><body><header><h1>A2 - What are you going to do today?</h1><a href="../">All lessons</a></header>
-<div id="stage"><video id="v" playsinline preload="metadata" poster="media/a2_01_first.jpg"></video>
+<div id="stage"><video id="v" playsinline preload="metadata" poster="media/a2_poster.jpg" src="media/a2_dialogue.mp4"></video>
 <div id="bub"><span id="txt"></span></div>
 <button id="next" aria-label="Next line"><svg viewBox="0 0 24 24"><path d="M8 4l9 8-9 8" fill="none" stroke="#221e28" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 <div id="start">Tap to start</div></div>
 <nav><button id="back">Back</button><button id="replay">Replay</button><button id="nx">Next</button><span id="count"></span></nav>
-<ol id="script"><li><b>Wanda:</b> Did you take the laundry out of the basket?</li><li><b>Demi:</b> Yes, I did. It's on my bed.</li><li><b>Wanda:</b> Thanks. What are you going to do today?</li><li><b>Demi:</b> I'm going to visit my grandma.</li><li><b>Wanda:</b> That's nice. How are you going to get there?</li><li><b>Demi:</b> By bus. Do you want to come with me?</li><li><b>Wanda:</b> Sure! I'd love to.</li></ol>
+<ol id="script"><li data-i='0'><b>Wanda:</b> Did you take the laundry out of the basket?</li><li data-i='1'><b>Demi:</b> Yes, I did. It's on my bed.</li><li data-i='2'><b>Wanda:</b> Thanks. What are you going to do today?</li><li data-i='3'><b>Demi:</b> I'm going to visit my grandma.</li><li data-i='4'><b>Wanda:</b> That's nice. How are you going to get there?</li><li data-i='5'><b>Demi:</b> By bus. Do you want to come with me?</li><li data-i='6'><b>Wanda:</b> Sure! I'd love to.</li></ol>
 <script>
-const L=[{"src": "media/a2_01.mp4", "poster": "media/a2_01_first.jpg", "sp": "Wanda", "text": "Did you take the laundry out of the basket?", "on": 0.25, "off": 4.89, "lay": [4, 2, 46, 32], "mir": true}, {"src": "media/a2_02.mp4", "poster": "media/a2_02_first.jpg", "sp": "Demi", "text": "Yes, I did. It's on my bed.", "on": 0.25, "off": 4.89, "lay": [48, 2, 46, 32], "mir": false}, {"src": "media/a2_03.mp4", "poster": "media/a2_03_first.jpg", "sp": "Wanda", "text": "Thanks. What are you going to do today?", "on": 0.25, "off": 4.89, "lay": [4, 2, 46, 32], "mir": true}, {"src": "media/a2_04.mp4", "poster": "media/a2_04_first.jpg", "sp": "Demi", "text": "I'm going to visit my grandma.", "on": 0.25, "off": 4.89, "lay": [48, 2, 46, 32], "mir": false}, {"src": "media/a2_05.mp4", "poster": "media/a2_05_first.jpg", "sp": "Wanda", "text": "That's nice. How are you going to get there?", "on": 0.25, "off": 4.89, "lay": [4, 2, 46, 32], "mir": true}, {"src": "media/a2_06.mp4", "poster": "media/a2_06_first.jpg", "sp": "Demi", "text": "By bus. Do you want to come with me?", "on": 0.25, "off": 4.89, "lay": [48, 2, 46, 32], "mir": false}, {"src": "media/a2_07.mp4", "poster": "media/a2_07_first.jpg", "sp": "Wanda", "text": "Sure! I'd love to.", "on": 0.25, "off": 4.27, "lay": [28, 1, 40, 27], "mir": true}];let i=0,started=false;
-const v=document.getElementById('v'),b=document.getElementById('bub'),t=document.getElementById('txt'),nx=document.getElementById('next');
-function show(k,play=true){i=Math.max(0,Math.min(L.length-1,k));const l=L[i];b.classList.remove('on');nx.classList.remove('show');
- v.src=l.src;v.poster=l.poster;const[x,y,w,h]=l.lay;Object.assign(b.style,{left:x+'%',top:y+'%',width:w+'%',height:h+'%',backgroundImage:`url(media/${l.mir?'bubble_frame_r':'bubble_frame'}.png)`});
- t.textContent=l.text;fit();if(play)v.play().catch(()=>{});
- document.getElementById('count').textContent=(i+1)+' / '+L.length;document.getElementById('back').disabled=i==0;document.getElementById('nx').disabled=i==L.length-1;
- document.querySelectorAll('#script li').forEach((e,j)=>e.classList.toggle('cur',j==i));}
-function fit(){const bh=b.clientHeight;t.style.fontSize='';let fs=parseFloat(getComputedStyle(t).fontSize);
- while(t.scrollHeight>bh*0.6&&fs>10){fs-=1;t.style.fontSize=fs+'px'}t.style.marginTop=(bh*0.44-t.scrollHeight/2)+'px';}
-v.addEventListener('timeupdate',()=>{const l=L[i];b.classList.toggle('on',v.currentTime>=l.on&&v.currentTime<l.off);});
-v.addEventListener('ended',()=>{b.classList.remove('on');if(i<L.length-1)nx.classList.add('show');});
-function next(){if(!started){started=true;document.getElementById('start').remove();show(0);return}if(i<L.length-1)show(i+1);}
+// Cut timestamps (seconds) - same data as media/cuts.json
+const C=[{"n": 1, "speaker": "Wanda", "text": "Did you take the laundry out of the basket?", "start": 0.0, "end": 7.0, "on": 0.3, "off": 5.3, "layout": [3, 3, 37, 30], "mirror": true}, {"n": 2, "speaker": "Demi", "text": "Yes, I did. It's on my bed.", "start": 7.0, "end": 14.0, "on": 7.3, "off": 12.3, "layout": [60, 3, 37, 30], "mirror": false}, {"n": 3, "speaker": "Wanda", "text": "Thanks. What are you going to do today?", "start": 14.0, "end": 21.0, "on": 14.3, "off": 19.3, "layout": [3, 3, 37, 30], "mirror": true}, {"n": 4, "speaker": "Demi", "text": "I'm going to visit my grandma.", "start": 21.0, "end": 28.0, "on": 21.3, "off": 26.3, "layout": [60, 3, 37, 30], "mirror": false}, {"n": 5, "speaker": "Wanda", "text": "That's nice. How are you going to get there?", "start": 28.0, "end": 35.0, "on": 28.3, "off": 33.3, "layout": [3, 3, 37, 30], "mirror": true}, {"n": 6, "speaker": "Demi", "text": "By bus. Do you want to come with me?", "start": 35.0, "end": 42.0, "on": 35.3, "off": 40.3, "layout": [60, 3, 37, 30], "mirror": false}, {"n": 7, "speaker": "Wanda", "text": "Sure! I'd love to.", "start": 42.0, "end": 49.0, "on": 42.3, "off": 47.3, "layout": [35.5, 2, 29, 25], "mirror": true}];
+const v=document.getElementById('v'),b=document.getElementById('bub'),t=document.getElementById('txt'),nx=document.getElementById('next'),st=document.getElementById('start');
+let cur=-1,shown=-1,started=false;
+function cutAt(time){let i=0;for(let j=0;j<C.length;j++)if(time>=C[j].start-0.02)i=j;return i;}
+function setBubble(i){const c=C[i],[x,y,w,h]=c.layout;Object.assign(b.style,{left:x+'%',top:y+'%',width:w+'%',height:h+'%',backgroundImage:`url(media/${c.mirror?'bubble_v2_r':'bubble_v2'}.png)`});t.textContent=c.text;const L=c.text.length;t.style.fontSize=(w<33?2.3:(L<30?2.75:L<45?2.45:2.15))+'cqw'; t.style.fontSize='max(10.5px,'+t.style.fontSize+')';shown=i;}
+function tick(){const time=v.currentTime,i=cutAt(time),c=C[i];
+ if(i!==cur){cur=i;document.getElementById('count').textContent=(i+1)+' / '+C.length;document.getElementById('back').disabled=(i==0&&time-c.start<1.5);document.getElementById('nx').disabled=i==C.length-1;
+  document.querySelectorAll('#script li').forEach((e,j)=>e.classList.toggle('cur',j==i));}
+ const on=time>=c.on&&time<c.off; if(on&&shown!==i)setBubble(i); b.classList.toggle('on',on);
+ nx.classList.toggle('show',started&&i<C.length-1&&time>=c.off-0.5);
+ requestAnimationFrame(tick);}
+function begin(){if(started)return false;started=true;st.remove();v.play().catch(()=>{});return true;}
+function go(i){i=Math.max(0,Math.min(C.length-1,i));started=true;st.isConnected&&st.remove();b.classList.remove('on');v.currentTime=C[i].start+0.01;v.play().catch(()=>{});}
+function next(){if(begin())return;const i=cutAt(v.currentTime);if(i<C.length-1)go(i+1);}
+function back(){const i=cutAt(v.currentTime);go(v.currentTime-C[i].start<1.5?i-1:i);}
+function replay(){go(cutAt(v.currentTime));}
 document.getElementById('stage').addEventListener('click',next);
-document.getElementById('back').onclick=()=>{started=true;document.getElementById('start')?.remove();show(i-1)};
-document.getElementById('replay').onclick=()=>{started=true;document.getElementById('start')?.remove();show(i)};
-document.getElementById('nx').onclick=e=>{if(!started)next();else show(i+1)};
-document.addEventListener('keydown',e=>{if(e.code=='Space'||e.key=='ArrowRight'){e.preventDefault();next()}else if(e.key=='ArrowLeft')document.getElementById('back').click();});
-window.addEventListener('resize',fit);show(0,false);
+nx.addEventListener('click',e=>{e.stopPropagation();next();});
+document.getElementById('back').onclick=back;document.getElementById('replay').onclick=replay;document.getElementById('nx').onclick=next;
+document.querySelectorAll('#script li').forEach(e=>e.onclick=()=>go(+e.dataset.i));
+document.addEventListener('keydown',e=>{if(e.code=='Space'||e.key=='ArrowRight'){e.preventDefault();next()}else if(e.key=='ArrowLeft'){e.preventDefault();back()}});
+requestAnimationFrame(tick);
 </script></body></html>

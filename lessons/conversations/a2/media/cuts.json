@@ -1,0 +1,140 @@
+{
+ "level": "a2",
+ "title": "A2 - What are you going to do today?",
+ "light": "morning",
+ "video": "media/a2_dialogue.mp4",
+ "poster": "media/a2_poster.jpg",
+ "duration": 49.0,
+ "bubble": {
+  "on_after_cut_start": 0.3,
+  "visible_s": 5.0
+ },
+ "cuts": [
+  {
+   "n": 1,
+   "speaker": "Wanda",
+   "shot": "wanda",
+   "text": "Did you take the laundry out of the basket?",
+   "start": 0.0,
+   "end": 7.0,
+   "on": 0.3,
+   "off": 5.3,
+   "layout": [
+    3,
+    3,
+    37,
+    30
+   ],
+   "mirror": true,
+   "take": "t1"
+  },
+  {
+   "n": 2,
+   "speaker": "Demi",
+   "shot": "demi",
+   "text": "Yes, I did. It's on my bed.",
+   "start": 7.0,
+   "end": 14.0,
+   "on": 7.3,
+   "off": 12.3,
+   "layout": [
+    60,
+    3,
+    37,
+    30
+   ],
+   "mirror": false,
+   "take": "t1"
+  },
+  {
+   "n": 3,
+   "speaker": "Wanda",
+   "shot": "wanda",
+   "text": "Thanks. What are you going to do today?",
+   "start": 14.0,
+   "end": 21.0,
+   "on": 14.3,
+   "off": 19.3,
+   "layout": [
+    3,
+    3,
+    37,
+    30
+   ],
+   "mirror": true,
+   "take": "t1"
+  },
+  {
+   "n": 4,
+   "speaker": "Demi",
+   "shot": "demi",
+   "text": "I'm going to visit my grandma.",
+   "start": 21.0,
+   "end": 28.0,
+   "on": 21.3,
+   "off": 26.3,
+   "layout": [
+    60,
+    3,
+    37,
+    30
+   ],
+   "mirror": false,
+   "take": "t1"
+  },
+  {
+   "n": 5,
+   "speaker": "Wanda",
+   "shot": "wanda",
+   "text": "That's nice. How are you going to get there?",
+   "start": 28.0,
+   "end": 35.0,
+   "on": 28.3,
+   "off": 33.3,
+   "layout": [
+    3,
+    3,
+    37,
+    30
+   ],
+   "mirror": true,
+   "take": "t1"
+  },
+  {
+   "n": 6,
+   "speaker": "Demi",
+   "shot": "demi",
+   "text": "By bus. Do you want to come with me?",
+   "start": 35.0,
+   "end": 42.0,
+   "on": 35.3,
+   "off": 40.3,
+   "layout": [
+    60,
+    3,
+    37,
+    30
+   ],
+   "mirror": false,
+   "take": "t1"
+  },
+  {
+   "n": 7,
+   "speaker": "Wanda",
+   "shot": "two",
+   "text": "Sure! I'd love to.",
+   "start": 42.0,
+   "end": 49.0,
+   "on": 42.3,
+   "off": 47.3,
+   "layout": [
+    35.5,
+    2,
+    29,
+    25
+   ],
+   "mirror": true,
+   "take": "t1"
+  }
+ ]
+}
