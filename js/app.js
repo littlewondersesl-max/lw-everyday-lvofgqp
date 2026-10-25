@@ -48,7 +48,7 @@ function viewer(){
   const id=new URLSearchParams(location.search).get('book'); const b=D.books.find(x=>x.id===id)||D.books[0];
   document.title=b.title+' · Little Wonders'; Q('#btitle').textContent=b.title;
   const st=Q('#stage'), strip=Q('#strip'); let i=0;
-  strip.innerHTML=b.seq.map((s,k)=>`<button data-k="${k}" class="th ${s.type}">${s.type==='page'?`<img loading="lazy" src="${s.src}" alt="page ${s.n}">`:`<span>${s.type==='game'?'🎮':'▶'}<b class="tl"><br>${esc(s.title)}</b></span>`}</button>`).join('');
+  strip.innerHTML=b.seq.map((s,k)=>`<button data-k="${k}" class="th ${s.type}">${s.type==='page'||s.thumb?`<img loading="lazy" src="${s.thumb||s.src}" alt="${s.type==='page'?'page '+s.n:esc(s.title)}">`:`<span>${s.type==='game'?'🎮':'▶'}<b class="tl"><br>${esc(s.title)}</b></span>`}</button>`).join('');
   st.innerHTML=b.seq.map((s,k)=>{
     let h;
     if(s.type==='page') h=`<img class="slide" loading="${k<2?'eager':'lazy'}" src="${s.src}" alt="Page ${s.n}">`;
