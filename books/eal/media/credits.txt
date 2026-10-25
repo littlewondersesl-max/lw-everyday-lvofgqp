@@ -1,5 +1,6 @@
 Everyday Animals - "Farm sounds" video (everyday-animals-farm-sounds.mp4)
 Pictures and motion: Grok Imagine (image-to-video) from the Everyday Animals pack art.
+Tractor shot (0:25-0:30): new Grok Imagine still of a farm tractor, animated with Grok Imagine image-to-video (Oct 2026).
 Sound effects (all public-domain / CC0, free for commercial use, no attribution required):
 
 1. Rabbit (0:00-0:05) - "Rabbit oinks and squeaks.wav" (excerpt 20-25 s)
@@ -21,4 +22,4 @@ Sound effects (all public-domain / CC0, free for commercial use, no attribution 
    Source: https://bigsoundbank.com/small-tractor-s0499.html
    License: CC0
 
-Mixing: ffmpeg (loudness-normalised to about -17 LUFS, short fades between sections).
+Mixing: ffmpeg (loudness-normalised to about -17 LUFS, short fades between sections; cat purr section lowered about 7 dB so it sits with the others).
