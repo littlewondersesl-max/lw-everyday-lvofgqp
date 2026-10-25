@@ -1,6 +1,6 @@
 (function(){
 const D=window.LW, Q=s=>document.querySelector(s);
-const SECTIONS=[['packs','Flashcard Packs'],['weather','Everyday Weather'],['games','Games'],['stories','Stories & Reading'],['lessons','Lessons']];
+const SECTIONS=[['packs','Flashcard Packs'],['weather','Everyday Weather'],['chores','Everyday Chores'],['games','Games'],['stories','Stories & Reading'],['lessons','Lessons']];
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function entries(sec){
   const b=D.books.filter(x=>x.section===sec).map(x=>({title:x.title,sub:x.sub,href:'viewer.html?book='+x.id,img:x.cover,book:x}));
