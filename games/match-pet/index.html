@@ -36,12 +36,12 @@ line{stroke-width:9;stroke-linecap:round}
 button.ctl{font:inherit;font-size:clamp(18px,4.4vw,26px);font-weight:800;border:0;border-radius:22px;padding:10px 26px;min-height:56px;background:#f7a8c4;color:#fff;cursor:pointer;box-shadow:0 4px 0 #d9789c}
 .c{position:fixed;top:-20px;width:14px;height:20px;border-radius:4px;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
-@media (min-width:700px){body{padding:8px 0}#page{width:min(97vw,150vh);padding:4px 0 4px;border-width:5px}h1{font-size:min(5vh,46px)}#sub{font-size:min(3vh,22px);margin:0 0 4px}#foot{font-size:min(2vh,14px);margin-top:2px}}
+@media (min-width:700px){body{padding:8px 0}#page{width:min(97vw,150vh);padding:4px 0 4px;border-width:5px}h1{font-size:min(4vh,36px)}#sub{font-size:min(2.4vh,17px);margin:0 0 2px}#foot{display:none}}
 .na .blk,.na .node,.na .band{transition:none!important}
 </style></head><body>
 <div id="page"><h1>Match the pet to its home</h1><div id="sub">Draw a line from each pet to its home.</div>
 <div id="stage"><svg id="svg"></svg></div><div id="foot">Pip's Little Wonders · Everyday Animals</div></div>
-<div id="party"><div>&#127881; Well done! &#127881;<br>Every pet is home!</div><button class="ctl" id="again">Play again</button></div>
+<div id="party"><div>Well done!<br>Every pet is home!</div><button class="ctl" id="again">Play again</button></div>
 <script>
 const PETS=[{id:"cat",name:"cat",home:"bed",move:"walk"},{id:"dog",name:"dog",home:"kennel",move:"walk"},{id:"bird",name:"bird",home:"birdcage",move:"fly"},{id:"fish",name:"fish",home:"bowl",move:"swim"},{id:"rabbit",name:"rabbit",home:"hutch",move:"hop"},{id:"hamster",name:"hamster",home:"hamster-cage",move:"walk"}];
 const PC=["#ffc2d4","#9cc8f0","#ffe36e","#a8e0b4","#c7b2f0","#ffcfa8"],HC=["#bfe6f2","#ffd6e6","#d8f0b0","#ffe0b8","#e2d4fa","#c6eedc"];
@@ -59,7 +59,7 @@ let voice=null;function pv(){const v=speechSynthesis.getVoices();voice=v.find(x=
 if("speechSynthesis"in window){pv();speechSynthesis.onvoiceschanged=pv}
 function say(t){if(!("speechSynthesis"in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-GB";if(voice)u.voice=voice;u.rate=.85;speechSynthesis.speak(u)}
 function geo(){const W=stage.clientWidth;if(innerWidth>=700){const top=stage.getBoundingClientRect().top+scrollY,ft=document.getElementById("foot").offsetHeight+22;const H=Math.max(300,innerHeight-top-ft);const rh=H/6;
- let T=Math.min(W*.2,(rh-8)/1.3);T=Math.max(40,T);const lab=Math.max(13,Math.min(30,T*.18)),no=Math.min(W*.03,40),nd=Math.max(20,Math.min(34,T*.3)),gap=(W*.9-2*T-2*no)/2,px=W/2-gap/2-no-T;return{W,T,lab,rh,px,hx:W-px-T,pn:px+T+no,hn:W-px-T-no,nd}}
+ let T=Math.min(W*.2,(rh-6)/1.2);T=Math.max(40,T);const lab=Math.max(11,Math.min(18,T*.13)),no=Math.min(W*.03,40),nd=Math.max(20,Math.min(34,T*.3)),gap=(W*.9-2*T-2*no)/2,px=W/2-gap/2-no-T;return{W,T,lab,rh,px,hx:W-px-T,pn:px+T+no,hn:W-px-T-no,nd}}
  const T=Math.min(W*.24,165),lab=Math.min(Math.max(16,W*.045),30),rh=T+lab+Math.min(W*.075,50),m=Math.min(W*.07,60),no=Math.min(W*.065,44),nd=Math.min(Math.max(26,W*.055),36);return{W,T,lab,rh,px:m,hx:W-m-T,pn:m+T+no,hn:W-m-T-no,nd}}
 function mk(kind,id,label,img){const b=document.createElement("div");b.className="blk";b.dataset.kind=kind;b.dataset.id=id;b.innerHTML=`<div class="pic"><img src="${img}" alt="${label}"></div><div class="lab">${label}</div>`;stage.appendChild(b);
  const n=document.createElement("div");n.className="node";n.dataset.kind=kind;n.dataset.id=id;stage.appendChild(n);

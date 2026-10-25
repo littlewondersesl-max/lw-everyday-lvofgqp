@@ -2,14 +2,21 @@
 <title>Animal Memory</title><style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:#fdf8f3}
-body{font-family:"Baloo 2","Nunito","Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif;color:#5a4670;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px 0}
-#card{--w:min(94vw,calc(100vh - 320px),600px);width:var(--w);padding:calc(var(--w)*.035);border-radius:calc(var(--w)*.11);
+body{font-family:"Baloo 2","Nunito","Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif;color:#5a4670;height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:6px}
+.side{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+#card{--w:min(96vw,calc(100dvh - 210px),720px);width:var(--w);flex:none;padding:calc(var(--w)*.025);border-radius:calc(var(--w)*.09);
  background:linear-gradient(180deg,#ffc2d4 0%,#ffe9a8 38%,#bfeccd 64%,#b5dcf7 100%);
  box-shadow:0 10px 26px #b08ab033, inset 0 3px 6px #fff9, inset 0 -4px 8px #0001}
-#inner{background:#fff6e8;border-radius:calc(var(--w)*.08);padding:calc(var(--w)*.035) calc(var(--w)*.05) calc(var(--w)*.05);box-shadow:inset 0 3px 8px #c9a98a33}
-#title{text-align:center;font-weight:800;font-size:calc(var(--w)*.085);line-height:1.15;letter-spacing:.01em;margin:0 0 calc(var(--w)*.03);
+#inner{background:#fff6e8;border-radius:calc(var(--w)*.07);padding:calc(var(--w)*.035);box-shadow:inset 0 3px 8px #c9a98a33}
+#title{text-align:center;font-weight:800;font-size:clamp(20px,3.2vw,30px);line-height:1.1;margin:0;
  background:linear-gradient(90deg,#f28bb0,#f5b14c 30%,#5fc29a 55%,#6aaee8 78%,#a785e0);-webkit-background-clip:text;background-clip:text;color:transparent;
  filter:drop-shadow(0 2px 0 #fff) drop-shadow(0 3px 3px #0002)}
+@media (min-aspect-ratio:5/4){
+ body{flex-direction:row;gap:clamp(8px,1.6vw,22px);padding:8px}
+ #card{--w:min(calc(100dvh - 16px),64vw)}
+ .side{width:clamp(130px,16vw,230px)}
+ #left{order:-1}
+}
 #grid{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(var(--w)*.03)}
 .cell{aspect-ratio:1;border-radius:18%;padding:6%;box-shadow:inset 0 3px 6px #0000001f, 0 2px 0 #fff}
 .t{touch-action:manipulation;width:100%;height:100%;border:0;padding:0;border-radius:16%;overflow:hidden;cursor:pointer;background:none;display:block;transition:transform .18s,box-shadow .18s;box-shadow:0 3px 6px #0002}
@@ -27,29 +34,30 @@ body{font-family:"Baloo 2","Nunito","Arial Rounded MT Bold","Trebuchet MS",syste
 #star.glow img{filter:brightness(1.12) saturate(1.15)}
 @keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 0 18px 6px #ffd84d99}50%{transform:scale(1.07);box-shadow:0 0 38px 16px #ffd84dcc}}
 @keyframes spin{to{transform:rotate(360deg)}}
-#cap{min-height:1.25em;font-size:clamp(34px,9vw,60px);font-weight:800;color:#c84678;text-align:center;line-height:1.2;margin-top:6px}
-#bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;margin:2px 0 10px}
-#level{font-size:clamp(18px,4.5vw,26px);font-weight:800;background:#fff;border-radius:20px;padding:6px 16px;box-shadow:0 3px 8px #0001}
-button.ctl{font:inherit;font-size:clamp(17px,4vw,24px);font-weight:800;border:0;border-radius:22px;padding:8px 20px;min-height:54px;background:#9cc8f0;color:#fff;cursor:pointer;box-shadow:0 4px 0 #6fa3d6}
+#cap{min-height:1.2em;font-size:clamp(24px,4vw,40px);font-weight:800;color:#c84678;text-align:center;line-height:1.15;overflow-wrap:anywhere}
+#bar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center}
+#level{font-size:clamp(14px,1.6vw,18px);font-weight:800;background:#fff;border-radius:16px;padding:4px 12px;box-shadow:0 3px 8px #0001;white-space:nowrap}
+button.ctl{font:inherit;font-size:clamp(14px,1.6vw,18px);font-weight:800;border:0;border-radius:18px;padding:6px 14px;min-height:44px;background:#9cc8f0;color:#fff;cursor:pointer;box-shadow:0 4px 0 #6fa3d6;touch-action:manipulation}
 button.ctl:active{transform:translateY(3px);box-shadow:0 1px 0 #6fa3d6}
-#opts{display:flex;gap:10px 16px;align-items:center;flex-wrap:wrap;justify-content:center;margin:0 8px 8px;font-weight:800}
-#mode{display:flex;background:#fff;border-radius:22px;padding:4px;box-shadow:0 3px 8px #0001}
-#mode button{font:inherit;font-size:clamp(14px,3.4vw,18px);font-weight:800;border:0;border-radius:18px;padding:8px 12px;min-height:44px;background:none;color:#8a76a0;cursor:pointer;touch-action:manipulation}
+#opts{display:flex;flex-direction:column;gap:8px;align-items:stretch;font-weight:800}
+#mode{display:flex;flex-direction:column;background:#fff;border-radius:16px;padding:3px;box-shadow:0 3px 8px #0001}
+#mode button{font:inherit;font-size:clamp(12px,1.3vw,15px);line-height:1.15;font-weight:800;border:0;border-radius:13px;padding:6px 8px;min-height:40px;background:none;color:#8a76a0;cursor:pointer;touch-action:manipulation}
 #mode button.on{background:#c7a8f0;color:#fff;box-shadow:0 3px 0 #a785e0}
-#spd{display:flex;align-items:center;gap:8px;background:#fff;border-radius:22px;padding:6px 14px;min-height:52px;box-shadow:0 3px 8px #0001;font-size:clamp(14px,3.4vw,18px)}
-#speed{width:clamp(110px,30vw,170px);height:32px;accent-color:#f28bb0;touch-action:pan-x}
-#spdv{min-width:6.5em;color:#9a86a8;font-size:.9em}
-#hint{text-align:center;padding:0 10px;font-size:clamp(15px,3.6vw,20px);color:#9a86a8;font-weight:700}
-#party{position:fixed;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px;background:#fff9;z-index:9;font-size:clamp(34px,8vw,66px);font-weight:800;color:#7854a0;text-align:center}
+#spd{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:2px 6px;background:#fff;border-radius:16px;padding:6px 10px;box-shadow:0 3px 8px #0001;font-size:clamp(12px,1.3vw,15px)}
+#speed{flex:1 1 60px;min-width:60px;width:auto;height:28px;accent-color:#f28bb0;touch-action:pan-x}
+#spdv{width:100%;text-align:center;color:#9a86a8;font-size:.9em}
+#hint{text-align:center;font-size:clamp(11px,1.2vw,14px);color:#9a86a8;font-weight:700;line-height:1.25}
+@media (max-aspect-ratio:5/4){#opts{flex-direction:row;flex-wrap:wrap;justify-content:center}#mode{flex-direction:row}#hint{display:none}#right{gap:4px}}
+#party{position:fixed;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px;background:#fff9;z-index:9;font-size:clamp(28px,6vw,52px);font-weight:800;color:#7854a0;text-align:center}
 .c{position:fixed;top:-20px;width:14px;height:20px;border-radius:4px;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
 </style></head><body>
-<div id="card"><div id="inner"><div id="title">Animal Memory</div><div id="grid"></div></div></div>
-<div id="cap">Tap the star to start!</div>
-<div id="bar"><div id="level">Level 1 / 12</div><button class="ctl" id="mix">&#128256; New game</button></div>
-<div id="opts"><div id="mode" role="group" aria-label="Game mode"><button type="button" data-m="grow" class="on">Same sequence grows</button><button type="button" data-m="fresh">New sequence every level</button></div><label id="spd" title="How fast the earlier animals play back. The last 3 always play at normal speed.">&#128034;<input type="range" id="speed" min="0" max="4" step="1" value="2" aria-label="Playback speed of the earlier animals">&#128007;<span id="spdv"></span></label></div>
-<div id="hint">&#11088; Tap the star to start / hear it again &middot; the last 3 animals always play at normal speed</div>
-<div id="party"><div>&#127881; Well done! &#127881;<br>You remembered all 14!</div><button class="ctl" id="again">Play again</button></div>
+<div class="side" id="left"><div id="title">Animal Memory</div><div id="cap">Tap the star to start!</div>
+<div id="bar"><div id="level">Level 1 / 12</div><button class="ctl" id="mix">New game</button></div></div>
+<div id="card"><div id="inner"><div id="grid"></div></div></div>
+<div class="side" id="right"><div id="opts"><div id="mode" role="group" aria-label="Game mode"><button type="button" data-m="grow" class="on">Same sequence grows</button><button type="button" data-m="fresh">New sequence every level</button></div><label id="spd" title="How fast the earlier animals play back. The last 3 always play at normal speed.">slow<input type="range" id="speed" min="0" max="4" step="1" value="2" aria-label="Playback speed of the earlier animals">fast<span id="spdv"></span></label></div>
+<div id="hint">Tap the star to start or hear it again. The last 3 animals always play at normal speed.</div></div>
+<div id="party"><div>Well done!<br>You remembered all 14!</div><button class="ctl" id="again">Play again</button></div>
 <script>
 const ANIMALS=[["cat","01-cat"],["dog","02-dog"],["bird","03-bird-budgie"],["goldfish","04-goldfish"],["rabbit","05-rabbit"],["hamster","06-hamster"],["cow","07-cow"],["duck","10-duck"]];
 const SEQ_LEN=14, LEVELS=12;
@@ -92,9 +100,9 @@ async function playLevel(){if(playing)return;playing=true;setLocked(true);pos=0;
  cap.textContent="Your turn!";playing=false;setLocked(false)}
 function flash(b,c,ms=450){clearTimeout(b._ft);b.classList.remove("ok","bad");void b.offsetWidth;b.classList.add(c);b._ft=setTimeout(()=>b.classList.remove(c),ms)}
 async function tap(i){if(busy)return;const b=btns[i];say(ANIMALS[i][0]);cap.textContent=ANIMALS[i][0];const r=checkTap(seq,level,pos,i);
- if(r==="wrong"){flash(b,"bad",1100);setLocked(true);cap.textContent="Try again \ud83d\ude42";await wait(1400);return playLevel()}
+ if(r==="wrong"){flash(b,"bad",1100);setLocked(true);cap.textContent="Try again";await wait(1400);return playLevel()}
  flash(b,"ok");pos++;
- if(r==="levelDone"){setLocked(true);await wait(500);cap.textContent="Great! \u2b50";await wait(1000);level++;seq=sequenceFor(mode,level,seq);playLevel()}
+ if(r==="levelDone"){setLocked(true);await wait(500);cap.textContent="Great!";await wait(1000);level++;seq=sequenceFor(mode,level,seq);playLevel()}
  if(r==="win"){setLocked(true);celebrate()}}
 function celebrate(){say("Well done! You did it!");starBtn.classList.add("glow");const p=document.getElementById("party");p.style.display="flex";const cols=["#f7a8c4","#9cc8f0","#ffd23f","#7ccf8a","#c7a8f0"];
  for(let i=0;i<80;i++){const c=document.createElement("div");c.className="c";c.style.left=Math.random()*100+"vw";c.style.background=cols[i%5];c.style.animationDuration=2+Math.random()*2+"s";c.style.animationDelay=Math.random()*1.5+"s";p.appendChild(c)}}

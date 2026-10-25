@@ -1,0 +1,24 @@
+Everyday Animals - "Farm sounds" video (everyday-animals-farm-sounds.mp4)
+Pictures and motion: Grok Imagine (image-to-video) from the Everyday Animals pack art.
+Sound effects (all public-domain / CC0, free for commercial use, no attribution required):
+
+1. Rabbit (0:00-0:05) - "Rabbit oinks and squeaks.wav" (excerpt 20-25 s)
+   Source: https://commons.wikimedia.org/wiki/File:Rabbit_oinks_and_squeaks.wav
+   License: CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
+2. Duck (0:05-0:10) - "Ducks" #0276 by DenisChardonnet, BigSoundBank (excerpt 0-5 s)
+   Source: https://bigsoundbank.com/ducks-s0276.html
+   License: CC0 (BigSoundBank public-domain equivalent)
+3. Bird flapping its wings (0:10-0:15) - "Flight Bird #1" #2891 (used twice) and "Flight of a Pigeon" #0840 by Joseph Sardin, BigSoundBank
+   Sources: https://bigsoundbank.com/flight-bird-1-s2891.html , https://bigsoundbank.com/flight-of-a-pigeon-s0840.html
+   License: CC0
+4. Cat purring (0:15-0:20) - "Cat Purring #3" #1010 by Joseph Sardin, BigSoundBank (excerpt 10-15 s)
+   Source: https://bigsoundbank.com/cat-purring-3-s1010.html
+   License: CC0
+5. Dog sniffing close up (0:20-0:25) - "Dog - Snif - Sniffing - Animal - Breathing - Search.wav" by td6d, Freesound #547563 (excerpt 0.3-5.3 s)
+   Source: https://freesound.org/people/td6d/sounds/547563/
+   License: CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
+6. Tractor (0:25-0:30) - "Small Tractor" #0499 by Joseph Sardin, BigSoundBank (excerpt 3-8 s)
+   Source: https://bigsoundbank.com/small-tractor-s0499.html
+   License: CC0
+
+Mixing: ffmpeg (loudness-normalised to about -17 LUFS, short fades between sections).
