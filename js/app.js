@@ -6,9 +6,24 @@ function entries(sec){
   const b=D.books.filter(x=>x.section===sec).map(x=>({title:x.title,sub:x.sub,href:'viewer.html?book='+x.id,img:x.cover,book:x}));
   return b.concat(D.items.filter(x=>x.section===sec));
 }
+const NAV=[
+  ['Everyday Series',[['Flashcard packs',()=>entries('packs').filter(e=>!e.book||e.book.id!=='az')],['Everyday Weather',()=>entries('weather')],['Everyday Chores',()=>entries('chores')]]],
+  ['Games',()=>entries('games')],
+  ['Stories & Reading','stories'],
+  ['Lessons',()=>{const l=entries('lessons'),az=entries('packs').filter(e=>e.book&&e.book.id==='az');return {main:az.concat(l.filter(e=>!(e.book&&e.book.group))),teen:l.filter(e=>e.book&&e.book.group)}}]
+];
+function link(e,cls){cls=cls?` class="${cls}"`:'';return e.href?`<a${cls} href="${e.href}">${esc(e.title)}</a>`:e.links?e.links.map(l=>`<a${cls} href="${l[1]}">${esc(e.title.split('—')[0].trim())}: ${esc(l[0])}</a>`).join(''):`<span class="soon">${esc(e.title)} (soon)</span>`}
+function navBody(name,src){
+  if(src==='stories'){const all=entries('stories'),lib=all.find(e=>e.title==='Story Library');
+    return (lib?link(lib,'pin'):'')+all.filter(e=>e!==lib).map(e=>link(e,'child')).join('')}
+  if(Array.isArray(src)) return src.map(([n,f])=>`<div class="sdd"><button class="sddb">${n} ▸</button><div class="sddm">${f().map(e=>link(e)).join('')}</div></div>`).join('');
+  const r=src(); if(Array.isArray(r)) return r.map(e=>link(e)).join('');
+  return r.main.map(e=>link(e)).join('')+(r.teen.length?`<div class="grp">12 and up</div>`+r.teen.map(e=>link(e)).join(''):'');
+}
 function menu(){
-  const m=Q('#menu'); m.innerHTML=SECTIONS.map(([id,name])=>`<div class="dd"><button class="ddb">${name} ▾</button><div class="ddm">${
-    entries(id).map(e=>e.href?`<a href="${e.href}">${esc(e.title)}</a>`:e.links?e.links.map(l=>`<a href="${l[1]}">${esc(e.title.split('—')[0])}: ${esc(l[0])}</a>`).join(''):`<span class="soon">${esc(e.title)} (soon)</span>`).join('')}</div></div>`).join('');
+  const m=Q('#menu'); m.innerHTML=NAV.map(([name,src])=>`<div class="dd"><button class="ddb">${name} ▾</button><div class="ddm">${navBody(name,src)}</div></div>`).join('');
+  m.querySelectorAll('.sddb').forEach(b=>b.onclick=e=>{b.parentNode.classList.toggle('open');e.stopPropagation()});
+  m.querySelectorAll('.ddm').forEach(d=>d.addEventListener('click',e=>{if(e.target.tagName!=='A')e.stopPropagation()}));
   m.querySelectorAll('.ddb').forEach(b=>b.onclick=e=>{const p=b.parentNode;const o=p.classList.contains('open');m.querySelectorAll('.dd').forEach(x=>x.classList.remove('open'));if(!o)p.classList.add('open');e.stopPropagation()});
   document.addEventListener('click',()=>m.querySelectorAll('.dd').forEach(x=>x.classList.remove('open')));
   Q('#burger').onclick=()=>m.classList.toggle('show');
