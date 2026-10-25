@@ -7,7 +7,7 @@ function entries(sec){
   D.books.filter(x=>x.section===sec).forEach(x=>{
     if(!x.series){b.push({title:x.title,sub:x.sub,href:'viewer.html?book='+x.id,img:x.cover,book:x});return}
     if(seen.has(x.series))return; seen.add(x.series);
-    b.push({title:x.seriesTitle,sub:'Level A1 or A2 · Part 1 and Part 2',href:'book.html?s='+x.series,img:x.cover});
+    b.push({title:x.seriesTitle,sub:'Level A1 or A2',href:'book.html?s='+x.series,img:x.cover});
   });
   return b.concat(D.items.filter(x=>x.section===sec));
 }
@@ -72,7 +72,7 @@ function viewer(){
   document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){go(i+1);e.preventDefault()}if(e.key==='ArrowLeft'||e.key==='PageUp'){go(i-1);e.preventDefault()}if(e.key==='Home')go(0);if(e.key==='End')go(b.seq.length-1)});
   let sx=null,sy=0; st.addEventListener('touchstart',e=>{if(b.seq[i].type!=='page')return;sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
   st.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy))go(i+(dx<0?1:-1));sx=null});
-  Q('#downloads').innerHTML=(b.series?`<p class="crumb"><a href="book.html?s=${b.series}">${esc(b.seriesTitle)}</a> › <a href="book.html?s=${b.series}&l=${b.level}">Level ${b.level}</a> › Part ${b.part}</p>`:'')+`<h3>Downloads</h3>${b.downloads.map(d=>`<a class="dlb" href="${d.href}" download>⬇ ${esc(d.label)} <small>${d.size} MB</small></a>`).join('')||'<p>No downloads.</p>'}${b.note?`<p class="note">${esc(b.note)}</p>`:''}<p class="hint">Keys: ← → to move · swipe on phones · games open between pages.</p>`;
+  Q('#downloads').innerHTML=(b.series?`<p class="crumb"><a href="book.html?s=${b.series}">${esc(b.seriesTitle)}</a> › Level ${b.level}</p>`:'')+`<h3>Downloads</h3>${b.downloads.map(d=>`<a class="dlb" href="${d.href}" download>⬇ ${esc(d.label)} <small>${d.size} MB</small></a>`).join('')||'<p>No downloads.</p>'}${b.note?`<p class="note">${esc(b.note)}</p>`:''}<p class="hint">Keys: ← → to move · swipe on phones · games open between pages.</p>`;
   window.addEventListener('hashchange',()=>{const k=(parseInt(location.hash.slice(1))||1)-1;if(k!==i)go(k)});
   show();
 }
@@ -85,11 +85,9 @@ function chooser(){
   const card=(href,img,h,t,cls)=>`<div class="card ${cls||''}"><a class="cl" href="${href}"><div class="thumb"><img src="${img}" alt=""></div><div class="ct"><h3>${esc(h)}</h3><p>${esc(t)}</p></div></a></div>`;
   let html=`<section class="sec"><p class="crumb"><a href="index.html">Home</a> › ${lv?`<a href="book.html?s=${sid}">${esc(S.title)}</a> › Level ${esc(lv)}`:esc(S.title)}</p>`;
   if(!lv||!S.levels[lv]){
-    html+=`<h2>${esc(S.title)}: choose a level</h2><div class="grid lvgrid">`+Object.keys(S.levels).map(l=>{const c=all.find(x=>x.level===l&&x.part===1);return card(`book.html?s=${sid}&l=${l}`,c.cover,'Level '+l,S.levels[l].split('·')[1].trim(),'lv')}).join('')+`</div>`;
+    html+=`<h2>${esc(S.title)}: choose a level</h2><div class="grid lvgrid">`+Object.keys(S.levels).map(l=>{const c=all.find(x=>x.level===l);return card('viewer.html?book='+c.id,c.cover,'Level '+l,S.levels[l].split('·')[1].trim(),'lv')}).join('')+`</div><div class="dls lvdl">`+Object.keys(S.levels).map(l=>{const c=all.find(x=>x.level===l);return c.downloads.map(d=>`<a href="${d.href}" download>PDF Level ${l} (${d.size} MB)</a>`).join('')}).join('')+`</div>`;
   }else{
-    const bs=all.filter(x=>x.level===lv).sort((x,y)=>x.part-y.part);
-    html+=`<h2>${esc(S.title)} · Level ${esc(lv)}: choose a part</h2><div class="grid lvgrid">`+bs.map(b=>card('viewer.html?book='+b.id,b.cover,'Part '+b.part,b.seq.filter(s=>s.type==='page').length+' pages')+'').join('')+`</div>`+
-      `<div class="dls lvdl">`+bs.map(b=>b.downloads.map(d=>`<a href="${d.href}" download>PDF Part ${b.part} (${d.size} MB)</a>`).join('')).join('')+`</div>`;
+    location.replace('viewer.html?book='+all.find(x=>x.level===lv).id);return;
   }
   Q('#home').innerHTML=html+`</section>`;
 }
