@@ -35,6 +35,7 @@ function viewer(){
     const s=b.seq[i];
     if(s.type==='page') st.innerHTML=`<img class="slide" src="${s.src}" alt="Page ${s.n}">`;
     else if(s.type==='game') st.innerHTML=`<div class="gamebox"><div class="gbar">Game: <b>${esc(s.title)}</b> <a href="${s.src}" target="_blank">open full screen ↗</a></div><iframe src="${s.src}" title="${esc(s.title)}" allow="fullscreen; autoplay"></iframe></div>`;
+    else if(s.src) st.innerHTML=`<video class="bookvid" src="${s.src}"${s.poster?` poster="${s.poster}"`:''} controls playsinline preload="metadata" title="${esc(s.title)}"></video>`;
     else st.innerHTML=`<div class="videoph"><div class="play">▶</div><h3>${esc(s.title)}</h3><p>Video slot — coming soon.</p></div>`;
     const pn=s.type==='page'?`Page ${s.n}`:(s.type==='game'?'Game':'Video');
     Q('#count').textContent=`${pn} · ${i+1} / ${b.seq.length}`;
