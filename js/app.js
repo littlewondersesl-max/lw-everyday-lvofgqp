@@ -1,13 +1,13 @@
 (function(){
 const D=window.LW, Q=s=>document.querySelector(s);
-const SECTIONS=[['packs','Flashcard Packs'],['weather','Everyday Weather'],['chores','Everyday Chores'],['games','Games'],['stories','Stories & Reading'],['lessons','Lessons']];
+const SECTIONS=[['packs','Flashcard Packs'],['weather','Everyday Weather'],['chores','Household Chores'],['games','Games'],['stories','Stories & Reading'],['lessons','Lessons']];
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function entries(sec){
   const b=D.books.filter(x=>x.section===sec).map(x=>({title:x.title,sub:x.sub,href:'viewer.html?book='+x.id,img:x.cover,book:x}));
   return b.concat(D.items.filter(x=>x.section===sec));
 }
 const NAV=[
-  ['Everyday Series',[['Flashcard packs',()=>entries('packs').filter(e=>!e.book||e.book.id!=='az')],['Everyday Weather',()=>entries('weather')],['Everyday Chores',()=>entries('chores')]]],
+  ['Everyday Series',[['Flashcard packs',()=>entries('packs').filter(e=>!e.book||e.book.id!=='az')],['Everyday Weather',()=>entries('weather')],['Household Chores',()=>entries('chores')]]],
   ['Games',()=>entries('games')],
   ['Stories & Reading','stories'],
   ['Lessons',()=>{const l=entries('lessons'),az=entries('packs').filter(e=>e.book&&e.book.id==='az');const g=e=>(e.book&&e.book.group)||e.group||'';return {main:az.concat(l.filter(e=>!g(e))),groups:[...new Set(l.filter(g).map(g))].map(n=>[n,l.filter(e=>g(e)===n)])}}]
