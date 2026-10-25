@@ -55,3 +55,17 @@ a{color:var(--pur)}
 .bookvid{position:absolute;inset:0;width:100%;height:100%;background:#000;object-fit:contain}
 
 .crumb{font-size:.95rem;margin:0 0 .4rem}.crumb a{color:inherit}.lvgrid{max-width:820px}.lvdl{margin-top:1rem;gap:.6rem;display:flex;flex-wrap:wrap}
+
+/* vertical scroll viewer */
+.vwrap{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;max-width:1440px;margin:0 auto;padding:12px}
+.vstrip{position:sticky;top:76px;align-self:start;max-height:calc(100vh - 90px);overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px;scrollbar-width:thin}
+.vstrip .th{width:100%}
+.vstack{display:flex;flex-direction:column;gap:18px}
+.vitem{position:relative;aspect-ratio:16/9;background:#fff;border-radius:18px;box-shadow:0 8px 26px rgba(108,78,160,.16);overflow:hidden;scroll-margin-top:76px}
+.vitem.game{aspect-ratio:auto;height:min(82vh,860px)}
+.vmain .downloads{margin-top:18px}
+.vcount{position:fixed;right:16px;bottom:16px;z-index:15;display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.94);border-radius:999px;padding:6px 8px 6px 14px;box-shadow:0 4px 14px rgba(0,0,0,.15);font-weight:800;font-size:14px}
+.vcount button{border:0;background:var(--teal);color:#fff;border-radius:999px;padding:6px 10px;font:inherit;cursor:pointer}
+@media (max-width:760px){.vwrap{grid-template-columns:58px minmax(0,1fr);gap:8px;padding:6px}.vstrip{top:66px;max-height:calc(100vh - 76px);gap:5px;padding:2px}
+.vstrip .th{border-width:2px;border-radius:7px}.vstrip .th span{font-size:16px}.vstrip .th .tl{display:none}.vstack{gap:10px}.vitem{border-radius:12px;scroll-margin-top:66px}.vitem.game{height:75vh}.vcount{right:8px;bottom:8px;font-size:12px}}
+.th .tl{font-weight:800}
