@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>A1 - Can you pass the butter?</title><link rel="preconnect" href="https://fonts.bunny.net"><link href="https://fonts.bunny.net/css?family=fraunces:600,700|nunito:600,700,800" rel="stylesheet"><style>
+*{box-sizing:border-box}html,body{margin:0;background:#1b1612;color:#f3e9da;font-family:Nunito,system-ui,sans-serif;font-weight:600}
+header{max-width:1100px;margin:0 auto;padding:14px 16px 6px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+h1{font-family:Fraunces,Georgia,serif;font-weight:700;margin:0;font-size:clamp(20px,4vw,32px)}
+header a{color:#e8b77a;font-weight:700;text-decoration:none}
+#stage{position:relative;max-width:1100px;margin:0 auto;aspect-ratio:16/9;background:#000;overflow:hidden;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+#stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#bub{position:absolute;background-size:100% 100%;opacity:0;transition:opacity .25s;pointer-events:none;display:flex;align-items:flex-start;justify-content:center}
+#bub.on{opacity:1}#bub span{display:block;margin-top:0;width:74%;text-align:center;font-weight:800;color:#221e28;line-height:1.2;font-size:clamp(14px,3.6cqw,44px)}
+#stage{container-type:inline-size}
+#next{position:absolute;right:2.5%;bottom:5%;width:clamp(48px,9cqw,96px);height:clamp(48px,9cqw,96px);border-radius:50%;border:0;background:#e8b77a;color:#221e28;font-size:0;opacity:0;transform:scale(.8);transition:.3s;box-shadow:0 4px 18px #0008}
+#next svg{width:55%;height:55%}#next.show{opacity:1;transform:scale(1)}
+#start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#0006;font:800 clamp(18px,4cqw,40px) Nunito;color:#fff}
+nav{max-width:1100px;margin:10px auto;padding:0 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+nav button{font:700 17px Nunito;padding:10px 18px;border-radius:999px;border:2px solid #e8b77a;background:transparent;color:#f3e9da;cursor:pointer}
+nav button:disabled{opacity:.35}#count{margin-left:auto;font-weight:700;color:#cdbca5}
+#script{max-width:1100px;margin:6px auto 30px;padding:0 16px 0 40px;color:#cdbca5}#script li{margin:4px 0}#script li.cur{color:#fff;font-weight:800}
+</style></head><body><header><h1>A1 - Can you pass the butter?</h1><a href="../">All lessons</a></header>
+<div id="stage"><video id="v" playsinline preload="metadata" poster="media/a1_01_first.jpg"></video>
+<div id="bub"><span id="txt"></span></div>
+<button id="next" aria-label="Next line"><svg viewBox="0 0 24 24"><path d="M8 4l9 8-9 8" fill="none" stroke="#221e28" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<div id="start">Tap to start</div></div>
+<nav><button id="back">Back</button><button id="replay">Replay</button><button id="nx">Next</button><span id="count"></span></nav>
+<ol id="script"><li><b>Demi:</b> Hi, Wanda! I'm hungry.</li><li><b>Wanda:</b> Me too. Let's eat!</li><li><b>Demi:</b> Can you pass the butter, please?</li><li><b>Wanda:</b> Sure. Here you go.</li><li><b>Demi:</b> Thanks! What time is it?</li><li><b>Wanda:</b> It's eight o'clock.</li><li><b>Demi:</b> Oh! It's time for bed.</li></ol>
+<script>
+const L=[{"src": "media/a1_01.mp4", "poster": "media/a1_01_first.jpg", "sp": "Demi", "text": "Hi, Wanda! I'm hungry.", "on": 0.25, "off": 4.27, "lay": [48, 2, 46, 32], "mir": false}, {"src": "media/a1_02.mp4", "poster": "media/a1_02_first.jpg", "sp": "Wanda", "text": "Me too. Let's eat!", "on": 0.25, "off": 4.27, "lay": [4, 2, 46, 32], "mir": true}, {"src": "media/a1_03.mp4", "poster": "media/a1_03_first.jpg", "sp": "Demi", "text": "Can you pass the butter, please?", "on": 0.25, "off": 4.89, "lay": [48, 2, 46, 32], "mir": false}, {"src": "media/a1_04.mp4", "poster": "media/a1_04_first.jpg", "sp": "Wanda", "text": "Sure. Here you go.", "on": 0.25, "off": 4.27, "lay": [28, 1, 40, 27], "mir": true}, {"src": "media/a1_05.mp4", "poster": "media/a1_05_first.jpg", "sp": "Demi", "text": "Thanks! What time is it?", "on": 0.25, "off": 4.6, "lay": [48, 2, 46, 32], "mir": false}, {"src": "media/a1_06.mp4", "poster": "media/a1_06_first.jpg", "sp": "Wanda", "text": "It's eight o'clock.", "on": 0.25, "off": 3.94, "lay": [4, 2, 46, 32], "mir": true}, {"src": "media/a1_07.mp4", "poster": "media/a1_07_first.jpg", "sp": "Demi", "text": "Oh! It's time for bed.", "on": 0.25, "off": 4.6, "lay": [48, 2, 46, 32], "mir": false}];let i=0,started=false;
+const v=document.getElementById('v'),b=document.getElementById('bub'),t=document.getElementById('txt'),nx=document.getElementById('next');
+function show(k,play=true){i=Math.max(0,Math.min(L.length-1,k));const l=L[i];b.classList.remove('on');nx.classList.remove('show');
+ v.src=l.src;v.poster=l.poster;const[x,y,w,h]=l.lay;Object.assign(b.style,{left:x+'%',top:y+'%',width:w+'%',height:h+'%',backgroundImage:`url(media/${l.mir?'bubble_frame_r':'bubble_frame'}.png)`});
+ t.textContent=l.text;fit();if(play)v.play().catch(()=>{});
+ document.getElementById('count').textContent=(i+1)+' / '+L.length;document.getElementById('back').disabled=i==0;document.getElementById('nx').disabled=i==L.length-1;
+ document.querySelectorAll('#script li').forEach((e,j)=>e.classList.toggle('cur',j==i));}
+function fit(){const bh=b.clientHeight;t.style.fontSize='';let fs=parseFloat(getComputedStyle(t).fontSize);
+ while(t.scrollHeight>bh*0.6&&fs>10){fs-=1;t.style.fontSize=fs+'px'}t.style.marginTop=(bh*0.44-t.scrollHeight/2)+'px';}
+v.addEventListener('timeupdate',()=>{const l=L[i];b.classList.toggle('on',v.currentTime>=l.on&&v.currentTime<l.off);});
+v.addEventListener('ended',()=>{b.classList.remove('on');if(i<L.length-1)nx.classList.add('show');});
+function next(){if(!started){started=true;document.getElementById('start').remove();show(0);return}if(i<L.length-1)show(i+1);}
+document.getElementById('stage').addEventListener('click',next);
+document.getElementById('back').onclick=()=>{started=true;document.getElementById('start')?.remove();show(i-1)};
+document.getElementById('replay').onclick=()=>{started=true;document.getElementById('start')?.remove();show(i)};
+document.getElementById('nx').onclick=e=>{if(!started)next();else show(i+1)};
+document.addEventListener('keydown',e=>{if(e.code=='Space'||e.key=='ArrowRight'){e.preventDefault();next()}else if(e.key=='ArrowLeft')document.getElementById('back').click();});
+window.addEventListener('resize',fit);show(0,false);
+</script></body></html>

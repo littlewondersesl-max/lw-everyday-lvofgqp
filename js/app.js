@@ -10,7 +10,7 @@ const NAV=[
   ['Everyday Series',[['Flashcard packs',()=>entries('packs').filter(e=>!e.book||e.book.id!=='az')],['Everyday Weather',()=>entries('weather')],['Everyday Chores',()=>entries('chores')]]],
   ['Games',()=>entries('games')],
   ['Stories & Reading','stories'],
-  ['Lessons',()=>{const l=entries('lessons'),az=entries('packs').filter(e=>e.book&&e.book.id==='az');return {main:az.concat(l.filter(e=>!(e.book&&e.book.group))),teen:l.filter(e=>e.book&&e.book.group)}}]
+  ['Lessons',()=>{const l=entries('lessons'),az=entries('packs').filter(e=>e.book&&e.book.id==='az');const g=e=>(e.book&&e.book.group)||e.group||'';return {main:az.concat(l.filter(e=>!g(e))),groups:[...new Set(l.filter(g).map(g))].map(n=>[n,l.filter(e=>g(e)===n)])}}]
 ];
 function link(e,cls){cls=cls?` class="${cls}"`:'';return e.href?`<a${cls} href="${e.href}">${esc(e.title)}</a>`:e.links?e.links.map(l=>`<a${cls} href="${l[1]}">${esc(e.title.split('—')[0].trim())}: ${esc(l[0])}</a>`).join(''):`<span class="soon">${esc(e.title)} (soon)</span>`}
 function navBody(name,src){
@@ -18,7 +18,7 @@ function navBody(name,src){
     return (lib?link(lib,'pin'):'')+all.filter(e=>e!==lib).map(e=>link(e,'child')).join('')}
   if(Array.isArray(src)) return src.map(([n,f])=>`<div class="sdd"><button class="sddb">${n} ▸</button><div class="sddm">${f().map(e=>link(e)).join('')}</div></div>`).join('');
   const r=src(); if(Array.isArray(r)) return r.map(e=>link(e)).join('');
-  return r.main.map(e=>link(e)).join('')+(r.teen.length?`<div class="grp">12 and up</div>`+r.teen.map(e=>link(e)).join(''):'');
+  return r.main.map(e=>link(e)).join('')+r.groups.map(([n,a])=>`<div class="grp">${esc(n)}</div>`+a.map(e=>link(e)).join('')).join('');
 }
 function menu(){
   const m=Q('#menu'); m.innerHTML=NAV.map(([name,src])=>`<div class="dd"><button class="ddb">${name} ▾</button><div class="ddm">${navBody(name,src)}</div></div>`).join('');
