@@ -79,6 +79,7 @@ button.no{background:#e5394a;box-shadow:0 4px 0 #b02232}
 #yes:disabled{opacity:.35;filter:grayscale(1);cursor:not-allowed}
 #zoom{position:fixed;z-index:12;pointer-events:none;transition:all .8s cubic-bezier(.5,0,.2,1)}#zoom img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 #cells .cell{animation:pop .35s both}@keyframes pop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
+#ans{position:relative}#slots{position:absolute!important;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);margin:0;pointer-events:none;z-index:15;grid-column:auto!important;order:0!important;max-width:96vw;flex-wrap:nowrap}
 </style><link rel="icon" href="data:,"></head><body>
 <div id="top"><a class="home" href="../../index.html">Home</a><h1 id="title">Alphabet Lights</h1>
  <div class="seg" id="game"><button data-g="seq">Sequence</button><button data-g="spell">Spelling</button><button data-g="table">Letter Table</button></div>
