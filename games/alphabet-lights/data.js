@@ -19,11 +19,13 @@ B1:{3:"the art,and conj,but conj,she pron,him pron,wow interj,hey interj,for pre
 pos:{n:"noun",v:"verb",adj:"adjective",adv:"adverb",pron:"pronoun",prep:"preposition",conj:"conjunction",interj:"interjection",art:"article"},
 // prompt: [label, letters that have an easy answer]
 P:{color:["a color","BGPRWYOS"],food:["a food","ABCDEFGHIJKLMNOPRSTWY"],animal:["an animal","ABCDEFGHIJKLMNOPRSTWYZ"],
+ fruit:["a fruit","ABCGKLMOPSW"],toy:["a toy","BCDKPRTY"],clothes:["something you wear","BCDGHJPST"],
  doing:["something you do","BCDEFGHJKLMPRSTW"],vehicle:["a vehicle","ABCFHJKLMPRSTVY"],body:["a body part","ABCEFHKLMNST"],
  verb:["a verb","ABCDEFGHIJKLMNOPRSTUVWY"],adj:["an adjective","ABCDEFGHIKLMNOPQRSTUWY"],
  animal2:["two animals","BCDFGHLMPRST"],food2:["two foods","BCMPST"],animal3:["three animals","BCDGHLMPS"],
  place:["a place","BCFHLMPSTZ"],job:["a job","ABCDFNPSTV"]},
-levels:{A1:{base:["color","food","animal","doing"],extra:[],cells:4,min:3},
- A2:{base:["food","animal","doing"],extra:["color","vehicle","body","verb","adj","animal2"],cells:6,min:5},
- B1:{base:["animal","verb","adj"],extra:["food","vehicle","body","place","job","color","animal2","food2","animal3"],cells:8,min:5}}
+// A1 = 3 boxes, concrete nouns only (no verbs). A2/B1 = 4 boxes; difficulty comes from the prompts.
+levels:{A1:{base:["animal","food"],extra:["color","fruit","toy","body","clothes"],cells:3,min:3},
+ A2:{base:["animal","doing"],extra:["food","fruit","vehicle","body","clothes","color","adj","animal2"],cells:4,min:4},
+ B1:{base:["verb","adj"],extra:["animal2","food2","animal3","place","job","vehicle","body"],cells:4,min:4}}
 };
