@@ -64,6 +64,14 @@ button.no{background:#e5394a;box-shadow:0 4px 0 #b02232}
 #res>div{background:#1a2030;border:2px solid #ff2d95;border-radius:24px;padding:28px 40px;text-align:center;box-shadow:0 0 40px #ff2d9588}
 #res h2{margin:0 0 6px;font-size:clamp(20px,3vw,30px)}#res .big{font-size:clamp(40px,8vw,72px);font-weight:900;color:#ffe100;text-shadow:0 0 18px #ffe100aa}#res p{margin:6px 0 18px;opacity:.85}
 #ans.idle #yes,#ans.idle #noB,#ans.idle #reveal{display:none!important}
+#slots{flex:none;display:none;gap:min(1.6vw,12px);justify-content:center;padding:4px 0 6px;position:relative;z-index:6}#slots.show{display:flex}
+.sl{width:min(10.5vw,11vh,74px);aspect-ratio:3/4;border-radius:12px;border:2px dashed #ffffff55;background:#0b0f1ad0;display:flex;align-items:center;justify-content:center;transition:border-color .2s,box-shadow .2s}
+.sl img{width:82%;height:82%;object-fit:contain;filter:drop-shadow(0 0 6px var(--c))}
+.sl.ok{border:3px solid #39ff6a;box-shadow:0 0 10px #39ff6a,0 0 22px #39ff6a88,inset 0 0 10px #39ff6a66;animation:pop .3s}
+.sl.nx{border-color:#ffffffaa}
+.sl.bad{animation:bad .5s}@keyframes bad{0%,40%,80%{border-color:#ff3b3b;box-shadow:0 0 14px #ff3b3b}20%,60%,100%{box-shadow:none}}
+#slots.win .sl{animation:win 1s ease-in-out infinite}@keyframes win{0%,100%{box-shadow:0 0 10px #39ff6a,0 0 22px #39ff6a88}50%{box-shadow:0 0 22px #b6ffc8,0 0 50px #39ff6a,0 0 80px #39ff6a99;transform:scale(1.07)}}
+.L.bad{animation:lbad .45s}@keyframes lbad{0%,50%{filter:drop-shadow(0 0 10px #ff3b3b) sepia(1) saturate(6) hue-rotate(-40deg)}25%,75%,100%{filter:none}}
 #yes:disabled{opacity:.35;filter:grayscale(1);cursor:not-allowed}
 #zoom{position:fixed;z-index:12;pointer-events:none;transition:all .8s cubic-bezier(.5,0,.2,1)}#zoom img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 #cells .cell{animation:pop .35s both}@keyframes pop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
@@ -74,7 +82,7 @@ button.no{background:#e5394a;box-shadow:0 4px 0 #b02232}
  <button class="ctl go" id="play">Play</button><button class="ctl" id="restart">Start over</button><span id="score"><span id="bar"><i></i></span><em id="rtxt">Round 0/10</em></span></div>
 <div id="main"><div id="stage"></div><div id="table"><div id="big"></div><div id="cells"></div></div>
  <div id="side"><button id="tog">Bonus</button><h3>Bonus: word type</h3><p>What kind of word is it?</p><div id="pos"></div><button class="ctl" id="skip" style="width:100%;margin-top:8px">Skip</button></div></div>
-<div id="ans"><button id="reveal">Teacher: tap to show answer</button><span id="answer"></span><span id="msg"></span><button class="ctl ok" id="yes" title="Correct">&#10003; Correct</button><button class="ctl no" id="noB" title="Replay">&#10007; Replay</button></div>
+<div id="slots"></div><div id="ans"><button id="reveal">Teacher: tap to show answer</button><span id="answer"></span><span id="msg"></span><button class="ctl ok" id="yes" title="Correct">&#10003; Correct</button><button class="ctl no" id="noB" title="Replay">&#10007; Replay</button></div>
 <canvas id="fx"></canvas><div id="res"><div><h2 id="rh">Round complete</h2><div class="big" id="rbig"></div><p id="rsub"></p><button class="ctl go" id="again">Play again</button></div></div>
 <script src="data.js"></script><script>
 (function(){
@@ -87,7 +95,7 @@ function letter(c){const d=document.createElement("div");d.className="L";d.style
 [[0,9],[9,18],[18,26]].forEach(([a,b])=>{const r=document.createElement("div");r.className="row";for(let i=a;i<b;i++){const d=letter(ABC[i]);el[ABC[i]]=d;r.appendChild(d)}Q("#stage").appendChild(r)});
 const big=letter("A");Q("#big").appendChild(big);
 const T=(f,ms)=>timers.push(setTimeout(f,ms));
-function stop(){timers.forEach(clearTimeout);timers=[];busy=false;Object.values(el).forEach(d=>d.className="L")}
+function stop(){timers.forEach(clearTimeout);timers=[];busy=false;Q("#slots").className="";Q("#slots").innerHTML="";if(cur)cur.build=0;Object.values(el).forEach(d=>d.className="L")}
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function seg(id,items,val,cb){const s=Q(id);s.innerHTML=items.map(([v,t])=>`<button data-v="${v}" class="${v==val?"on":""}">${t}</button>`).join("");s.onclick=e=>{const b=e.target.closest("button");if(!b)return;s.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));cb(b.dataset.v)}}
@@ -105,7 +113,7 @@ function setup(){
  Q("#game").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.g===G));
  Q("#stage").style.display="";Q("#table").classList.remove("show");Q("#ans").classList.add("idle");Q("#yes").disabled=false;
  if(G==="seq"){lvl=lvl&&+lvl<=8?lvl:"2";seg("#lvl",[2,3,4,5,6,7,8].map(n=>[n,"Level "+(n-1)]),lvl,v=>{lvl=v;setup()});Q("#diff").style.display="none"}
- else if(G==="spell"){lvl=lvl&&+lvl>=3&&+lvl<=7?lvl:"3";seg("#lvl",[3,4,5,6,7].map(n=>[n,n+" letters"]),lvl,v=>{lvl=v;setup()});Q("#diff").style.display="";seg("#diff",[["A1","A1"],["A2","A2"],["B1","B1"]],diff,v=>{diff=v;setup()})}
+ else if(G==="spell"){const mx={A1:4,A2:5,B1:7}[diff];lvl=lvl&&+lvl>=3&&+lvl<=mx?lvl:"3";seg("#lvl",[3,4,5,6,7].filter(n=>n<=mx).map(n=>[n,n+" letters"]),lvl,v=>{lvl=v;setup()});Q("#diff").style.display="";seg("#diff",[["A1","A1"],["A2","A2"],["B1","B1"]],diff,v=>{diff=v;setup()})}
  else{Q("#lvl").innerHTML="";Q("#lvl").style.display="none";Q("#diff").style.display="";seg("#diff",[["A1","A1"],["A2","A2"],["B1","B1"]],diff,v=>{diff=v;setup()})}
  if(G!=="table")Q("#lvl").style.display="";
  Q("#play").textContent=G==="table"?"Start":"Play";Q("#noB").textContent="\u2717 Replay";
@@ -132,7 +140,14 @@ function tick(){cx.clearRect(0,0,innerWidth,innerHeight);cx.globalCompositeOpera
  parts=parts.filter(p=>p.l>0);cx.globalAlpha=1;raf=(parts.length||flashes.length)?requestAnimationFrame(tick):(cx.clearRect(0,0,innerWidth,innerHeight),0)}
 function flash(seq,on,gap){busy=true;let t=300;
  seq.forEach((c,i)=>{const d=el[c];T(()=>{d.className="L lit";if(i%5===4)T(()=>sparks(d,COL[c]),120)},t);T(()=>{d.className="L out"},t+on);T(()=>{d.className="L"},t+on+OUT);t+=on+OUT+DARK});
- T(()=>{busy=false;Q("#msg").textContent="Say it!"},t)}
+ T(()=>{busy=false;Q("#msg").textContent="Say it!";if(G==="seq"&&cur&&!cur.marked)T(slots,700)},t)}
+function slots(){cur.build=1;cur.fill=0;const s=Q("#slots");s.innerHTML=cur.seq.map(()=>'<div class="sl"></div>').join("");s.className="show";s.children[0].classList.add("nx");Q("#msg").textContent="Tap the letters in order!"}
+function tap(c){if(!cur||busy||cur.marked||!cur.build)return;const s=Q("#slots"),sl=s.children[cur.fill],d=el[c];
+ if(c===cur.seq[cur.fill]){sl.className="sl ok";sl.style.setProperty("--c",COL[c]);sl.innerHTML=`<img src="on-${c}.webp" alt="${c}">`;d.className="L lit";setTimeout(()=>{if(d.className==="L lit")d.className="L"},420);cur.fill++;
+  if(cur.fill<cur.seq.length){s.children[cur.fill].classList.add("nx");return}
+  cur.build=0;s.classList.add("win");marked(1);Q("#msg").textContent="You did it!";Q("#answer").textContent=cur.ans;Q("#reveal").style.display="none";setTimeout(()=>cur.seq.forEach(x=>el[x].className="L stay"),450);T(play,3000)}
+ else{sl.classList.remove("bad");void sl.offsetWidth;sl.classList.add("bad");d.className="L bad";setTimeout(()=>{if(d.className==="L bad")d.className="L"},460)}}
+Object.entries(el).forEach(([c,d])=>d.addEventListener("click",()=>tap(c)));
 function play(){
  if(busy)return;
  if(cur&&!cur.marked&&G!=="table"&&rn>0)return;
@@ -172,7 +187,7 @@ function showCells(c,L){
  cells.onclick=e=>{const b=e.target.closest(".cell");if(!b)return;b.classList.toggle("done");pts+=b.classList.contains("done")?1:-1};
 }
 Q("#reveal").onclick=()=>{if(G==="table"||!cur||busy)return;Q("#answer").textContent=cur.ans;Q("#reveal").style.display="none"};
-Q("#yes").onclick=()=>{if(!cur||busy||cur.marked||Q("#yes").disabled)return;marked(1);Q("#msg").textContent="Great!";Q("#answer").textContent=cur.ans;Q("#reveal").style.display="none";if(!(G==="spell"&&diff==="B1"))T(play,3000);
+Q("#yes").onclick=()=>{if(!cur||busy||cur.marked||Q("#yes").disabled)return;cur.build=0;marked(1);Q("#msg").textContent="Great!";Q("#answer").textContent=cur.ans;Q("#reveal").style.display="none";if(!(G==="spell"&&diff==="B1"))T(play,3000);
  Object.values(el).forEach(d=>{}); (G==="spell"?cur.ans.split(""):cur.ans.split(" ")).forEach(c=>el[c].className="L stay");
  if(G==="spell"&&diff==="B1"){const s=Q("#side");s.classList.add("show");s.classList.remove("closed");Q("#pos").innerHTML=Object.entries(A.pos).map(([k,v])=>`<button data-k="${k}">${v}</button>`).join("")}};
 Q("#noB").onclick=()=>{if(!cur||busy||cur.marked)return;
