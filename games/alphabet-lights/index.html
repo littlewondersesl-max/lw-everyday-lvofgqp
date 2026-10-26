@@ -55,20 +55,25 @@ button.no{background:#e5394a;box-shadow:0 4px 0 #b02232}
 .cell.done::after{content:"\2713";font-size:1.2em}
 @media (max-aspect-ratio:1/1){#side{position:fixed;right:6px;left:6px;top:auto;bottom:84px;width:auto;max-height:46vh;overflow:auto}#side #pos{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}#side #pos button{padding:6px 2px;font-size:13px}#table{flex-direction:column}#big{height:38cqh;width:30cqh}#cells{height:auto;width:100%}}
 @media (min-aspect-ratio:3/2){#cells{grid-template-columns:repeat(2,1fr)}}
-</style></head><body>
+#score{display:inline-flex;align-items:center;gap:8px}#bar{width:clamp(50px,8vw,110px);height:10px;border-radius:6px;background:#ffffff26;overflow:hidden}#bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff2d95,#ffe100);transition:width .3s}
+#res{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;background:#05070cd0}#res.show{display:flex}
+#res>div{background:#1a2030;border:2px solid #ff2d95;border-radius:24px;padding:28px 40px;text-align:center;box-shadow:0 0 40px #ff2d9588}
+#res h2{margin:0 0 6px;font-size:clamp(20px,3vw,30px)}#res .big{font-size:clamp(40px,8vw,72px);font-weight:900;color:#ffe100;text-shadow:0 0 18px #ffe100aa}#res p{margin:6px 0 18px;opacity:.85}
+</style><link rel="icon" href="data:,"></head><body>
 <div id="top"><a class="home" href="../../index.html">Home</a><h1 id="title">Alphabet Lights</h1>
  <div class="seg" id="game"><button data-g="seq">Sequence</button><button data-g="spell">Spelling</button><button data-g="table">Letter Table</button></div>
  <div class="seg" id="lvl"></div><div class="seg" id="diff"></div>
- <button class="ctl go" id="play">Play</button><span id="score">Score 0</span></div>
+ <button class="ctl go" id="play">Play</button><span id="score"><span id="bar"><i></i></span><em id="rtxt">Round 0/10</em></span></div>
 <div id="main"><div id="stage"></div><div id="table"><div id="big"></div><div id="cells"></div></div>
  <div id="side"><button id="tog">Bonus</button><h3>Bonus: word type</h3><p>What kind of word is it?</p><div id="pos"></div><button class="ctl" id="skip" style="width:100%;margin-top:8px">Skip</button></div></div>
 <div id="ans"><button id="reveal">Teacher: tap to show answer</button><span id="answer"></span><span id="msg"></span><button class="ctl ok" id="yes" title="Correct">&#10003; Correct</button><button class="ctl no" id="noB" title="Try again">&#10007; Try again</button></div>
+<div id="res"><div><h2 id="rh">Round complete</h2><div class="big" id="rbig"></div><p id="rsub"></p><button class="ctl go" id="again">Play again</button></div></div>
 <script src="data.js"></script><script>
 (function(){
 const A=window.AL,Q=s=>document.querySelector(s),ABC="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const COL={A:"#ff2d95",B:"#1e7bff",C:"#9dff1e",D:"#ff8a00",E:"#ffe100",F:"#b13cff",G:"#ff1e1e",H:"#00f0ff",I:"#ff2d95",J:"#9dff1e",K:"#ff8a00",L:"#1e7bff",M:"#ffe100",N:"#b13cff",O:"#ff1e1e",P:"#00f0ff",Q:"#9dff1e",R:"#ff2d95",S:"#ff8a00",T:"#1e7bff",U:"#ffe100",V:"#b13cff",W:"#9dff1e",X:"#ff1e1e",Y:"#00f0ff",Z:"#ff2d95"};
 const prm=new URLSearchParams(location.search);
-let G=["seq","spell","table"].includes(prm.get("g"))?prm.get("g"):"seq",lvl=null,diff="A1",score=0,cur=null,busy=false,timers=[];
+let G=["seq","spell","table"].includes(prm.get("g"))?prm.get("g"):"seq",lvl=null,diff="A1",score=0,cur=null,rn=0,pts=0,bonus=0,used=[],tot=0,busy=false,timers=[];
 const el={};
 function letter(c){const d=document.createElement("div");d.className="L";d.style.setProperty("--c",COL[c]);d.innerHTML=`<img class="off" src="off-${c}.webp" alt="${c}"><img class="on" src="on-${c}.webp" alt="">`;return d}
 [[0,9],[9,18],[18,26]].forEach(([a,b])=>{const r=document.createElement("div");r.className="row";for(let i=a;i<b;i++){const d=letter(ABC[i]);el[ABC[i]]=d;r.appendChild(d)}Q("#stage").appendChild(r)});
@@ -78,17 +83,24 @@ function stop(){timers.forEach(clearTimeout);timers=[];busy=false;Object.values(
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function seg(id,items,val,cb){const s=Q(id);s.innerHTML=items.map(([v,t])=>`<button data-v="${v}" class="${v==val?"on":""}">${t}</button>`).join("");s.onclick=e=>{const b=e.target.closest("button");if(!b)return;s.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));cb(b.dataset.v)}}
-function setScore(n){score=n;Q("#score").textContent="Score "+score}
+const N=10;function prog(){Q("#rtxt").textContent="Round "+rn+"/"+N;Q("#bar i").style.width=rn/N*100+"%"}
+function setScore(n){score=n}
+function newRound(){rn=0;pts=0;bonus=0;used=[];tot=0;Q("#res").classList.remove("show");prog()}
+function finish(){stop();const s=Q("#res");
+ if(G==="table"){Q("#rbig").textContent=pts+" answers";Q("#rsub").textContent=pts+" of "+tot+" prompts answered across "+N+" letters"}
+ else{Q("#rbig").textContent=pts+" out of "+N;Q("#rsub").textContent=(G==="spell"&&diff==="B1"?"Bonus word types: "+bonus+" ":"")}
+ Q("#rh").textContent="Round complete";s.classList.add("show")}
+function marked(ok){cur.marked=1;if(ok)pts++;Q("#noB").textContent="\u2717 Try again";Q("#play").textContent=rn>=N?"Results":"Next"}
 function resetAns(){Q("#answer").textContent="";Q("#msg").textContent="";Q("#reveal").style.display="";}
 function setup(){
- stop();resetAns();cur=null;Q("#side").classList.remove("show");
+ stop();resetAns();cur=null;newRound();Q("#side").classList.remove("show");
  Q("#game").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.g===G));
  const isT=G==="table";Q("#stage").style.display=isT?"none":"";Q("#table").classList.toggle("show",isT);
  if(G==="seq"){lvl=lvl&&+lvl<=8?lvl:"2";seg("#lvl",[2,3,4,5,6,7,8].map(n=>[n,"Level "+(n-1)]),lvl,v=>{lvl=v;setup()});Q("#diff").style.display="none"}
  else if(G==="spell"){lvl=lvl&&+lvl>=3&&+lvl<=7?lvl:"3";seg("#lvl",[3,4,5,6,7].map(n=>[n,n+" letters"]),lvl,v=>{lvl=v;setup()});Q("#diff").style.display="";seg("#diff",[["A1","A1"],["A2","A2"],["B1","B1"]],diff,v=>{diff=v;setup()})}
  else{Q("#lvl").innerHTML="";Q("#lvl").style.display="none";Q("#diff").style.display="";seg("#diff",[["A1","A1"],["A2","A2"],["B1","B1"]],diff,v=>{diff=v;setup()})}
  if(G!=="table")Q("#lvl").style.display="";
- Q("#play").textContent=G==="table"?"New letter":"Play";
+ Q("#play").textContent=G==="table"?"Start":"Play";Q("#noB").textContent="\u2717 Try again";
  Q("#reveal").textContent=G==="table"?"Teacher: tap a box when the answer is right":"Teacher: tap to show answer";
  Q("#yes").style.display=Q("#noB").style.display=G==="table"?"none":"";
  if(G==="table"){Q("#cells").innerHTML="";big.className="L";}
@@ -98,33 +110,39 @@ function flash(seq,on,gap){busy=true;let t=300;
  seq.forEach(c=>{const d=el[c];T(()=>{d.className="L lit"},t);T(()=>{d.className="L out"},t+on);T(()=>{d.className="L"},t+on+380);t+=on+gap});
  T(()=>{busy=false;Q("#msg").textContent="Say it!"},t)}
 function play(){
- if(busy)return;stop();resetAns();Q("#side").classList.remove("show");
- if(G==="seq"){const n=+lvl,s=[];while(s.length<n){const c=rnd(ABC.split(""));if(s[s.length-1]!==c)s.push(c)}cur={ans:s.join(" ")};flash(s,1000,350)}
- else if(G==="spell"){const list=A.words[diff][lvl].split(",").map(x=>x.split(" "));let w;do{w=rnd(list)}while(cur&&list.length>1&&cur.w===w[0]);
-  cur={w:w[0],p:w[1],ans:w[0].toUpperCase()};flash(cur.ans.split(""),620,120)}
+ if(busy)return;
+ if(cur&&!cur.marked&&G!=="table"&&rn>0)return;
+ if(rn>=N){if(G==="table"&&cur&&!cur.fin){cur.fin=1}finish();return}
+ stop();resetAns();Q("#side").classList.remove("show");rn++;prog();
+ Q("#noB").textContent="\u2717 Try again";Q("#play").textContent=G==="table"?(rn>=N?"Results":"Next letter"):"Next";
+ if(G==="seq"){const n=+lvl,s=[];while(s.length<n){const c=rnd(ABC.split(""));if(s[s.length-1]!==c)s.push(c)}cur={ans:s.join(" "),seq:s,on:1000,gap:350};flash(s,1000,350)}
+ else if(G==="spell"){const list=A.words[diff][lvl].split(",").map(x=>x.split(" "));let left=list.filter(x=>!used.includes(x[0]));if(!left.length){used=[];left=list}const w=rnd(left);used.push(w[0]);
+  cur={w:w[0],p:w[1],ans:w[0].toUpperCase()};cur.seq=cur.ans.split("");cur.on=620;cur.gap=120;flash(cur.seq,620,120)}
  else table();
 }
 function table(){
  const L=A.levels[diff],all=[...L.base,...L.extra],pool=ABC.split("").filter(c=>all.filter(p=>A.P[p][1].includes(c)).length>=L.min);
- let c;do{c=rnd(pool)}while(cur&&pool.length>1&&cur.c===c);cur={c};
+ let left=pool.filter(x=>!used.includes(x));if(!left.length)left=pool;const c=rnd(left);used.push(c);cur={c};
  big.style.setProperty("--c",COL[c]);big.innerHTML=`<img class="off" src="off-${c}.webp" alt="${c}"><img class="on" src="on-${c}.webp" alt="">`;
  big.className="L";requestAnimationFrame(()=>big.className="L lit");
  const base=L.base.filter(p=>A.P[p][1].includes(c)),ex=shuffle(L.extra.filter(p=>A.P[p][1].includes(c)));
- const ps=base.concat(ex).slice(0,L.cells);const cells=Q("#cells");cells.style.setProperty("--c",COL[c]);
+ const ps=base.concat(ex).slice(0,L.cells);tot+=ps.length;const cells=Q("#cells");cells.style.setProperty("--c",COL[c]);
  cells.style.gridTemplateColumns=ps.length>6?"repeat(2,1fr)":"repeat(2,1fr)";
  cells.innerHTML=ps.map(p=>`<button class="cell">Give me ${A.P[p][0]} starting with <b>${c}</b></button>`).join("");
- cells.onclick=e=>{const b=e.target.closest(".cell");if(!b)return;b.classList.toggle("done");setScore(score+(b.classList.contains("done")?1:-1))};
+ cells.onclick=e=>{const b=e.target.closest(".cell");if(!b)return;b.classList.toggle("done");pts+=b.classList.contains("done")?1:-1};
 }
 Q("#reveal").onclick=()=>{if(G==="table"||!cur||busy)return;Q("#answer").textContent=cur.ans;Q("#reveal").style.display="none"};
-Q("#yes").onclick=()=>{if(!cur||busy||cur.marked)return;cur.marked=1;setScore(score+1);Q("#msg").textContent="Great!";
+Q("#yes").onclick=()=>{if(!cur||busy||cur.marked)return;marked(1);Q("#msg").textContent="Great!";
  Object.values(el).forEach(d=>{}); (G==="spell"?cur.ans.split(""):cur.ans.split(" ")).forEach(c=>el[c].className="L stay");
  if(G==="spell"&&diff==="B1"){const s=Q("#side");s.classList.add("show");s.classList.remove("closed");Q("#pos").innerHTML=Object.entries(A.pos).map(([k,v])=>`<button data-k="${k}">${v}</button>`).join("")}};
-Q("#noB").onclick=()=>{if(!cur||busy)return;Q("#msg").textContent="Try again!";Q("#answer").textContent=cur.ans;Q("#reveal").style.display="none"};
+Q("#noB").onclick=()=>{if(!cur||busy||cur.marked)return;
+ if(!cur.retry){cur.retry=1;stop();resetAns();Q("#msg").textContent="Watch again!";Q("#noB").textContent="\u2717 Wrong / Next";T(()=>flash(cur.seq,cur.on,cur.gap),400);busy=true;return}
+ marked(0);Q("#msg").textContent="Next one";Q("#side").classList.remove("show");T(play,500)};
 Q("#pos").onclick=e=>{const b=e.target.closest("button");if(!b||!cur||cur.posDone)return;cur.posDone=1;
- const r=b.dataset.k===cur.p;b.classList.add(r?"right":"wrong");if(!r)Q(`#pos [data-k="${cur.p}"]`).classList.add("right");if(r)setScore(score+1);Q("#msg").textContent=r?"Bonus point!":cur.w+" is a "+A.pos[cur.p]};
+ const r=b.dataset.k===cur.p;b.classList.add(r?"right":"wrong");if(!r)Q(`#pos [data-k="${cur.p}"]`).classList.add("right");if(r)bonus++;Q("#msg").textContent=r?"Bonus point!":cur.w+" is a "+A.pos[cur.p]};
 Q("#skip").onclick=()=>Q("#side").classList.remove("show");
 Q("#tog").onclick=()=>Q("#side").classList.toggle("closed");
-Q("#play").onclick=play;
+Q("#play").onclick=play;Q("#again").onclick=()=>{newRound();cur=null;Q("#play").textContent=G==="table"?"Start":"Play";play()};
 Q("#game").onclick=e=>{const b=e.target.closest("button");if(!b)return;G=b.dataset.g;lvl=null;setup()};
 setup();
 })();
