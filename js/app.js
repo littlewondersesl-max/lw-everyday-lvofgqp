@@ -1,6 +1,10 @@
 (function(){
 const D=window.LW, Q=s=>document.querySelector(s);
-const SECTIONS=[['packs','Flashcard Packs'],['weather','Everyday Weather'],['chores','Household Chores'],['games','Games'],['alphabet','Alphabet Games'],['stories','Stories & Reading'],['lessons','Lessons']];
+const SECTIONS=[['packs','Flashcard Packs'],['weather','Everyday Weather'],['chores','Household Chores'],['games','Games'],['alphabet','Alphabet Games'],['stories','Stories & Reading'],['videos','Video lessons'],['lessons','Lessons']];
+// Video lessons: watch-and-choose series and frame-video stories (progress type videoSeries / video)
+const VIDEO={'games/everyday-english/index.html':'11 video lessons · watch, tap, see','stories/comic-stories/index.html':'10 video lessons · teacher notes'};
+D.items.forEach(x=>{if(x.href in VIDEO){x.section='videos';x.sub=VIDEO[x.href]}else if(x.group==='Conversations')x.section='videos'});
+const PG=window.LWProgress;
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function entries(sec){
   const seen=new Set(),b=[];
@@ -16,6 +20,7 @@ const NAV=[
   ['Games',()=>entries('games')],
   ['Alphabet Games',()=>entries('alphabet')],
   ['Stories & Reading','stories'],
+  ['Video lessons',()=>entries('videos')],
   ['Lessons',()=>{const l=entries('lessons'),az=entries('packs').filter(e=>e.book&&e.book.id==='az');const g=e=>(e.book&&e.book.group)||e.group||'';return {main:az.concat(l.filter(e=>!g(e))),groups:[...new Set(l.filter(g).map(g))].map(n=>[n,l.filter(e=>g(e)===n)])}}]
 ];
 function link(e,cls){cls=cls?` class="${cls}"`:'';return e.href?`<a${cls} href="${e.href}">${esc(e.title)}</a>`:e.links?e.links.map(l=>`<a${cls} href="${l[1]}">${esc(e.title.split('—')[0].trim())}: ${esc(l[0])}</a>`).join(''):`<span class="soon">${esc(e.title)} (soon)</span>`}
@@ -43,12 +48,14 @@ function home(){
     const links=e.links?`<div class="dls">${e.links.map(l=>`<a href="${l[1]}">${esc(l[0])}</a>`).join('')}</div>`:'';
     const body=`${img}<div class="ct"><h3>${esc(e.title)}</h3><p>${esc(e.sub||'')}</p>${e.note?`<p class="note">${esc(e.note)}</p>`:''}</div>`;
     return `<div class="card${e.href?'':' off'}">${e.href?`<a class="cl" href="${e.href}">${body}</a>`:body}${dls}${links}</div>`}).join('')}</div></section>`).join('');
+  if(PG)PG.decorate(Q('#home'));
 }
 function viewer(){
   menu();
   const id=new URLSearchParams(location.search).get('book'); const b=D.books.find(x=>x.id===id)||D.books[0];
   document.title=b.title+' · Little Wonders'; Q('#btitle').textContent=b.title;
-  const st=Q('#stage'), strip=Q('#strip'); let i=0;
+  const st=Q('#stage'), strip=Q('#strip'); let i=0; const LAST=Math.max(...b.seq.filter(s=>s.type==='page').map(s=>s.n));
+  if(PG&&PG.typeOf(b.id)==='worksheet')PG.finish(b.id);
   strip.innerHTML=b.seq.map((s,k)=>`<button data-k="${k}" class="th ${s.type}">${s.type==='page'||s.thumb?`<img loading="lazy" src="${s.thumb||s.src}" alt="${s.type==='page'?'page '+s.n:esc(s.title)}">`:`<span>${s.type==='game'?'🎮':'▶'}<b class="tl"><br>${esc(s.title)}</b></span>`}</button>`).join('');
   st.innerHTML=b.seq.map((s,k)=>{
     let h;
@@ -64,7 +71,8 @@ function viewer(){
     strip.querySelectorAll('.th').forEach((t,j)=>t.classList.toggle('on',j===k));
     const a=strip.children[k]; if(a){const r=a.getBoundingClientRect(),sr=strip.getBoundingClientRect();if(r.top<sr.top||r.bottom>sr.bottom)strip.scrollBy({top:r.top-sr.top-sr.height/2+r.height/2,left:r.left-sr.left-sr.width/2+r.width/2})}
     Q('#count').textContent=`${s.type==='page'?'Page '+s.n:(s.type==='game'?'Game':'Video')} · ${k+1} / ${items.length}`;
-    history.replaceState(null,'','#'+(k+1));}
+    history.replaceState(null,'','#'+(k+1));
+    if(PG&&s.type==='page'){PG.page(b.id,s.n,LAST);if(b.series)PG.page(b.series,s.n,LAST)}}
   const vis=new Map();
   const io=new IntersectionObserver(es=>{es.forEach(e=>vis.set(+e.target.dataset.k,e.intersectionRatio));let best=i,bv=-1;vis.forEach((v,k)=>{if(v>bv+.01||(Math.abs(v-bv)<=.01&&k<best)){bv=v;best=k}});if(bv>0)mark(best)},{threshold:[0,.25,.5,.75,1]}); items.forEach(x=>io.observe(x));
   // lazy-load game iframes only when near the viewport
@@ -90,7 +98,7 @@ function chooser(){
   }else{
     location.replace('viewer.html?book='+all.find(x=>x.level===lv).id);return;
   }
-  Q('#home').innerHTML=html+`</section>`;
+  Q('#home').innerHTML=html+`</section>`; if(PG)PG.decorate(Q('#home'));
 }
 window.LWApp={home,viewer,chooser};
 })();

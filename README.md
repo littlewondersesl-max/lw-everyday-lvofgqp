@@ -24,3 +24,24 @@ The fixes are applied by `web-app-src/offline_fix.py`, which `build_app.py` runs
 - Household Chores (Grandma & Grandpa): placeholder. The repo is a server-rendered Nitro/TanStack app (`.vercel/output` has a server function, no static index.html); not yet pulled to the box.
 - Save Sam: the source game requests a few optional images/videos that do not exist in /workspace/save-sam (404s, same as the original).
 - Video slots are placeholders.
+
+## Progress tracking (per student)
+`js/progress.js` is one shared module (no build step) that stores each student's progress in `localStorage` (`lwp.students`, `lwp.data.<studentId>`). The header has a **New student** button: typing a name starts a clean slate (no marks anywhere); saved students can be picked again from the same dialog.
+
+Marks on home/level tiles: check mark bottom-left, counter bottom-right. Untouched items show nothing.
+
+| type | counts as used | tile shows |
+|---|---|---|
+| `game` | first tap/key in a page visit = 1 play | check + play count |
+| `book` | furthest page reached in the viewer (either level) | nothing below page 3; check + furthest page; check only at the last page |
+| `project` | opened; finished when `data-finish` selector appears | check + infinity; check only when finished |
+| `worksheet` | opened | check |
+| `videoSeries` | `LWProgress.watched(seriesId, videoId)` | check + watched/total; checks per video inside the series |
+| `video` | single video watched to the end | check |
+
+**Registering new content**
+- New flashcard book in `js/data.js`: nothing to do (books are `book` by default; the viewer reports pages).
+- New game/page: add before `</body>`: `<script src="../../js/progress.js" data-id="games/<folder>" data-type="game"></script>` (the id is the folder path from the site root, the same path the home card links to). Use `data-type="project" data-finish=".css-selector-of-end-screen"` for open-ended projects, `data-type="worksheet"` for one-offs.
+- New video series: add `'<folder id>':{type:'videoSeries',total:N}` to `REG` at the top of `js/progress.js`, load the script on the series page, call `LWProgress.watched('<folder id>','<video id>')` when a video ends, and use `LWProgress.isWatched(...)`/`LWProgress.checkHTML()` to mark the list.
+- To override a type without touching the page, add it to `REG` in `js/progress.js` (e.g. `'chem':{type:'worksheet'}`). Items not listed default to `book` (ids without a slash) or `game`.
+- Video lessons section: `js/app.js` moves Everyday English (Max), comic stories and Conversations into "Video lessons" (`VIDEO` map / `group==="Conversations"`). Note: `build_app.py` regenerates pages from web-app-src; port these edits there before a rebuild.
