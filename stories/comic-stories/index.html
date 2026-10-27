@@ -61,4 +61,5 @@ function caps(){const f=st.frames,w=i=>showWords||peek===i,q=i=>`<button class="
 addEventListener('popstate',pick);
 addEventListener('keydown',e=>{if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;if(e.key===' '){e.preventDefault();toggle()}else if(e.key==='ArrowRight')nav(1);else if(e.key==='ArrowLeft')nav(-1);else if(/^c$/i.test(e.key)){showWords=!showWords;peek=null;caps()}else if(/^r$/i.test(e.key))go(cur)});
 pick();
-</script></body></html>
+</script>
+<script src="../../js/teachers-corner.js"></script></body></html>
