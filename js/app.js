@@ -16,12 +16,12 @@ function entries(sec){
   return b.concat(D.items.filter(x=>x.section===sec));
 }
 const NAV=[
-  ['Everyday Series',[['Flashcard packs',()=>entries('packs').filter(e=>!e.book||e.book.id!=='az')],['Everyday Weather',()=>entries('weather')],['Household Chores',()=>entries('chores')]]],
+  ['Everyday Series',[['Flashcard packs',()=>entries('packs')],['Everyday Weather',()=>entries('weather')],['Household Chores',()=>entries('chores')]]],
   ['Games',()=>entries('games')],
   ['Alphabet Games',()=>entries('alphabet')],
   ['Stories & Reading','stories'],
   ['Video lessons',()=>entries('videos')],
-  ['Lessons',()=>{const l=entries('lessons'),az=entries('packs').filter(e=>e.book&&e.book.id==='az');const g=e=>(e.book&&e.book.group)||e.group||'';return {main:az.concat(l.filter(e=>!g(e))),groups:[...new Set(l.filter(g).map(g))].map(n=>[n,l.filter(e=>g(e)===n)])}}]
+  ['Lessons',()=>{const l=entries('lessons');const g=e=>(e.book&&e.book.group)||e.group||'';return {main:l.filter(e=>!g(e)),groups:[...new Set(l.filter(g).map(g))].map(n=>[n,l.filter(e=>g(e)===n)])}}]
 ];
 function link(e,cls){cls=cls?` class="${cls}"`:'';return e.href?`<a${cls} href="${e.href}">${esc(e.title)}</a>`:e.links?e.links.map(l=>`<a${cls} href="${l[1]}">${esc(e.title.split('—')[0].trim())}: ${esc(l[0])}</a>`).join(''):`<span class="soon">${esc(e.title)} (soon)</span>`}
 function navBody(name,src){

@@ -205,7 +205,6 @@ const ITEMS={
   'stories/jack-texts':{label:'Jack and the Beanstalk texts',lvl:'B1',bars:{vocab:.4,sentences:.3,grammar:.3},g:['past_simple']},
   'chem':{label:'Chem Word Lab',lvl:'B1',bars:{vocab:.6,spelling:.25,speaking:.15}},
   // ---- books outside the Everyday series (Everyday books come from goal-books.js)
-  'az':{label:'A to Z Foods',lvl:'A1',bars:{spelling:.4,vocab:.5,sentences:.1}}
 };
 // defaults for content that has no entry yet (it still scores, and is listed as "untagged" in the console)
 const DEFAULTS={game:{lvl:'A1',bars:{vocab:.4,sentences:.2,listening:.2,speaking:.2}},book:{lvl:'A1',bars:{vocab:.5,sentences:.3,speaking:.2}},video:{lvl:'A1',bars:{listening:.5,vocab:.2,speaking:.3}},worksheet:{lvl:'A1',bars:{vocab:.4,sentences:.3,grammar:.3}},videoSeries:{lvl:'A1',bars:{listening:.5,vocab:.2,speaking:.3}},project:{lvl:'A1',bars:{speaking:.6,listening:.4}}};
