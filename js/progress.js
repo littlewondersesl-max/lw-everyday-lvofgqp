@@ -7,6 +7,7 @@ const KS='lwp.students',KD='lwp.data.';
 // ---- registry: id -> {type,total}. Anything not listed gets a type from its location (see typeOf).
 const lvls=(n,p)=>Array.from({length:n|0},(_,i)=>p+(i+1));
 const wv=(c,id,k)=>{const w=((c[id]||{}).w||{})[k];return w&&+w.v||0};
+const EVG=['room-hop','use-it','helper-pairs','shadow-match','read-find','before-after','feed-pets','mama-baby','kite-week','pack-mountain','chore-kit','family-team','zoom-guess','taste-test','grow-cook-chill'];
 const REG={
   'games/four-corners':{type:'project'},
   // ring: a thing with a fixed set of parts (stories, levels, scenes, pages, lines). Its tile shows a green progress ring (done/ring) round the check badge instead of a play count.
@@ -21,6 +22,8 @@ const REG={
   'games/save-sam':{type:'game',ring:3,unit:'stages',from:c=>lvls(wv(c,'games/save-sam','stage'),'S')},
   'games/what-should-max-wear':{type:'game',ring:3,unit:'scenes',from:c=>[0,1,2].filter(i=>(((c['games/everyday-english']||{}).ok)||{})['wear:'+i]).map(i=>'s'+i)},
   'stories/story-library':{type:'game',ring:10,unit:'pages'},
+  // Everyday Games (the 15 games/mm-* match games): each has 3 levels (A1, A2, 12+; a higher level also finishes the lower ones). The hub tile rings games finished at any level.
+  'games/everyday-games':{type:'game',ring:15,unit:'games',agg:EVG.map(x=>'games/mm-'+x)},
   'games/match-pet':{type:'game',noRing:1},
   'games/match-object':{type:'game',noRing:1},
   'games/everyday-english':{type:'videoSeries',total:11},
@@ -33,6 +36,7 @@ const REG={
   'chem':{type:'worksheet'},
   'lessons/chem-word-lab':{type:'worksheet',alias:'chem'}
 };
+EVG.forEach(x=>{REG['games/mm-'+x]={type:'game',ring:3,unit:'levels'}});
 function register(id,type,opts){REG[id]=Object.assign({},REG[id]||{},opts||{},{type});return REG[id]}
 function typeOf(id){if(REG[id])return REG[id].type;if(id.indexOf('/')<0)return 'book';return 'game'}
 // ---- students
@@ -114,6 +118,7 @@ function levelWinRing(id){const r=rec(id),gc=(goalsData().c||{})[resolve(id)]||{
   if(got.A2)got.A1=1; // two for one
   const n=Object.keys(got).length;return (n||(r&&r.n))?{done:n,total:2,unit:'levels'}:null}
 function ringInfo(id){const t=typeOf(id),rid=resolve(id),R=REG[rid]||REG[id]||{},r=rec(id);
+  if(R.agg){const n=R.agg.filter(i=>{const x=rec(i);return x&&x.u&&Object.keys(x.u).length}).length;return n?{done:n,total:R.agg.length,unit:R.unit||'games'}:null}
   if(R.ring&&(t==='game'||t==='video')){if(t==='game')return r&&(r.n||r.u)?{done:unitsDone(id),total:totalOf(id),unit:R.unit||'parts'}:null;
     const full=(r&&r.done)||higherDone(id);if(!full&&!(r&&r.u))return null;return {done:full?R.ring:unitsDone(id),total:R.ring,unit:R.unit||'parts'}}
   if(t==='game'&&!R.noRing&&/^games\/match-/.test(id))return levelWinRing(id);

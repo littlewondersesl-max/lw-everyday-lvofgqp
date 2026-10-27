@@ -13,14 +13,55 @@ let voice=null;function pv(){const v=speechSynthesis.getVoices();voice=v.find(x=
 if('speechSynthesis' in window){pv();speechSynthesis.onvoiceschanged=pv}
 function say(t){if(!t||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(String(t).replace(/_+/g,'blank'));u.lang='en-GB';if(voice)u.voice=voice;u.rate=.85;speechSynthesis.speak(u)}catch(e){}}
 const P=()=>window.LWProgress;
+/* ---------- level 12+ (B1): same game, same pictures, derived from the A2 plan with less word support, more distractors and fuller clues ---------- */
+const B1T={
+'mm-before-after':{desk:'I started with a blank page, and after an hour of hard work my homework is finally ___.',bath:'The bath was empty, so I turned on the tap and waited. Now it is ___.',lantern:'The path was too dark to walk along until I lit the lantern. Now it gives us ___.',washing_machine:'My clothes were dirty after the match, but after one cycle in the washing machine they are ___.',kettle:'The water was cold, but after a few minutes in the kettle it is ___.',teapot:'The cups were empty until the teapot poured some ___ into them.',guitar:'The room was silent until she picked up the guitar and began to play ___.'},
+'mm-feed-pets':{cat:'It sleeps most of the day, but at night it hunts quietly. It cleans itself with its tongue.',dog:'It is loyal and always waits for you at the door. When you come home, it wags its tail.',bird:'It has a beak and feathers, and it sings at sunrise. Because it can fly, it needs a big cage.',goldfish:'It never makes a sound and it breathes through gills. You have to change the water in its bowl.',rabbit:'It is quiet and gentle, and its back legs are strong. It hops fast and loves carrots and leaves.',hamster:'It sleeps all day and wakes up at night. It runs on its wheel and stores food in its cheeks.'},
+'mm-kite-week':{sunny:'On Monday there was not a single cloud, so we put on sun cream and walked to the park without a coat.',cloudy:'On Tuesday the sky was grey all day, but it did not rain, so it felt cooler than Monday.',rainy:'On Wednesday the streets were wet and we needed umbrellas, so I stayed inside and read a book.',snowy:'On Thursday everything outside was white. We wore our warmest gloves and built a snowman.',stormy:'On Friday there was thunder and lightning, and the wind was strong. It was not safe to fly the kite.',windy:'On Saturday the trees were moving and the kite flew high in the sky. It was perfect weather for kites.'},
+'mm-mama-baby':{hen:'Farmers collect eggs from a hen, and when an egg hatches, the baby that comes out is called a ___.',cow:'A cow gives us milk, and her baby, which drinks that milk too, is called a ___.',sheep:'We use wool from a sheep, and her baby is called a ___.',duck:'A duck swims on the pond with her babies behind her, and the baby is called a ___.',snail:'A snail carries its shell wherever it goes. A young snail is just called a ___.',frog:'A frog lays eggs in the pond, and the baby that hatches has a tail and lives in water. It is called a ___.'},
+'mm-pack-mountain':{hot:'The sun was strong and there was no wind, so for the walk I wore ___.',cold:'The wind was freezing at the top of the mountain, so to keep my head and neck warm I wore ___.',foggy:'The fog was so thick that I could hardly see the path, so I carried ___.',rainy:'It started to pour while we were climbing, so I quickly opened ___.',puddles:'The path was full of deep puddles, so to keep my feet and body dry I wore ___.',rbw:'The rain stopped and the sun came out, and in the sky we saw ___.'},
+'mm-read-find':{sofa:'In the evening the whole family sits together on the ___ to watch TV.',heater:'It is freezing today, so we switched on the ___ to keep the room warm.',bottle:'I take a ___ to school so that I can drink water all day.',fan:'It is a boiling hot afternoon, so I turned on the ___ to cool the room.',laptop:'I write my emails and finish my homework on my ___.',headphones:'The bus is noisy, so I listen to music through my ___.',paintbrush:'To paint a picture, first I dip my ___ in the colour.',bin:'When I finish eating, I throw the wrapper in the ___.'},
+'mm-taste-test':{juice:'Which drink is sweeter than milk and comes from squeezed fruit?',kiwi:'Which fruit is fuzzier than a lemon and is green inside?',lemon:'Which fruit is sourer than a kiwi and is usually yellow?',milk:'Which drink is whiter than juice and comes from a cow?',noodles:'Which food is longer and thinner than a grain of rice, and is often eaten in soup?',orange:'Which fruit is sweeter than a lemon, easier to peel than a kiwi, and has the same name as its colour?',pizza:'Which food is cheesier than rice and is cut into triangle slices?',rice:'Which food is smaller than a noodle and comes in tiny white grains?'},
+'mm-zoom-guess':{apple:'It grows on trees and can be red, green or yellow. Cut it open and you find small brown seeds in the middle.',bread:'Bakers make it from flour in the oven, and it is softer inside than outside. We cut it into slices for sandwiches.',carrot:'It grows under the ground and it is orange. Rabbits love it, and it is crunchier than a potato.',donut:'It is sweeter than most breads, it is round and often has icing on top, and it has a hole in the middle.',egg:'A hen lays it, and it has a hard shell outside. Inside, the yellow part is called the yolk.',fish:'It breathes under water and swims faster than a turtle. Its body is covered in shiny scales.',grapes:'They grow in bunches on a vine and they are smaller than apples. This one is cut in half so we can see inside.',honey:'Bees make it, and it is much stickier than juice. We lift it with a dipper.',['ice-cream']:'It is colder than milk and it melts in the sun. We serve it with a scoop in a cone or a bowl.'},
+'mm-use-it':{cup:'You were very thirsty after the football match. What did you do with the cup?',spoon:'Mum made hot soup for dinner. What did you do with the spoon?',toothbrush:'It was time for bed. What did you do with the toothbrush?',watch:'You did not want to be late for the bus. What did you do with your watch?',shoes:'It was time to leave for school. What did you do with your shoes?',hat:'The sun was very bright at the beach. What did you do with your hat?',glasses:'You opened your favourite story before bed. What did you do with your glasses and the book?',umbrella:'Dark clouds came and it started to pour. What did you do with your umbrella?',teddy:'You felt a little scared in the dark. What did you do with your teddy?',bicycle:'It was a lovely Saturday and the park is far away. What did you do with your bicycle?'},
+'mm-helper-pairs':{fridge:'We keep milk and ice cream in here so they do not go bad.',plate:'I cut my dinner with a knife and eat it with a fork from this.',phone:'When its battery is nearly empty, I connect it to a charger.',window:'I open it to let in fresh air, and I close the curtain at night.',soap:'After I wash my hands with it, I dry them with a towel.',mirror:'I look at myself in it before school, then I comb my hair.',key:'I use it to unlock the front door when I get home.'}};
+const B1X={'mm-use-it':{glasses:{nx:['a-hat','a-shoes']}}};
+function deriveB1(cfg){
+ const src=(cfg.levels||{}).A2||(cfg.levels||{}).A1||[];const ph0=JSON.parse(JSON.stringify(src)),T=B1T[cfg.id]||{},X=B1X[cfg.id]||{},TH=cfg.things||{};
+ const lab=id=>(TH[id]||{}).l||'';
+ ph0.forEach(ph=>{
+  if(ph.t==='quiz'){delete ph.listen;delete ph.autosay;
+   const pool=ph.pool||[];ph.choices=Math.min((ph.choices||3)+1,6,Math.max(pool.length,3));
+   if(/read-find|shadow-match/.test(cfg.id))ph.ol=false;
+   ph.rounds.forEach(r=>{r.q=r.q||{};if(r.q.say===true)delete r.q.say;if(T[r.id])r.q.t=T[r.id];if(X[r.id])Object.assign(r,X[r.id]);
+    if(r.opts){const ans=[].concat(r.a),have=new Set(r.opts);const add=pool.filter(x=>!have.has(x)&&!ans.includes(x)&&!(r.nx||[]).includes(x));if(add.length&&r.opts.length<6)r.opts=r.opts.concat([add[(r.id.length*7+r.opts.length)%add.length]])}})}
+  else if(ph.t==='memory'){ph.ol=false;ph.pairs.forEach(p=>{if(T[p.id])p.b={t:T[p.id]}})}
+  else if(ph.t==='order'){ph.ol=false}
+  else if(ph.t==='sort'){ph.pl=false;
+   ph.bins.forEach(b=>{if(b.a&&!b.l){b.l=b.a;delete b.i}});
+   const labs=ph.pieces.map(p=>lab(p.id)).filter(Boolean);
+   ph.pieces.forEach(p=>{if(p.ask)return;const k=p.sb?Object.keys(p.sb)[0]:null,s=(k&&p.sb[k])||p.say||'';if(!s)return;
+    const m=/\b(in|on|at|under)\b(?= (?:the|a|an|my) )/.exec(s);
+    if(m){const o=['in','on','at','under'].filter(x=>x!==m[1]);p.ask={q:s.replace(m[0],'___'),o:[m[1],...shuf(o).slice(0,2)],a:m[1],s};return}
+    const l=lab(p.id),i=l?s.toLowerCase().indexOf(l.toLowerCase()):-1;
+    if(i>=0){const w=s.substr(i,l.length);p.ask={q:s.slice(0,i)+'___'+s.slice(i+l.length),o:[w,...shuf(labs.filter(x=>x!==l)).slice(0,2)],a:w,s}}})}
+ });
+ return ph0}
 function run(cfg){
  const q=new URLSearchParams(location.search);
  const mid=q.get('mid')==='1';
- let lv=q.get('lv')==='A2'?'A2':'A1';
+ // level: A1, A2 or B1 (shown as "12+"). ?lv= or ?lvl= wins; otherwise the level this profile used last (kept per profile in localStorage)
+ const normLv=v=>{v=String(v||'').toUpperCase().replace(/\s/g,'');return v==='12+'||v==='B1'?'B1':(v==='A1'||v==='A2')?v:null};
+ const curId=()=>{try{const s=JSON.parse(localStorage.getItem('lwp.students')||'{}'),l=Array.isArray(s.list)?s.list:[];return s.cur&&l.some(x=>x&&x.id===s.cur)?s.cur:'s0'}catch(e){return 's0'}};
+ const LVK='lw.everyday.level.'+curId();
+ const saveLv=()=>{if(!mid)try{localStorage.setItem(LVK,lv)}catch(e){}};
+ let lv=normLv(q.get('lv'))||normLv(q.get('lvl'))||(mid?null:(()=>{try{return normLv(localStorage.getItem(LVK))}catch(e){return null}})())||'A1';
+ if(!cfg.levels.B1)cfg.levels.B1=deriveB1(cfg);
+ const LVN={A1:'A1',A2:'A2',B1:'12+'},LVO=['A1','A2','B1'];
  const gid='games/'+cfg.id,TH=cfg.things||{};
  const app=$('#app');
  let S;// run state
- function allowedFn(){const al=cfg.alias||{};if(!mid)return()=>true;const n=(cfg.mid||{})[lv]||3,set=new Set((cfg.book||[]).slice(0,n)),all=new Set(cfg.book||[]);return id=>{id=al[id]||id;return !all.has(id)||set.has(id)}}
+ function allowedFn(){const al=cfg.alias||{};if(!mid)return()=>true;const n=(cfg.mid||{})[lv]||(cfg.mid||{}).A2||3,set=new Set((cfg.book||[]).slice(0,n)),all=new Set(cfg.book||[]);return id=>{id=al[id]||id;return !all.has(id)||set.has(id)}}
  function th(id){return TH[id]||{}}
  function spec(x){if(x&&x.th)return Object.assign({},th(x.th),x,{id:x.th});return x||{}}
  function imHtml(sp,cls,c){const i=sp.i,fb=flatBg(i),cut=i&&/\.webp$/.test(i);const col=c||sp.c||PAL[0];
@@ -35,7 +76,7 @@ function run(cfg){
   pg.innerHTML=`<div id="hd"><div id="lvs"></div><h1>${esc(cfg.title)}</h1><span id="tcs"><span data-tc-slot style="--tcs-size:40px;--tcs-radius:50%;--tcs-bg:#fff;--tcs-bg-hover:#fbe3ec;--tcs-color:#c84678;--tcs-border:3px solid #f4c8d8;--tcs-shadow:none;--tcs-icon:20px"></span></span></div><div id="sub"></div><div id="bar"><i></i></div><div id="stage"></div><div id="cap"></div><div id="foot">Pip's Little Wonders · ${esc(cfg.foot||'')}</div><div id="ask"></div>`;
   app.appendChild(pg);
   const L=$('#lvs');
-  if(!mid)['A1','A2'].forEach(l=>{const b=el('button',l===lv?'on':'',l);b.onclick=()=>{if(l===lv)return;lv=l;history.replaceState(null,'','?lv='+l);start()};L.appendChild(b)});
+  if(!mid)LVO.forEach(l=>{const b=el('button',l===lv?'on':'',LVN[l]);b.onclick=()=>{if(l===lv)return;lv=l;saveLv();history.replaceState(null,'','?lv='+l);start()};L.appendChild(b)});
  }
  function plan(){const ok=allowedFn();const out=[];
   (cfg.levels[lv]||[]).forEach((ph,i)=>{ph=JSON.parse(JSON.stringify(ph));ph.ix=i;
@@ -46,6 +87,7 @@ function run(cfg){
    out.push(ph)});
   return out}
  async function start(){
+  saveLv();
   speechSynthesis&&speechSynthesis.cancel&&speechSynthesis.cancel();
   document.querySelectorAll('.c').forEach(c=>c.remove());$('#party').style.display='none';
   build();
@@ -152,10 +194,10 @@ function run(cfg){
    else{miss.add(n);b.classList.remove('no');void b.offsetWidth;b.classList.add('no')}}
  }
  function finish(){
-  const sc=S.first,tot=S.total;try{P().win(gid,'match:'+lv,{v:sc});if(P().unit){P().unit(gid,lv,2);if(lv==='A2')P().unit(gid,'A1',2)}}catch(e){}
+  const sc=S.first,tot=S.total;try{P().win(gid,'match:'+lv,{v:sc});if(P().unit){for(let k=0;k<=LVO.indexOf(lv);k++)P().unit(gid,LVO[k],3)}}catch(e){}
   const pa=$('#party');pa.innerHTML=`<div>Well done!<small>${sc} of ${tot} right the first time</small></div><div class="row"></div>`;
   const row=$('.row',pa);const again=el('button','btn','Play again');again.onclick=start;row.appendChild(again);
-  if(!mid&&lv==='A1'){const nx=el('button','btn','Try A2');nx.onclick=()=>{lv='A2';history.replaceState(null,'','?lv=A2');start()};row.appendChild(nx)}
+  if(!mid&&lv!=='B1'){const nl=LVO[LVO.indexOf(lv)+1];const nx=el('button','btn','Try '+LVN[nl]);nx.onclick=()=>{lv=nl;saveLv();history.replaceState(null,'','?lv='+nl);start()};row.appendChild(nx)}
   pa.style.display='flex';say('Well done!');
   const cols=['#f7a8c4','#9cc8f0','#ffd23f','#7ccf8a','#c7a8f0'];for(let i=0;i<70;i++){const c=el('div','c');c.style.left=Math.random()*100+'vw';c.style.background=cols[i%5];c.style.animationDuration=2+Math.random()*2+'s';c.style.animationDelay=Math.random()*1.5+'s';pa.appendChild(c)}
  }

@@ -85,3 +85,14 @@ header.top .lwg-star{flex:none}
 header.top .burger{margin-left:0;padding:3px 9px;font-size:20px;flex:none}
 }
 @media (max-width:380px){header.top .brand span{font-size:0}header.top .brand small{display:none}header.top .lwp-who{max-width:72px}}
+
+/* Everyday Games: square card, Level pill, level badge */
+.thumb.sq{aspect-ratio:1/1}
+.lvbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin:0 0 16px}
+.lvlab{font-weight:900;color:var(--pur);font-size:18px}
+.lvpill{display:inline-flex;gap:2px;padding:4px;background:#fff;border-radius:999px;box-shadow:0 6px 18px rgba(108,78,160,.1)}
+.lvpill button{border:0;background:transparent;border-radius:999px;padding:8px 20px;min-width:62px;font:inherit;font-weight:800;color:var(--pur);cursor:pointer}
+.lvpill button:hover{background:var(--lav)}.lvpill button.on{background:var(--pur);color:#fff}
+.lvpill button:focus-visible{outline:3px solid var(--teal);outline-offset:1px}
+.lvnote{flex-basis:100%;margin:2px 4px 0;font-size:14px;color:var(--ink)}.lvnote b{color:var(--teal)}
+.lvb{position:absolute;top:8px;right:8px;z-index:3;min-width:26px;height:26px;padding:0 9px;display:inline-flex;align-items:center;justify-content:center;border-radius:13px;background:rgba(255,255,255,.94);box-shadow:0 1px 5px rgba(0,0,0,.18);font:800 13px/1 Nunito,system-ui,sans-serif;color:var(--pur);pointer-events:none}

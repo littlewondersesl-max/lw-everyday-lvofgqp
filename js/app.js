@@ -5,6 +5,10 @@ const SECTIONS=[['packs','Flashcard Packs'],['weather','Everyday Weather'],['cho
 const VIDEO={'games/everyday-english/index.html':'11 video lessons · watch, tap, see','stories/comic-stories/index.html':'10 video lessons · teacher notes'};
 D.items.forEach(x=>{if(x.href in VIDEO){x.section='videos';x.sub=VIDEO[x.href]}else if(x.group==='Conversations')x.section='videos'});
 const PG=window.LWProgress;
+// The 15 match games (games/mm-*) live on one Everyday Games page; the menus show a single square card for them.
+const MMRE=/^games\/mm-/;
+const EVERYDAY={title:'Everyday Games',sub:'15 matching games · pick a level: A1, A2 or 12+',href:'everyday-games.html',img:'img/thumbs/everyday-games.jpg',sq:1,pid:'games/everyday-games'};
+const LVN={A1:'A1',A2:'A2',B1:'12+'},LVI={A1:'Pictures and simple words, with fewer pairs.',A2:'Short sentences, with a few more pairs.',B1:'Fuller clues and sentences, more choices and less picture help.'};
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function entries(sec){
   const seen=new Set(),b=[];
@@ -13,7 +17,8 @@ function entries(sec){
     if(seen.has(x.series))return; seen.add(x.series);
     b.push({title:x.seriesTitle,sub:'Level A1 or A2',href:'book.html?s='+x.series,img:x.cover});
   });
-  return b.concat(D.items.filter(x=>x.section===sec));
+  const rest=D.items.filter(x=>x.section===sec&&!MMRE.test(x.href));
+  return (sec==='games'?[EVERYDAY]:[]).concat(b,rest);
 }
 const NAV=[
   ['Everyday Series',[['Flashcard packs',()=>entries('packs')],['Everyday Weather',()=>entries('weather')],['Household Chores',()=>entries('chores')]]],
@@ -27,6 +32,7 @@ function link(e,cls){cls=cls?` class="${cls}"`:'';return e.href?`<a${cls} href="
 function navBody(name,src){
   if(src==='stories'){const all=entries('stories'),lib=all.find(e=>e.title==='Story Library');
     return (lib?link(lib,'pin'):'')+all.filter(e=>e!==lib).map(e=>link(e,'child')).join('')}
+  if(name==='Games'){const r=src(),h=r.find(e=>e.pid);return (h?link(h,'pin'):'')+r.filter(e=>e!==h).map(e=>link(e)).join('')}
   if(Array.isArray(src)) return src.map(([n,f])=>`<div class="sdd"><button class="sddb">${n} ▸</button><div class="sddm">${f().map(e=>link(e)).join('')}</div></div>`).join('');
   const r=src(); if(Array.isArray(r)) return r.map(e=>link(e)).join('');
   return r.main.map(e=>link(e)).join('')+r.groups.map(([n,a])=>`<div class="grp">${esc(n)}</div>`+a.map(e=>link(e)).join('')).join('');
@@ -43,11 +49,11 @@ function home(){
   menu();
   Q('#home').innerHTML=`<section class="hero"><img src="img/logo.png" alt=""><div><h1>The Everyday Series</h1><p>Picture sentence flashcards, games and stories for young English learners. Pick a book to open the lesson: pages in order, with games in between.</p></div></section>`+
   SECTIONS.map(([id,name])=>`<section class="sec" id="${id}"><h2>${name}</h2><div class="grid">${entries(id).map(e=>{
-    const img=e.img?`<div class="thumb"><img loading="lazy" src="${e.img}" alt=""></div>`:`<div class="thumb ph">Coming soon</div>`;
+    const img=e.img?`<div class="thumb${e.sq?' sq':''}"><img loading="lazy" src="${e.img}" alt=""></div>`:`<div class="thumb ph">Coming soon</div>`;
     const dls=e.book&&e.book.downloads.length?`<div class="dls">${e.book.downloads.map(d=>`<a href="${d.href}" download>${esc(d.label)}</a>`).join('')}</div>`:'';
     const links=e.links?`<div class="dls">${e.links.map(l=>`<a href="${l[1]}">${esc(l[0])}</a>`).join('')}</div>`:'';
     const body=`${img}<div class="ct"><h3>${esc(e.title)}</h3><p>${esc(e.sub||'')}</p>${e.note?`<p class="note">${esc(e.note)}</p>`:''}</div>`;
-    return `<div class="card${e.href?'':' off'}">${e.href?`<a class="cl" href="${e.href}">${body}</a>`:body}${dls}${links}</div>`}).join('')}</div></section>`).join('');
+    return `<div class="card${e.href?'':' off'}"${e.pid?` data-pid="${e.pid}"`:''}>${e.href?`<a class="cl" href="${e.href}">${body}</a>`:body}${dls}${links}</div>`}).join('')}</div></section>`).join('');
   if(PG)PG.decorate(Q('#home'));
 }
 function viewer(){
@@ -100,5 +106,28 @@ function chooser(){
   }
   Q('#home').innerHTML=html+`</section>`; if(PG)PG.decorate(Q('#home'));
 }
-window.LWApp={home,viewer,chooser};
+function hub(){
+  menu();
+  document.title='Everyday Games · Little Wonders';Q('#btitle').textContent='Everyday Games';
+  const MM=D.items.filter(x=>MMRE.test(x.href));
+  const pid=()=>{try{return PG.current().id}catch(e){return 's0'}};
+  const KEY='lw.everyday.level.'+pid();
+  const norm=v=>{v=String(v||'').toUpperCase();return v==='12+'?'B1':(LVN[v]?v:null)};
+  let lv=norm(new URLSearchParams(location.search).get('lvl'))||norm(new URLSearchParams(location.search).get('lv'));
+  if(!lv){try{lv=norm(localStorage.getItem(KEY))}catch(e){}}
+  lv=lv||'A1';
+  const gid=x=>'games/'+x.href.split('/')[1];
+  function render(){
+    try{localStorage.setItem(KEY,lv)}catch(e){}
+    const fin=PG?MM.filter(x=>{const r=PG.get(gid(x));return r&&r.u&&r.u[lv]}).length:0;
+    Q('#home').innerHTML=`<section class="sec"><p class="crumb"><a href="index.html">Home</a> › Everyday Games</p><h2>Everyday Games</h2>
+    <div class="lvbar"><span class="lvlab" id="lvlab">Level</span><div class="lvpill" role="radiogroup" aria-labelledby="lvlab">${['A1','A2','B1'].map(l=>`<button type="button" role="radio" aria-checked="${l===lv}" class="${l===lv?'on':''}" data-l="${l}">${LVN[l]}</button>`).join('')}</div>
+    <p class="lvnote">${esc(LVI[lv])} The same 15 games and pictures at every level. A game you finish at a higher level counts for the lower levels too.${PG?` <b>${fin} of ${MM.length}</b> finished at ${LVN[lv]}.`:''}</p></div>
+    <div class="grid">${MM.map(x=>`<div class="card" data-pid="${gid(x)}"><a class="cl" href="${x.href}?lv=${lv}"><div class="thumb"><img loading="lazy" src="img/thumbs/game-${x.href.split('/')[1]}.jpg" alt=""><span class="lvb" title="Level ${LVN[lv]}">${LVN[lv]}</span></div><div class="ct"><h3>${esc(x.title)}</h3><p>${esc(x.sub||'')}</p></div></a></div>`).join('')}</div></section>`;
+    Q('#home').querySelectorAll('.lvpill button').forEach(b=>b.onclick=()=>{if(b.dataset.l!==lv){lv=b.dataset.l;history.replaceState(null,'','?lvl='+({A1:'a1',A2:'a2',B1:'b1'})[lv]);render();const n=Q('#home .lvpill button.on');n&&n.focus()}});
+    if(PG)PG.decorate(Q('#home'));
+  }
+  render();
+}
+window.LWApp={home,viewer,chooser,hub};
 })();
