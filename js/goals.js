@@ -18,9 +18,35 @@ function defOf(id){id=T.ALIAS[id]||id;if(T.ITEMS[id])return Object.assign({id,ta
   const d=T.DEFAULTS[P.typeOf(id)]||T.DEFAULTS.game;return Object.assign({id,tagged:0,label:id},d)}
 function winDef(def,key){const base=String(key).split(':')[0];const w=(def.wins||{})[base]||{label:base,unit:''};const sfx=String(key).split(':')[1];
   return {label:w.label,unit:w.unit||'',bars:norm(w.bars||def.bars),lvl:(LV.indexOf(sfx)>=0?sfx:(w.lvl||def.lvl)),sfx:LV.indexOf(sfx)>=0?sfx:''}}
+// ---------- two for one: a higher-level achievement also completes the matching lower-level one
+// Pip's rule: finishing an A2 achievement also marks the matching A1 achievement complete (A2 covers the higher difficulty); B1 completes the A2 and A1 ones.
+// Done at scoring time on a COPY of the saved record (nothing extra is stored), so it applies to progress saved before the rule existed,
+// it is a set union (an achievement is credited once, however it was earned or repeated), and the credit counts toward that level's goal bars.
+// Matching: same series at another level (book eo1a2 -> eo1a1, lessons/conversations/a2 -> .../a1), page by page (pages of the same kind, aligned in order, so
+// extra worksheet pages that only the higher book has are not matched), and level-tagged game wins in the same game ('spell:A2' -> 'spell:A1').
+const LTOK=/^(.*?)(a1|a2|b1)$/;
+function famOf(id){const m=LTOK.exec(id);if(!m)return null;const L=m[2].toUpperCase();const d=B[id]?{lvl:B[id].lvl}:T.ITEMS[id];return d&&d.lvl===L?{base:m[1],L}:null}
+function sibOf(id,L){const f=famOf(id);if(!f)return null;const sid=f.base+L.toLowerCase();return sid!==id&&(B[sid]||T.ITEMS[sid])&&famOf(sid)?sid:null}
+const PM={};
+function pageMap(from,to){const key=from+'>'+to;if(PM[key])return PM[key];const a=B[from]&&B[from].k,b=B[to]&&B[to].k,map={};if(!a||!b)return PM[key]=map;
+  const n=a.length,m=b.length,D=[];for(let i=0;i<=n;i++)D.push(new Array(m+1).fill(0));
+  for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)D[i][j]=a[i]===b[j]?D[i+1][j+1]+1:Math.max(D[i+1][j],D[i][j+1]);
+  let i=0,j=0;while(i<n&&j<m){if(a[i]===b[j]&&D[i][j]===D[i+1][j+1]+1){map[i+1]=j+1;i++;j++}else if(D[i+1][j]>=D[i][j+1])i++;else j++}
+  return PM[key]=map}
+// returns a new record map with the cascaded credit added; the saved data is never changed
+function cascade(C){const E={};Object.keys(C).forEach(k=>E[k]=C[k]);const own={};
+  const mine=id=>{if(!own[id]){const r=E[id]||{};E[id]=Object.assign({},r,r.pg?{pg:Object.assign({},r.pg)}:{},r.w?{w:Object.assign({},r.w)}:{});own[id]=1}return E[id]};
+  Object.keys(C).forEach(id=>{const r=C[id],f=famOf(id);
+    if(r.w)Object.keys(r.w).forEach(k=>{const q=k.split(':'),li=LV.indexOf(q[1]);if(li<1)return; // level-tagged win in the same game: 'spell:A2' also earns 'spell:A1'
+      for(let l=0;l<li;l++){const k2=q[0]+':'+LV[l];if(!((E[id]||{}).w||{})[k2]){const t=mine(id);t.w=t.w||{};t.w[k2]={t:r.w[k].t,f:null,v:null,n:0}}}});
+    if(!f)return;const li=LV.indexOf(f.L);if(li<1)return;
+    for(let l=0;l<li;l++){const sid=sibOf(id,LV[l]);if(!sid)continue;
+      if(r.pg){const mp=pageMap(id,sid);Object.keys(r.pg).forEach(n=>{const m=mp[n];if(m&&!((E[sid]||{}).pg||{})[m]){const t=mine(sid);t.pg=t.pg||{};t.pg[m]=r.pg[n]}})}
+      if(r.d&&!(E[sid]||{}).d)mine(sid).d=r.d}});
+  return E}
 // ---------- scoring (pure function of the raw record + registry, so re-tagging re-scores history)
 function ledger(){
-  const data=P.goalsData(),C=data.c||{};
+  const data=P.goalsData(),C=cascade(data.c||{});
   const S={pts:{},lines:{},gram:{},topic:{},seen:{},untagged:[]};
   LV.forEach(l=>{S.pts[l]={};S.lines[l]={};S.gram[l]={};S.topic[l]={};S.seen[l]={}});
   const add=(L,bars,p)=>{if(!p)return;for(const b in bars)S.pts[L][b]=(S.pts[L][b]||0)+p*bars[b]};
@@ -125,10 +151,11 @@ function away(e){if(panel&&!panel.contains(e.target)&&!star.contains(e.target))c
 function esc_(e){if(e.key==='Escape'){close();star&&star.focus()}}
 addEventListener('resize',place);addEventListener('scroll',()=>{if(panel&&!panel.matches(':hover'))place()},{passive:true});
 // ---------- book page coins (viewer)
+function creditedPage(book,n){try{const r=cascade(P.goalsData().c||{})[book];return !!(r&&r.pg&&r.pg[n])}catch(e){return false}}
 function coins(){const st=document.getElementById('stage');const book=new URLSearchParams(location.search).get('book');if(!st||!book)return;
   const hdr=document.querySelector('header.top');const items=[...st.querySelectorAll('.vitem.page')];if(!items.length)return;
   const list=items.map(el=>{const img=el.querySelector('img.slide');const m=img&&/Page (\d+)/.exec(img.alt||'');if(!m)return null;const n=+m[1];
-    const got=P.hasCoin(book,n);const c=document.createElement('div');c.className='lwc'+(got?' got':'');c.innerHTML=STAR;c.setAttribute('aria-hidden','true');el.appendChild(c);
+    const got=P.hasCoin(book,n)||creditedPage(book,n);const c=document.createElement('div');c.className='lwc'+(got?' got':'');c.innerHTML=STAR;c.setAttribute('aria-hidden','true');el.appendChild(c);
     return {el,n,c,got,seen:false}}).filter(Boolean);
   const io=new IntersectionObserver(es=>es.forEach(e=>{const o=list.find(x=>x.el===e.target);if(o&&e.intersectionRatio>=.25)o.seen=true}),{threshold:[0,.25,.5]});list.forEach(o=>io.observe(o.el));
   let q=[],busy=false;
@@ -152,7 +179,7 @@ function fly(it){const s=star&&star.getBoundingClientRect();if(!s){pulse();retur
   a.onfinish=()=>{f.remove();chime();pulse(true)}}
 function pulse(plus){if(!star)return;star.classList.remove('pulse');void star.offsetWidth;star.classList.add('pulse');if(plus){const r=star.getBoundingClientRect(),p=document.createElement('div');p.className='lwg-plus';p.textContent='+1';p.style.left=(r.left+r.width/2-14)+'px';p.style.top=(r.bottom-2)+'px';document.body.appendChild(p);setTimeout(()=>p.remove(),1000)}
   if(panel)render()}
-window.LWGoals={ledger:()=>ledger(),autoLevel:()=>autoLevel(ledger()),open,close,chime,level:()=>{const S=ledger(),p=levelPref();return p==='auto'?autoLevel(S):p}};
+window.LWGoals={ledger:()=>ledger(),credited:(id,n)=>creditedPage(id,n),cascade:c=>cascade(c),autoLevel:()=>autoLevel(ledger()),open,close,chime,level:()=>{const S=ledger(),p=levelPref();return p==='auto'?autoLevel(S):p}};
 function load(src,cb){const s=document.createElement('script');s.src=ROOT+src;s.onload=cb;s.onerror=()=>console.warn('[goals] could not load',src);document.head.appendChild(s)}
 function init(){T=window.LWGoalTags;B=window.LWGoalBooks||{};if(!T)return;addCSS();mount();coins();
   addEventListener('lwgoals',e=>{if(!panel)return;render()});
