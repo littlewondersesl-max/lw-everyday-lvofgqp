@@ -103,7 +103,7 @@ async function walk(pet,home,opts={}){const P=PETS.find(p=>p.id===pet),ep=els["p
  if(opts.freeze!==undefined){w.style.left=(x0+(x1-x0)*opts.freeze)+"px";return}
  const dur=2600;w.style.transition=`left ${dur}ms linear`;await wait(30);w.style.left=x1+"px";await wait(dur);
  w.style.transition="opacity .3s, transform .3s";w.style.opacity=0;w.style.transform="scale(.6)";eh.b.querySelector("img").src="home-"+home+"-in.jpg";eh.b.querySelector(".pic").classList.add("pop");await wait(320);w.remove();setTimeout(()=>{ep.band.classList.remove("on");eh.b.querySelector(".pic").classList.remove("pop")},600)}
-function celebrate(){say("Well done! Every pet is home!");const p=document.getElementById("party");p.style.display="flex";const cols=["#f7a8c4","#9cc8f0","#ffd23f","#7ccf8a","#c7a8f0"];
+function celebrate(){try{LWProgress.win("games/match-pet","match")}catch(e){}say("Well done! Every pet is home!");const p=document.getElementById("party");p.style.display="flex";const cols=["#f7a8c4","#9cc8f0","#ffd23f","#7ccf8a","#c7a8f0"];
  for(let i=0;i<80;i++){const c=document.createElement("div");c.className="c";c.style.left=Math.random()*100+"vw";c.style.background=cols[i%5];c.style.animationDuration=2+Math.random()*2+"s";c.style.animationDelay=Math.random()*1.5+"s";p.appendChild(c)}}
 document.getElementById("again").onclick=()=>{document.getElementById("party").style.display="none";document.querySelectorAll(".c").forEach(c=>c.remove());svg.innerHTML="";build()};
 build();stage.classList.add("na");const relay=()=>{stage.classList.add("na");layout();LINES.forEach(setL);stage.offsetHeight;setTimeout(()=>stage.classList.remove("na"),50)};addEventListener("load",relay);setTimeout(relay,300);setTimeout(relay,1000);document.fonts&&document.fonts.ready.then(relay);

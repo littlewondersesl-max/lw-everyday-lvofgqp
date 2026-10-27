@@ -102,6 +102,7 @@ function flash(b,c,ms=450){clearTimeout(b._ft);b.classList.remove("ok","bad");vo
 async function tap(i){if(busy)return;const b=btns[i];say(ANIMALS[i][0]);cap.textContent=ANIMALS[i][0];const r=checkTap(seq,level,pos,i);
  if(r==="wrong"){flash(b,"bad",1100);setLocked(true);cap.textContent="Try again";await wait(1400);return playLevel()}
  flash(b,"ok");pos++;
+ if(r==="levelDone"||r==="win")try{LWProgress.win("games/animal-memory","memory",{v:level})}catch(e){}
  if(r==="levelDone"){setLocked(true);await wait(500);cap.textContent="Great!";await wait(1000);level++;seq=sequenceFor(mode,level,seq);playLevel()}
  if(r==="win"){setLocked(true);celebrate()}}
 function celebrate(){say("Well done! You did it!");starBtn.classList.add("glow");const p=document.getElementById("party");p.style.display="flex";const cols=["#f7a8c4","#9cc8f0","#ffd23f","#7ccf8a","#c7a8f0"];

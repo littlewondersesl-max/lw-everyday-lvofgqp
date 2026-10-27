@@ -45,3 +45,37 @@ Marks on home/level tiles: check mark bottom-left, counter bottom-right. Untouch
 - New video series: add `'<folder id>':{type:'videoSeries',total:N}` to `REG` at the top of `js/progress.js`, load the script on the series page, call `LWProgress.watched('<folder id>','<video id>')` when a video ends, and use `LWProgress.isWatched(...)`/`LWProgress.checkHTML()` to mark the list.
 - To override a type without touching the page, add it to `REG` in `js/progress.js` (e.g. `'chem':{type:'worksheet'}`). Items not listed default to `book` (ids without a slash) or `game`.
 - Video lessons section: `js/app.js` moves Everyday English (Max), comic stories and Conversations into "Video lessons" (`VIDEO` map / `group==="Conversations"`). Rebuild safety: `web-app-src/progress.js` is the source of `js/progress.js`, and `web-app-src/progress_apply.py` (run by `build_app.py` after `offline_fix`) re-inserts the progress script tags and hooks into the copied pages, so a rebuild keeps progress tracking and My account. (`web-app-src/app.js`, `index.html`, `viewer.html` carry the hooks directly; they predate later hand edits in the repo, such as book.html, Alphabet Games and the Video lessons menu, which a rebuild would still drop.)
+
+## Goals, points and the gold coin star
+
+The header shows a gold coin star next to the student name. It opens a dropdown with the six goals shown to parents (Words I know, Spelling and letters, Making sentences, Grammar, Listening and understanding, Talking about my world). Each goal shows the student's level (A1, A2 or B1), a progress bar and a status word, and expands into a plain-language breakdown ("Weather: 2 of 12 word cards seen", "Letter sequence: first success at level 2, improved to level 3"). The level is chosen automatically (the highest level with 10 or more points) and can be set by hand in the dropdown.
+
+**Scoring is hidden and per student.** Points go only to a first completion and to an improvement. Repeating something earns nothing.
+
+| Event | Points | Where it is recorded |
+|---|---|---|
+| Book page coin (first time per page) | 1 x the page type weight (word card, bridge, pairs, story page, worksheet; "other" pages 0.3) | `LWProgress.coin(book, page)` |
+| First play of a game | 1 | `LWProgress.played` (automatic) |
+| First success of a named task (`win`) | 3 | `LWProgress.win(id, key, {v})` |
+| Improvement of that task (higher `v`) | 1.5 each, up to 3 improvements | same call, later with a higher `v` |
+| Video or video series item finished | 4 | `LWProgress.watched` (automatic) |
+| Worksheet or project finished | 2 | `LWProgress.finish` (automatic) |
+| Correct choice (each distinct choice once, cap 12 per item) | 0.75 | `LWProgress.correct(id, key)` |
+
+Raw events are stored in `localStorage` under `lwp.goals.<student id>`. Points are **computed when the dropdown opens** from those raw events and the registry, so changing a tag re-scores history. One goal bar fills at 30 points per level.
+
+### The tag registry (how future content joins the system)
+
+- `js/goal-tags.js` (hand-edited) holds the six goals with their A1, A2 and B1 wording, the grammar point list, the topics (weather, actions, chores, family), the page-type weights, and `ITEMS`: one entry per game, lesson, video series, worksheet set or book that is not an Everyday book. An entry declares its level (`lvl`), which goal bars it feeds (`bars`, weights are normalised), optional `topic`, grammar (`g`), named wins (`wins`), and totals used in the "x of N" lines.
+- `js/goal-books.js` (generated, do not edit) tags every page of every Everyday book with its page type, grammar points and topics. It comes from `tools/goal-book-source.json`; run `python3 tools/gen_goal_books.py` after changing that file. The grammar and topic tags were produced by a heuristic (patterns plus a word list, estimated 90 to 95 percent right) and spot-checked by hand.
+- `js/goals.js` is the engine and UI (loaded automatically by `progress.js` on pages that have the site header).
+
+**To add new content:** give it a stable id (its path, e.g. `games/my-game`), add one `ITEMS` entry in `goal-tags.js`, and make the page report what happened. A game that is only played needs nothing more, because the first tap is recorded. For wins call `LWProgress.win('games/my-game','round',{v:levelReached})` when a task is first completed and again with a higher `v` when the child improves. Repeats are ignored automatically. Content that has no entry is still scored, with a default for its type, and its id is logged to the browser console as "content without a tag entry". A new Everyday book needs no code: add it to `tools/goal-book-source.json` (level, family, per-page type, grammar, topics), regenerate `goal-books.js`, and every page gets its coin.
+
+### Book page coins
+
+Every page in `viewer.html` carries a small gold coin in its top right corner. A coin is collected only after the page was really on screen (at least a quarter of it visible) and the coin has scrolled up to the header. Jumping straight to a later page does not collect the pages skipped. The coin then slides into the header star with a soft chime made with WebAudio (no sound file), and the star pulses. Each page pays once per student. The dropdown has a Coin sound switch (`localStorage lwp.coinsound`). `prefers-reduced-motion` shortens the animation.
+
+### Rebuilds
+
+`web-app-src/progress_apply.py` copies `progress.js`, `goals.js`, `goal-tags.js` and `goal-books.js` and re-applies the small `LWProgress.win/correct` hooks in the game pages (`GOAL_RULES`), so a rebuild keeps all of this.

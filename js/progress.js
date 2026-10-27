@@ -38,12 +38,26 @@ function all(){return jget(KD+current().id,{})}
 function rec(id){return all()[resolve(id)]||null}
 function upd(id,f){id=resolve(id);const d=all();const r0=d[id]||{};d[id]=f(r0)||r0;d[id].t=Date.now();jset(KD+current().id,d);return d[id]}
 function resolve(id){return REG[id]&&REG[id].alias||id}
+// ---- goals data layer: RAW events only (first plays, first wins and best values, correct choices, book-page coins).
+// Points are computed from these by js/goals.js using the tag registry (js/goal-tags.js), so re-tagging re-scores history.
+const KG='lwp.goals.';
+function goalsData(){return jget(KG+current().id,{})}
+function goalsSave(d){jset(KG+current().id,d)}
+function gupd(id,f){id=resolve(id);const d=goalsData();d.c=d.c||{};const r=d.c[id]||(d.c[id]={});const res=f(r);if(res){d.t=Date.now();goalsSave(d);try{dispatchEvent(new CustomEvent('lwgoals',{detail:Object.assign({id},res)}))}catch(e){}}return res||null}
+// win(id,key,{v,lvl}): first success of `key` (a named task) is recorded once; a higher `v` later counts as an improvement. Returns {first}|{better}|null.
+function win(id,key,o){o=o||{};const v=typeof o.v==='number'&&isFinite(o.v)?o.v:null;return gupd(id,r=>{r.w=r.w||{};const w=r.w[key];
+  if(!w){r.w[key]={t:Date.now(),f:v,v:v,n:0};return {first:1}}
+  if(v!==null&&(w.v===null||v>w.v)){if(w.v===null)w.f=v;else w.n=(w.n||0)+1;w.v=v;return {better:1}}return null})}
+function correct(id,key){return gupd(id,r=>{r.ok=r.ok||{};if(r.ok[key])return null;r.ok[key]=1;return {first:1}})}
+function coin(book,n){return !!gupd(book,r=>{r.pg=r.pg||{};if(r.pg[n])return null;r.pg[n]=Date.now();return {coin:n}})}
+function hasCoin(book,n){const r=(goalsData().c||{})[resolve(book)];return !!(r&&r.pg&&r.pg[n])}
 // ---- events
-function played(id){return upd(id,r=>{r.n=(r.n||0)+1})}
+function played(id){const r=upd(id,r=>{r.n=(r.n||0)+1});if(typeOf(id)==='game')gupd(id,g=>{if(g.f)return null;g.f=Date.now();return {first:1}});return r}
 function open(id){return upd(id,r=>{r.open=1})}
-function finish(id){return upd(id,r=>{r.open=1;r.done=1})}
+function finish(id){const r=upd(id,r=>{r.open=1;r.done=1});gupd(id,g=>{if(g.d)return null;g.d=Date.now();return {done:1}});return r}
 function page(id,n,last){return upd(id,r=>{r.last=n;r.max=Math.max(r.max||0,n);if(last&&n>=last)r.done=1})}
-function watched(series,vid){if(REG[series]&&REG[series].type==='video'){const p=REG[series].series;if(p)upd(p,r=>{r.w=r.w||{};r.w[series]=1});return upd(series,r=>{r.done=1})}
+function watched(series,vid,noGoal){if(REG[series]&&REG[series].type==='video'){const p=REG[series].series;if(p)upd(p,r=>{r.w=r.w||{};r.w[series]=1});gupd(series,g=>{if(g.d)return null;g.d=Date.now();return {done:1}});return upd(series,r=>{r.done=1})}
+  if(!noGoal)gupd(series,g=>{g.v=g.v||{};if(g.v[vid])return null;g.v[vid]=Date.now();return {video:vid}});
   return upd(series,r=>{r.w=r.w||{};r.w[vid]=1})}
 function isWatched(series,vid){const r=rec(series);return !!(r&&r.w&&r.w[vid])}
 // ---- marks
@@ -104,14 +118,15 @@ function dialog(){if(document.querySelector('.lwp-ov'))return;const cur=current(
   (ov.querySelector('.lwp-ls button:not(.cur)')||inp).focus()}
 // ---- auto wiring from the <script> tag
 const ME=document.currentScript;const SCRIPT_BASE=new URL('..',ME?ME.src:location.href).href; // site root
-function auto(){addCSS();header();const id=ME&&ME.dataset.id;if(!id)return;const t=ME.dataset.type||typeOf(id);if(ME.dataset.type)register(id,t);
+function loadGoals(){if(document.getElementById('lwg-js')||!document.querySelector('header.top .lwp-st'))return;const s=document.createElement('script');s.id='lwg-js';s.src=new URL('js/goals.js',SCRIPT_BASE).href;document.head.appendChild(s)}
+function auto(){addCSS();header();loadGoals();const id=ME&&ME.dataset.id;if(!id)return;const t=ME.dataset.type||typeOf(id);if(ME.dataset.type)register(id,t);
   const also=ME.dataset.series; // "seriesId:videoId" also marked when this item is used
-  if(t==='game'){let done=false;const go=()=>{if(done||API.manual)return;done=true;played(id);if(also){const [s,v]=also.split(':');watched(s,v)}};
+  if(t==='game'){let done=false;const go=()=>{if(done||API.manual)return;done=true;played(id);if(also){const [s,v]=also.split(':');watched(s,v,true)}};
     ['pointerdown','keydown','touchstart'].forEach(e=>addEventListener(e,go,{capture:true,once:false,passive:true}))}
   else if(t==='project'||t==='worksheet'){open(id);if(t==='worksheet')finish(id)}
   const fin=ME.dataset.finish;if(fin){const chk=()=>{if(document.querySelector(fin)){finish(id);mo.disconnect()}};const mo=new MutationObserver(chk);
     const start=()=>{mo.observe(document.body,{childList:true,subtree:true});chk()};document.body?start():addEventListener('DOMContentLoaded',start)}}
-const API={register,typeOf,played,open,finish,page,watched,isWatched,get:rec,marks,markHTML,checkHTML,decorate,idFromHref,current,students,newStudent,switchStudent,dialog,manual:false};
+const API={win,correct,coin,hasCoin,goalsData,goalsSave,register,typeOf,played,open,finish,page,watched,isWatched,get:rec,marks,markHTML,checkHTML,decorate,idFromHref,current,students,newStudent,switchStudent,dialog,manual:false};
 window.LWProgress=API;
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',auto);else auto();
 })();

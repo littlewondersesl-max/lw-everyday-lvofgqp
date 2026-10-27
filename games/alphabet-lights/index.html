@@ -127,7 +127,7 @@ function seg(id,items,val,cb){const s=Q(id);s.innerHTML=items.map(([v,t])=>`<but
 const isSeq=()=>G==="seq"||G==="wordseq",NN=()=>isSeq()?5:10,LEN=()=>2*(+lvl)+1;function prog(){const N=NN();Q("#rtxt").textContent="Round "+rn+"/"+N;Q("#bar i").style.width=rn/N*100+"%"}
 function setScore(n){score=n}
 function newRound(){rn=0;pts=0;bonus=0;used=[];tot=0;Q("#res").classList.remove("show");prog()}
-function finish(){stop();const s=Q("#res"),N=NN(),nb=Q("#nextlvl"),ag=Q("#again");nb.style.display="none";ag.textContent="Play again";
+function finish(){stop();try{if(G==="table"||pts>=Math.ceil(NN()*.6))LWProgress.win("games/alphabet-lights",G==="spell"||G==="table"?G+":"+diff:G,{v:isSeq()||G==="spell"?+lvl:pts})}catch(e){}const s=Q("#res"),N=NN(),nb=Q("#nextlvl"),ag=Q("#again");nb.style.display="none";ag.textContent="Play again";
  if(G==="table"){Q("#rbig").textContent=pts+" answers";Q("#rsub").textContent=pts+" of "+tot+" prompts answered across "+N+" letters"}
  else{Q("#rbig").textContent=pts+" out of "+N;Q("#rsub").textContent=(G==="spell"&&diff==="B1"?"Bonus word types: "+bonus+" ":"")}
  Q("#rh").textContent="Round complete";

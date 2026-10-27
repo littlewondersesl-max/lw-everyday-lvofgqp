@@ -108,7 +108,7 @@ vid.addEventListener('ended',function(){var w=W[i];
  else if(mode==='wrong'){var o=cards.filter(function(c){return c.classList.contains('picked')})[0].dataset.o;q.textContent=w.no[o]||'Oops!';
   var x=$('cross');x.classList.remove('show');void x.offsetWidth;x.classList.add('show');bip();
   setTimeout(function(){x.classList.remove('show');load()},1300)}
- else if(mode==='right'){stage.classList.add('win');$('star').classList.add('show');chime();sparks();q.className='ok';q.textContent=w.yes;
+ else if(mode==='right'){try{LWProgress.correct('games/everyday-english','wear:'+i)}catch(e){}stage.classList.add('win');$('star').classList.add('show');chime();sparks();q.className='ok';q.textContent=w.yes;
   $('next').style.display='block';busy=true}
 });
 function sparks(){var cols=['#ffd34d','#4cd964','#ff7a59','#5ac8fa','#ff6fb5'];for(var n=0;n<24;n++){var s=document.createElement('div');s.className='spark';

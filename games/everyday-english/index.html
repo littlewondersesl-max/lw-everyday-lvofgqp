@@ -63,7 +63,7 @@ function start(id){const g=G.find(x=>x.id===id);if(!g)return hub();if(g.href){lo
   v.onpause=()=>{if(!v.ended)play.style.display='';};v.onplay=()=>play.style.display='none';
   btns.forEach(b=>b.onclick=()=>{if(!played)return;const c=b.dataset.c,o=s.outcomes[c];btns.forEach(x=>x.classList.toggle('sel',x===b));
    load(o.video,o.poster);stage.className='stage '+(c===s.correct?'right':'wrong');
-   if(c===s.correct){solved=true;msg.innerHTML=`<span style="color:var(--good)">Yes! ${esc(s.before)} ${esc(s.after)}</span> <button class="btn" id="next">${i+1<g.situations.length?'Next ▶':'Finish'}</button> <button class="btn alt" id="rs">Watch the scene again</button>`;
+   if(c===s.correct){solved=true;try{LWProgress.correct('games/everyday-english',g.id+':'+i)}catch(e){}msg.innerHTML=`<span style="color:var(--good)">Yes! ${esc(s.before)} ${esc(s.after)}</span> <button class="btn" id="next">${i+1<g.situations.length?'Next ▶':'Finish'}</button> <button class="btn alt" id="rs">Watch the scene again</button>`;
     next.onclick=()=>{v.pause();i++;i<g.situations.length?show():done()};}
    else{msg.innerHTML=`<span style="color:var(--bad)">${esc(o.wrong||'Oh no!')}</span> <span class="hint">Try another one.</span> <button class="btn alt" id="rs">Watch the scene again</button>`;}
    rs.onclick=()=>{stage.className='stage';btns.forEach(x=>x.classList.remove('sel'));load(s.situation,s.poster)};});}
