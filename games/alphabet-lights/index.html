@@ -113,7 +113,7 @@ button.no{background:#e5394a;box-shadow:0 4px 0 #b02232}
 const A=window.AL,Q=s=>document.querySelector(s),ABC="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const COL={A:"#ff2d95",B:"#1e7bff",C:"#9dff1e",D:"#ff8a00",E:"#ffe100",F:"#b13cff",G:"#ff1e1e",H:"#00f0ff",I:"#ff2d95",J:"#9dff1e",K:"#ff8a00",L:"#1e7bff",M:"#ffe100",N:"#b13cff",O:"#ff1e1e",P:"#00f0ff",Q:"#9dff1e",R:"#ff2d95",S:"#ff8a00",T:"#1e7bff",U:"#ffe100",V:"#b13cff",W:"#9dff1e",X:"#ff1e1e",Y:"#00f0ff",Z:"#ff2d95"};
 const prm=new URLSearchParams(location.search);
-let G=["seq","wordseq","spell","table"].includes(prm.get("g"))?prm.get("g"):"seq",lvl=null,diff="A1",score=0,cur=null,rn=0,pts=0,bonus=0,used=[],tot=0,busy=false,timers=[],cd=0;
+let G=["seq","wordseq","spell","table"].includes(prm.get("g"))?prm.get("g"):"seq",lvl=null,diff="A1",score=0,cur=null,rn=0,pts=0,bonus=0,used=[],gUsed={},pUsed={},tot=0,busy=false,timers=[],cd=0;
 const el={};
 function letter(c){const d=document.createElement("div");d.className="L";d.style.setProperty("--c",COL[c]);d.innerHTML=`<img class="off" src="off-${c}.webp" alt="${c}"><img class="on" src="on-${c}.webp" alt="">`;return d}
 [[0,9],[9,18],[18,26]].forEach(([a,b])=>{const r=document.createElement("div");r.className="row";for(let i=a;i<b;i++){const d=letter(ABC[i]);el[ABC[i]]=d;r.appendChild(d)}Q("#stage").appendChild(r)});
@@ -126,7 +126,7 @@ function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor
 function seg(id,items,val,cb){const s=Q(id);s.innerHTML=items.map(([v,t])=>`<button data-v="${v}" class="${v==val?"on":""}">${t}</button>`).join("");s.onclick=e=>{const b=e.target.closest("button");if(!b)return;s.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));cb(b.dataset.v)}}
 const isSeq=()=>G==="seq"||G==="wordseq",NN=()=>isSeq()?5:10,LEN=()=>2*(+lvl)+1;function prog(){const N=NN();Q("#rtxt").textContent="Round "+rn+"/"+N;Q("#bar i").style.width=rn/N*100+"%"}
 function setScore(n){score=n}
-function newRound(){rn=0;pts=0;bonus=0;used=[];tot=0;Q("#res").classList.remove("show");prog()}
+function newRound(){rn=0;pts=0;bonus=0;used=[];gUsed={};pUsed={};tot=0;Q("#res").classList.remove("show");prog()}
 function finish(){stop();try{if(G==="table"||pts>=Math.ceil(NN()*.6))LWProgress.win("games/alphabet-lights",G==="spell"||G==="table"?G+":"+diff:G,{v:isSeq()||G==="spell"?+lvl:pts})}catch(e){}const s=Q("#res"),N=NN(),nb=Q("#nextlvl"),ag=Q("#again");nb.style.display="none";ag.textContent="Play again";
  if(G==="table"){Q("#rbig").textContent=pts+" answers";Q("#rsub").textContent=pts+" of "+tot+" prompts answered across "+N+" letters"}
  else{Q("#rbig").textContent=pts+" out of "+N;Q("#rsub").textContent=(G==="spell"&&diff==="B1"?"Bonus word types: "+bonus+" ":"")}
@@ -197,7 +197,7 @@ function play(){
  else{busy=true;table()}
 }
 function table(){
- const L=A.levels[diff],all=[...L.base,...L.extra],pool=ABC.split("").filter(c=>all.filter(p=>A.P[p][1].includes(c)).length>=L.min);
+ const L=A.levels[diff],pool=ABC.split("").filter(c=>tGroups(c).length>=L.min);
  let left=pool.filter(x=>!used.includes(x));if(!left.length)left=pool;const c=rnd(left);used.push(c);cur={c};
  Q("#table").classList.remove("show");Q("#stage").style.display="";Q("#cells").innerHTML="";Q("#msg").textContent="Picking a letter...";
  let t=200;const picks=shuffle(pool).slice(0,9);
@@ -215,11 +215,15 @@ function zoomTo(c,L){
  T(()=>{Q("#stage").style.display="none";Q("#table").classList.add("show");el[c].className="L"},450);
  T(()=>{z.remove();big.style.opacity=1;showCells(c,L);busy=false},900);
 }
+function tGroups(c){const g={};A.T[diff].forEach(r=>{if(r[1].includes(c))(g[r[2]]=g[r[2]]||[]).push(r)});return Object.keys(g).map(k=>g[k])}
+function tPick(c,n){/* n different groups; least-used groups first, then least-used prompt inside the group */
+ const gs=shuffle(tGroups(c)).sort((x,y)=>(gUsed[x[0][2]]||0)-(gUsed[y[0][2]]||0));
+ return gs.slice(0,n).map(g=>{const m=Math.min(...g.map(r=>pUsed[r[0]]||0));const r=rnd(g.filter(r=>(pUsed[r[0]]||0)===m));
+  gUsed[r[2]]=(gUsed[r[2]]||0)+1;pUsed[r[0]]=(pUsed[r[0]]||0)+1;return r})}
 function showCells(c,L){
- const base=L.base.filter(p=>A.P[p][1].includes(c)),ex=shuffle(L.extra.filter(p=>A.P[p][1].includes(c)));
- const ps=base.concat(ex).slice(0,L.cells);tot+=ps.length;const cells=Q("#cells");cells.style.setProperty("--c",COL[c]);
+ const ps=shuffle(tPick(c,L.cells));tot+=ps.length;const cells=Q("#cells");cells.style.setProperty("--c",COL[c]);
  cells.style.gridTemplateColumns=ps.length===3?"1fr":"repeat(2,1fr)";
- cells.innerHTML=ps.map((p,i)=>`<button class="cell" style="animation-delay:${i*.12}s">Give me ${A.P[p][0]} starting with <b>${c}</b></button>`).join("");
+ cells.innerHTML=ps.map((p,i)=>`<button class="cell" style="animation-delay:${i*.12}s">${p[0].replace(/\{L\}/g,`<b>${c}</b>`)}</button>`).join("");
  Q("#msg").textContent="Teacher: tap a box when the answer is right";
  cells.onclick=e=>{const b=e.target.closest(".cell");if(!b)return;b.classList.toggle("done");pts+=b.classList.contains("done")?1:-1};
 }
