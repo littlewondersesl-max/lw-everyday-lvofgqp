@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Compare old / new · Everyday English · Little Wonders</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.bunny.net/css?family=fraunces:600,700|nunito:600,700,800&display=swap">
+<style>
+:root{--ink:#1f2a33;--spruce:#2f6f62;--paper:#fffaf0;--bg:#f4ecd8;--good:#2e9b57;--warn:#c98a00}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:16px}h1,h2,h3{font-family:Fraunces,Georgia,serif;margin:.3em 0}
+a.back{color:var(--spruce);font-weight:800;text-decoration:none}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.bar button{border:2px solid var(--spruce);border-radius:999px;background:var(--paper);color:var(--spruce);font:800 15px Nunito;padding:6px 14px;cursor:pointer}
+.bar button.on{background:var(--spruce);color:#fff}
+.sum{background:var(--paper);border-radius:16px;padding:10px 14px;font-weight:700}
+.sum b.n{color:var(--good)}
+section{background:var(--paper);border:3px solid var(--spruce);border-radius:18px;padding:12px;margin:14px 0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;border-top:1px dashed #cbbf9f;padding:10px 0}
+.row h4{grid-column:1/-1;margin:0;font-size:15px}.row h4 small{font-weight:700;color:#667}
+figure{margin:0}figure img,figure video{width:100%;border-radius:12px;background:#000;display:block;max-height:340px;object-fit:contain}
+figcaption{font-weight:800;font-size:13px;margin-top:4px}
+.tag{display:inline-block;border-radius:999px;padding:1px 9px;font-size:12px;font-weight:800;color:#fff;background:#889}
+.tag.still{background:var(--good)}.tag.video{background:#2a6fb0}.tag.pend{background:var(--warn)}
+.same{color:#667;font-weight:700;font-size:14px;margin:6px 0 0}
+</style></head><body><main>
+<a class="back" href="../index.html">← Everyday English</a>
+<h1>Compare old / new</h1>
+<div class="sum" id="sum"></div>
+<div class="bar" id="bar"></div>
+<div id="out"></div>
+</main>
+<script src="data.js"></script>
+<script>
+const NAMES={wear:'What should Max wear?',eat:'What should Max eat or drink?',put:'Where should Max put it?',tool:'Which tool should Max use?',help:'Where should Max go for help?',go:'How should Max get there?',bring:'What should Max bring?',pet:'What should the pet eat?',room:'Which room should Max go to?',time:'What time of day is it?',season:'Which season is it?',bunny:"Bunny's Carrot (comic story)"};
+const ORDER=['wear','eat','put','tool','go','help','bring','pet','room','time','season','bunny'];
+const ROOT='../../../';let flt='changed';
+const media=(src,kind)=>kind==='video'?`<video src="${src}" controls preload="none" playsinline></video>`:`<img src="${src}" loading="lazy" alt="">`;
+function what(e){if(e.pending)return '<span class="tag pend">new still waiting in art drop · not live yet</span>';
+ if(!e.old)return '';return e.kind==='video'?`<span class="tag video">new video · regenerated ${e.changed}</span>`:`<span class="tag still">new still frame only · ${e.changed}</span>`}
+function render(){const out=[];
+ for(const g of ORDER){const all=CMP.filter(e=>e.group===g);if(!all.length)continue;
+  const ch=all.filter(e=>e.old||e.pending),list=flt==='all'?all:ch;
+  const nv=ch.filter(e=>e.old&&e.kind==='video').length,ns=ch.filter(e=>e.old&&e.kind==='still').length,np=ch.filter(e=>e.pending).length;
+  let s=`<section><h2>${NAMES[g]||g}</h2><p class="same">${nv} new video(s) · ${ns} new still(s) live · ${np} still(s) pending · ${all.length-ch.length} of ${all.length} files unchanged since first published (${all[0].first})</p>`;
+  for(const e of list){const name=e.path.split('/').pop(),cur=ROOT+e.path;
+   s+=`<div class="row"><h4>${name} <small>${what(e)}</small></h4>`;
+   if(e.old)s+=`<figure>${media(e.old,e.kind)}<figcaption>OLD · first published ${e.first}</figcaption></figure><figure>${media(cur,e.kind)}<figcaption>NEW · live now</figcaption></figure>`;
+   else if(e.pending)s+=`<figure>${media(cur,e.kind)}<figcaption>OLD · live now (since ${e.first})</figcaption></figure><figure>${media(e.pending,e.kind)}<figcaption>NEW · from art-redo drop, not in the game yet</figcaption></figure>`;
+   else s+=`<figure>${media(cur,e.kind)}<figcaption>Only version (unchanged since ${e.first})</figcaption></figure><div></div>`;
+   s+='</div>'}
+  if(!list.length)s+='<p class="same">Nothing new yet: no new stills or videos exist for this one.</p>';
+  out.push(s+'</section>')}
+ document.getElementById('out').innerHTML=out.join('');
+ document.querySelectorAll('#bar button').forEach(b=>b.classList.toggle('on',b.dataset.f===flt))}
+const V=CMP.filter(e=>e.old&&e.kind==='video').length,S=CMP.filter(e=>e.old&&e.kind==='still').length,P=CMP.filter(e=>e.pending).length;
+document.getElementById('sum').innerHTML=`Old is on the left, new is on the right. Today's art redo (Oct 27) only replaced <b class="n">still frames</b> (posters, choice pictures, cards): <b>${S}</b> live and <b>${P}</b> waiting in the art drop. <b>No new videos were made in the art redo.</b> The ${V} "new video" items are earlier fixes (Oct 23–26 regenerations). Bunny's Carrot has no new version.`;
+document.getElementById('bar').innerHTML='<button data-f="changed">Show old / new pairs only</button><button data-f="all">Show every file</button>';
+document.getElementById('bar').onclick=e=>{if(e.target.dataset.f){flt=e.target.dataset.f;render()}};render();
+</script></body></html>
