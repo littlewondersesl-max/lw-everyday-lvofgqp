@@ -187,6 +187,7 @@ const ITEMS={
     wins:{seq:{label:'Letter sequence',unit:'level',bars:{spelling:.7,listening:.3}},wordseq:{label:'Word sequence',unit:'level',bars:{spelling:.7,vocab:.15,listening:.15}},spell:{label:'Spelling',unit:'letters',bars:{spelling:1}},table:{label:'Letter table',unit:'answers',bars:{spelling:.6,vocab:.4}}}},
   'games/animal-memory':{label:'Animal Memory',lvl:'A1',bars:{listening:.5,vocab:.3,speaking:.2},wins:{memory:{label:'Animal memory',unit:'level'}}},
   'games/match-pet':{label:'Match the pet to its home',lvl:'A1',bars:{vocab:.5,listening:.3,grammar:.2},wins:{match:{label:'All pets home',unit:''}}},
+  'games/match-object':{label:'Match the object',lvl:'A1',bars:{vocab:.5,listening:.3,grammar:.2},wins:{match:{label:'All objects matched',unit:''}}},
   'games/save-sam':{label:'Save Sam',lvl:'A1',bars:{sentences:.4,vocab:.3,listening:.3},wins:{stage:{label:'Rescue stage',unit:'stage'}}},
   'games/what-should-max-wear':{label:'What should Max wear?',lvl:'A1',topic:'weather',bars:{listening:.4,vocab:.3,speaking:.3},okLabel:'weather choices',okTotal:3},
   'games/household-chores':{label:'Household Chores',lvl:'A2',topic:'chores,family',bars:{vocab:.35,speaking:.3,listening:.2,grammar:.15}},
