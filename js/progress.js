@@ -7,6 +7,9 @@ const KS='lwp.students',KD='lwp.data.';
 // ---- registry: id -> {type,total}. Anything not listed gets a type from its location (see typeOf).
 const REG={
   'games/four-corners':{type:'project'},
+  // ring: a game with a fixed number of units (stories/levels). Tile shows a green progress ring (done/ring) round the check badge instead of a play count.
+  // legacy: progress the game kept before per-student tracking (My account only): unit u is done when localStorage[key] .completed has u:0..n-1.
+  'games/household-chores':{type:'game',ring:4,legacy:{key:'chore-story-v1',units:{grandma:3,grandpa:3}}},
   'games/everyday-english':{type:'videoSeries',total:11},
   'stories/comic-stories':{type:'videoSeries',total:10},
   'lessons/conversations':{type:'videoSeries',total:3},
@@ -53,6 +56,13 @@ function coin(book,n){return !!gupd(book,r=>{r.pg=r.pg||{};if(r.pg[n])return nul
 function hasCoin(book,n){const r=(goalsData().c||{})[resolve(book)];return !!(r&&r.pg&&r.pg[n])}
 // ---- events
 function played(id){const r=upd(id,r=>{r.n=(r.n||0)+1});if(typeOf(id)==='game')gupd(id,g=>{if(g.f)return null;g.f=Date.now();return {first:1}});return r}
+// units: named parts of a game (e.g. stories) finished by the current student; the tile ring = units done / REG[id].ring
+function unit(id,key){return upd(id,r=>{r.u=r.u||{};if(!r.u[key])r.u[key]=Date.now()})}
+function unitsDone(id){const r=rec(id),R=REG[resolve(id)]||{};const n=r&&r.u?Object.keys(r.u).length:0;return Math.min(n,R.ring||n)}
+function migrate(){const s=current();if(s.id!==MAINID)return;Object.keys(REG).forEach(id=>{const L=REG[id].legacy;if(!L)return;const r=rec(id);if(r&&r.u)return;
+  let c=[];try{c=(JSON.parse(localStorage.getItem(L.key))||{}).completed||[]}catch(e){}if(!Array.isArray(c)||!c.length)return;
+  const done=Object.keys(L.units).filter(u=>{for(let i=0;i<L.units[u];i++)if(c.indexOf(u+':'+i)<0&&!(u==='grandma'&&c.indexOf(i)>=0))return false;return true});
+  if(done.length)upd(id,r=>{r.u=r.u||{};done.forEach(u=>{r.u[u]=r.u[u]||Date.now()})})})}
 function open(id){return upd(id,r=>{r.open=1})}
 function finish(id){const r=upd(id,r=>{r.open=1;r.done=1});gupd(id,g=>{if(g.d)return null;g.d=Date.now();return {done:1}});return r}
 function page(id,n,last){return upd(id,r=>{r.last=n;r.max=Math.max(r.max||0,n);if(last&&n>=last)r.done=1})}
@@ -64,13 +74,16 @@ function isWatched(series,vid){const r=rec(series);return !!(r&&r.w&&r.w[vid])}
 const CK='<span class="lwp-ck" aria-label="done"></span>';
 const INF='<svg class="lwp-inf" viewBox="0 0 24 12" aria-label="in progress"><path d="M6 1.5C3.2 1.5 1.5 3.6 1.5 6s1.7 4.5 4.5 4.5c3.6 0 8.4-9 12-9 2.8 0 4.5 2.1 4.5 4.5s-1.7 4.5-4.5 4.5c-3.6 0-8.4-9-12-9z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 function marks(id){const t=typeOf(id),r=rec(id),R=REG[resolve(id)]||REG[id]||{};if(!r)return null;let c=null;
-  if(t==='game'){if(!r.n)return null;c=String(r.n)}
+  if(t==='game'){if(R.ring){if(!r.n&&!r.u)return null;return {check:true,count:null,ring:{done:unitsDone(id),total:R.ring}}}if(!r.n)return null;c=String(r.n)}
   else if(t==='book'){if((r.max||0)<3&&!r.done)return null;c=r.done?null:String(r.max)}
   else if(t==='project'){if(!r.open)return null;c=r.done?null:INF}
   else if(t==='worksheet'||t==='video'){if(!r.open&&!r.done)return null}
   else if(t==='videoSeries'){const w=Object.keys(r.w||{}).length;if(!w)return null;c=w+'/'+(R.total||w)}
   return {check:true,count:c}}
-function markHTML(id){const m=marks(id);if(!m)return '';return `<span class="lwp-mk lwp-l">${CK}</span>`+(m.count?`<span class="lwp-mk lwp-r">${m.count}</span>`:'')}
+// ring badge: white circle with the check, a light-green track and a green arc that fills done/total of the circumference
+function ringHTML(d,t){const f=t>0?Math.max(0,Math.min(1,d/t)):0;
+  return `<span class="lwp-mk lwp-l lwp-ring" role="img" aria-label="${d} of ${t} stories finished" title="${d} of ${t} stories finished"><svg viewBox="0 0 40 40" aria-hidden="true"><circle class="lwp-rt" cx="20" cy="20" r="17"/><circle class="lwp-rf" cx="20" cy="20" r="17" pathLength="100" stroke-dasharray="${(f*100).toFixed(2)} 100"/></svg>${CK}</span>`}
+function markHTML(id){const m=marks(id);if(!m)return '';if(m.ring)return ringHTML(m.ring.done,m.ring.total);return `<span class="lwp-mk lwp-l">${CK}</span>`+(m.count?`<span class="lwp-mk lwp-r">${m.count}</span>`:'')}
 function idFromHref(href){if(!href)return null;let u;try{u=new URL(href,location.href)}catch(e){return null}
   const q=u.searchParams;if(/\/viewer\.html$/.test(u.pathname)&&q.get('book'))return q.get('book');if(/\/book\.html$/.test(u.pathname)&&q.get('s'))return q.get('s');
   const base=new URL('.',SCRIPT_BASE).pathname;let p=u.pathname;if(p.indexOf(base)!==0)return null;p=p.slice(base.length).replace(/\/index\.html$/,'').replace(/\/$/,'');
@@ -93,6 +106,7 @@ const css=`.lwp-box{position:relative}.lwp-mk.lwp-mk{position:absolute;bottom:8p
 .lwp-sw{margin-top:14px;padding-top:12px;border-top:1px solid #eee}.lwp-sw label{display:block;font-size:13px;font-weight:800;margin-bottom:6px}
 .lwp-now{background:#f0eaf8;border-radius:12px;padding:8px 12px;margin:0 0 12px;font-size:14px}.lwp-now b{color:#6c4ea0}
 .lwp-ls{display:flex;flex-direction:column;gap:6px;max-height:210px;overflow:auto;margin:0 0 4px}.lwp-ls button{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;box-sizing:border-box;border:2px solid #e2d3f3;border-radius:12px;background:#fff;padding:9px 12px;font:800 15px Nunito,system-ui,sans-serif;color:#45506b;cursor:pointer;text-align:left}.lwp-ls button:hover{border-color:#6c4ea0}.lwp-ls button.cur{border-color:#2c9a83;background:#e6f5f1;cursor:default}.lwp-ls small{font-weight:800;color:#2c7a6a;white-space:nowrap}.lwp-err{color:#b3261e;font-size:13px;font-weight:700;margin:6px 0 0;min-height:1em}
+.lwp-mk.lwp-ring{width:38px;height:38px;min-width:38px;border-radius:50%;left:6px;bottom:6px;background:#fff}.lwp-ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}.lwp-ring circle{fill:none;stroke-width:4.5}.lwp-ring .lwp-rt{stroke:#d3ebe3}.lwp-ring .lwp-rf{stroke:#2fb57a;stroke-linecap:butt}
 .lwp-done{position:relative}.lwp-done>.lwp-mk.lwp-mk{top:8px;bottom:auto}
 @media (max-width:760px){.lwp-who{max-width:118px;padding:4px 8px}.lwp-who span{display:none}.lwp-st{gap:5px;margin-left:4px}.lwp-nb{padding:6px 10px;font-size:13px}}`;
 function addCSS(){if(document.getElementById('lwp-css'))return;const s=document.createElement('style');s.id='lwp-css';s.textContent=css;(document.head||document.documentElement).appendChild(s)}
@@ -126,7 +140,8 @@ function auto(){addCSS();header();loadGoals();const id=ME&&ME.dataset.id;if(!id)
   else if(t==='project'||t==='worksheet'){open(id);if(t==='worksheet')finish(id)}
   const fin=ME.dataset.finish;if(fin){const chk=()=>{if(document.querySelector(fin)){finish(id);mo.disconnect()}};const mo=new MutationObserver(chk);
     const start=()=>{mo.observe(document.body,{childList:true,subtree:true});chk()};document.body?start():addEventListener('DOMContentLoaded',start)}}
-const API={win,correct,coin,hasCoin,goalsData,goalsSave,register,typeOf,played,open,finish,page,watched,isWatched,get:rec,marks,markHTML,checkHTML,decorate,idFromHref,current,students,newStudent,switchStudent,dialog,manual:false};
+const API={unit,unitsDone,win,correct,coin,hasCoin,goalsData,goalsSave,register,typeOf,played,open,finish,page,watched,isWatched,get:rec,marks,markHTML,checkHTML,decorate,idFromHref,current,students,newStudent,switchStudent,dialog,manual:false};
+try{migrate()}catch(e){} // before any tile is drawn
 window.LWProgress=API;
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',auto);else auto();
 })();

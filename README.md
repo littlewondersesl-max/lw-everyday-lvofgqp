@@ -39,6 +39,8 @@ Marks on home/level tiles: check mark bottom-left, counter bottom-right. Untouch
 | `videoSeries` | `LWProgress.watched(seriesId, videoId)` | check + watched/total; checks per video inside the series |
 | `video` | single video watched to the end | check |
 
+**Ring games (per-game progress ring).** A game registered in `REG` with `ring:N` (e.g. `'games/household-chores':{type:'game',ring:4}`) shows a green circular progress ring around the check badge instead of a play count; each finished unit (story/level) fills 1/N of the circle. The game reports a finished unit with `LWProgress.unit(id, unitKey)` (stored per student as `u` in `lwp.data.<studentId>`, counted once). Household Chores: 4 stories (Mom, Dad, Mia, Max; only Mom and Dad exist so far), a story is finished when all 3 of its chapters are done, and the game keeps its own chapter state per student (`chore-story-v1` for My account, `chore-story-v1.<studentId>` for others). Progress made before this (My account) is picked up once from `chore-story-v1`.
+
 **Registering new content**
 - New flashcard book in `js/data.js`: nothing to do (books are `book` by default; the viewer reports pages).
 - New game/page: add before `</body>`: `<script src="../../js/progress.js" data-id="games/<folder>" data-type="game"></script>` (the id is the folder path from the site root, the same path the home card links to). Use `data-type="project" data-finish=".css-selector-of-end-screen"` for open-ended projects, `data-type="worksheet"` for one-offs.
