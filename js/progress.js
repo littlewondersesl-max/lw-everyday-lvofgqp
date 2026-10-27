@@ -5,17 +5,30 @@
 if(window.LWProgress)return;
 const KS='lwp.students',KD='lwp.data.';
 // ---- registry: id -> {type,total}. Anything not listed gets a type from its location (see typeOf).
+const lvls=(n,p)=>Array.from({length:n|0},(_,i)=>p+(i+1));
+const wv=(c,id,k)=>{const w=((c[id]||{}).w||{})[k];return w&&+w.v||0};
 const REG={
   'games/four-corners':{type:'project'},
-  // ring: a game with a fixed number of units (stories/levels). Tile shows a green progress ring (done/ring) round the check badge instead of a play count.
-  // legacy: progress the game kept before per-student tracking (My account only): unit u is done when localStorage[key] .completed has u:0..n-1.
-  'games/household-chores':{type:'game',ring:4,legacy:{key:'chore-story-v1',units:{grandma:3,grandpa:3}}},
+  // ring: a thing with a fixed set of parts (stories, levels, scenes, pages, lines). Its tile shows a green progress ring (done/ring) round the check badge instead of a play count.
+  //   unit: word for the parts in the ring's label.  A game reports a finished part with LWProgress.unit(id,key[,total]); a key counts once per student.
+  //   legacy: progress a game kept before per-student tracking (My account only): unit u is done when localStorage[key] .completed has u:0..n-1.
+  //   from(c): turns progress already saved in the student's goals data (c = {id:record}) into unit keys, once per student (see migrate).
+  // Not listed here: books and series (pages, from page coins + furthest page), videoSeries (videos watched / total), and games/match-* (levels A1/A2, automatic).
+  // Endless replay games keep the play count: match-pet, match-object, land-neighbours; four-corners and jack-texts keep their check.
+  'games/household-chores':{type:'game',ring:4,unit:'stories',legacy:{key:'chore-story-v1',units:{grandma:3,grandpa:3}}},
+  'games/alphabet-lights':{type:'game',ring:4,unit:'levels',from:c=>lvls(Math.max(wv(c,'games/alphabet-lights','seq'),wv(c,'games/alphabet-lights','wordseq')),'L')},
+  'games/animal-memory':{type:'game',ring:12,unit:'levels',from:c=>lvls(wv(c,'games/animal-memory','memory'),'L')},
+  'games/save-sam':{type:'game',ring:3,unit:'stages',from:c=>lvls(wv(c,'games/save-sam','stage'),'S')},
+  'games/what-should-max-wear':{type:'game',ring:3,unit:'scenes',from:c=>[0,1,2].filter(i=>(((c['games/everyday-english']||{}).ok)||{})['wear:'+i]).map(i=>'s'+i)},
+  'stories/story-library':{type:'game',ring:10,unit:'pages'},
+  'games/match-pet':{type:'game',noRing:1},
+  'games/match-object':{type:'game',noRing:1},
   'games/everyday-english':{type:'videoSeries',total:11},
   'stories/comic-stories':{type:'videoSeries',total:10},
   'lessons/conversations':{type:'videoSeries',total:3},
-  'lessons/conversations/a1':{type:'video',series:'lessons/conversations'},
-  'lessons/conversations/a2':{type:'video',series:'lessons/conversations'},
-  'lessons/conversations/b1':{type:'video',series:'lessons/conversations'},
+  'lessons/conversations/a1':{type:'video',series:'lessons/conversations',ring:7,unit:'lines'},
+  'lessons/conversations/a2':{type:'video',series:'lessons/conversations',ring:7,unit:'lines'},
+  'lessons/conversations/b1':{type:'video',series:'lessons/conversations',ring:8,unit:'lines'},
   'stories/jack-texts':{type:'worksheet'},
   'chem':{type:'worksheet'},
   'lessons/chem-word-lab':{type:'worksheet',alias:'chem'}
@@ -39,14 +52,14 @@ function newStudent(name){name=String(name||'').trim().replace(/\s+/g,' ').slice
 function switchStudent(id){const s=st();if(s.list.some(x=>x.id===id)){s.cur=id;jset(KS,s)}}
 function all(){return jget(KD+current().id,{})}
 function rec(id){return all()[resolve(id)]||null}
-function upd(id,f){id=resolve(id);const d=all();const r0=d[id]||{};d[id]=f(r0)||r0;d[id].t=Date.now();jset(KD+current().id,d);return d[id]}
+function upd(id,f){CC=null;id=resolve(id);const d=all();const r0=d[id]||{};d[id]=f(r0)||r0;d[id].t=Date.now();jset(KD+current().id,d);return d[id]}
 function resolve(id){return REG[id]&&REG[id].alias||id}
 // ---- goals data layer: RAW events only (first plays, first wins and best values, correct choices, book-page coins).
 // Points are computed from these by js/goals.js using the tag registry (js/goal-tags.js), so re-tagging re-scores history.
-const KG='lwp.goals.';
+const KG='lwp.goals.';let CC=null; // CC: cached credited goals (see creditedGoals)
 function goalsData(){return jget(KG+current().id,{})}
 function goalsSave(d){jset(KG+current().id,d)}
-function gupd(id,f){id=resolve(id);const d=goalsData();d.c=d.c||{};const r=d.c[id]||(d.c[id]={});const res=f(r);if(res){d.t=Date.now();goalsSave(d);try{dispatchEvent(new CustomEvent('lwgoals',{detail:Object.assign({id},res)}))}catch(e){}}return res||null}
+function gupd(id,f){CC=null;id=resolve(id);const d=goalsData();d.c=d.c||{};const r=d.c[id]||(d.c[id]={});const res=f(r);if(res){d.t=Date.now();goalsSave(d);try{dispatchEvent(new CustomEvent('lwgoals',{detail:Object.assign({id},res)}))}catch(e){}}return res||null}
 // win(id,key,{v,lvl}): first success of `key` (a named task) is recorded once; a higher `v` later counts as an improvement. Returns {first}|{better}|null.
 function win(id,key,o){o=o||{};const v=typeof o.v==='number'&&isFinite(o.v)?o.v:null;return gupd(id,r=>{r.w=r.w||{};const w=r.w[key];
   if(!w){r.w[key]={t:Date.now(),f:v,v:v,n:0};return {first:1}}
@@ -56,13 +69,24 @@ function coin(book,n){return !!gupd(book,r=>{r.pg=r.pg||{};if(r.pg[n])return nul
 function hasCoin(book,n){const r=(goalsData().c||{})[resolve(book)];return !!(r&&r.pg&&r.pg[n])}
 // ---- events
 function played(id){const r=upd(id,r=>{r.n=(r.n||0)+1});if(typeOf(id)==='game')gupd(id,g=>{if(g.f)return null;g.f=Date.now();return {first:1}});return r}
-// units: named parts of a game (e.g. stories) finished by the current student; the tile ring = units done / REG[id].ring
-function unit(id,key){return upd(id,r=>{r.u=r.u||{};if(!r.u[key])r.u[key]=Date.now()})}
-function unitsDone(id){const r=rec(id),R=REG[resolve(id)]||{};const n=r&&r.u?Object.keys(r.u).length:0;return Math.min(n,R.ring||n)}
-function migrate(){const s=current();if(s.id!==MAINID)return;Object.keys(REG).forEach(id=>{const L=REG[id].legacy;if(!L)return;const r=rec(id);if(r&&r.u)return;
-  let c=[];try{c=(JSON.parse(localStorage.getItem(L.key))||{}).completed||[]}catch(e){}if(!Array.isArray(c)||!c.length)return;
-  const done=Object.keys(L.units).filter(u=>{for(let i=0;i<L.units[u];i++)if(c.indexOf(u+':'+i)<0&&!(u==='grandma'&&c.indexOf(i)>=0))return false;return true});
-  if(done.length)upd(id,r=>{r.u=r.u||{};done.forEach(u=>{r.u[u]=r.u[u]||Date.now()})})})}
+// units: named parts of a thing (stories, levels, lines...) finished by the current student; the tile ring = units done / total.
+// total = REG[id].ring, or the number the page passes as 3rd argument (stored with the record, so a page can state its own part count).
+function unit(id,key,total){return upd(id,r=>{r.u=r.u||{};if(!r.u[key])r.u[key]=Date.now();if(total>0)r.tot=total})}
+function totalOf(id){const R=REG[resolve(id)]||{},r=rec(id);return R.ring||(r&&r.tot)||0}
+function unitsDone(id){const r=rec(id);const n=r&&r.u?Object.keys(r.u).length:0;const t=totalOf(id);return t?Math.min(n,t):n}
+// One-time pass per student (flag lwp.ringmig.<id>): turns progress saved before rings existed into units, so nobody starts over.
+//  games: from(c) reads the goals wins/answers (e.g. best Alphabet Lights level 3 -> levels 1-3 done); chores: the game's own saved chapters (My account).
+//  books: pages 1..furthest page reached (r.max) count as pages done. From then on pages come from the page coins (and this record).
+function migrate(){const s=st();s.list.forEach(S=>{const kf='lwp.ringmig.'+S.id;try{if(localStorage.getItem(kf))return}catch(e){return}
+  const data=jget(KD+S.id,{}),gc=(jget(KG+S.id,{}).c)||{};let ch=false;const now=Date.now();
+  Object.keys(REG).forEach(id=>{const R=REG[id];if(!R.from)return;const r=data[id];if(r&&r.u)return;let ks=[];try{ks=R.from(gc)||[]}catch(e){}
+    if(ks.length){const q=data[id]=data[id]||{};q.u={};ks.forEach(k=>q.u[k]=now);q.t=q.t||now;ch=true}});
+  if(S.id===MAINID)Object.keys(REG).forEach(id=>{const L=REG[id].legacy;if(!L)return;const r=data[id];if(r&&r.u)return;
+    let c=[];try{c=(JSON.parse(localStorage.getItem(L.key))||{}).completed||[]}catch(e){}if(!Array.isArray(c)||!c.length)return;
+    const done=Object.keys(L.units).filter(u=>{for(let i=0;i<L.units[u];i++)if(c.indexOf(u+':'+i)<0&&!(u==='grandma'&&c.indexOf(i)>=0))return false;return true});
+    if(done.length){const q=data[id]=data[id]||{};q.u={};done.forEach(u=>q.u[u]=now);q.t=q.t||now;ch=true}});
+  Object.keys(data).forEach(id=>{const r=data[id];if(!r||r.u||id.indexOf('/')>=0||!(r.max>0))return;r.u={};for(let i=1;i<=r.max;i++)r.u[i]=now;ch=true});
+  if(ch)jset(KD+S.id,data);try{localStorage.setItem(kf,'1')}catch(e){}})}
 function open(id){return upd(id,r=>{r.open=1})}
 function finish(id){const r=upd(id,r=>{r.open=1;r.done=1});gupd(id,g=>{if(g.d)return null;g.d=Date.now();return {done:1}});return r}
 function page(id,n,last){return upd(id,r=>{r.last=n;r.max=Math.max(r.max||0,n);if(last&&n>=last)r.done=1})}
@@ -73,17 +97,45 @@ function isWatched(series,vid){const r=rec(series);return !!(r&&r.w&&r.w[vid])}
 // ---- marks
 const CK='<span class="lwp-ck" aria-label="done"></span>';
 const INF='<svg class="lwp-inf" viewBox="0 0 24 12" aria-label="in progress"><path d="M6 1.5C3.2 1.5 1.5 3.6 1.5 6s1.7 4.5 4.5 4.5c3.6 0 8.4-9 12-9 2.8 0 4.5 2.1 4.5 4.5s-1.7 4.5-4.5 4.5c-3.6 0-8.4-9-12-9z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
-function marks(id){const t=typeOf(id),r=rec(id),R=REG[resolve(id)]||REG[id]||{};if(!r)return null;let c=null;
-  if(t==='game'){if(R.ring){if(!r.n&&!r.u)return null;return {check:true,count:null,ring:{done:unitsDone(id),total:R.ring}}}if(!r.n)return null;c=String(r.n)}
+// ---- ring data. Every ring is {done,total,unit}; null when the thing has no finite set of parts (it then keeps its play count / check).
+const LVL=['a1','a2','b1'],LVLM=/^(.*?)(a1|a2|b1)$/;
+function higherDone(id){const m=LVLM.exec(id);if(!m)return false;for(let i=LVL.indexOf(m[2])+1;i<LVL.length;i++){const sid=m[1]+LVL[i];if(REG[sid]){const q=rec(sid);if(q&&q.done)return true}}return false} // two for one: A2 done also completes A1, B1 completes A2 and A1
+function creditedGoals(){ // goals data + this record's units as page coins, with the two-for-one cascade (js/goals.js) applied to a copy
+  if(CC)return CC;const gc=goalsData().c||{},data=all();let C={};Object.keys(gc).forEach(k=>C[k]=gc[k]);
+  Object.keys(data).forEach(k=>{const u=data[k]&&data[k].u;if(u&&k.indexOf('/')<0){const c0=C[k]||{};C[k]=Object.assign({},c0,{pg:Object.assign({},c0.pg||{},u)})}});
+  try{if(window.LWGoals&&window.LWGoals.cascade)C=window.LWGoals.cascade(C)}catch(e){}
+  CC=C;setTimeout(()=>{CC=null},0);return C}
+function bookOf(id){const D=window.LW;return D&&D.books&&D.books.find(x=>x.id===id)||null}
+function bookRing(b){const C=creditedGoals(),pg=(C[b.id]||{}).pg||{};const pages=b.seq.filter(x=>x.type==='page').map(x=>x.n);
+  return {done:pages.filter(n=>pg[n]).length,total:pages.length,unit:'pages'}}
+function seriesRing(id){const D=window.LW;if(!D||!D.books)return null;const bs=D.books.filter(x=>x.series===id);if(!bs.length)return null;let best=null; // A1 or A2: the level furthest along
+  bs.forEach(b=>{const r=bookRing(b);if(!best||r.done/r.total>best.done/best.total)best=r});return best}
+function levelWinRing(id){const r=rec(id),gc=(goalsData().c||{})[resolve(id)]||{},got={};Object.keys(gc.w||{}).forEach(k=>{const q=k.split(':')[1];if(q==='A1'||q==='A2')got[q]=1});
+  if(got.A2)got.A1=1; // two for one
+  const n=Object.keys(got).length;return (n||(r&&r.n))?{done:n,total:2,unit:'levels'}:null}
+function ringInfo(id){const t=typeOf(id),rid=resolve(id),R=REG[rid]||REG[id]||{},r=rec(id);
+  if(R.ring&&(t==='game'||t==='video')){if(t==='game')return r&&(r.n||r.u)?{done:unitsDone(id),total:totalOf(id),unit:R.unit||'parts'}:null;
+    const full=(r&&r.done)||higherDone(id);if(!full&&!(r&&r.u))return null;return {done:full?R.ring:unitsDone(id),total:R.ring,unit:R.unit||'parts'}}
+  if(t==='game'&&!R.noRing&&/^games\/match-/.test(id))return levelWinRing(id);
+  if(t==='game'&&r&&r.u&&r.tot)return {done:unitsDone(id),total:r.tot,unit:'parts'};
+  if(t==='videoSeries'){const w=Object.keys((r&&r.w)||{}).length;return w&&R.total?{done:Math.min(w,R.total),total:R.total,unit:'videos'}:null}
+  const b=id.indexOf('/')<0&&bookOf(id);if(b){const x=bookRing(b);return x.done>0||(r&&((r.max||0)>=3||r.done))?x:null}
+  const sr=id.indexOf('/')<0&&seriesRing(id);if(sr){return sr.done>0||(r&&((r.max||0)>=3||r.done))?sr:null}
+  return null}
+function marks(id){const t=typeOf(id),r=rec(id),R=REG[resolve(id)]||REG[id]||{};let c=null;
+  const ri=ringInfo(id);if(ri)return {check:true,count:null,ring:ri};
+  if(t==='video'&&higherDone(id))return {check:true,count:null};
+  if(!r)return null;
+  if(t==='game'){if(!r.n)return null;c=String(r.n)}
   else if(t==='book'){if((r.max||0)<3&&!r.done)return null;c=r.done?null:String(r.max)}
   else if(t==='project'){if(!r.open)return null;c=r.done?null:INF}
   else if(t==='worksheet'||t==='video'){if(!r.open&&!r.done)return null}
   else if(t==='videoSeries'){const w=Object.keys(r.w||{}).length;if(!w)return null;c=w+'/'+(R.total||w)}
   return {check:true,count:c}}
 // ring badge: white circle with the check, a light-green track and a green arc that fills done/total of the circumference
-function ringHTML(d,t){const f=t>0?Math.max(0,Math.min(1,d/t)):0;
-  return `<span class="lwp-mk lwp-l lwp-ring" role="img" aria-label="${d} of ${t} stories finished" title="${d} of ${t} stories finished"><svg viewBox="0 0 40 40" aria-hidden="true"><circle class="lwp-rt" cx="20" cy="20" r="17"/><circle class="lwp-rf" cx="20" cy="20" r="17" pathLength="100" stroke-dasharray="${(f*100).toFixed(2)} 100"/></svg>${CK}</span>`}
-function markHTML(id){const m=marks(id);if(!m)return '';if(m.ring)return ringHTML(m.ring.done,m.ring.total);return `<span class="lwp-mk lwp-l">${CK}</span>`+(m.count?`<span class="lwp-mk lwp-r">${m.count}</span>`:'')}
+function ringHTML(d,t,u){const f=t>0?Math.max(0,Math.min(1,d/t)):0,L=`${d} of ${t} ${u||'parts'} finished`;
+  return `<span class="lwp-mk lwp-l lwp-ring" role="img" aria-label="${L}" title="${L}"><svg viewBox="0 0 40 40" aria-hidden="true"><circle class="lwp-rt" cx="20" cy="20" r="17"/><circle class="lwp-rf" cx="20" cy="20" r="17" pathLength="100" stroke-dasharray="${(f*100).toFixed(2)} 100"/></svg>${CK}</span>`}
+function markHTML(id){const m=marks(id);if(!m)return '';if(m.ring)return ringHTML(m.ring.done,m.ring.total,m.ring.unit);return `<span class="lwp-mk lwp-l">${CK}</span>`+(m.count?`<span class="lwp-mk lwp-r">${m.count}</span>`:'')}
 function idFromHref(href){if(!href)return null;let u;try{u=new URL(href,location.href)}catch(e){return null}
   const q=u.searchParams;if(/\/viewer\.html$/.test(u.pathname)&&q.get('book'))return q.get('book');if(/\/book\.html$/.test(u.pathname)&&q.get('s'))return q.get('s');
   const base=new URL('.',SCRIPT_BASE).pathname;let p=u.pathname;if(p.indexOf(base)!==0)return null;p=p.slice(base.length).replace(/\/index\.html$/,'').replace(/\/$/,'');
@@ -107,7 +159,7 @@ const css=`.lwp-box{position:relative}.lwp-mk.lwp-mk{position:absolute;bottom:8p
 .lwp-now{background:#f0eaf8;border-radius:12px;padding:8px 12px;margin:0 0 12px;font-size:14px}.lwp-now b{color:#6c4ea0}
 .lwp-ls{display:flex;flex-direction:column;gap:6px;max-height:210px;overflow:auto;margin:0 0 4px}.lwp-ls button{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;box-sizing:border-box;border:2px solid #e2d3f3;border-radius:12px;background:#fff;padding:9px 12px;font:800 15px Nunito,system-ui,sans-serif;color:#45506b;cursor:pointer;text-align:left}.lwp-ls button:hover{border-color:#6c4ea0}.lwp-ls button.cur{border-color:#2c9a83;background:#e6f5f1;cursor:default}.lwp-ls small{font-weight:800;color:#2c7a6a;white-space:nowrap}.lwp-err{color:#b3261e;font-size:13px;font-weight:700;margin:6px 0 0;min-height:1em}
 .lwp-mk.lwp-ring{width:38px;height:38px;min-width:38px;border-radius:50%;left:6px;bottom:6px;background:#fff}.lwp-ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}.lwp-ring circle{fill:none;stroke-width:4.5}.lwp-ring .lwp-rt{stroke:#d3ebe3}.lwp-ring .lwp-rf{stroke:#2fb57a;stroke-linecap:butt}
-.lwp-done{position:relative}.lwp-done>.lwp-mk.lwp-mk{top:8px;bottom:auto}
+.lwp-done>.lwp-mk.lwp-ring{top:8px;bottom:auto;left:8px}.lwp-done{position:relative}.lwp-done>.lwp-mk.lwp-mk{top:8px;bottom:auto}
 @media (max-width:760px){.lwp-who{max-width:118px;padding:4px 8px}.lwp-who span{display:none}.lwp-st{gap:5px;margin-left:4px}.lwp-nb{padding:6px 10px;font-size:13px}}`;
 function addCSS(){if(document.getElementById('lwp-css'))return;const s=document.createElement('style');s.id='lwp-css';s.textContent=css;(document.head||document.documentElement).appendChild(s)}
 // ---- New student control (pages with the site header)
@@ -142,6 +194,8 @@ function auto(){addCSS();header();loadGoals();const id=ME&&ME.dataset.id;if(!id)
     const start=()=>{mo.observe(document.body,{childList:true,subtree:true});chk()};document.body?start():addEventListener('DOMContentLoaded',start)}}
 const API={unit,unitsDone,win,correct,coin,hasCoin,goalsData,goalsSave,register,typeOf,played,open,finish,page,watched,isWatched,get:rec,marks,markHTML,checkHTML,decorate,idFromHref,current,students,newStudent,switchStudent,dialog,manual:false};
 try{migrate()}catch(e){} // before any tile is drawn
+// the goals script (two-for-one page credit) loads after the tiles are drawn: refresh the rings once it is ready
+addEventListener('lwgoals-ready',()=>{try{decorate(document)}catch(e){}});
 window.LWProgress=API;
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',auto);else auto();
 })();

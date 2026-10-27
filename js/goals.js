@@ -183,7 +183,8 @@ window.LWGoals={ledger:()=>ledger(),credited:(id,n)=>creditedPage(id,n),cascade:
 function load(src,cb){const s=document.createElement('script');s.src=ROOT+src;s.onload=cb;s.onerror=()=>console.warn('[goals] could not load',src);document.head.appendChild(s)}
 function init(){T=window.LWGoalTags;B=window.LWGoalBooks||{};if(!T)return;addCSS();mount();coins();
   addEventListener('lwgoals',e=>{if(!panel)return;render()});
-  const u=ledger().untagged;if(u.length)console.info('[goals] content without a tag entry (scored with defaults):',u.join(', '))}
+  const u=ledger().untagged;if(u.length)console.info('[goals] content without a tag entry (scored with defaults):',u.join(', '));
+  try{dispatchEvent(new Event('lwgoals-ready'))}catch(e){}}
 function boot(){load('js/goal-tags.js',()=>load('js/goal-books.js',init))}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();

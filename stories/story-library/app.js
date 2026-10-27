@@ -440,9 +440,14 @@
     return lines;
   }
 
+  function pageRead() {
+    try { window.LWProgress && LWProgress.unit("stories/story-library", "p" + STORY.pages[state.page].n, STORY.pages.length); } catch (e) {}
+  }
+
   function hopTo(index, instant) {
     if (!state.words.length) return;
     index = Math.max(0, Math.min(state.words.length - 1, index));
+    if (index === state.words.length - 1 && state.page === STORY.pages.length - 1) pageRead(); // reached the last word of the last page
     state.words.forEach((w) => w.el.classList.remove("current"));
     state.wordIndex = index;
     const w = state.words[index];
@@ -475,6 +480,7 @@
     els.bookEl.classList.remove("flip-next", "flip-prev");
     void els.bookEl.offsetWidth;
     els.bookEl.classList.add(delta > 0 ? "flip-next" : "flip-prev");
+    if (delta > 0) pageRead(); // turning forward = this page was read (ring on the library card)
     state.page = next;
     renderPage();
   }

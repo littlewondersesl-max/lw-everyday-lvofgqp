@@ -729,7 +729,7 @@
       if (!alive(gen)) return;
       hideStamp();
       screenPlay.classList.remove("cinema");
-      try { LWProgress.win("games/save-sam", "stage", { v: stageIndex + 1 }); } catch (e) {}
+      try { LWProgress.win("games/save-sam", "stage", { v: stageIndex + 1 }); LWProgress.unit("games/save-sam", "S" + (stageIndex + 1)); } catch (e) {}
       if (stageIndex >= STAGES.length - 1) {
         showScreen("safe");
         speakTTS("Sam is safe!");
