@@ -124,7 +124,7 @@ function stop(){timers.forEach(clearTimeout);timers=[];clearCd();busy=false;Q("#
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function seg(id,items,val,cb){const s=Q(id);s.innerHTML=items.map(([v,t])=>`<button data-v="${v}" class="${v==val?"on":""}">${t}</button>`).join("");s.onclick=e=>{const b=e.target.closest("button");if(!b)return;s.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));cb(b.dataset.v)}}
-const isSeq=()=>G==="seq"||G==="wordseq",NN=()=>isSeq()?5:10,LEN=()=>2*(+lvl)+1;function prog(){const N=NN();Q("#rtxt").textContent="Round "+rn+"/"+N;Q("#bar i").style.width=rn/N*100+"%"}
+let plan=[];const isSeq=()=>G==="seq"||G==="wordseq",NN=()=>isSeq()?5:10,LR={1:[3],2:[4,5],3:[6,7],4:[8,9]},LABEL=l=>{const r=LR[l]||LR[1];return r.length>1?r.join(" or ")+" letters":r[0]+" letters"},LEN=()=>plan[rn-1]||LR[+lvl||1][0],mkPlan=()=>{const r=LR[+lvl]||LR[1],N=NN();let p=[];for(let i=0;i<N;i++)p.push(r[i%r.length]);if(r.length>1&&N%r.length)p[N-1]=rnd(r);return shuffle(p)},rndW=(l,site,k=x=>x)=>rnd(l.flatMap(x=>site.has(k(x))?[x,x,x]:[x]));function prog(){const N=NN();Q("#rtxt").textContent="Round "+rn+"/"+N;Q("#bar i").style.width=rn/N*100+"%"}
 function setScore(n){score=n}
 function newRound(){rn=0;pts=0;bonus=0;used=[];gUsed={};pUsed={};tot=0;Q("#res").classList.remove("show");prog()}
 function finish(){stop();try{if(G==="table"||pts>=Math.ceil(NN()*.6))LWProgress.win("games/alphabet-lights",G==="spell"||G==="table"?G+":"+diff:G,{v:isSeq()||G==="spell"?+lvl:pts})}catch(e){}const s=Q("#res"),N=NN(),nb=Q("#nextlvl"),ag=Q("#again");nb.style.display="none";ag.textContent="Play again";
@@ -132,7 +132,7 @@ function finish(){stop();try{if(G==="table"||pts>=Math.ceil(NN()*.6))LWProgress.
  else{Q("#rbig").textContent=pts+" out of "+N;Q("#rsub").textContent=(G==="spell"&&diff==="B1"?"Bonus word types: "+bonus+" ":"")}
  Q("#rh").textContent="Round complete";
  if(isSeq()){const L=+lvl;
-  if(L<4){Q("#rh").textContent="Level "+L+" complete!";nb.style.display="";nb.textContent="Go to Level "+(L+1)+" now";ag.textContent="Stay and replay Level "+L;let k=5;const upd=()=>{Q("#rsub").textContent="Level "+(L+1)+" ("+(2*(L+1)+1)+" letters) starts in "+k+"..."};upd();
+  if(L<4){Q("#rh").textContent="Level "+L+" complete!";nb.style.display="";nb.textContent="Go to Level "+(L+1)+" now";ag.textContent="Stay and replay Level "+L;let k=5;const upd=()=>{Q("#rsub").textContent="Level "+(L+1)+" ("+LABEL(L+1)+") starts in "+k+"..."};upd();
    cd=setInterval(()=>{k--;if(k<=0){clearCd();goLevel(L+1)}else upd()},1000)}
   else{Q("#rh").textContent="All 4 levels complete!";Q("#rsub").textContent="Amazing work! You finished every level.";nb.style.display="";nb.textContent="Back to Level 1";ag.textContent="Replay Level 4"}}
  s.classList.add("show")}
@@ -187,12 +187,12 @@ function play(){
  if(busy)return;
  if(cur&&!cur.marked&&G!=="table"&&rn>0)return;
  if(rn>=NN()){if(G==="table"&&cur&&!cur.fin){cur.fin=1}finish();return}
- stop();resetAns();Q("#side").classList.remove("show");rn++;prog();if(G!=="table")Q("#ans").classList.remove("idle");Q("#yes").disabled=false;
+ stop();resetAns();Q("#side").classList.remove("show");rn++;if(isSeq()&&(rn===1||!plan.length))plan=mkPlan();prog();if(G!=="table")Q("#ans").classList.remove("idle");Q("#yes").disabled=false;
  Q("#noB").textContent="\u2717 Replay";Q("#play").textContent=G==="table"?(rn>=NN()?"Results":"Next letter"):"Next";
  if(G==="seq"){const n=LEN(),s=[];while(s.length<n){const c=rnd(ABC.split(""));if(s[s.length-1]!==c)s.push(c)}cur={ans:s.join(" "),seq:s,on:1000,gap:350};flash(s,1000,350)}
- else if(G==="wordseq"){const n=LEN(),list=A.ws[n].split(",");let left=list.filter(x=>!used.includes(x));if(!left.length){used=[];left=list}const w=rnd(left);used.push(w);const s=scr(w);
+ else if(G==="wordseq"){const n=LEN(),list=A.ws[n].split(",");let left=list.filter(x=>!used.includes(x));if(!left.length){used=[];left=list}const w=rndW(left,new Set(list.slice(0,(A.wsc||{})[n]||0)));used.push(w);const s=scr(w);
   cur={w,word:w.toUpperCase().split(""),ans:s.join(" "),seq:s,on:1000,gap:350};flash(s,1000,350)}
- else if(G==="spell"){const list=A.words[diff][lvl].split(",").map(x=>x.split(" "));let left=list.filter(x=>!used.includes(x[0]));if(!left.length){used=[];left=list}const w=rnd(left);used.push(w[0]);
+ else if(G==="spell"){const list=A.words[diff][lvl].split(",").map(x=>x.split(" "));let left=list.filter(x=>!used.includes(x[0]));if(!left.length){used=[];left=list}const w=rndW(left,new Set(list.slice(0,((A.sc||{})[diff]||{})[lvl]||0).map(x=>x[0])),x=>x[0]);used.push(w[0]);
   cur={w:w[0],p:w[1],ans:w[0].toUpperCase()};cur.seq=cur.ans.split("");cur.on=620;cur.gap=120;flash(cur.seq,620,120)}
  else{busy=true;table()}
 }
