@@ -69,3 +69,21 @@ a{color:var(--pur)}
 @media (max-width:760px){.vwrap{grid-template-columns:58px minmax(0,1fr);gap:8px;padding:6px}.vstrip{top:66px;max-height:calc(100vh - 76px);gap:5px;padding:2px}
 .vstrip .th{border-width:2px;border-radius:7px}.vstrip .th span{font-size:16px}.vstrip .th .tl{display:none}.vstack{gap:10px}.vitem{border-radius:12px;scroll-margin-top:66px}.vitem.game{height:75vh}.vcount{right:8px;bottom:8px;font-size:12px}}
 .th .tl{font-weight:800}
+/* phone header fit (360-430px): brand shrinks, icons only, name truncates, wraps if needed */
+@media (max-width:480px){
+header.top{flex-wrap:wrap;gap:6px 6px;padding:6px 8px;max-width:100vw;box-sizing:border-box}
+header.top .brand{gap:6px;min-width:0;flex:0 1 auto}
+header.top .brand img{width:34px;height:34px;flex:none}
+header.top .brand span{font-size:14px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header.top .brand small{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header.top .lwp-st{flex:1 1 auto;min-width:0;justify-content:flex-end;gap:4px;margin-left:0}
+header.top .lwp-who{min-width:0;max-width:78px;flex:0 1 auto;overflow:hidden;padding:4px 7px}
+header.top .lwp-who b{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+header.top .lwp-nb{flex:none;font-size:0!important;width:32px;height:32px;padding:0!important;display:inline-flex;align-items:center;justify-content:center}
+header.top .lwp-nb::before{content:"+";font-size:20px;line-height:1;font-weight:900}
+header.top .lwg-star{flex:none}
+header.top .lwtc-dock{margin:0;flex:none}
+header.top .lwtc-open{min-height:2.1rem;min-width:2.1rem;padding:0 .35rem}
+header.top .burger{margin-left:0;padding:3px 9px;font-size:20px;flex:none}
+}
+@media (max-width:380px){header.top .brand span{font-size:0}header.top .brand small{display:none}header.top .lwp-who{max-width:72px}}
