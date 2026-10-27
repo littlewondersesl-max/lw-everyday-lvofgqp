@@ -80,44 +80,70 @@ button.no{background:#e5394a;box-shadow:0 4px 0 #b02232}
 #zoom{position:fixed;z-index:12;pointer-events:none;transition:all .8s cubic-bezier(.5,0,.2,1)}#zoom img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 #cells .cell{animation:pop .35s both}@keyframes pop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
 #ans{position:relative}#slots{position:absolute!important;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);margin:0;pointer-events:none;z-index:15;grid-column:auto!important;order:0!important;max-width:96vw;flex-wrap:nowrap}
+
+/* Word Sequence: drag stage (overlay, never pushes the board) */
+#ws{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);display:none;gap:var(--gg,28px);align-items:center;justify-content:center;z-index:15;pointer-events:none;max-width:98vw;flex-wrap:nowrap}
+#ws.show{display:flex}#ws .grp{display:flex;gap:var(--g,6px);justify-content:center;flex-wrap:nowrap}
+#ws .sl{width:var(--sw,48px);flex:none;touch-action:none;pointer-events:none;position:relative}
+#ws .sl.t{pointer-events:auto;cursor:grab;user-select:none;-webkit-user-select:none;will-change:transform}
+#ws .sl.g,.sl.g.ghost{border:3px solid #39ff6a;box-shadow:0 0 10px #39ff6a,0 0 22px #39ff6a88,inset 0 0 10px #39ff6a66}
+#ws .sl.t.used{opacity:.22;border:2px dashed #ffffff55;box-shadow:none;pointer-events:none}#ws .sl.t.used img{opacity:0}
+#ws .sl.t.lift{opacity:.3}
+#ws .sl.t.sel{transform:translateY(-8px) scale(1.07);box-shadow:0 0 12px #fff,0 0 26px #39ff6a}
+#ws .sl.d{pointer-events:auto;cursor:pointer}#ws .sl.d.hot{border-color:#fff;box-shadow:0 0 12px #ffffffaa}
+#ws .sl.d.pp{animation:pop .3s}
+#ws .sl.d.no{animation:bad .5s}
+#ws.done .sl.d{animation:shine 1.05s ease-in-out infinite}
+@keyframes shine{0%,100%{box-shadow:0 0 10px #39ff6a,0 0 22px #39ff6a88;transform:scale(1)}50%{box-shadow:0 0 24px #e8ffee,0 0 54px #39ff6a,0 0 90px #39ff6acc;transform:scale(1.12)}}
+.sl.ghost{position:fixed;z-index:40;pointer-events:none;margin:0;opacity:.95;will-change:transform}
+@media (max-aspect-ratio:1/1){#ws{flex-direction:column;gap:8px}}
+#msg.wd{color:#fff6a8;text-shadow:0 0 10px #ffd84d}
+#res .row2{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 </style><link rel="icon" href="data:,"></head><body>
 <div id="top"><a class="home" href="../../index.html">Home</a><h1 id="title">Alphabet Lights</h1>
- <div class="seg" id="game"><button data-g="seq">Sequence</button><button data-g="spell">Spelling</button><button data-g="table">Letter Table</button></div>
+ <div class="seg" id="game"><button data-g="seq">Sequence</button><button data-g="wordseq">Word Sequence</button><button data-g="spell">Spelling</button><button data-g="table">Letter Table</button></div>
  <div class="seg" id="lvl"></div><div class="seg" id="diff"></div>
- <button class="ctl go" id="play">Play</button><button class="ctl" id="restart">Start over</button><span id="score"><span id="bar"><i></i></span><em id="rtxt">Round 0/10</em></span></div>
+ <button class="ctl go" id="play">Play</button><button class="ctl" id="restart">Start over</button><span id="score"><span id="bar"><i></i></span><em id="rtxt">Round 0/5</em></span></div>
 <div id="main"><div id="stage"></div><div id="table"><div id="big"></div><div id="cells"></div></div>
  <div id="side"><button id="tog">Bonus</button><h3>Bonus: word type</h3><p>What kind of word is it?</p><div id="pos"></div><button class="ctl" id="skip" style="width:100%;margin-top:8px">Skip</button></div></div>
-<div id="ans"><div class="al"><button id="reveal">Teacher: tap to show answer</button><span id="answer"></span><span id="msg"></span></div><div id="slots"></div><div class="ar"><button class="ctl ok" id="yes" title="Correct">&#10003; Correct</button><button class="ctl no" id="noB" title="Replay">&#10007; Replay</button></div></div>
-<canvas id="fx"></canvas><div id="res"><div><h2 id="rh">Round complete</h2><div class="big" id="rbig"></div><p id="rsub"></p><button class="ctl go" id="again">Play again</button></div></div>
+<div id="ans"><div class="al"><button id="reveal">Teacher: tap to show answer</button><span id="answer"></span><span id="msg"></span></div><div id="slots"></div><div id="ws"></div><div class="ar"><button class="ctl ok" id="yes" title="Correct">&#10003; Correct</button><button class="ctl no" id="noB" title="Replay">&#10007; Replay</button></div></div>
+<canvas id="fx"></canvas><div id="res"><div><h2 id="rh">Round complete</h2><div class="big" id="rbig"></div><p id="rsub"></p><div class="row2"><button class="ctl go" id="nextlvl" style="display:none">Next level</button><button class="ctl" id="again">Play again</button></div></div></div>
 <script src="data.js"></script><script>
 (function(){
 const A=window.AL,Q=s=>document.querySelector(s),ABC="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const COL={A:"#ff2d95",B:"#1e7bff",C:"#9dff1e",D:"#ff8a00",E:"#ffe100",F:"#b13cff",G:"#ff1e1e",H:"#00f0ff",I:"#ff2d95",J:"#9dff1e",K:"#ff8a00",L:"#1e7bff",M:"#ffe100",N:"#b13cff",O:"#ff1e1e",P:"#00f0ff",Q:"#9dff1e",R:"#ff2d95",S:"#ff8a00",T:"#1e7bff",U:"#ffe100",V:"#b13cff",W:"#9dff1e",X:"#ff1e1e",Y:"#00f0ff",Z:"#ff2d95"};
 const prm=new URLSearchParams(location.search);
-let G=["seq","spell","table"].includes(prm.get("g"))?prm.get("g"):"seq",lvl=null,diff="A1",score=0,cur=null,rn=0,pts=0,bonus=0,used=[],tot=0,busy=false,timers=[];
+let G=["seq","wordseq","spell","table"].includes(prm.get("g"))?prm.get("g"):"seq",lvl=null,diff="A1",score=0,cur=null,rn=0,pts=0,bonus=0,used=[],tot=0,busy=false,timers=[],cd=0;
 const el={};
 function letter(c){const d=document.createElement("div");d.className="L";d.style.setProperty("--c",COL[c]);d.innerHTML=`<img class="off" src="off-${c}.webp" alt="${c}"><img class="on" src="on-${c}.webp" alt="">`;return d}
 [[0,9],[9,18],[18,26]].forEach(([a,b])=>{const r=document.createElement("div");r.className="row";for(let i=a;i<b;i++){const d=letter(ABC[i]);el[ABC[i]]=d;r.appendChild(d)}Q("#stage").appendChild(r)});
 const big=letter("A");Q("#big").appendChild(big);
 const T=(f,ms)=>timers.push(setTimeout(f,ms));
-function stop(){timers.forEach(clearTimeout);timers=[];busy=false;Q("#slots").className="";Q("#slots").innerHTML="";if(cur)cur.build=0;Object.values(el).forEach(d=>d.className="L")}
+function clearCd(){if(cd){clearInterval(cd);cd=0}}
+function stop(){timers.forEach(clearTimeout);timers=[];clearCd();busy=false;Q("#slots").className="";Q("#slots").innerHTML="";wsClear();if(cur)cur.build=0;Object.values(el).forEach(d=>d.className="L")}
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function seg(id,items,val,cb){const s=Q(id);s.innerHTML=items.map(([v,t])=>`<button data-v="${v}" class="${v==val?"on":""}">${t}</button>`).join("");s.onclick=e=>{const b=e.target.closest("button");if(!b)return;s.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));cb(b.dataset.v)}}
-const N=10;function prog(){Q("#rtxt").textContent="Round "+rn+"/"+N;Q("#bar i").style.width=rn/N*100+"%"}
+const isSeq=()=>G==="seq"||G==="wordseq",NN=()=>isSeq()?5:10,LEN=()=>2*(+lvl)+1;function prog(){const N=NN();Q("#rtxt").textContent="Round "+rn+"/"+N;Q("#bar i").style.width=rn/N*100+"%"}
 function setScore(n){score=n}
 function newRound(){rn=0;pts=0;bonus=0;used=[];tot=0;Q("#res").classList.remove("show");prog()}
-function finish(){stop();const s=Q("#res");
+function finish(){stop();const s=Q("#res"),N=NN(),nb=Q("#nextlvl"),ag=Q("#again");nb.style.display="none";ag.textContent="Play again";
  if(G==="table"){Q("#rbig").textContent=pts+" answers";Q("#rsub").textContent=pts+" of "+tot+" prompts answered across "+N+" letters"}
  else{Q("#rbig").textContent=pts+" out of "+N;Q("#rsub").textContent=(G==="spell"&&diff==="B1"?"Bonus word types: "+bonus+" ":"")}
- Q("#rh").textContent="Round complete";s.classList.add("show")}
-function marked(ok){cur.marked=1;if(ok)pts++;Q("#noB").textContent="\u2717 Replay";Q("#play").textContent=rn>=N?"Results":"Next"}
-function resetAns(){Q("#answer").textContent="";Q("#msg").textContent="";Q("#reveal").style.display="";}
+ Q("#rh").textContent="Round complete";
+ if(isSeq()){const L=+lvl;
+  if(L<4){Q("#rh").textContent="Level "+L+" complete!";nb.style.display="";nb.textContent="Go to Level "+(L+1)+" now";ag.textContent="Stay and replay Level "+L;let k=5;const upd=()=>{Q("#rsub").textContent="Level "+(L+1)+" ("+(2*(L+1)+1)+" letters) starts in "+k+"..."};upd();
+   cd=setInterval(()=>{k--;if(k<=0){clearCd();goLevel(L+1)}else upd()},1000)}
+  else{Q("#rh").textContent="All 4 levels complete!";Q("#rsub").textContent="Amazing work! You finished every level.";nb.style.display="";nb.textContent="Back to Level 1";ag.textContent="Replay Level 4"}}
+ s.classList.add("show")}
+function goLevel(n){clearCd();Q("#res").classList.remove("show");lvl=String(n);setup();play()}
+function marked(ok){cur.marked=1;if(ok)pts++;Q("#noB").textContent="\u2717 Replay";Q("#play").textContent=rn>=NN()?"Results":"Next"}
+function resetAns(){Q("#answer").textContent="";Q("#msg").textContent="";Q("#reveal").style.display="";Q("#reveal").textContent="Teacher: tap to show answer";Q("#msg").className=""}
 function setup(){
  stop();resetAns();cur=null;newRound();Q("#side").classList.remove("show");
  Q("#game").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.g===G));
- Q("#stage").style.display="";Q("#stage").classList.toggle("sp",G==="spell");Q("#table").classList.remove("show");Q("#ans").classList.add("idle");Q("#yes").disabled=false;
- if(G==="seq"){lvl=lvl&&+lvl<=8?lvl:"2";seg("#lvl",[2,3,4,5,6,7,8].map(n=>[n,"Level "+(n-1)]),lvl,v=>{lvl=v;setup()});Q("#diff").style.display="none"}
+ Q("#stage").style.display="";Q("#stage").classList.toggle("sp",G==="spell");Q("#msg").className="";Q("#table").classList.remove("show");Q("#ans").classList.add("idle");Q("#yes").disabled=false;
+ if(isSeq()){lvl=["1","2","3","4"].includes(String(lvl))?String(lvl):"1";seg("#lvl",[1,2,3,4].map(n=>[n,"Level "+n]),lvl,v=>{lvl=v;setup()});Q("#diff").style.display="none"}
  else if(G==="spell"){const mx={A1:4,A2:5,B1:7}[diff];lvl=lvl&&+lvl>=3&&+lvl<=mx?lvl:"3";seg("#lvl",[3,4,5,6,7].filter(n=>n<=mx).map(n=>[n,n+" letters"]),lvl,v=>{lvl=v;setup()});Q("#diff").style.display="";seg("#diff",[["A1","A1"],["A2","A2"],["B1","B1"]],diff,v=>{diff=v;setup()})}
  else{Q("#lvl").innerHTML="";Q("#lvl").style.display="none";Q("#diff").style.display="";seg("#diff",[["A1","A1"],["A2","A2"],["B1","B1"]],diff,v=>{diff=v;setup()})}
  if(G!=="table")Q("#lvl").style.display="";
@@ -145,22 +171,27 @@ function tick(){cx.clearRect(0,0,innerWidth,innerHeight);cx.globalCompositeOpera
  parts=parts.filter(p=>p.l>0);cx.globalAlpha=1;raf=(parts.length||flashes.length)?requestAnimationFrame(tick):(cx.clearRect(0,0,innerWidth,innerHeight),0)}
 function flash(seq,on,gap){busy=true;let t=300;
  seq.forEach((c,i)=>{const d=el[c];T(()=>{d.className="L lit";if(i%5===4)T(()=>sparks(d,COL[c]),120)},t);T(()=>{d.className="L out"},t+on);T(()=>{d.className="L"},t+on+OUT);t+=on+OUT+DARK});
- T(()=>{busy=false;Q("#msg").textContent="Say it!";if(G==="seq"&&cur&&!cur.marked)T(slots,700)},t)}
+ T(()=>{busy=false;Q("#msg").textContent="Say it!";if(isSeq()&&cur&&!cur.marked)T(slots,700)},t)}
 function showAll(win){cur.build=0;const s=Q("#slots");s.innerHTML=cur.seq.map(c=>`<div class="sl ok" style="--c:${COL[c]}"><img src="on-${c}.webp" alt="${c}"></div>`).join("");s.className="show"+(win?" win":"")}
 function slots(){cur.build=1;cur.fill=0;const s=Q("#slots");s.innerHTML=cur.seq.map(()=>'<div class="sl"></div>').join("");s.className="show";s.children[0].classList.add("nx");Q("#msg").textContent="Tap the letters in order!"}
 function tap(c){if(!cur||busy||cur.marked||!cur.build)return;const s=Q("#slots"),sl=s.children[cur.fill],d=el[c];
  if(c===cur.seq[cur.fill]){sl.className="sl ok";sl.style.setProperty("--c",COL[c]);sl.innerHTML=`<img src="on-${c}.webp" alt="${c}">`;d.className="L lit";setTimeout(()=>{if(d.className==="L lit")d.className="L"},420);cur.fill++;
   if(cur.fill<cur.seq.length){s.children[cur.fill].classList.add("nx");return}
-  cur.build=0;s.classList.add("win");marked(1);Q("#msg").textContent="";Q("#answer").textContent=cur.ans;Q("#reveal").style.display="none";setTimeout(()=>cur.seq.forEach(x=>el[x].className="L stay"),450);T(play,3000)}
+  cur.build=0;s.classList.add("win");marked(1);Q("#msg").textContent="";Q("#answer").textContent=cur.ans;Q("#reveal").style.display="none";setTimeout(()=>cur.seq.forEach(x=>el[x].className="L stay"),450);if(G==="wordseq"){Q("#reveal").style.display="";T(startBuild,1500)}else T(play,3000)}
  else{sl.classList.remove("bad");void sl.offsetWidth;sl.classList.add("bad");d.className="L bad";setTimeout(()=>{if(d.className==="L bad")d.className="L"},460)}}
 Object.entries(el).forEach(([c,d])=>d.addEventListener("click",()=>tap(c)));
+function scr(w){const L=w.toUpperCase().split("");let r,k=0;const adj=a=>a.some((c,i)=>i&&a[i-1]===c);
+ do{r=shuffle(L);k++}while((r.join("")===L.join("")||(k<300&&adj(r)))&&k<600);
+ if(r.join("")===L.join("")&&L.length>1)r=L.slice(1).concat(L[0]);return r}
 function play(){
  if(busy)return;
  if(cur&&!cur.marked&&G!=="table"&&rn>0)return;
- if(rn>=N){if(G==="table"&&cur&&!cur.fin){cur.fin=1}finish();return}
+ if(rn>=NN()){if(G==="table"&&cur&&!cur.fin){cur.fin=1}finish();return}
  stop();resetAns();Q("#side").classList.remove("show");rn++;prog();if(G!=="table")Q("#ans").classList.remove("idle");Q("#yes").disabled=false;
- Q("#noB").textContent="\u2717 Replay";Q("#play").textContent=G==="table"?(rn>=N?"Results":"Next letter"):"Next";
- if(G==="seq"){const n=+lvl,s=[];while(s.length<n){const c=rnd(ABC.split(""));if(s[s.length-1]!==c)s.push(c)}cur={ans:s.join(" "),seq:s,on:1000,gap:350};flash(s,1000,350)}
+ Q("#noB").textContent="\u2717 Replay";Q("#play").textContent=G==="table"?(rn>=NN()?"Results":"Next letter"):"Next";
+ if(G==="seq"){const n=LEN(),s=[];while(s.length<n){const c=rnd(ABC.split(""));if(s[s.length-1]!==c)s.push(c)}cur={ans:s.join(" "),seq:s,on:1000,gap:350};flash(s,1000,350)}
+ else if(G==="wordseq"){const n=LEN(),list=A.ws[n].split(",");let left=list.filter(x=>!used.includes(x));if(!left.length){used=[];left=list}const w=rnd(left);used.push(w);const s=scr(w);
+  cur={w,word:w.toUpperCase().split(""),ans:s.join(" "),seq:s,on:1000,gap:350};flash(s,1000,350)}
  else if(G==="spell"){const list=A.words[diff][lvl].split(",").map(x=>x.split(" "));let left=list.filter(x=>!used.includes(x[0]));if(!left.length){used=[];left=list}const w=rnd(left);used.push(w[0]);
   cur={w:w[0],p:w[1],ans:w[0].toUpperCase()};cur.seq=cur.ans.split("");cur.on=620;cur.gap=120;flash(cur.seq,620,120)}
  else{busy=true;table()}
@@ -192,8 +223,56 @@ function showCells(c,L){
  Q("#msg").textContent="Teacher: tap a box when the answer is right";
  cells.onclick=e=>{const b=e.target.closest(".cell");if(!b)return;b.classList.toggle("done");pts+=b.classList.contains("done")?1:-1};
 }
-Q("#reveal").onclick=()=>{if(G==="table"||!cur||busy)return;showAll(0);Q("#msg").textContent="";Q("#reveal").style.display="none"};
-Q("#yes").onclick=()=>{if(!cur||busy||cur.marked||Q("#yes").disabled)return;showAll(1);marked(1);Q("#msg").textContent="";Q("#answer").textContent=cur.ans;Q("#reveal").style.display="none";if(!(G==="spell"&&diff==="B1"))T(play,3000);
+
+/* ---- Word Sequence: slide, drag (pointer events) and tap-to-move ---- */
+let wsOn=0,drag=null,selT=null;
+function wsClear(){wsOn=0;drag=null;selT=null;const w=Q("#ws");w.className="";w.innerHTML="";document.querySelectorAll(".sl.ghost").forEach(x=>x.remove());Q("#slots").style.visibility="";Q("#msg").className=""}
+function wsSize(n){const port=innerHeight>innerWidth,av=innerWidth*.96,g=port?6:6,gg=port?0:Math.max(14,Math.min(34,innerWidth*.02));
+ const sw=Math.max(18,Math.min(60,port?(av-(n-1)*g)/n:(av-gg-(2*n-2)*g)/(2*n)));const w=Q("#ws");w.style.setProperty("--sw",sw+"px");w.style.setProperty("--g",g+"px");w.style.setProperty("--gg",gg+"px")}
+addEventListener("resize",()=>{if(wsOn&&cur)wsSize(cur.word.length)});
+function tileHTML(c){return `<img src="on-${c}.webp" alt="${c}">`}
+function startBuild(){const c=cur;if(!c||G!=="wordseq"||!c.marked||c.revealed)return;
+ Object.values(el).forEach(d=>d.className="L");
+ const s=Q("#slots"),first=[...s.children].map(x=>x.getBoundingClientRect()),n=c.word.length,w=Q("#ws");
+ wsSize(n);
+ w.innerHTML='<div class="grp src">'+c.seq.map((l,i)=>`<div class="sl t g" data-i="${i}" data-l="${l}" style="--c:${COL[l]}">${tileHTML(l)}</div>`).join("")+'</div><div class="grp dst">'+c.word.map((l,i)=>`<div class="sl d" data-i="${i}"></div>`).join("")+'</div>';
+ w.className="show";w.style.visibility="hidden";
+ const tiles=[...w.querySelectorAll(".t")],dst=[...w.querySelectorAll(".d")],last=tiles.map(x=>x.getBoundingClientRect());
+ tiles.forEach((t,i)=>{t.style.transition="none";t.style.transform=`translate(${first[i].left-last[i].left}px,${first[i].top-last[i].top}px)`});
+ const off=innerWidth*.75;dst.forEach(d=>{d.style.transition="none";d.style.transform=`translateX(${off}px)`;d.style.opacity="0"});
+ s.style.visibility="hidden";w.style.visibility="";void w.offsetWidth;
+ tiles.forEach((t,i)=>{t.style.transition="transform .95s cubic-bezier(.55,0,.2,1)";t.style.transform=""});
+ dst.forEach((d,i)=>{d.style.transition=`transform .95s cubic-bezier(.55,0,.2,1) ${.08+i*.03}s,opacity .6s ease ${.08+i*.03}s`;d.style.transform="";d.style.opacity="1"});
+ Q("#msg").textContent="Drag the letters across!";c.fill=0;c.slide=1;
+ T(()=>{tiles.forEach(t=>{t.style.transition="";t.style.transform=""});dst.forEach(d=>{d.style.transition="";d.style.transform="";d.style.opacity=""});s.className="";s.innerHTML="";s.style.visibility="";if(c===cur){wsOn=1;c.slide=2}},1250)}
+function placeOK(t,d){const c=cur,l=t.dataset.l;d.classList.remove("hot");d.className="sl d g pp";d.style.setProperty("--c",COL[l]);d.innerHTML=tileHTML(l);t.classList.remove("lift","sel");t.classList.add("used");c.fill++;selT=null;
+ if(c.fill>=c.word.length){wsOn=0;Q("#ws").classList.add("done");Q("#msg").textContent="Great! "+c.word.join("");Q("#msg").className="wd";const ds=[...Q("#ws").querySelectorAll(".d")];
+  ds.forEach((x,i)=>{const r=x.getBoundingClientRect();if(i%5===4)setTimeout(()=>sparks(x,COL[c.word[i]]),200)});sparks(ds[Math.floor(ds.length/2)],COL[c.word[0]]);T(play,2800)}}
+function tryDrop(t,d){const j=+d.dataset.i;if(d.classList.contains("g"))return false;if(t.dataset.l===cur.word[j]){placeOK(t,d);return true}
+ d.classList.remove("no");void d.offsetWidth;d.classList.add("no");setTimeout(()=>d.classList.remove("no"),520);return false}
+function hit(x,y){return [...Q("#ws").querySelectorAll(".d")].find(d=>{const r=d.getBoundingClientRect(),p=Math.min(10,r.width*.25);return x>=r.left-p&&x<=r.right+p&&y>=r.top-p&&y<=r.bottom+p})}
+function snapBack(g,t){if(!g){t.classList.remove("lift");return}g.style.transition="transform .28s cubic-bezier(.3,1.4,.5,1)";g.style.transform="";setTimeout(()=>{g.remove();t.classList.remove("lift")},300)}
+function sel(t){if(selT)selT.classList.remove("sel");selT=(selT===t)?null:t;if(selT)selT.classList.add("sel")}
+const WS=Q("#ws");
+WS.addEventListener("pointerdown",e=>{const t=e.target.closest(".t");
+ if(!wsOn||!t||t.classList.contains("used")||drag)return;
+ drag={t,x:e.clientX,y:e.clientY,id:e.pointerId,moved:0,g:null,r:t.getBoundingClientRect()};try{t.setPointerCapture(e.pointerId)}catch(_){}e.preventDefault();
+ addEventListener("pointermove",mv,true);addEventListener("pointerup",up,true);addEventListener("pointercancel",cn,true)});
+function mv(e){if(!drag||(drag.id!==e.pointerId&&e.pointerId!==undefined&&drag.id!==undefined&&0))return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+ if(!drag.moved&&Math.hypot(dx,dy)>7){drag.moved=1;const g=drag.t.cloneNode(true);g.className="sl g ghost";g.removeAttribute("data-i");Object.assign(g.style,{left:drag.r.left+"px",top:drag.r.top+"px",width:drag.r.width+"px",height:drag.r.height+"px",transition:"none"});document.body.appendChild(g);drag.g=g;drag.t.classList.add("lift");if(selT){selT.classList.remove("sel");selT=null}}
+ if(drag.moved){drag.g.style.transform=`translate(${dx}px,${dy}px) scale(1.12)`;const h=hit(e.clientX,e.clientY);WS.querySelectorAll(".d.hot").forEach(x=>x!==h&&x.classList.remove("hot"));if(h&&!h.classList.contains("g"))h.classList.add("hot")}}
+function end(){removeEventListener("pointermove",mv,true);removeEventListener("pointerup",up,true);removeEventListener("pointercancel",cn,true)}
+function up(e){const d0=drag;end();drag=null;if(!d0)return;WS.querySelectorAll(".d.hot").forEach(x=>x.classList.remove("hot"));
+ if(!d0.moved){if(wsOn)sel(d0.t);return}
+ const h=wsOn?hit(e.clientX,e.clientY):null;
+ if(h&&tryDrop(d0.t,h)){const r=h.getBoundingClientRect();d0.g.style.transition="transform .12s ease-out";d0.g.style.transform=`translate(${r.left-d0.r.left}px,${r.top-d0.r.top}px)`;const g=d0.g;setTimeout(()=>g.remove(),140)}
+ else snapBack(d0.g,d0.t)}
+function cn(){const d0=drag;end();drag=null;if(d0&&d0.moved)snapBack(d0.g,d0.t)}
+WS.addEventListener("click",e=>{const d=e.target.closest(".d");if(!d||!wsOn||!selT)return;const t=selT;if(!tryDrop(t,d)){t.classList.remove("sel");selT=null}});
+Q("#reveal").onclick=()=>{if(G==="table"||!cur||busy)return;
+ if(G==="wordseq"){if(!cur.marked)showAll(0);Q("#msg").textContent="Word: "+cur.word.join("");Q("#msg").className="wd";if(!cur.marked)Q("#reveal").style.display="none";return}
+ showAll(0);Q("#msg").textContent="";Q("#reveal").style.display="none"};
+Q("#yes").onclick=()=>{if(!cur||busy||cur.marked||Q("#yes").disabled)return;showAll(1);marked(1);Q("#msg").textContent="";Q("#answer").textContent=cur.ans;if(G==="wordseq"){T(startBuild,1500)}else{Q("#reveal").style.display="none";if(!(G==="spell"&&diff==="B1"))T(play,3000)}
  Object.values(el).forEach(d=>{}); (G==="spell"?cur.ans.split(""):cur.ans.split(" ")).forEach(c=>el[c].className="L stay");
  if(G==="spell"&&diff==="B1"){const s=Q("#side");s.classList.add("show");s.classList.remove("closed");Q("#pos").innerHTML=Object.entries(A.pos).map(([k,v])=>`<button data-k="${k}">${v}</button>`).join("")}};
 Q("#noB").onclick=()=>{if(!cur||busy||cur.marked)return;
@@ -203,7 +282,8 @@ Q("#pos").onclick=e=>{const b=e.target.closest("button");if(!b||!cur||cur.posDon
  const r=b.dataset.k===cur.p;b.classList.add(r?"right":"wrong");if(!r)Q(`#pos [data-k="${cur.p}"]`).classList.add("right");if(r)bonus++;Q("#msg").textContent=r?"Bonus point!":cur.w+" is a "+A.pos[cur.p];T(play,2500)};
 Q("#skip").onclick=()=>{Q("#side").classList.remove("show");if(cur&&cur.marked&&!cur.posDone){cur.posDone=1;T(play,300)}};
 Q("#tog").onclick=()=>Q("#side").classList.toggle("closed");
-Q("#play").onclick=play;Q("#restart").onclick=()=>{document.querySelectorAll("#zoom").forEach(z=>z.remove());setup()};Q("#again").onclick=()=>{newRound();cur=null;Q("#play").textContent=G==="table"?"Start":"Play";play()};
+Q("#nextlvl").onclick=()=>goLevel(isSeq()&&+lvl<4?+lvl+1:1);
+Q("#play").onclick=play;Q("#restart").onclick=()=>{document.querySelectorAll("#zoom").forEach(z=>z.remove());setup()};Q("#again").onclick=()=>{clearCd();newRound();cur=null;Q("#play").textContent=G==="table"?"Start":"Play";play()};
 Q("#game").onclick=e=>{const b=e.target.closest("button");if(!b)return;G=b.dataset.g;lvl=null;setup()};
 setup();
 })();
