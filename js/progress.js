@@ -22,11 +22,17 @@ function typeOf(id){if(REG[id])return REG[id].type;if(id.indexOf('/')<0)return '
 // ---- students
 function jget(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
 function jset(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-function st(){return jget(KS,{cur:'s0',list:[{id:'s0',name:''}]})}
-function current(){const s=st();return s.list.find(x=>x.id===s.cur)||{id:s.cur,name:''}}
-function students(){return st().list.filter(x=>x.name)}
-function newStudent(name){name=String(name||'').trim().slice(0,40);if(!name)return null;const s=st();const id='s'+Date.now().toString(36);
-  s.list.push({id,name});s.cur=id;jset(KS,s);localStorage.removeItem(KD+id);return id}
+const MAIN='My account',MAINID='s0'; // the teacher's own profile: always present, always first, never deleted or reset
+function st(){const s=jget(KS,null)||{};if(!Array.isArray(s.list))s.list=[];
+  s.list=s.list.filter(x=>x&&x.id&&x.id!==MAINID&&String(x.name||'').trim());s.list.unshift({id:MAINID,name:MAIN});
+  if(!s.list.some(x=>x.id===s.cur))s.cur=MAINID;return s}
+function current(){const s=st();return s.list.find(x=>x.id===s.cur)||s.list[0]}
+function students(){return st().list}
+function nameTaken(name){const n=name.toLowerCase();return st().list.some(x=>x.name.toLowerCase()===n)}
+// New student only ADDS a profile (fresh id, empty data). It never touches My account (s0) or any other profile's data.
+function newStudent(name){name=String(name||'').trim().replace(/\s+/g,' ').slice(0,40);if(!name||nameTaken(name))return null;const s=st();let id;
+  do{id='s'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)}while(id===MAINID||s.list.some(x=>x.id===id));
+  s.list.push({id,name});s.cur=id;jset(KS,s);return id}
 function switchStudent(id){const s=st();if(s.list.some(x=>x.id===id)){s.cur=id;jset(KS,s)}}
 function all(){return jget(KD+current().id,{})}
 function rec(id){return all()[resolve(id)]||null}
@@ -64,31 +70,38 @@ function checkHTML(){return `<span class="lwp-mk lwp-l">${CK}</span>`}
 // ---- styles
 const css=`.lwp-box{position:relative}.lwp-mk.lwp-mk{position:absolute;bottom:8px;z-index:3;display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:26px;padding:0 7px;border-radius:13px;background:rgba(255,255,255,.94);box-shadow:0 1px 5px rgba(0,0,0,.18);font:800 13px/1 Nunito,system-ui,sans-serif;color:#2c7a6a;pointer-events:none}
 .lwp-mk.lwp-l{left:8px;padding:0;width:26px}.lwp-mk.lwp-r{right:8px}.lwp-ck.lwp-ck{margin:0;padding:0;display:block;width:7px;height:13px;border:solid #2c9a83;border-width:0 3px 3px 0;transform:translateY(-2px) rotate(45deg)}.lwp-inf{width:22px;height:11px;color:#6c4ea0}
-.lwp-st{display:flex;align-items:center;gap:8px;margin-left:8px;white-space:nowrap}.lwp-who{font-size:13px;color:#8a7fa8;max-width:160px;overflow:hidden;text-overflow:ellipsis}.lwp-who b{color:#6c4ea0}
+.lwp-st{display:flex;align-items:center;gap:8px;margin-left:8px;white-space:nowrap}.lwp-who{display:inline-flex;align-items:center;gap:5px;border:2px solid #d9c9ee;border-radius:12px;background:#f6f0fc;padding:5px 10px;font:700 13px Nunito,system-ui,sans-serif;color:#8a7fa8;max-width:200px;cursor:pointer}.lwp-who:hover{border-color:#6c4ea0}.lwp-who b{color:#6c4ea0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lwp-who:after{content:'';border:solid #6c4ea0;border-width:0 2px 2px 0;padding:2px;transform:translateY(-2px) rotate(45deg)}
 .lwp-nb{border:0;border-radius:12px;padding:7px 12px;font:800 14px Nunito,system-ui,sans-serif;background:#6c4ea0;color:#fff;cursor:pointer}.lwp-nb:hover{background:#5a3f8a}
 .lwp-ov{position:fixed;inset:0;z-index:1000;background:rgba(40,30,70,.35);display:flex;align-items:center;justify-content:center;padding:16px}
 .lwp-dlg{background:#fff;border-radius:22px;box-shadow:0 18px 50px rgba(60,40,110,.3);padding:22px 22px 18px;width:min(380px,100%);font-family:Nunito,system-ui,sans-serif;color:#45506b}
 .lwp-dlg h3{margin:0 0 4px;color:#6c4ea0;font-size:21px}.lwp-dlg p{margin:0 0 12px;font-size:14px}.lwp-dlg input,.lwp-dlg select{width:100%;box-sizing:border-box;border:2px solid #e2d3f3;border-radius:12px;padding:10px 12px;font:700 16px Nunito,system-ui,sans-serif;color:#45506b;outline:0}.lwp-dlg input:focus{border-color:#6c4ea0}
 .lwp-row{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}.lwp-row button{border:0;border-radius:12px;padding:9px 16px;font:800 15px Nunito,system-ui,sans-serif;cursor:pointer}.lwp-ok{background:#2c9a83;color:#fff}.lwp-cn{background:#f0eaf8;color:#6c4ea0}
 .lwp-sw{margin-top:14px;padding-top:12px;border-top:1px solid #eee}.lwp-sw label{display:block;font-size:13px;font-weight:800;margin-bottom:6px}
+.lwp-now{background:#f0eaf8;border-radius:12px;padding:8px 12px;margin:0 0 12px;font-size:14px}.lwp-now b{color:#6c4ea0}
+.lwp-ls{display:flex;flex-direction:column;gap:6px;max-height:210px;overflow:auto;margin:0 0 4px}.lwp-ls button{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;box-sizing:border-box;border:2px solid #e2d3f3;border-radius:12px;background:#fff;padding:9px 12px;font:800 15px Nunito,system-ui,sans-serif;color:#45506b;cursor:pointer;text-align:left}.lwp-ls button:hover{border-color:#6c4ea0}.lwp-ls button.cur{border-color:#2c9a83;background:#e6f5f1;cursor:default}.lwp-ls small{font-weight:800;color:#2c7a6a;white-space:nowrap}.lwp-err{color:#b3261e;font-size:13px;font-weight:700;margin:6px 0 0;min-height:1em}
 .lwp-done{position:relative}.lwp-done>.lwp-mk.lwp-mk{top:8px;bottom:auto}
-@media (max-width:760px){.lwp-who{display:none}.lwp-nb{padding:6px 10px;font-size:13px}}`;
+@media (max-width:760px){.lwp-who{max-width:118px;padding:4px 8px}.lwp-who span{display:none}.lwp-st{gap:5px;margin-left:4px}.lwp-nb{padding:6px 10px;font-size:13px}}`;
 function addCSS(){if(document.getElementById('lwp-css'))return;const s=document.createElement('style');s.id='lwp-css';s.textContent=css;(document.head||document.documentElement).appendChild(s)}
 // ---- New student control (pages with the site header)
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function header(){const top=document.querySelector('header.top');if(!top||!top.querySelector('#menu')||top.querySelector('.lwp-st'))return;const cur=current();
   const box=document.createElement('div');box.className='lwp-st';
-  box.innerHTML=(cur.name?`<span class="lwp-who">Student: <b>${esc(cur.name)}</b></span>`:'')+`<button type="button" class="lwp-nb" id="lwp-new">New student</button>`;
-  const burger=top.querySelector('.burger');top.insertBefore(box,burger||null);box.querySelector('button').onclick=dialog}
-function dialog(){const others=students().filter(x=>x.id!==current().id);const ov=document.createElement('div');ov.className='lwp-ov';
-  ov.innerHTML=`<div class="lwp-dlg" role="dialog" aria-modal="true" aria-labelledby="lwp-h"><h3 id="lwp-h">New student</h3><p>Type the student's name. They start with a clean slate: no marks on anything.</p>
-  <input id="lwp-name" maxlength="40" placeholder="Student name" autocomplete="off"><div class="lwp-row"><button class="lwp-cn" type="button">Cancel</button><button class="lwp-ok" type="button">Save</button></div>
-  ${others.length?`<div class="lwp-sw"><label for="lwp-pick">Or continue with a saved student</label><select id="lwp-pick"><option value="">Choose…</option>${others.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></div>`:''}</div>`;
-  document.body.appendChild(ov);const inp=ov.querySelector('#lwp-name');inp.focus();const close=()=>ov.remove();
-  const save=()=>{if(newStudent(inp.value))location.reload();else inp.focus()};
+  box.innerHTML=`<button type="button" class="lwp-who" id="lwp-who" title="Switch student" aria-label="Current student: ${esc(cur.name)}. Switch student"><span>Student:</span> <b>${esc(cur.name)}</b></button><button type="button" class="lwp-nb" id="lwp-new">New student</button>`;
+  const burger=top.querySelector('.burger');top.insertBefore(box,burger||null);box.querySelector('#lwp-who').onclick=box.querySelector('#lwp-new').onclick=dialog}
+function dialog(){if(document.querySelector('.lwp-ov'))return;const cur=current(),list=students();const ov=document.createElement('div');ov.className='lwp-ov';
+  ov.innerHTML=`<div class="lwp-dlg" role="dialog" aria-modal="true" aria-labelledby="lwp-h"><h3 id="lwp-h">Students</h3>
+  <p class="lwp-now">Showing: <b>${esc(cur.name)}</b></p>
+  <div class="lwp-sw" style="margin-top:0;padding-top:0;border:0"><label>Switch to</label><div class="lwp-ls">${list.map(x=>`<button type="button" data-id="${x.id}"${x.id===cur.id?' class="cur" aria-current="true"':''}><span>${esc(x.name)}</span>${x.id===cur.id?'<small>Showing now</small>':''}</button>`).join('')}</div></div>
+  <div class="lwp-sw"><label for="lwp-name">New student</label><input id="lwp-name" maxlength="40" placeholder="Student name" autocomplete="off"><p class="lwp-err" id="lwp-err" role="alert"></p>
+  <p style="margin:6px 0 0;font-size:13px">A new student starts with a clean slate. ${esc(MAIN)} and every other student keep their progress.</p></div>
+  <div class="lwp-row"><button class="lwp-cn" type="button">Close</button><button class="lwp-ok" type="button">Add student</button></div></div>`;
+  document.body.appendChild(ov);const inp=ov.querySelector('#lwp-name'),err=ov.querySelector('#lwp-err');const close=()=>ov.remove();
+  const save=()=>{const v=inp.value.trim();if(!v){err.textContent='Type a name first.';inp.focus();return}
+    if(newStudent(v))location.reload();else{err.textContent=nameTaken(v.replace(/\s+/g,' '))?'That name is already used.':'Please try another name.';inp.focus()}};
   ov.querySelector('.lwp-ok').onclick=save;ov.querySelector('.lwp-cn').onclick=close;ov.onclick=e=>{if(e.target===ov)close()};
-  inp.onkeydown=e=>{if(e.key==='Enter')save();if(e.key==='Escape')close()};
-  const pk=ov.querySelector('#lwp-pick');if(pk)pk.onchange=()=>{if(pk.value){switchStudent(pk.value);location.reload()}}}
+  inp.onkeydown=e=>{if(e.key==='Enter')save();if(e.key==='Escape')close()};ov.onkeydown=e=>{if(e.key==='Escape')close()};
+  ov.querySelectorAll('.lwp-ls button').forEach(b=>b.onclick=()=>{if(b.dataset.id===cur.id){close();return}switchStudent(b.dataset.id);location.reload()});
+  (ov.querySelector('.lwp-ls button:not(.cur)')||inp).focus()}
 // ---- auto wiring from the <script> tag
 const ME=document.currentScript;const SCRIPT_BASE=new URL('..',ME?ME.src:location.href).href; // site root
 function auto(){addCSS();header();const id=ME&&ME.dataset.id;if(!id)return;const t=ME.dataset.type||typeOf(id);if(ME.dataset.type)register(id,t);
