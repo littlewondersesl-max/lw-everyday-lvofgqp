@@ -1,7 +1,8 @@
 /* Little Wonders · Teacher's Corner (one shared include, no build step).
    Add before </body> on any page:  <script src="(path to)/js/teachers-corner.js"></script>
-   It loads css/teachers-corner.css itself, adds a "Teacher's Corner" button to the site header (or a small floating one on
-   pages without a header) and mounts a full-screen blackboard overlay: wood frame, green slate, chalk toolbar, chalk stage.
+   It loads css/teachers-corner.css itself and adds an icon-only "Teacher's Corner" button (aria-label + title) into the page's
+   [data-tc-slot] (or the site header); it never floats over the page. Pressing it mounts a full-screen blackboard overlay: wood frame,
+   green slate, chalk toolbar, chalk stage.
    Closes with the Close button or Escape (innermost layer first: text box, then note card, then the board). No sounds
    except the Listen button on a note card (browser speech). Drawings stay in memory until the page is reloaded.
    Notes list: how-to / goals for the current page or book, built from data already on the page. A page can add its own:
@@ -104,25 +105,48 @@ function loadAssets(){
   if(!D.getElementById('lwtc-fonts')){var f=el('link','',{id:'lwtc-fonts',rel:'stylesheet',href:'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560&family=Nunito:wght@700;800;900&family=Outfit:wght@400;600&display=swap'});(D.head||D.documentElement).appendChild(f)}
 }
 
+/* The button is icon-only and always sits in a slot the page offers: an element with data-tc-slot (preferably inside the page's own top
+   button row or header). Optional on the slot: data-tc-class="ctl" gives the button the host page's own button class(es), so it looks
+   exactly like that page's buttons; or set CSS variables on the slot (see css/teachers-corner.css: --tcs-size, --tcs-radius, --tcs-bg,
+   --tcs-color, --tcs-border, --tcs-shadow, --tcs-font). With no data-tc-slot the button goes into the site header (header.top) or, as a
+   last resort, into a slim in-flow row at the top of the page. It never floats over the page. */
+function findSlot(){
+  var all=D.querySelectorAll('[data-tc-slot]');
+  if(all.length){for(var i=0;i<all.length;i++){if(all[i].getClientRects().length)return all[i]}return all[0]}
+  var s;
+  var top=D.querySelector('header.top');
+  if(top){s=el('span','lwtc-slot-auto',{'data-tc-slot':'auto'});var brand=top.querySelector('.brand');top.insertBefore(s,brand&&brand.nextSibling||top.firstChild);return s}
+  s=el('div','lwtc-row',{'data-tc-slot':'auto'});D.body.insertBefore(s,D.body.firstChild);return s;
+}
+function mountDock(){
+  var s=findSlot();
+  var hc=(s.getAttribute('data-tc-class')||'').split(/\s+/).filter(Boolean);
+  openBtn.className='lwtc-open'+(hc.length?' lwtc-host '+hc.join(' '):'');
+  if(dock.parentNode!==s)s.appendChild(dock);
+}
 function buildButton(){
   dock=el('div','lwtc-dock');
-  openBtn=el('button','lwtc-open',{type:'button','aria-label':"Teacher's Corner",'aria-haspopup':'dialog'});
-  openBtn.innerHTML=svg('board')+'<span class="lwtc-label">Teacher\'s Corner</span>';
-  var neck='<svg class="lwtc-neck" viewBox="0 0 52 40" aria-hidden="true"><path d="M6 14c8 1 10 8 18 9 7 1 10-4 20-1-8 7-14 10-22 9-7-1-12-6-16-12 0-2 0-4 0-5z"/></svg>';
-  dock.appendChild(openBtn);dock.insertAdjacentHTML('beforeend',neck);
-  badge=el('span','lwtc-badge');dock.appendChild(badge);
-  var top=D.querySelector('header.top');
-  if(top){var brand=top.querySelector('.brand');top.insertBefore(dock,brand&&brand.nextSibling||top.firstChild)}
-  else{dock.classList.add('lwtc-float');D.body.appendChild(dock)}
+  openBtn=el('button','lwtc-open',{type:'button','aria-label':"Teacher's Corner",title:"Teacher's Corner",'aria-haspopup':'dialog'});
+  openBtn.innerHTML=svg('board');
+  dock.appendChild(openBtn);
+  badge=el('span','lwtc-badge');badge.setAttribute('aria-hidden','true');dock.appendChild(badge);
+  mountDock();
   openBtn.addEventListener('click',function(){isOpen?close():open()});
-  badge.addEventListener('click',function(){open()});
+  /* if the page re-renders and drops its slot, or hides the screen the slot is on (several slots, one per screen), mount again */
+  if(window.MutationObserver){
+    var pend=false;
+    var check=function(){pend=false;var p=dock.parentNode;
+      if(!dock.isConnected||!p||!p.hasAttribute('data-tc-slot')||(p.getClientRects().length===0&&D.querySelectorAll('[data-tc-slot]').length>1))mountDock()};
+    var mo=new MutationObserver(function(){if(!pend){pend=true;(window.requestAnimationFrame||setTimeout)(check)}});
+    mo.observe(D.body,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden']});
+  }
   updateBadge();
 }
 function updateBadge(){
   var n=0;try{n=unread().length}catch(e){}
   dock.classList.toggle('lwtc-has-badge',n>0);
-  if(n>0){badge.textContent=String(n);openBtn.setAttribute('aria-label',"Teacher's Corner, "+n+(n>1?' new notes':' new note'))}
-  else{badge.textContent='';openBtn.setAttribute('aria-label',"Teacher's Corner")}
+  var lab="Teacher's Corner"+(n>0?', '+n+(n>1?' new notes':' new note'):'');
+  badge.textContent=n>0?String(n):'';openBtn.setAttribute('aria-label',lab);openBtn.setAttribute('title',lab)
 }
 
 function toolBtn(cls,label,icon,extra){var b=el('button','lwtc-tool '+(cls||''),{type:'button','aria-label':label,title:label});b.innerHTML=svg(icon)+(extra||'');return b}

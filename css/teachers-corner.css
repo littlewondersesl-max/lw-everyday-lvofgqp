@@ -3,17 +3,24 @@
 .lwtc-root,.lwtc-dock{--tc-ink:#241c16;--tc-cream:#f6ede0;--tc-teal:#127a68;--tc-coral:#d85a45;--tc-board:#1a4034;--tc-board-deep:#10281f;--tc-chalk:#f7f4ec;--tc-yellow:#e6c34a;--tc-wood:#8a5a36;--tc-wood-deep:#5e3b22;--tc-lesson-ink:#3b2416;
   --tc-display:Fraunces,Georgia,'Times New Roman',serif;--tc-sans:Outfit,Nunito,system-ui,-apple-system,'Segoe UI',sans-serif;--tc-nun:Nunito,Outfit,system-ui,sans-serif}
 
-/* ---- the button (in the site header, or floating top-right on pages without a header) ---- */
-.lwtc-dock{position:relative;flex:none;display:inline-flex;align-items:center;margin:0 4px 0 6px;font-family:var(--tc-nun)}
-.lwtc-dock.lwtc-float{position:fixed;top:8px;right:8px;z-index:99990;margin:0}
-.lwtc-open{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;gap:.4rem;min-height:2.4rem;padding:0 .8rem;border:3px solid var(--tc-teal);border-radius:.8rem;background:var(--tc-cream);color:var(--tc-ink);font:900 .85rem/1 var(--tc-nun);white-space:nowrap;cursor:pointer;box-shadow:0 1px 5px rgba(0,0,0,.14)}
-.lwtc-open:hover{background:#fff}
+/* ---- the button: icon only, always inside a slot the page offers ([data-tc-slot], in the page's own top button row or header) ----
+   Host look: add data-tc-class="ctl" on the slot to give the button the page's own button class(es), or set these variables on the slot:
+   --tcs-size (width and height), --tcs-radius, --tcs-bg, --tcs-bg-hover, --tcs-color, --tcs-border, --tcs-shadow, --tcs-icon (icon size). */
+.lwtc-dock{position:relative;flex:none;display:inline-flex;align-items:center;justify-content:center;margin:0;vertical-align:middle;line-height:1}
+[data-tc-slot]{display:inline-flex;align-items:center;flex:none}
+/* site header (home, viewer, book): same look as the neighbouring header buttons (menu pills; on phones the burger button) */
+header.top [data-tc-slot]{--tcs-size:38px;--tcs-radius:999px;--tcs-bg:#fdf8fb;--tcs-bg-hover:#e2d3f3;--tcs-color:#6c4ea0;--tcs-border:0;--tcs-shadow:none;--tcs-icon:20px}
+@media (max-width:480px){header.top [data-tc-slot]{--tcs-size:34px;--tcs-radius:12px;--tcs-bg:#e2d3f3;--tcs-bg-hover:#d3c0ec}}
+.lwtc-row{display:flex;justify-content:flex-end;align-items:center;gap:6px;padding:8px 10px 0;width:100%;max-width:1100px;margin:0 auto}
+.lwtc-open:not(.lwtc-host){all:unset;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;width:var(--tcs-size,2.4rem);height:var(--tcs-size,2.4rem);padding:0;border:var(--tcs-border,3px solid var(--tc-teal));border-radius:var(--tcs-radius,.8rem);background:var(--tcs-bg,var(--tc-cream));color:var(--tcs-color,var(--tc-ink));cursor:pointer;box-shadow:var(--tcs-shadow,0 1px 5px rgba(0,0,0,.14));-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.lwtc-open:not(.lwtc-host):hover{background:var(--tcs-bg-hover,#fff)}
+.lwtc-open.lwtc-host{display:inline-flex;align-items:center;justify-content:center;gap:0;min-width:2.4rem;touch-action:manipulation}
 .lwtc-open:focus-visible,.lwtc-tool:focus-visible,.lwtc-close:focus-visible,.lwtc-pick input:focus-visible,.lwtc-list button:focus-visible,.lwtc-card-btns button:focus-visible{outline:3px solid var(--tc-yellow);outline-offset:2px}
-.lwtc-open svg{width:1.15rem;height:1.15rem;flex:none}
-.lwtc-badge{all:unset;box-sizing:border-box;position:absolute;z-index:2;left:-.85rem;top:-.85rem;width:1.85rem;height:1.85rem;display:flex;align-items:center;justify-content:center;border:3px solid var(--tc-teal);border-radius:999px;background:var(--tc-cream);color:var(--tc-ink);font:900 .85rem/1 var(--tc-nun);cursor:pointer}
-.lwtc-neck{position:absolute;z-index:1;left:-.15rem;top:-.85rem;width:2.7rem;height:2rem;pointer-events:none;fill:var(--tc-cream);stroke:var(--tc-teal);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
-.lwtc-dock:not(.lwtc-has-badge) .lwtc-badge,.lwtc-dock:not(.lwtc-has-badge) .lwtc-neck{display:none}
-body.lwtc-is-open .lwtc-open{background:var(--tc-board);border-color:var(--tc-board-deep);color:var(--tc-chalk)}
+.lwtc-open svg{position:static;inset:auto;display:block;margin:0;max-width:none;width:var(--tcs-icon,1.15rem);height:var(--tcs-icon,1.15rem);flex:none;pointer-events:none}
+.lwtc-badge{position:absolute;z-index:2;right:-4px;top:-4px;min-width:1.05rem;height:1.05rem;padding:0 .2rem;display:flex;align-items:center;justify-content:center;border:2px solid var(--tc-teal);border-radius:999px;background:var(--tc-cream);color:var(--tc-ink);font:900 .62rem/1 var(--tc-nun);pointer-events:none}
+.lwtc-dock:not(.lwtc-has-badge) .lwtc-badge{display:none}
+body.lwtc-is-open .lwtc-open:not(.lwtc-host){background:var(--tc-board);border-color:var(--tc-board-deep);color:var(--tc-chalk)}
+body.lwtc-is-open .lwtc-open.lwtc-host{outline:3px solid var(--tc-board);outline-offset:-3px}
 
 /* ---- the overlay ---- */
 .lwtc-root *,.lwtc-root *::before,.lwtc-root *::after{box-sizing:border-box}
@@ -90,5 +97,5 @@ body.lwtc-is-open .lwtc-open{background:var(--tc-board);border-color:var(--tc-bo
   .lwtc-wide span{display:none}.lwtc-wide{padding:0}
   .lwtc-hint{font-size:.95rem}
 }
-@media (max-width:760px){.lwtc-open .lwtc-label{display:none}.lwtc-open{padding:0 .5rem;min-width:2.4rem;justify-content:center}.lwtc-dock{margin:0 2px}}
 @media (prefers-reduced-motion:reduce){.lwtc-root *{scroll-behavior:auto}}
+@media print{[data-tc-slot],.lwtc-row{display:none!important}}

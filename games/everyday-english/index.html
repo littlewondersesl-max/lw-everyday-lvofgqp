@@ -39,16 +39,16 @@ main.game .btn{padding:6px 16px;font-size:clamp(14px,2.2vh,18px)}
 <script>
 const G=window.EE_GAMES,app=document.getElementById('app');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function hub(){app.className='';history.replaceState(null,'','#');app.innerHTML=`<a class="back" href="../../index.html">← Little Wonders home</a>
+function hub(){app.className='';history.replaceState(null,'','#');app.innerHTML=`<div class="top"><a class="back" href="../../index.html">← Little Wonders home</a><span data-tc-slot style="--tcs-size:36px;--tcs-radius:14px;--tcs-bg:var(--paper);--tcs-bg-hover:#fff;--tcs-color:var(--spruce);--tcs-border:3px solid var(--spruce);--tcs-shadow:none;--tcs-icon:20px"></span></div>
 <p style="font-weight:800;margin:.8em 0 0">WITH MAX</p><h1>Everyday English</h1><p style="font-weight:700">Watch. Tap. See what happens.</p>
 <ul class="hub">${G.map(g=>`<li><button data-id="${g.id}"><img src="${g.card}" loading="lazy" alt="" onerror="this.src='media/max.jpg'"><span>${esc(g.title)}</span></button></li>`).join('')}</ul>`;
 if(window.LWProgress)app.querySelectorAll('.hub button').forEach(b=>{if(LWProgress.isWatched('games/everyday-english',b.dataset.id)){b.classList.add('lwp-box');b.insertAdjacentHTML('beforeend',LWProgress.checkHTML())}});
 app.querySelectorAll('.hub button').forEach(b=>b.onclick=()=>{const g=G.find(x=>x.id===b.dataset.id);if(g&&g.href){location.href=g.href;return}start(b.dataset.id)});}
 function start(id){const g=G.find(x=>x.id===id);if(!g)return hub();if(g.href){location.href=g.href;return}history.replaceState(null,'','#'+id);let i=0;
- function done(){if(window.LWProgress)LWProgress.watched('games/everyday-english',g.id);app.className='';app.innerHTML=`<button class="link" id="home">All games</button><h1 style="text-align:center">Well done!</h1><ul class="done">${g.situations.map(s=>`<li>${esc(s.before)} <b style="color:var(--spruce)">so</b> ${esc(s.after)}</li>`).join('')}</ul><p style="text-align:center"><button class="btn" id="again">Play again</button></p>`;
+ function done(){if(window.LWProgress)LWProgress.watched('games/everyday-english',g.id);app.className='';app.innerHTML=`<div class="top"><button class="link" id="home">All games</button><span data-tc-slot style="--tcs-size:36px;--tcs-radius:14px;--tcs-bg:var(--paper);--tcs-bg-hover:#fff;--tcs-color:var(--spruce);--tcs-border:3px solid var(--spruce);--tcs-shadow:none;--tcs-icon:20px"></span></div><h1 style="text-align:center">Well done!</h1><ul class="done">${g.situations.map(s=>`<li>${esc(s.before)} <b style="color:var(--spruce)">so</b> ${esc(s.after)}</li>`).join('')}</ul><p style="text-align:center"><button class="btn" id="again">Play again</button></p>`;
   home.onclick=hub;again.onclick=()=>{i=0;show()};}
  function show(){const s=g.situations[i];app.className='game';let played=false,solved=false;
-  app.innerHTML=`<div class="top"><button class="link" id="home">All games</button><span class="dots">${i+1} / ${g.situations.length}</span></div>
+  app.innerHTML=`<div class="top"><button class="link" id="home">All games</button><span style="display:flex;align-items:center;gap:10px"><span class="dots">${i+1} / ${g.situations.length}</span><span data-tc-slot style="--tcs-size:36px;--tcs-radius:14px;--tcs-bg:var(--paper);--tcs-bg-hover:#fff;--tcs-color:var(--spruce);--tcs-border:3px solid var(--spruce);--tcs-shadow:none;--tcs-icon:20px"></span></span></div>
   <h2>${esc(s.prompt)}</h2>
   <div class="stage" id="stage"><video id="v" muted playsinline preload="none" poster="${s.poster}"></video><button class="play" id="play" aria-label="Play">▶</button></div>
   <div class="choices">${g.choices.map(c=>`<button data-c="${c.id}" disabled><img src="${c.image}" alt="${esc(c.alt||c.label)}"><span>${esc(c.label)}</span></button>`).join('')}</div>
