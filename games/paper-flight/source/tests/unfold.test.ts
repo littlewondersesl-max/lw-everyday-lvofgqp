@@ -11,7 +11,7 @@ import {
 } from '../src/sim/geometry'
 import { DEFAULT_STOCK, scaleFoldOp, STOCKS } from '../src/sim/stock'
 import { deriveShape } from '../src/sim/shape'
-import { clampCrease, HANDLE_PX } from '../src/ui/creaseClamp'
+import { boardTickSpans, clampCrease, fitSheet, HANDLE_PX } from '../src/ui/creaseClamp'
 
 const corner: FoldOp = { angle: 0.9, ax: 0, ay: SHEET.height / 2 - 0.04, side: 1, explicit: true }
 const across: FoldOp = { angle: Math.PI / 2, ax: 0.02, ay: 0, side: 1, explicit: true }
@@ -126,14 +126,45 @@ describe('crease handles', () => {
   })
 })
 
+describe('board ticks', () => {
+  it('matches the same sheet coordinate on opposite edges, outside the paper', () => {
+    for (const stock of [DEFAULT_STOCK, STOCKS.find((item) => item.id === 'square-medium')!]) {
+      const view = fitSheet(1280, 800, stock)
+      const marks = boardTickSpans(view, stock)
+      expect(marks.top.length).toBe(marks.bottom.length)
+      expect(marks.left.length).toBe(marks.right.length)
+      expect(marks.top.length).toBeGreaterThan(4)
+      marks.top.forEach((tick, i) => {
+        const opposite = marks.bottom[i]!
+        expect(opposite.at).toBeCloseTo(tick.at, 6)
+        expect(tick.cm).toBe(opposite.cm)
+        expect(Math.max(tick.from, tick.to)).toBeLessThan(view.top)
+        expect(Math.min(opposite.from, opposite.to)).toBeGreaterThan(view.top + view.ph)
+      })
+      marks.left.forEach((tick, i) => {
+        const opposite = marks.right[i]!
+        expect(opposite.at).toBeCloseTo(tick.at, 6)
+        expect(tick.cm).toBe(opposite.cm)
+        expect(Math.max(tick.from, tick.to)).toBeLessThan(view.left)
+        expect(Math.min(opposite.from, opposite.to)).toBeGreaterThan(view.left + view.pw)
+      })
+      const square = stock.width === stock.height
+      if (square) expect(marks.top.filter((tick) => tick.major).map((tick) => tick.cm)).toEqual(marks.left.filter((tick) => tick.major).map((tick) => tick.cm))
+    }
+  })
+})
+
 function point(crease: FoldOp, w: number, h: number, stock: typeof DEFAULT_STOCK, offset: number) {
   const clamped = crease
   const frameX = Math.cos(clamped.angle)
   const frameY = Math.sin(clamped.angle)
   const x = clamped.ax + frameX * offset
   const y = clamped.ay + frameY * offset
-  const maxW = Math.max(80, w - 160)
-  const maxH = Math.max(80, h - 180)
+  const padX = 78
+  const padTop = 22
+  const padBottom = 36
+  const maxW = Math.max(80, w - padX * 2)
+  const maxH = Math.max(80, h - padTop - padBottom)
   const aspect = stock.width / stock.height
   let pw = maxW
   let ph = pw / aspect
@@ -142,7 +173,7 @@ function point(crease: FoldOp, w: number, h: number, stock: typeof DEFAULT_STOCK
     pw = ph * aspect
   }
   const left = (w - pw) / 2
-  const top = (h - ph) / 2 - 10
+  const top = padTop + Math.max(0, (h - padTop - padBottom - ph) / 2)
   const scale = pw / stock.width
   return {
     x: left + (x + stock.width / 2) * scale,

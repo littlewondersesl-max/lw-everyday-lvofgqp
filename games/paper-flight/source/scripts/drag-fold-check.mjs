@@ -36,19 +36,44 @@ async function paperScreen(x, y) {
   return page.evaluate((x, y) => {
     const canvas = document.querySelector('.fold-canvas').getBoundingClientRect()
     const stock = { width: 0.2159, height: 0.2794 }
-    const maxW = Math.max(80, canvas.width - 160)
-    const maxH = Math.max(80, canvas.height - 180)
+    const padX = 78
+    const padTop = 22
+    const padBottom = 36
+    const maxW = Math.max(80, canvas.width - padX * 2)
+    const maxH = Math.max(80, canvas.height - padTop - padBottom)
+    const aspect = stock.width / stock.height
     let pw = maxW
-    let ph = pw / (stock.width / stock.height)
-    if (ph > maxH) { ph = maxH; pw = ph * (stock.width / stock.height) }
+    let ph = pw / aspect
+    if (ph > maxH) { ph = maxH; pw = ph * aspect }
     const left = (canvas.width - pw) / 2
-    const top = (canvas.height - ph) / 2 - 10
+    const top = padTop + Math.max(0, (canvas.height - padTop - padBottom - ph) / 2)
     const scale = pw / stock.width
     return {
       x: canvas.left + left + (x + stock.width / 2) * scale,
       y: canvas.top + top + (stock.height / 2 - y) * scale,
     }
   }, x, y)
+}
+
+async function assertChromeOutsidePaper() {
+  const layout = await page.evaluate(() => {
+    const canvas = document.querySelector('.fold-canvas').getBoundingClientRect()
+    const hits = {}
+    for (const name of ['.fold-bar', '.fold-readout', '.fold-hint', '.fold-note', '.fold-dock', '.fold-tools']) {
+      const el = document.querySelector(name)
+      if (!el) {
+        hits[name] = null
+        continue
+      }
+      const r = el.getBoundingClientRect()
+      hits[name] = r.left < canvas.right && r.right > canvas.left && r.top < canvas.bottom && r.bottom > canvas.top
+    }
+    return { bar: hits, canvasTop: canvas.top, canvasHeight: canvas.height }
+  })
+  const missing = ['.fold-bar', '.fold-readout', '.fold-hint', '.fold-dock', '.fold-tools'].filter((name) => layout.bar[name] == null)
+  const overlap = Object.entries(layout.bar).filter(([, hit]) => hit)
+  if (missing.length || overlap.length) throw new Error(`status overlaps the sheet ${JSON.stringify(layout)}`)
+  return layout
 }
 
 async function placeGuide(step) {
@@ -59,6 +84,18 @@ async function placeGuide(step) {
   await new Promise((r) => setTimeout(r, 40))
   if (await page.$('.guide')) await page.click('button::-p-text(Hide guide)')
 }
+
+console.log('chrome', await assertChromeOutsidePaper())
+for (let i = 0; i < 16; i++) {
+  const angle = await page.$eval('.fold', (el) => Number(el.dataset.angle))
+  const deg = Math.atan2(Math.sin(angle), Math.cos(angle)) * 180 / Math.PI
+  if (Math.min(Math.abs(deg), 180 - Math.abs(deg)) < 1) break
+  await page.keyboard.down('Shift')
+  await page.keyboard.press(Math.abs(deg) <= 90 ? (deg < 0 ? 'KeyQ' : 'KeyE') : (deg > 0 ? 'KeyE' : 'KeyQ'))
+  await page.keyboard.up('Shift')
+  await new Promise((r) => setTimeout(r, 30))
+}
+await page.screenshot({ path: '/tmp/fold-board.jpg', type: 'jpeg', quality: 74 })
 
 await placeGuide(0)
 const guide = await info()
@@ -92,13 +129,17 @@ const diag = await page.evaluate((sx, sy) => {
   const canvas = document.querySelector('.fold-canvas').getBoundingClientRect()
   const fold = document.querySelector('.fold')
   const stock = { width: 0.2159, height: 0.2794 }
-  const maxW = Math.max(80, canvas.width - 160)
-  const maxH = Math.max(80, canvas.height - 180)
+  const padX = 78
+  const padTop = 22
+  const padBottom = 36
+  const maxW = Math.max(80, canvas.width - padX * 2)
+  const maxH = Math.max(80, canvas.height - padTop - padBottom)
+  const aspect = stock.width / stock.height
   let pw = maxW
-  let ph = pw / (stock.width / stock.height)
-  if (ph > maxH) { ph = maxH; pw = ph * (stock.width / stock.height) }
+  let ph = pw / aspect
+  if (ph > maxH) { ph = maxH; pw = ph * aspect }
   const left = (canvas.width - pw) / 2
-  const top = (canvas.height - ph) / 2 - 10
+  const top = padTop + Math.max(0, (canvas.height - padTop - padBottom - ph) / 2)
   const scale = pw / stock.width
   const x = sx - canvas.left
   const y = sy - canvas.top
@@ -130,6 +171,11 @@ await page.mouse.click(tap.x, tap.y)
 await new Promise((r) => setTimeout(r, 200))
 const afterTap = await info()
 if (afterTap.folds !== '0') throw new Error('a tap sealed the ridge')
+
+await page.setViewport({ width: 800, height: 640 })
+await new Promise((r) => setTimeout(r, 250))
+console.log('chrome-narrow', await assertChromeOutsidePaper())
+await page.screenshot({ path: '/tmp/fold-board-narrow.jpg', type: 'jpeg', quality: 74 })
 
 console.log(JSON.stringify({ guideFolds: guide.folds, held: { folds: held.folds, provisional: held.provisional, note: held.note }, sealed: sealed.folds, afterTap, errors }, null, 2))
 await browser.close()
