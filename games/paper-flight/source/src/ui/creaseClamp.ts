@@ -40,18 +40,18 @@ export function fitSheet(w: number, h: number, stock: PaperSize): SheetView {
   }
 }
 
-/** Centimetre marks measured from the sheet's bottom-left corner, including both edges. */
+/**
+ * Centimetre marks measured from the center of the original sheet.
+ * Zero is that center. Positive and negative counts run outward, one centimetre apart.
+ */
 export function boardTickMeters(width: number, height: number, step = 0.01) {
-  const along = (span: number) => {
-    const marks = [0]
-    for (let n = 1; n * step < span - 1e-6; n++) marks.push(n * step)
-    if (span - marks[marks.length - 1]! > 1e-6) marks.push(span)
+  const along = (half: number) => {
+    const n = Math.floor((half + 1e-9) / step)
+    const marks: { at: number; cm: number }[] = []
+    for (let i = -n; i <= n; i++) marks.push({ at: i * step, cm: i })
     return marks
   }
-  return {
-    xs: along(width).map((d) => -width / 2 + d),
-    ys: along(height).map((d) => -height / 2 + d),
-  }
+  return { xs: along(width / 2), ys: along(height / 2) }
 }
 
 export interface TickSpan {
@@ -62,29 +62,26 @@ export interface TickSpan {
   cm: number | null
 }
 
-function tickMeta(distance: number) {
-  const cm = Math.round(distance / 0.01)
-  const onGrid = Math.abs(distance - cm * 0.01) < 1e-6
-  return { cm: onGrid ? cm : null, major: onGrid && cm % 5 === 0 }
-}
-
 /** The same sheet coordinate is marked on both opposite board edges, outside the paper. */
 export function boardTickSpans(view: SheetView, sheet: { width: number; height: number }) {
   const { xs, ys } = boardTickMeters(sheet.width, sheet.height)
   const gap = 4
-  const top: TickSpan[] = xs.map((x) => {
-    const meta = tickMeta(x + sheet.width / 2)
-    const len = meta.major ? 12 : 6
-    return { at: paperToScreen(view, { x, y: 0 }, sheet).x, from: view.top - gap, to: view.top - gap - len, ...meta }
+  const span = (at: number, from: number, outward: number, cm: number): TickSpan => {
+    const major = cm % 5 === 0
+    const len = major ? 12 : 6
+    return { at, from, to: from + outward * len, major, cm }
+  }
+  const top: TickSpan[] = xs.map((mark) => {
+    const x = paperToScreen(view, { x: mark.at, y: 0 }, sheet).x
+    return span(x, view.top - gap, -1, mark.cm)
   })
-  const bottom: TickSpan[] = top.map((tick) => {
-    const len = tick.major ? 12 : 6
-    return { at: tick.at, from: view.top + view.ph + gap, to: view.top + view.ph + gap + len, major: tick.major, cm: tick.cm }
+  const bottom: TickSpan[] = xs.map((mark) => {
+    const x = paperToScreen(view, { x: mark.at, y: 0 }, sheet).x
+    return span(x, view.top + view.ph + gap, 1, mark.cm)
   })
-  const left: TickSpan[] = ys.map((y) => {
-    const meta = tickMeta(y + sheet.height / 2)
-    const len = meta.major ? 12 : 6
-    return { at: paperToScreen(view, { x: 0, y }, sheet).y, from: view.left - gap, to: view.left - gap - len, ...meta }
+  const left: TickSpan[] = ys.map((mark) => {
+    const y = paperToScreen(view, { x: 0, y: mark.at }, sheet).y
+    return span(y, view.left - gap, -1, mark.cm)
   })
   const right: TickSpan[] = left.map((tick) => {
     const len = tick.major ? 12 : 6

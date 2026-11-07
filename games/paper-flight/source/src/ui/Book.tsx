@@ -116,12 +116,12 @@ export const BOOK_PAGE_COUNT = PAGES.length
 function MovePage({ dye }: { dye: Dye }) {
   return (
     <>
-      <h2>Move the crease</h2>
+      <h2>Point A, then point B</h2>
       <p>
-        The dashed line is the crease. Drag the line itself, or the filled hub, and the whole line slides. It can sit anywhere on the sheet, including off a corner.
+        Click the edge of the paper for point A. A line follows the cursor. Click the edge again for point B. The straight line between them is only a limit. It does not crease the paper, and it does not move if you click it.
       </p>
       <Sketch kind="move" dye={dye} />
-      <p>The pale line is where it was. The dark line is where you moved it. Arrows on the keyboard nudge it by a few millimeters.</p>
+      <p>Right-click A or B to remove that point. Reset nodes clears both. Escape does the same. Folds you already pressed stay.</p>
     </>
   )
 }
@@ -129,12 +129,12 @@ function MovePage({ dye }: { dye: Dye }) {
 function RotatePage({ dye }: { dye: Dye }) {
   return (
     <>
-      <h2>Turn the crease</h2>
+      <h2>Drag either side</h2>
       <p>
-        The open circle is the handle. Drag it and the line pivots through a full turn, all 360 degrees, around the hub. Hold Shift to snap to 15 degree steps. Q and E rotate it from the keyboard.
+        Once A and B are set, pinch an edge or corner on either side of the line and drag it inward. The paper follows. Stop short of the line, or take it all the way. Let go and the fold stays. Drag the flap again to change it.
       </p>
       <Sketch kind="rotate" dye={dye} />
-      <p>A line at 0 degrees and the same line at 180 degrees cut the sheet in the same place. Turning past that swaps which half is which. The marked side is still the one that folds, and you can switch it.</p>
+      <p>The side you grab is the side that folds. You do not have to press a side button first.</p>
     </>
   )
 }
@@ -142,17 +142,17 @@ function RotatePage({ dye }: { dye: Dye }) {
 function RulePage({ dye }: { dye: Dye }) {
   return (
     <>
-      <h2>Choose which side folds</h2>
+      <h2>Press the ridge</h2>
       <p>
-        These three pictures are the real folder. The shaded side is the one that moves. A curved arrow crosses the crease and points at the landing. By default that is the smaller side. You can mark the opposite side instead, even when the two areas do not match, and the arrow and the fold both follow.
+        These three pictures are the real folder. The dashed line is the limit. The fold itself is the ridge where the flap stopped.
       </p>
       <div className="book-trio">
         <Mini ops={[]} dye={dye} label="Before" />
-        <Mini ops={[]} crease={RULE} dye={dye} label="Crease" />
+        <Mini ops={[]} crease={RULE} dye={dye} label="Limit" />
         <Mini ops={[RULE]} dye={dye} label="After" />
       </div>
       <p>
-        The dashed line is only a limit. The filled circle moves it. The ring with circular arrows turns it. Neither one creases the paper. Pinch an edge or corner on the marked side and drag it inward. The paper follows your hand, and you can stop before the line. Let go and the fold stays put. Drag the flap again to change it. It does not spring back. Then press along the new ridge, from one end toward the other. A tap does not crease it. When the ridge is pressed, the fold is real. Unfold opens only that latest fold and keeps the crease. Undo drops the last sealed action, or a fold you have not pressed in. Reset clears the sheet.
+        Press along that new ridge, from one end toward the other. A tap does not crease it. When the ridge is pressed, the points disappear and the crease stays in the paper. Then you can choose a new A and B. Unfold opens only the latest fold and keeps its crease. Undo drops the last sealed action, or a fold you have not pressed in. Reset clears the sheet. Reset nodes clears only A and B.
       </p>
     </>
   )
