@@ -1,10 +1,14 @@
 import { lineFrame, type FoldOp } from '../sim/geometry'
 import type { PaperSize } from '../sim/stock'
 
-/** Distance from the hub to the round handle, in metres. Matches the drawn handle. */
-export const HANDLE_OFFSET = 0.16
+/** Round handle sits this many pixels from the hub, along the crease. Not a paper distance. */
+export const HANDLE_PX = 58
 /** Pixels kept inside the canvas so the handle disc stays grabbable. */
-export const HANDLE_MARGIN = 22
+export const HANDLE_MARGIN = 20
+
+export function handleMeters(scale: number) {
+  return HANDLE_PX / Math.max(scale, 1)
+}
 
 export interface SheetView {
   left: number
@@ -61,9 +65,10 @@ export function clampCrease(crease: FoldOp, width: number, height: number, stock
   const maxY = height - HANDLE_MARGIN
   for (let pass = 0; pass < 4; pass++) {
     const hub = paperToScreen(view, { x: ax, y: ay }, stock)
+    const reach = handleMeters(view.scale)
     const handle = paperToScreen(
       view,
-      { x: ax + frame.dx * HANDLE_OFFSET, y: ay + frame.dy * HANDLE_OFFSET },
+      { x: ax + frame.dx * reach, y: ay + frame.dy * reach },
       stock,
     )
     let dx = 0

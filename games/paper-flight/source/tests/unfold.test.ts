@@ -11,7 +11,7 @@ import {
 } from '../src/sim/geometry'
 import { DEFAULT_STOCK, scaleFoldOp, STOCKS } from '../src/sim/stock'
 import { deriveShape } from '../src/sim/shape'
-import { clampCrease } from '../src/ui/creaseClamp'
+import { clampCrease, HANDLE_PX } from '../src/ui/creaseClamp'
 
 const corner: FoldOp = { angle: 0.9, ax: 0, ay: SHEET.height / 2 - 0.04, side: 1, explicit: true }
 const across: FoldOp = { angle: Math.PI / 2, ax: 0.02, ay: 0, side: 1, explicit: true }
@@ -83,6 +83,13 @@ describe('sheet stock', () => {
 })
 
 describe('crease handles', () => {
+  it('keeps a horizontal tip crease near the tip while the handle stays on screen', () => {
+    const tip = clampCrease({ angle: 0, ax: 0, ay: 0.12, side: 1 }, 1440, 900, DEFAULT_STOCK)
+    expect(tip.angle).toBeCloseTo(0)
+    expect(Math.abs(tip.ay - 0.12)).toBeLessThan(0.04)
+    expect(Math.abs(tip.ax)).toBeLessThan(0.05)
+  })
+
   it('keeps the hub and the round handle inside a desktop canvas', () => {
     const stock = DEFAULT_STOCK
     const wild: FoldOp = { angle: 0.4, ax: -2, ay: 3, side: 1 }
@@ -104,15 +111,16 @@ describe('crease handles', () => {
         }
         void view
         const hub = point(size.crease, size.w, size.h, stock, 0)
-        const handle = point(size.crease, size.w, size.h, stock, 0.16)
-        expect(hub.x).toBeGreaterThanOrEqual(21)
-        expect(hub.x).toBeLessThanOrEqual(size.w - 21)
-        expect(hub.y).toBeGreaterThanOrEqual(21)
-        expect(hub.y).toBeLessThanOrEqual(size.h - 21)
-        expect(handle.x).toBeGreaterThanOrEqual(21)
-        expect(handle.y).toBeGreaterThanOrEqual(21)
-        expect(handle.x).toBeLessThanOrEqual(size.w - 21)
-        expect(handle.y).toBeLessThanOrEqual(size.h - 21)
+        const handle = point(size.crease, size.w, size.h, stock, HANDLE_PX / hub.scale)
+        expect(hub.x).toBeGreaterThanOrEqual(19)
+        expect(hub.x).toBeLessThanOrEqual(size.w - 19)
+        expect(hub.y).toBeGreaterThanOrEqual(19)
+        expect(hub.y).toBeLessThanOrEqual(size.h - 19)
+        expect(handle.x).toBeGreaterThanOrEqual(19)
+        expect(handle.y).toBeGreaterThanOrEqual(19)
+        expect(handle.x).toBeLessThanOrEqual(size.w - 19)
+        expect(handle.y).toBeLessThanOrEqual(size.h - 19)
+        expect(size.crease.angle).toBeCloseTo(angle)
       }
     }
   })
@@ -139,5 +147,6 @@ function point(crease: FoldOp, w: number, h: number, stock: typeof DEFAULT_STOCK
   return {
     x: left + (x + stock.width / 2) * scale,
     y: top + (stock.height / 2 - y) * scale,
+    scale,
   }
 }
