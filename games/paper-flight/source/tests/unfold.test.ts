@@ -11,7 +11,7 @@ import {
 } from '../src/sim/geometry'
 import { DEFAULT_STOCK, scaleFoldOp, STOCKS } from '../src/sim/stock'
 import { deriveShape } from '../src/sim/shape'
-import { boardTickSpans, clampCrease, fitSheet, HANDLE_PX } from '../src/ui/creaseClamp'
+import { boardTickSpans, clampCrease, fitSheet, HANDLE_PX, paperToScreen } from '../src/ui/creaseClamp'
 
 const corner: FoldOp = { angle: 0.9, ax: 0, ay: SHEET.height / 2 - 0.04, side: 1, explicit: true }
 const across: FoldOp = { angle: Math.PI / 2, ax: 0.02, ay: 0, side: 1, explicit: true }
@@ -127,17 +127,29 @@ describe('crease handles', () => {
 })
 
 describe('board ticks', () => {
-  it('matches the same sheet coordinate on opposite edges, outside the paper', () => {
-    for (const stock of [DEFAULT_STOCK, STOCKS.find((item) => item.id === 'square-medium')!]) {
+  it('puts zero on the sheet center and matches that mark across opposite edges', () => {
+    for (const stock of STOCKS) {
       const view = fitSheet(1280, 800, stock)
       const marks = boardTickSpans(view, stock)
-      expect(marks.top.length).toBe(marks.bottom.length)
-      expect(marks.left.length).toBe(marks.right.length)
-      expect(marks.top.length).toBeGreaterThan(4)
+      const center = paperToScreen(view, { x: 0, y: 0 }, stock)
+      const zeroX = marks.top.find((tick) => tick.cm === 0)
+      const zeroY = marks.left.find((tick) => tick.cm === 0)
+      expect(zeroX?.major).toBe(true)
+      expect(zeroY?.major).toBe(true)
+      expect(zeroX?.at).toBeCloseTo(center.x, 4)
+      expect(zeroY?.at).toBeCloseTo(center.y, 4)
+      expect(marks.bottom.find((tick) => tick.cm === 0)?.at).toBeCloseTo(center.x, 4)
+      expect(marks.right.find((tick) => tick.cm === 0)?.at).toBeCloseTo(center.y, 4)
+      const xs = marks.top.map((tick) => tick.cm)
+      for (let i = 1; i < xs.length; i++) expect(xs[i]! - xs[i - 1]!).toBe(1)
+      expect(xs).toContain(0)
+      expect(xs).toContain(5)
+      expect(xs).toContain(-5)
       marks.top.forEach((tick, i) => {
         const opposite = marks.bottom[i]!
         expect(opposite.at).toBeCloseTo(tick.at, 6)
         expect(tick.cm).toBe(opposite.cm)
+        expect(tick.major).toBe(tick.cm! % 5 === 0)
         expect(Math.max(tick.from, tick.to)).toBeLessThan(view.top)
         expect(Math.min(opposite.from, opposite.to)).toBeGreaterThan(view.top + view.ph)
       })
@@ -148,8 +160,6 @@ describe('board ticks', () => {
         expect(Math.max(tick.from, tick.to)).toBeLessThan(view.left)
         expect(Math.min(opposite.from, opposite.to)).toBeGreaterThan(view.left + view.pw)
       })
-      const square = stock.width === stock.height
-      if (square) expect(marks.top.filter((tick) => tick.major).map((tick) => tick.cm)).toEqual(marks.left.filter((tick) => tick.major).map((tick) => tick.cm))
     }
   })
 })

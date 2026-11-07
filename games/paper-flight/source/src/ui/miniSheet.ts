@@ -50,36 +50,38 @@ export function drawMini(
   strokeCrease(ctx, view, crease, dye.ink)
 }
 
-/** The handle, drawn the same way as on the folding desk. */
+/** A and B on the edge, or a straight drag toward that limit. */
 export function drawLesson(ctx: CanvasRenderingContext2D, w: number, h: number, kind: 'move' | 'rotate', dye: Dye) {
   ctx.clearRect(0, 0, w, h)
   ctx.fillStyle = '#f3ead8'
   ctx.fillRect(0, 0, w, h)
   const view = fit(w, h, 16)
   drawPaper(ctx, view, applyOps([]), dye)
-  const angle = kind === 'move' ? 0.9 : 1.15
-  const from = { angle, ax: -0.02, ay: 0.01, side: 1 as const }
-  const to =
-    kind === 'move'
-      ? { ...from, ax: 0.035, ay: -0.03 }
-      : { ...from, angle: from.angle + 0.9 }
-  strokeCrease(ctx, view, from, dye.ink, 0.35)
-  strokeCrease(ctx, view, to, dye.ink, 1)
-  const a = paperToScreen(view, { x: from.ax, y: from.ay })
-  const b = paperToScreen(view, { x: to.ax, y: to.ay })
+  const a = { x: -SHEET.width / 2, y: 0.04 }
+  const b = { x: SHEET.width / 2, y: -0.03 }
+  const sa = paperToScreen(view, a)
+  const sb = paperToScreen(view, b)
   ctx.save()
   ctx.strokeStyle = dye.ink
   ctx.fillStyle = dye.ink
   ctx.lineWidth = 1.5
-  if (kind === 'move') {
-    arrow(ctx, a.x, a.y, b.x, b.y)
-  } else {
+  ctx.setLineDash([4, 3])
+  ctx.beginPath()
+  ctx.moveTo(sa.x, sa.y)
+  ctx.lineTo(sb.x, sb.y)
+  ctx.stroke()
+  ctx.setLineDash([])
+  for (const [p, label] of [[sa, 'A'], [sb, 'B']] as const) {
     ctx.beginPath()
-    ctx.arc(a.x, a.y, 28, from.angle, to.angle, false)
-    ctx.stroke()
-    const frame = lineFrame(to.angle, to.ax, to.ay)
-    const handle = paperToScreen(view, { x: to.ax + frame.dx * 0.12, y: to.ay + frame.dy * 0.12 })
-    arrow(ctx, a.x + 26, a.y - 8, handle.x, handle.y)
+    ctx.arc(p.x, p.y, 4, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.font = '12px sans-serif'
+    ctx.fillText(label, p.x + 6, p.y - 6)
+  }
+  if (kind === 'rotate') {
+    const edge = paperToScreen(view, { x: 0, y: SHEET.height / 2 })
+    const mid = paperToScreen(view, { x: 0, y: 0.05 })
+    arrow(ctx, edge.x, edge.y, mid.x, mid.y)
   }
   ctx.restore()
 }
@@ -126,16 +128,6 @@ function strokeCrease(ctx: CanvasRenderingContext2D, view: View, crease: FoldOp,
   ctx.lineTo(b.x, b.y)
   ctx.stroke()
   ctx.setLineDash([])
-  const hub = paperToScreen(view, { x: crease.ax, y: crease.ay })
-  ctx.beginPath()
-  ctx.arc(hub.x, hub.y, 3.5, 0, Math.PI * 2)
-  ctx.fill()
-  const handle = paperToScreen(view, { x: crease.ax + frame.dx * 0.07, y: crease.ay + frame.dy * 0.07 })
-  ctx.beginPath()
-  ctx.arc(handle.x, handle.y, 4.5, 0, Math.PI * 2)
-  ctx.fillStyle = '#f7f3ea'
-  ctx.fill()
-  ctx.stroke()
   ctx.restore()
 }
 
