@@ -134,7 +134,7 @@ function RotatePage({ dye }: { dye: Dye }) {
         The open circle is the handle. Drag it and the line pivots through a full turn, all 360 degrees, around the hub. Hold Shift to snap to 15 degree steps. Q and E rotate it from the keyboard.
       </p>
       <Sketch kind="rotate" dye={dye} />
-      <p>A line at 0 degrees and the same line at 180 degrees cut the sheet in the same place. Turning past that swaps which side is which.</p>
+      <p>A line at 0 degrees and the same line at 180 degrees cut the sheet in the same place. Turning past that swaps which half is which. The marked side is still the one that folds, and you can switch it.</p>
     </>
   )
 }
@@ -142,9 +142,9 @@ function RotatePage({ dye }: { dye: Dye }) {
 function RulePage({ dye }: { dye: Dye }) {
   return (
     <>
-      <h2>The smaller side folds over</h2>
+      <h2>Choose which side folds</h2>
       <p>
-        These three pictures are the real folder, not a sketch of a different rule. A line near the top cuts off a small strip. That strip is the lighter side, so it flips across the line and lands on the sheet. The larger part stays put.
+        These three pictures are the real folder. The shaded side is the one that moves. A curved arrow crosses the crease and points at the landing. By default that is the smaller side. You can mark the opposite side instead, even when the two areas do not match, and the arrow and the fold both follow.
       </p>
       <div className="book-trio">
         <Mini ops={[]} dye={dye} label="Before" />
@@ -152,7 +152,7 @@ function RulePage({ dye }: { dye: Dye }) {
         <Mini ops={[RULE]} dye={dye} label="After" />
       </div>
       <p>
-        If the two sides match, within a small tolerance, you choose the side. Otherwise the choice is made for you: smaller over larger. Folded paper stacks. The back of the sheet shows as a deeper shade of the same color.
+        Fold commits that one crease and leaves the line, the hub, and the round handle on the sheet you have now. Fold again, or press To the hall when you are finished. If the line misses the folded paper, drag it back or place it on the paper. The names are not left and right: the mark is the source, and the arrowhead is where it lands. Folded paper stacks. The back shows as a deeper shade of the same color.
       </p>
     </>
   )

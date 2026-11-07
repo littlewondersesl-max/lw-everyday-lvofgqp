@@ -2,9 +2,10 @@
  * Flat paper folds.
  *
  * The sheet is a stack of convex polygons in the plane. A crease is an
- * infinite line. The line splits every facet; the side with less paper
- * area is reflected across the line onto the other side. When the two
- * sides match within LIMITS.tieFraction, `side` chooses which one moves.
+ * infinite line. The line splits every facet. By default the side with
+ * less paper is reflected across the line onto the other side. When
+ * `explicit` is set, `side` chooses which side moves, even if it is larger.
+ * A tie within LIMITS.tieFraction also follows `side`.
  *
  * Reflection reverses the moving stack: what was on top lands against the
  * paper it covers, and the face that was up is now down. Material area is
@@ -43,8 +44,12 @@ export interface FoldOp {
   angle: number
   ax: number
   ay: number
-  /** Used only when the two sides have essentially equal area. */
+  /**
+   * Which side of the line moves. Without `explicit`, this is used only when
+   * the two areas match. With `explicit`, this side moves even if it is larger.
+   */
   side: 1 | -1
+  explicit?: boolean
 }
 
 const EPS = 1e-8
@@ -371,9 +376,10 @@ export function buildFold(paper: Paper, op: FoldOp): FoldBuild {
     return { ...miss, reason: 'The crease misses the sheet.' }
   }
   const tie = Math.abs(areaPos - areaNeg) / total <= LIMITS.tieFraction
+  const smallerSign: 1 | -1 = areaPos <= areaNeg ? 1 : -1
   let movingSign: 1 | -1
-  if (tie) movingSign = op.side === -1 ? -1 : 1
-  else movingSign = areaPos < areaNeg ? 1 : -1
+  if (op.explicit || tie) movingSign = op.side === -1 ? -1 : 1
+  else movingSign = smallerSign
 
   const movingFraction = (movingSign > 0 ? areaPos : areaNeg) / total
   if (movingFraction < 0.004) {
@@ -465,7 +471,47 @@ export function sanitizeOp(input: unknown): FoldOp | null {
   if (!Number.isFinite(angle) || !Number.isFinite(ax) || !Number.isFinite(ay)) return null
   if (ax * ax + ay * ay > 1.5 * 1.5) return null
   const side: 1 | -1 = o.side === -1 ? -1 : 1
-  return { angle, ax, ay, side }
+  const op: FoldOp = { angle, ax, ay, side }
+  if (o.explicit === true) op.explicit = true
+  return op
+}
+
+/** A crease that cuts the current sheet, near the previous angle, for the next fold. */
+export function suggestCrease(paper: Paper, previous?: FoldOp): FoldOp {
+  const pts = paper.facets.flatMap((facet) => facet.poly)
+  const angle = previous?.angle ?? 0
+  if (!pts.length) return { angle, ax: 0, ay: 0, side: 1 }
+  const frame = lineFrame(angle, 0, 0)
+  let min = Infinity
+  let max = -Infinity
+  let cx = 0
+  let cy = 0
+  for (const p of pts) {
+    const d = p.x * frame.nx + p.y * frame.ny
+    min = Math.min(min, d)
+    max = Math.max(max, d)
+    cx += p.x
+    cy += p.y
+  }
+  cx /= pts.length
+  cy /= pts.length
+  const span = Math.max(1e-6, max - min)
+  const candidates: FoldOp[] = []
+  for (const frac of [0.3, 0.22, 0.42, 0.58, 0.7]) {
+    const d = min + span * frac
+    candidates.push({ angle, ax: frame.nx * d, ay: frame.ny * d, side: 1 })
+  }
+  for (const extra of [0, Math.PI / 2, Math.PI / 5, -Math.PI / 7]) {
+    const ang = angle + extra
+    const fr = lineFrame(ang, cx, cy)
+    for (const shift of [0, 0.018, -0.018, 0.04, -0.04]) {
+      candidates.push({ angle: ang, ax: cx + fr.nx * shift, ay: cy + fr.ny * shift, side: 1 })
+    }
+  }
+  for (const op of candidates) {
+    if (buildFold(paper, op).valid) return op
+  }
+  return { angle, ax: cx, ay: cy, side: 1 }
 }
 
 export function sanitizeOps(input: unknown): FoldOp[] {

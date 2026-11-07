@@ -26,14 +26,14 @@ Share a seat by copying the room link. A second browser (not a second tab that r
 
 ## How a round works
 
-1. **Fold.** Drag the crease, spin the round handle through a full turn, and fold. The smaller side always flips onto the larger. When the two sides match, you pick the side. Undo and reset are there. The guide is an optional dart recipe, not a required path. A blank sheet is legal, and it flies badly.
+1. **Fold.** Drag the crease, spin the round handle through a full turn, and fold. The marked side flips across the crease. That starts as the smaller side, and you can choose the other side even when the areas differ. An arrow shows the landing. Fold does not leave the sheet: the crease stays for another fold until you go to the hall. Undo and reset are there. The guide is an optional dart recipe, not a required path. A blank sheet is legal, and it flies badly.
 2. **Aim.** The hall is viewed from behind a platform whose deck is two-thirds of the way up the walls. The floor and its distance markers are below you. Click your sheet to lift it. The height control is meters above that deck; the throw is released at deck height plus that hand height. Drag to set it and to yaw, scroll to pitch, and set speed on the right-hand power slider.
 3. **Flight.** Each sheet is released with a short pullback and then moves under the flight model. Distance markers run down the floor. The score is how far forward the sheet is when it comes to rest.
 4. **Results.** Replay the flights or start a new round. Everyone gets a fresh sheet.
 
 Each competitor keeps a different sheet color from the fold through the landing. Pick a free dye from the stack on the left. Names stay next to the color.
 
-The Book tab on the left opens a paged primer: how to slide and turn the crease, how the smaller side folds over, and recipes the folder can actually run (beginner plane, pointed dart, envelope, flat hat). Place a recipe crease onto your sheet. The envelope and the hat are real folds, and they are not meant to glide.
+The Book tab on the left opens a paged primer: how to slide and turn the crease, how to choose which side folds, and recipes the folder can actually run (beginner plane, pointed dart, envelope, flat hat). Place a recipe crease onto your sheet. The envelope and the hat are real folds, and they are not meant to glide.
 
 ## What the model actually is
 
