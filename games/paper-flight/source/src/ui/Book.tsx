@@ -152,7 +152,7 @@ function RulePage({ dye }: { dye: Dye }) {
         <Mini ops={[RULE]} dye={dye} label="After" />
       </div>
       <p>
-        Fold commits that one crease and leaves the line, the hub, and the round handle on the sheet you have now. Fold again, or press To the hall when you are finished. Unfold opens only the latest fold and leaves that crease on the paper so you can line the next fold up with it. Unfold again to open the one before. Undo takes back the last action, which is not the same as unfolding. Reset clears the sheet. If the line misses the folded paper, drag it back or place it on the paper. The names are not left and right: the mark is the source, and the arrowhead is where it lands. Folded paper stacks. The back shows as a deeper shade of the same color.
+        The dashed line is only a limit. The filled circle moves it. The ring with circular arrows turns it. Neither one creases the paper. Pinch an edge or corner on the marked side and drag it inward. The paper follows your hand, and you can stop before the line. Let go and the fold stays put. Drag the flap again to change it. It does not spring back. Then press along the new ridge, from one end toward the other. A tap does not crease it. When the ridge is pressed, the fold is real. Unfold opens only that latest fold and keeps the crease. Undo drops the last sealed action, or a fold you have not pressed in. Reset clears the sheet.
       </p>
     </>
   )
