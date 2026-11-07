@@ -21,7 +21,7 @@ import {
   type Vec2,
 } from '../sim/geometry'
 import { scaleFoldOp, STOCKS, stockById, type Stock } from '../sim/stock'
-import { clampCrease, fitSheet, HANDLE_OFFSET } from './creaseClamp'
+import { clampCrease, fitSheet, HANDLE_PX } from './creaseClamp'
 
 interface Props {
   ops: SheetStep[]
@@ -643,16 +643,23 @@ function strokeLine(ctx: CanvasRenderingContext2D, view: View, crease: FoldOp, i
   ctx.stroke()
   ctx.setLineDash([])
   const anchor = paperToScreen(view, { x: crease.ax, y: crease.ay })
+  const reach = HANDLE_PX / Math.max(view.scale, 1)
+  const handle = paperToScreen(view, {
+    x: crease.ax + frame.dx * reach,
+    y: crease.ay + frame.dy * reach,
+  })
+  ctx.strokeStyle = ink
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.moveTo(anchor.x, anchor.y)
+  ctx.lineTo(handle.x, handle.y)
+  ctx.stroke()
   ctx.fillStyle = ink
   ctx.beginPath()
   ctx.arc(anchor.x, anchor.y, 7, 0, Math.PI * 2)
   ctx.fill()
-  const handle = paperToScreen(view, {
-    x: crease.ax + frame.dx * HANDLE_OFFSET,
-    y: crease.ay + frame.dy * HANDLE_OFFSET,
-  })
   ctx.beginPath()
-  ctx.arc(handle.x, handle.y, 9, 0, Math.PI * 2)
+  ctx.arc(handle.x, handle.y, 11, 0, Math.PI * 2)
   ctx.fillStyle = '#f7f3ea'
   ctx.fill()
   ctx.lineWidth = 2
@@ -726,7 +733,8 @@ function hitHandle(canvas: HTMLCanvasElement, crease: FoldOp, clientX: number, c
   const localY = clientY - rect.top
   const frame = lineFrame(crease.angle, crease.ax, crease.ay)
   const anchor = paperToScreen(view, { x: crease.ax, y: crease.ay })
-  const handle = paperToScreen(view, { x: crease.ax + frame.dx * HANDLE_OFFSET, y: crease.ay + frame.dy * HANDLE_OFFSET })
+  const reach = HANDLE_PX / Math.max(view.scale, 1)
+  const handle = paperToScreen(view, { x: crease.ax + frame.dx * reach, y: crease.ay + frame.dy * reach })
   if (Math.hypot(localX - handle.x, localY - handle.y) < 16) return 'rotate'
   if (Math.hypot(localX - anchor.x, localY - anchor.y) < 14) return 'anchor'
   const a = paperToScreen(view, { x: crease.ax - frame.dx, y: crease.ay - frame.dy })
