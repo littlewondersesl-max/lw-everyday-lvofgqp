@@ -34,7 +34,7 @@ import {
   type Guide,
 } from '../sim/dragFold'
 import { scaleFoldOp, STOCKS, stockById, type Stock } from '../sim/stock'
-import { clampCrease, fitSheet, HANDLE_PX } from './creaseClamp'
+import { boardTickSpans, clampCrease, fitSheet, HANDLE_PX } from './creaseClamp'
 
 const PINCH =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M9 22c1-6 4-9 7-9 1 2 1 4 0 6 3-4 6-4 8-1 1 2-1 5-3 6l-5 3c-4 2-8 0-7-5z' fill='%23f7f3ea' stroke='%231c1915' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M14 14c1-3 3-5 5-4' fill='none' stroke='%231c1915' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E\") 8 8, grab"
@@ -363,7 +363,7 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
 
   return (
     <div className="fold" data-dye={dye.id} data-folds={folds} data-open={opens} data-provisional={hold ? '1' : '0'} data-seal={seal.toFixed(2)} data-stock={stock.id} data-ax={crease.ax} data-ay={crease.ay} data-angle={crease.angle} data-rx1={heldRidge?.a.x ?? ''} data-ry1={heldRidge?.a.y ?? ''} data-rx2={heldRidge?.b.x ?? ''} data-ry2={heldRidge?.b.y ?? ''}>
-      <canvas ref={canvasRef} className="fold-canvas" />
+      <div className="fold-bar">
       <div className="fold-readout">
         <span>{folds} {folds === 1 ? 'fold' : 'folds'}</span>
         <span>{formatDeg(crease.angle)}</span>
@@ -377,6 +377,10 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
         {opens > 0 && <span>{opens} open {opens === 1 ? 'crease' : 'creases'}</span>}
       </div>
       {note && <p className="fold-note" role="status">{note}</p>}
+      <p className="fold-hint">Pinch an edge and drag. Stop short if you want. Then press along the new ridge. The dashed line is only the limit.</p>
+      </div>
+      <div className="fold-stage">
+      <canvas ref={canvasRef} className="fold-canvas" />
       {preview.valid && (
         <div className="side-choice" role="group" aria-label="Which side folds">
           <button
@@ -415,50 +419,6 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
             </button>
           )
         })}
-      </div>
-      <div className="fold-tools">
-        <button type="button" onClick={() => { setNote(null); if (holdRef.current) { setHold(null); return } onOps(ops.slice(0, -1)) }} disabled={(!ops.length && !hold) || busy} title="Drop a held fold, or take back the last sealed action">
-          Undo
-        </button>
-        <button type="button" className="unfold" onClick={unfold} disabled={folds === 0 || busy} title="Open the last fold and keep its crease on the paper">
-          Unfold
-        </button>
-        <button type="button" onClick={() => { setHold(null); setNote(null); onOps([]) }} disabled={(!ops.length && !hold) || busy} title="Clear every fold and every open crease">
-          Reset
-        </button>
-        <button
-          type="button"
-          className="primary"
-          onClick={() => {
-            if (!preview.valid) return
-            const guide = { angle: previewOp.angle, ax: previewOp.ax, ay: previewOp.ay, movingSign: preview.movingSign }
-            const previewHold = previewFold(paper, guide, 0)
-            if (!previewHold) return
-            setHold({ op: previewHold.op, depth: 0, grabDepth: Math.max(0.02, edgeDepth(paper, guide)) })
-            setNote('Held at the line. Press along the ridge to set the crease.')
-          }}
-          disabled={!preview.valid || busy || !!hold}
-          title="Hold the fold at the limit line. You still press along the ridge."
-        >
-          Hold at the line
-        </button>
-        {!preview.valid && (
-          <button
-            type="button"
-            onClick={() => {
-              setCrease(suggestCrease(paper, crease))
-              setPinned(null)
-            }}
-          >
-            Place on the paper
-          </button>
-        )}
-        <button type="button" className="quiet" onClick={() => setGuide((g) => !g)}>
-          {guide ? 'Hide guide' : 'Guide'}
-        </button>
-        <button type="button" className="go" onClick={() => { if (holdRef.current) { setNote('Press along the new crease before the hall.'); return } onDone() }}>
-          To the hall
-        </button>
       </div>
       {guide && (
         <aside className="guide">
@@ -506,7 +466,53 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
         )}
         {stockDirty && folds > 0 && <p>New sheet clears these folds.</p>}
       </fieldset>
-      <p className="fold-hint">Pinch an edge and drag. Stop short if you want. Then press along the new ridge. The dashed line is only the limit.</p>
+      </div>
+      <div className="fold-dock">
+      <div className="fold-tools">
+        <button type="button" onClick={() => { setNote(null); if (holdRef.current) { setHold(null); return } onOps(ops.slice(0, -1)) }} disabled={(!ops.length && !hold) || busy} title="Drop a held fold, or take back the last sealed action">
+          Undo
+        </button>
+        <button type="button" className="unfold" onClick={unfold} disabled={folds === 0 || busy} title="Open the last fold and keep its crease on the paper">
+          Unfold
+        </button>
+        <button type="button" onClick={() => { setHold(null); setNote(null); onOps([]) }} disabled={(!ops.length && !hold) || busy} title="Clear every fold and every open crease">
+          Reset
+        </button>
+        <button
+          type="button"
+          className="primary"
+          onClick={() => {
+            if (!preview.valid) return
+            const guide = { angle: previewOp.angle, ax: previewOp.ax, ay: previewOp.ay, movingSign: preview.movingSign }
+            const previewHold = previewFold(paper, guide, 0)
+            if (!previewHold) return
+            setHold({ op: previewHold.op, depth: 0, grabDepth: Math.max(0.02, edgeDepth(paper, guide)) })
+            setNote('Held at the line. Press along the ridge to set the crease.')
+          }}
+          disabled={!preview.valid || busy || !!hold}
+          title="Hold the fold at the limit line. You still press along the ridge."
+        >
+          Hold at the line
+        </button>
+        {!preview.valid && (
+          <button
+            type="button"
+            onClick={() => {
+              setCrease(suggestCrease(paper, crease))
+              setPinned(null)
+            }}
+          >
+            Place on the paper
+          </button>
+        )}
+        <button type="button" className="quiet" onClick={() => setGuide((g) => !g)}>
+          {guide ? 'Hide guide' : 'Guide'}
+        </button>
+        <button type="button" className="go" onClick={() => { if (holdRef.current) { setNote('Press along the new crease before the hall.'); return } onDone() }}>
+          To the hall
+        </button>
+      </div>
+      </div>
     </div>
   )
 }
@@ -588,7 +594,7 @@ function paint(
     }
   }
 
-  drawRuler(ctx, view)
+  drawBoardTicks(ctx, view)
 }
 
 function drawFacets(
@@ -817,22 +823,41 @@ function segmentDistance(p: Vec2, a: Vec2, b: Vec2) {
   return Math.hypot(p.x - (a.x + t * dx), p.y - (a.y + t * dy))
 }
 
-function drawRuler(ctx: CanvasRenderingContext2D, view: View) {
+/** Paired ticks on the board, outside the sheet, at the same sheet coordinates on opposite edges. */
+function drawBoardTicks(ctx: CanvasRenderingContext2D, view: View) {
+  const spans = boardTickSpans(view, { width: view.sheetW, height: view.sheetH })
   ctx.save()
-  ctx.fillStyle = 'rgba(60, 36, 18, 0.7)'
-  ctx.font = '12px "Segoe UI", sans-serif'
-  const origin = paperToScreen(view, { x: -view.sheetW / 2, y: -view.sheetH / 2 })
-  for (let cm = 0; cm <= 21; cm += 1) {
-    const x = origin.x + (cm / 100) * view.scale
-    const major = cm % 5 === 0
-    ctx.strokeStyle = 'rgba(60, 36, 18, 0.45)'
-    ctx.lineWidth = 1
+  ctx.lineWidth = 1
+  ctx.strokeStyle = 'rgba(244, 239, 228, 0.55)'
+  ctx.fillStyle = 'rgba(244, 239, 228, 0.72)'
+  ctx.font = '10px "Segoe UI", sans-serif'
+  ctx.textBaseline = 'middle'
+  spans.top.forEach((tick, i) => {
+    const bottom = spans.bottom[i]!
     ctx.beginPath()
-    ctx.moveTo(x, view.top + view.ph + 6)
-    ctx.lineTo(x, view.top + view.ph + (major ? 16 : 11))
+    ctx.moveTo(tick.at, tick.from)
+    ctx.lineTo(tick.at, tick.to)
+    ctx.moveTo(bottom.at, bottom.from)
+    ctx.lineTo(bottom.at, bottom.to)
     ctx.stroke()
-    if (major) ctx.fillText(String(cm), x - 4, view.top + view.ph + 28)
-  }
+    if (bottom.major && bottom.cm != null) {
+      ctx.textAlign = 'center'
+      ctx.fillText(String(bottom.cm), bottom.at, bottom.to + 8)
+    }
+  })
+  spans.left.forEach((tick, i) => {
+    const right = spans.right[i]!
+    ctx.beginPath()
+    ctx.moveTo(tick.from, tick.at)
+    ctx.lineTo(tick.to, tick.at)
+    ctx.moveTo(right.from, right.at)
+    ctx.lineTo(right.to, right.at)
+    ctx.stroke()
+    if (tick.major && tick.cm != null) {
+      ctx.textAlign = 'right'
+      ctx.fillText(String(tick.cm), tick.to - 4, tick.at)
+    }
+  })
   ctx.restore()
 }
 
