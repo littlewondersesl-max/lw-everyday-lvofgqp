@@ -28,6 +28,7 @@ export function HallView({ room, onThrow, onNewRound }: Props) {
     flights: room.flights,
     aim,
     replayToken: 0,
+    stock: room.stock,
   })
 
   snap.current = {
@@ -46,6 +47,7 @@ export function HallView({ room, onThrow, onNewRound }: Props) {
     flights: room.flights,
     aim,
     replayToken: replay + (room.flights ? room.round * 10 : 0),
+    stock: room.stock,
   }
 
   useEffect(() => {

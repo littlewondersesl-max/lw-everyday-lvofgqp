@@ -6,24 +6,34 @@ import {
   applyOps,
   buildFold,
   facetCentroid,
+  isUnfold,
   lineFrame,
+  longestCrease,
+  netFolds,
+  openCreaseCount,
   polygonArea,
   reflectPoint,
   signedDistance,
   suggestCrease,
   type FoldOp,
   type Paper,
+  type SheetStep,
   type Vec2,
 } from '../sim/geometry'
+import { scaleFoldOp, STOCKS, stockById, type Stock } from '../sim/stock'
+import { clampCrease, fitSheet, HANDLE_OFFSET } from './creaseClamp'
 
 interface Props {
-  ops: FoldOp[]
+  ops: SheetStep[]
+  stock: Stock
   dye: Dye
   dyes: Dye[]
   taken: string[]
   onDye: (id: string) => void
+  onStock: (id: string) => void
+  onNewSheet: (id: string) => void
   practice: { id: number; op: FoldOp } | null
-  onOps: (ops: FoldOp[]) => void
+  onOps: (ops: SheetStep[]) => void
   onDone: () => void
 }
 
@@ -33,13 +43,17 @@ type Anim = {
   started: number
 }
 
-export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone }: Props) {
+export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSheet, practice, onOps, onDone }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [crease, setCrease] = useState<FoldOp>(GUIDE_STEPS[0].op)
   const [guide, setGuide] = useState(false)
   /** null keeps the smaller side. A number forces that side of the line. */
   const [pinned, setPinned] = useState<1 | -1 | null>(null)
+  const [draftId, setDraftId] = useState(stock.id)
+  const [note, setNote] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+  const stockRef = useRef(stock)
+  stockRef.current = stock
   const animRef = useRef<Anim | null>(null)
   const creaseRef = useRef<FoldOp>(crease)
   const opsRef = useRef(ops)
@@ -64,7 +78,7 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
         canvas.height = h
       }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      paint(ctx, rect.width, rect.height, opsRef.current, creaseRef.current, animRef.current, dyeRef.current)
+      paint(ctx, rect.width, rect.height, opsRef.current, creaseRef.current, animRef.current, dyeRef.current, stockRef.current)
     }
     frame = requestAnimationFrame(draw)
     return () => cancelAnimationFrame(frame)
@@ -89,25 +103,41 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
+  function placeCrease(next: FoldOp | ((current: FoldOp) => FoldOp)) {
+    setCrease((current) => {
+      const raw = typeof next === 'function' ? next(current) : next
+      const canvas = canvasRef.current
+      const rect = canvas?.getBoundingClientRect()
+      const clamped = !rect || rect.width < 80 ? raw : clampCrease(raw, rect.width, rect.height, stockRef.current)
+      if (clamped.ax === current.ax && clamped.ay === current.ay && clamped.angle === current.angle && clamped.side === current.side && clamped.explicit === current.explicit) {
+        return current
+      }
+      return clamped
+    })
+  }
   function nudge(dx: number, dy: number) {
-    setCrease((c) => ({
-      ...c,
-      ax: clamp(c.ax + dx, -0.45, 0.45),
-      ay: clamp(c.ay + dy, -0.45, 0.45),
-    }))
+    placeCrease((c) => ({ ...c, ax: c.ax + dx, ay: c.ay + dy }))
   }
   function turnCrease(delta: number) {
-    setCrease((c) => ({ ...c, angle: c.angle + delta }))
+    placeCrease((c) => ({ ...c, angle: c.angle + delta }))
   }
 
   useEffect(() => {
     if (!practice) return
-    setCrease(practice.op)
+    placeCrease(scaleFoldOp(practice.op, SHEET, stockRef.current))
     setPinned(null)
   }, [practice])
 
   useEffect(() => {
-    const paperNow = applyOps(ops)
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const observer = new ResizeObserver(() => placeCrease((c) => c))
+    observer.observe(canvas)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const paperNow = applyOps(ops, stock)
     const trial: FoldOp = { angle: crease.angle, ax: crease.ax, ay: crease.ay, side: pinned ?? crease.side, ...(pinned != null ? { explicit: true } : {}) }
     if (buildFold(paperNow, trial).valid) return
     const open: FoldOp = { angle: crease.angle, ax: crease.ax, ay: crease.ay, side: crease.side }
@@ -116,9 +146,9 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
       return
     }
     const next = suggestCrease(paperNow, crease)
-    setCrease(next)
+    placeCrease(next)
     setPinned(null)
-  }, [ops])
+  }, [ops, stock])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -126,18 +156,18 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
     let drag: 'anchor' | 'rotate' | 'line' | null = null
     const down = (event: PointerEvent) => {
       if (animRef.current) return
-      const p = toPaper(canvas, event.clientX, event.clientY)
+      const p = toPaper(canvas, event.clientX, event.clientY, stockRef.current)
       if (!p) return
-      const hit = hitHandle(canvas, creaseRef.current, event.clientX, event.clientY)
+      const hit = hitHandle(canvas, creaseRef.current, event.clientX, event.clientY, stockRef.current)
       if (!hit) return
       drag = hit
       canvas.setPointerCapture(event.pointerId)
     }
     const move = (event: PointerEvent) => {
       if (!drag) return
-      const p = toPaper(canvas, event.clientX, event.clientY)
+      const p = toPaper(canvas, event.clientX, event.clientY, stockRef.current)
       if (!p) return
-      setCrease((c) => {
+      placeCrease((c) => {
         if (drag === 'rotate') {
           let angle = Math.atan2(p.y - c.ay, p.x - c.ax)
           if (event.shiftKey) {
@@ -146,13 +176,9 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
           }
           return { ...c, angle }
         }
-        const prev = toPaper(canvas, event.clientX - event.movementX, event.clientY - event.movementY)
+        const prev = toPaper(canvas, event.clientX - event.movementX, event.clientY - event.movementY, stockRef.current)
         if (!prev) return c
-        return {
-          ...c,
-          ax: clamp(c.ax + (p.x - prev.x), -0.45, 0.45),
-          ay: clamp(c.ay + (p.y - prev.y), -0.45, 0.45),
-        }
+        return { ...c, ax: c.ax + (p.x - prev.x), ay: c.ay + (p.y - prev.y) }
       })
     }
     const up = () => {
@@ -168,7 +194,11 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
     }
   }, [])
 
-  const paper = applyOps(ops)
+  const paper = applyOps(ops, stock)
+  const folds = netFolds(ops)
+  const opens = openCreaseCount(ops)
+  const draft = stockById(draftId)
+  const stockDirty = draft.id !== stock.id
   const previewOp: FoldOp = {
     angle: crease.angle,
     ax: crease.ax,
@@ -180,7 +210,30 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
   creaseRef.current = previewOp
   const smallSign: 1 | -1 = preview.areaPos <= preview.areaNeg ? 1 : -1
   const markedIsSmaller = preview.tie || preview.movingSign === smallSign
-  const matched = prefixMatch(ops)
+  const matched = prefixMatch(ops, stock)
+
+  function chooseStock(id: string) {
+    setDraftId(id)
+    if (netFolds(opsRef.current) === 0) onStock(id)
+  }
+
+  function unfold() {
+    if (netFolds(opsRef.current) === 0 || animRef.current) return
+    const next: SheetStep[] = [...opsRef.current, { unfold: true }]
+    onOps(next)
+    const opened = applyOps(next, stockRef.current)
+    const mark = longestCrease(opened.creases)
+    if (mark) {
+      placeCrease({
+        angle: Math.atan2(mark.b.y - mark.a.y, mark.b.x - mark.a.x),
+        ax: (mark.a.x + mark.b.x) / 2,
+        ay: (mark.a.y + mark.b.y) / 2,
+        side: 1,
+      })
+      setPinned(null)
+    }
+    setNote('Opened the last fold. Its crease stays on the paper. Unfold again for the one before it.')
+  }
 
   function commit() {
     if (!preview.valid || animRef.current || ops.length >= LIMITS.maxFolds) return
@@ -203,16 +256,17 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
       }
       animRef.current = null
       setBusy(false)
+      setNote(null)
       onOps([...opsRef.current, op])
     }
     requestAnimationFrame(finish)
   }
 
   return (
-    <div className="fold" data-dye={dye.id} data-folds={ops.length}>
+    <div className="fold" data-dye={dye.id} data-folds={folds} data-open={opens} data-stock={stock.id} data-ax={crease.ax} data-ay={crease.ay} data-angle={crease.angle}>
       <canvas ref={canvasRef} className="fold-canvas" />
       <div className="fold-readout">
-        <span>{ops.length} {ops.length === 1 ? 'fold' : 'folds'}</span>
+        <span>{folds} {folds === 1 ? 'fold' : 'folds'}</span>
         <span>{formatDeg(crease.angle)}</span>
         {preview.valid ? (
           preview.tie ? (
@@ -225,7 +279,9 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
         ) : (
           <span>{preview.reason} Drag the line back onto the paper.</span>
         )}
+        {opens > 0 && <span>{opens} open {opens === 1 ? 'crease' : 'creases'}</span>}
       </div>
+      {note && <p className="fold-note" role="status">{note}</p>}
       {preview.valid && (
         <div className="side-choice" role="group" aria-label="Which side folds">
           <button
@@ -266,10 +322,13 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
         })}
       </div>
       <div className="fold-tools">
-        <button type="button" onClick={() => onOps(ops.slice(0, -1))} disabled={!ops.length || busy}>
+        <button type="button" onClick={() => { setNote(null); onOps(ops.slice(0, -1)) }} disabled={!ops.length || busy} title="Take back the last fold or unfold">
           Undo
         </button>
-        <button type="button" onClick={() => onOps([])} disabled={!ops.length}>
+        <button type="button" className="unfold" onClick={unfold} disabled={folds === 0 || busy} title="Open the last fold and keep its crease on the paper">
+          Unfold
+        </button>
+        <button type="button" onClick={() => { setNote(null); onOps([]) }} disabled={!ops.length || busy} title="Clear every fold and every open crease">
           Reset
         </button>
         <button
@@ -309,7 +368,7 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
                 <button
                   type="button"
                   onClick={() => {
-                    setCrease(step.op)
+                    placeCrease(scaleFoldOp(step.op, SHEET, stock))
                     setPinned(null)
                   }}
                 >
@@ -323,15 +382,43 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
           </ol>
         </aside>
       )}
-      <p className="fold-hint">Drag the crease and spin the round handle after every fold. To the hall when you are finished. Arrows nudge. Q and E rotate.</p>
+      <fieldset className="stock">
+        <legend>Sheet</legend>
+        <div className="stock-row" role="group" aria-label="Sheet shape">
+          {(['rectangle', 'square'] as const).map((shape) => (
+            <button key={shape} type="button" className={draft.shape === shape ? 'on' : ''} aria-pressed={draft.shape === shape} onClick={() => chooseStock(STOCKS.find((item) => item.shape === shape && item.size === draft.size)?.id || draft.id)}>
+              {shape === 'square' ? 'Square' : 'Rectangle'}
+            </button>
+          ))}
+        </div>
+        <div className="stock-row" role="group" aria-label="Sheet size">
+          {(['small', 'medium', 'large'] as const).map((size) => (
+            <button key={size} type="button" className={draft.size === size ? 'on' : ''} aria-pressed={draft.size === size} onClick={() => chooseStock(STOCKS.find((item) => item.shape === draft.shape && item.size === size)?.id || draft.id)}>
+              {size === 'small' ? 'Small' : size === 'medium' ? 'Medium' : 'Large'}
+            </button>
+          ))}
+        </div>
+        <p>{draft.name} · {draft.label}{stockDirty ? '' : ' · this sheet'}</p>
+        {stockDirty && folds > 0 && (
+          <button type="button" onClick={() => { setNote(null); onNewSheet(draft.id) }}>New sheet</button>
+        )}
+        {stockDirty && folds > 0 && <p>New sheet clears these folds.</p>}
+      </fieldset>
+      <p className="fold-hint">Unfold opens the last fold and leaves its crease. Undo takes back the last action. Reset clears the sheet. Arrows nudge. Q and E rotate.</p>
     </div>
   )
 }
 
-function prefixMatch(ops: FoldOp[]) {
-  for (let i = 0; i < ops.length && i < GUIDE_STEPS.length; i++) {
+function prefixMatch(steps: SheetStep[], stock: Stock) {
+  const ops: FoldOp[] = []
+  for (const step of steps) {
+    if (isUnfold(step)) ops.pop()
+    else ops.push(step)
+  }
+  const guide = GUIDE_STEPS.map((step) => scaleFoldOp(step.op, SHEET, stock))
+  for (let i = 0; i < ops.length && i < guide.length; i++) {
     const op = ops[i]
-    const step = GUIDE_STEPS[i].op
+    const step = guide[i]
     const dAng = Math.atan2(Math.sin(op.angle - step.angle), Math.cos(op.angle - step.angle))
     const undirected = Math.min(Math.abs(dAng), Math.abs(Math.abs(dAng) - Math.PI))
     if (undirected > 0.02 || Math.hypot(op.ax - step.ax, op.ay - step.ay) > 0.004) return -1
@@ -343,39 +430,28 @@ function paint(
   ctx: CanvasRenderingContext2D,
   w: number,
   h: number,
-  ops: FoldOp[],
+  ops: SheetStep[],
   crease: FoldOp,
   anim: Anim | null,
   dye: Dye,
+  stock: Stock,
 ) {
   ctx.clearRect(0, 0, w, h)
-  const desk = ctx.createLinearGradient(0, 0, 0, h)
-  desk.addColorStop(0, '#d7b48a')
-  desk.addColorStop(1, '#b88858')
-  ctx.fillStyle = desk
+  ctx.fillStyle = '#2c2825'
   ctx.fillRect(0, 0, w, h)
-  // Soft grain.
-  ctx.strokeStyle = 'rgba(90, 50, 20, 0.05)'
-  ctx.lineWidth = 2
-  for (let y = 12; y < h; y += 7) {
-    ctx.beginPath()
-    ctx.moveTo(0, y)
-    ctx.lineTo(w, y + 2)
-    ctx.stroke()
-  }
 
-  const view = fit(w, h)
-  const paper = anim ? anim.from : applyOps(ops)
+  const view = fit(w, h, stock)
+  const paper = anim ? anim.from : applyOps(ops, stock)
   const t = anim ? Math.min(1, (performance.now() - anim.started) / 520) : 1
   const eased = t < 0.5 ? 2 * t * t : 1 - ((-2 * t + 2) ** 2) / 2
   const swing = anim ? eased * Math.PI : 0
 
   ctx.save()
-  ctx.shadowColor = 'rgba(70, 36, 12, 0.28)'
-  ctx.shadowBlur = 24
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.55)'
+  ctx.shadowBlur = 22
   ctx.shadowOffsetY = 10
-  roundPath(ctx, view.left - 8, view.top - 8, view.pw + 16, view.ph + 16, 4)
-  ctx.fillStyle = '#efe4cf'
+  roundPath(ctx, view.left, view.top, view.pw, view.ph, 2)
+  ctx.fillStyle = '#2c2825'
   ctx.fill()
   ctx.restore()
 
@@ -396,10 +472,7 @@ function paint(
     const built = buildFold(paper, crease)
     let landing: Vec2[][] = []
     if (built.valid) {
-      ctx.save()
-      ctx.globalAlpha = 0.38
-      drawPolys(ctx, view, built.moving, dye.ink, dye.ink)
-      ctx.restore()
+      shadeSource(ctx, view, built.moving)
       const frame = lineFrame(crease.angle, crease.ax, crease.ay)
       landing = built.moving.map((poly) => poly.map((p) => reflectPoint(p, frame)))
       ctx.save()
@@ -414,6 +487,21 @@ function paint(
   drawRuler(ctx, view)
 }
 
+function shadeSource(ctx: CanvasRenderingContext2D, view: View, polys: Vec2[][]) {
+  ctx.save()
+  for (const poly of polys) {
+    pathPoly(ctx, view, poly)
+    ctx.fillStyle = 'rgba(255, 236, 190, 0.22)'
+    ctx.fill()
+    ctx.setLineDash([6, 4])
+    ctx.strokeStyle = '#f4efe4'
+    ctx.lineWidth = 1.75
+    ctx.stroke()
+    ctx.setLineDash([])
+  }
+  ctx.restore()
+}
+
 function drawFacets(
   ctx: CanvasRenderingContext2D,
   view: View,
@@ -425,11 +513,10 @@ function drawFacets(
     pathPoly(ctx, view, facet.poly)
     ctx.fillStyle = dyeFill(dye, facet.faceUp > 0, facet.layer)
     ctx.fill()
-    ctx.strokeStyle = dye.ink
-    ctx.globalAlpha = 0.45
-    ctx.lineWidth = 1
-    ctx.stroke()
+    ctx.strokeStyle = '#1a1612'
     ctx.globalAlpha = 1
+    ctx.lineWidth = 1.4
+    ctx.stroke()
   }
 }
 
@@ -561,8 +648,8 @@ function strokeLine(ctx: CanvasRenderingContext2D, view: View, crease: FoldOp, i
   ctx.arc(anchor.x, anchor.y, 7, 0, Math.PI * 2)
   ctx.fill()
   const handle = paperToScreen(view, {
-    x: crease.ax + frame.dx * 0.16,
-    y: crease.ay + frame.dy * 0.16,
+    x: crease.ax + frame.dx * HANDLE_OFFSET,
+    y: crease.ay + frame.dy * HANDLE_OFFSET,
   })
   ctx.beginPath()
   ctx.arc(handle.x, handle.y, 9, 0, Math.PI * 2)
@@ -577,7 +664,7 @@ function drawRuler(ctx: CanvasRenderingContext2D, view: View) {
   ctx.save()
   ctx.fillStyle = 'rgba(60, 36, 18, 0.7)'
   ctx.font = '12px "Segoe UI", sans-serif'
-  const origin = paperToScreen(view, { x: -SHEET.width / 2, y: -SHEET.height / 2 })
+  const origin = paperToScreen(view, { x: -view.sheetW / 2, y: -view.sheetH / 2 })
   for (let cm = 0; cm <= 21; cm += 1) {
     const x = origin.x + (cm / 100) * view.scale
     const major = cm % 5 === 0
@@ -605,47 +692,41 @@ interface View {
   pw: number
   ph: number
   scale: number
+  sheetW: number
+  sheetH: number
 }
 
-function fit(w: number, h: number): View {
-  const maxW = Math.max(80, w - 160)
-  const maxH = Math.max(80, h - 180)
-  const aspect = SHEET.width / SHEET.height
-  let pw = maxW
-  let ph = pw / aspect
-  if (ph > maxH) {
-    ph = maxH
-    pw = ph * aspect
-  }
-  return { left: (w - pw) / 2, top: (h - ph) / 2 - 10, pw, ph, scale: pw / SHEET.width }
+function fit(w: number, h: number, stock: Stock): View {
+  const base = fitSheet(w, h, stock)
+  return { ...base, sheetW: stock.width, sheetH: stock.height }
 }
 
 function paperToScreen(view: View, p: Vec2) {
   return {
-    x: view.left + (p.x + SHEET.width / 2) * view.scale,
-    y: view.top + (SHEET.height / 2 - p.y) * view.scale,
+    x: view.left + (p.x + view.sheetW / 2) * view.scale,
+    y: view.top + (view.sheetH / 2 - p.y) * view.scale,
   }
 }
 
-function toPaper(canvas: HTMLCanvasElement, clientX: number, clientY: number): Vec2 | null {
+function toPaper(canvas: HTMLCanvasElement, clientX: number, clientY: number, stock: Stock): Vec2 | null {
   const rect = canvas.getBoundingClientRect()
-  const view = fit(rect.width, rect.height)
+  const view = fit(rect.width, rect.height, stock)
   const x = clientX - rect.left
   const y = clientY - rect.top
   return {
-    x: (x - view.left) / view.scale - SHEET.width / 2,
-    y: SHEET.height / 2 - (y - view.top) / view.scale,
+    x: (x - view.left) / view.scale - stock.width / 2,
+    y: stock.height / 2 - (y - view.top) / view.scale,
   }
 }
 
-function hitHandle(canvas: HTMLCanvasElement, crease: FoldOp, clientX: number, clientY: number): 'anchor' | 'rotate' | 'line' | null {
+function hitHandle(canvas: HTMLCanvasElement, crease: FoldOp, clientX: number, clientY: number, stock: Stock): 'anchor' | 'rotate' | 'line' | null {
   const rect = canvas.getBoundingClientRect()
-  const view = fit(rect.width, rect.height)
+  const view = fit(rect.width, rect.height, stock)
   const localX = clientX - rect.left
   const localY = clientY - rect.top
   const frame = lineFrame(crease.angle, crease.ax, crease.ay)
   const anchor = paperToScreen(view, { x: crease.ax, y: crease.ay })
-  const handle = paperToScreen(view, { x: crease.ax + frame.dx * 0.16, y: crease.ay + frame.dy * 0.16 })
+  const handle = paperToScreen(view, { x: crease.ax + frame.dx * HANDLE_OFFSET, y: crease.ay + frame.dy * HANDLE_OFFSET })
   if (Math.hypot(localX - handle.x, localY - handle.y) < 16) return 'rotate'
   if (Math.hypot(localX - anchor.x, localY - anchor.y) < 14) return 'anchor'
   const a = paperToScreen(view, { x: crease.ax - frame.dx, y: crease.ay - frame.dy })
@@ -689,6 +770,3 @@ function formatDeg(angle: number) {
   return `${(deg + 360) % 360}°`
 }
 
-function clamp(v: number, lo: number, hi: number) {
-  return Math.max(lo, Math.min(hi, v))
-}

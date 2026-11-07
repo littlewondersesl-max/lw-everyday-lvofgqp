@@ -7,7 +7,8 @@
 import * as THREE from 'three'
 import { HALL, LANES, LIMITS, releaseHeight } from '../sim/constants'
 import { dyeById, dyeUnit } from '../sim/dyes'
-import { applyOps, type FoldOp } from '../sim/geometry'
+import { applyOps, type SheetStep } from '../sim/geometry'
+import { stockById } from '../sim/stock'
 import type { PublicFlight } from '../sim/room'
 import { deriveShape } from '../sim/shape'
 
@@ -25,7 +26,7 @@ export interface HallSeatView {
   color: string
   paper: string
   dye: string
-  ops: FoldOp[]
+  ops: SheetStep[]
   you: boolean
   aim: { height: number; pitch: number; yaw: number } | null
 }
@@ -37,6 +38,7 @@ export interface HallSnapshot {
   flights: PublicFlight[] | null
   aim: HallAim
   replayToken: number
+  stock: string
 }
 
 export interface HallHandlers {
@@ -215,7 +217,7 @@ export function mountHall(canvas: HTMLCanvasElement, handlers: HallHandlers) {
       }
     }
     for (const seat of snap.seats) {
-      const key = JSON.stringify(seat.ops) + '|' + seat.name + '|' + seat.paper + '|' + seat.you
+      const key = JSON.stringify(seat.ops) + '|' + seat.name + '|' + seat.paper + '|' + seat.you + '|' + snap.stock
       let actor = actors.get(seat.index)
       if (!actor || actor.key !== key) {
         if (actor) {
@@ -223,7 +225,7 @@ export function mountHall(canvas: HTMLCanvasElement, handlers: HallHandlers) {
           scene.remove(actor.shadow)
           disposeActor(actor)
         }
-        actor = makeActor(seat, shadowTex)
+        actor = makeActor(seat, shadowTex, snap.stock)
         actor.key = key
         actors.set(seat.index, actor)
         scene.add(actor.group)
@@ -254,8 +256,8 @@ interface Actor {
   hand: THREE.Group
 }
 
-function makeActor(seat: HallSeatView, shadowTex: THREE.Texture): Actor {
-  const shape = deriveShape(applyOps(seat.ops))
+function makeActor(seat: HallSeatView, shadowTex: THREE.Texture, stock: string): Actor {
+  const shape = deriveShape(applyOps(seat.ops, stockById(stock)))
   const group = new THREE.Group()
   const positions: number[] = []
   const colors: number[] = []

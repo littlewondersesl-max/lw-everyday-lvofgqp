@@ -152,7 +152,7 @@ function RulePage({ dye }: { dye: Dye }) {
         <Mini ops={[RULE]} dye={dye} label="After" />
       </div>
       <p>
-        Fold commits that one crease and leaves the line, the hub, and the round handle on the sheet you have now. Fold again, or press To the hall when you are finished. If the line misses the folded paper, drag it back or place it on the paper. The names are not left and right: the mark is the source, and the arrowhead is where it lands. Folded paper stacks. The back shows as a deeper shade of the same color.
+        Fold commits that one crease and leaves the line, the hub, and the round handle on the sheet you have now. Fold again, or press To the hall when you are finished. Unfold opens only the latest fold and leaves that crease on the paper so you can line the next fold up with it. Unfold again to open the one before. Undo takes back the last action, which is not the same as unfolding. Reset clears the sheet. If the line misses the folded paper, drag it back or place it on the paper. The names are not left and right: the mark is the source, and the arrowhead is where it lands. Folded paper stacks. The back shows as a deeper shade of the same color.
       </p>
     </>
   )
@@ -173,6 +173,7 @@ function RecipePage({
     <>
       <h2>{recipe.title}</h2>
       <p>{recipe.intro}</p>
+      <p>These pictures use the letter rectangle. Place this crease scales the same fold onto the sheet you have.</p>
       <p className="book-flight">{recipe.flight}</p>
       <ol className="book-steps">
         {recipe.steps.map((step, index) => {
