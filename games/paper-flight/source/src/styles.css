@@ -140,10 +140,11 @@ main { flex: 1; min-height: 0; position: relative; }
 .fold-readout span:first-child { font-family: var(--serif); font-size: 18px; }
 
 .side-choice {
-  top: 62px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 110px;
+  right: 16px;
+  left: auto;
   display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 .side-choice button, .fold-tools button, .result-actions button, .modal button, .gate button, .throw {

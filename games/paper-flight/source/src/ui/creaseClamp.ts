@@ -2,7 +2,7 @@ import { lineFrame, type FoldOp } from '../sim/geometry'
 import type { PaperSize } from '../sim/stock'
 
 /** Round handle sits this many pixels from the hub, along the crease. Not a paper distance. */
-export const HANDLE_PX = 58
+export const HANDLE_PX = 36
 /** Pixels kept inside the canvas so the handle disc stays grabbable. */
 export const HANDLE_MARGIN = 20
 
