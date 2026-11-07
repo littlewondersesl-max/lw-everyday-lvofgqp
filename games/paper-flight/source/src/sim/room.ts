@@ -4,13 +4,13 @@
  * depend on which browser threw.
  */
 
-import { LANES, LIMITS, releaseHeight } from './constants'
+import { LANES, LIMITS, releaseHeight, SHEET } from './constants'
 import { DYES, dyeById } from './dyes'
 import { BOT_FILL, archetypeById, type ArchetypeId } from './bots'
-import { sanitizeOps, type FoldOp } from './geometry'
+import { applyOps, netFolds, sanitizeOps, type SheetStep } from './geometry'
+import { DEFAULT_STOCK, scaleFoldOp, stockById, STOCKS } from './stock'
 import { simulateFlight, type FlightResult, type Launch } from './flight'
 import { deriveShape } from './shape'
-import { applyOps } from './geometry'
 
 export type Phase = 'fold' | 'aim' | 'fly' | 'results'
 
@@ -42,7 +42,7 @@ export interface PublicSeat {
   dyeName: string
   connected: boolean
   ready: boolean
-  ops: FoldOp[]
+  ops: SheetStep[]
   aim: AimInput | null
   you: boolean
   waiting: boolean
@@ -56,6 +56,7 @@ export interface PublicRoom {
   seats: PublicSeat[]
   flights: PublicFlight[] | null
   note: string | null
+  stock: string
 }
 
 interface Seat {
@@ -66,7 +67,7 @@ interface Seat {
   dye: string
   connected: boolean
   ready: boolean
-  ops: FoldOp[]
+  ops: SheetStep[]
   aim: AimInput | null
   disconnectAt: number | null
   /** Human joined after this round was already in the air or on the board. */
@@ -80,6 +81,7 @@ export interface Room {
   seats: Seat[]
   flights: PublicFlight[] | null
   note: string | null
+  stockId: string
 }
 
 export const DISCONNECT_GRACE_MS = 12_000
@@ -92,6 +94,7 @@ export function createRoom(code: string): Room {
     seats: [],
     flights: null,
     note: null,
+    stockId: DEFAULT_STOCK.id,
   }
   for (let i = 0; i < 4; i++) {
     const seat = emptyBot()
@@ -136,7 +139,8 @@ function assignBotCast(room: Room) {
     seat.kind = 'bot'
     if (locked) continue
     seat.name = bot.name
-    seat.ops = bot.ops.map((op) => ({ ...op }))
+    const stock = stockById(room.stockId)
+    seat.ops = bot.ops.map((op) => scaleFoldOp(op, SHEET, stock))
     seat.aim = room.phase === 'aim' ? { ...bot.aim } : null
     seat.ready = true
     seat.waiting = false
@@ -152,6 +156,7 @@ export function publicView(room: Room, token: string | null): PublicRoom {
     you,
     note: room.note,
     flights: room.flights,
+    stock: room.stockId,
     seats: room.seats.map((s, index) => ({
       index,
       name: s.name,
@@ -267,6 +272,28 @@ export function renameSeat(room: Room, token: string, name: string) {
   seat.name = cleanName(name)
 }
 
+export function setStock(room: Room, token: string, stockId: string) {
+  if (!STOCKS.some((item) => item.id === stockId) || room.phase !== 'fold') return
+  const seat = room.seats.find((s) => s.token === token && s.kind === 'human')
+  if (!seat || seat.waiting || netFolds(seat.ops) > 0) return
+  if (room.seats.some((other) => other !== seat && other.kind === 'human' && netFolds(other.ops) > 0)) return
+  room.stockId = stockId
+  assignBotCast(room)
+}
+
+/** Clears this player's folds and switches stock. Does not run just because a control changed. */
+export function newSheet(room: Room, token: string, stockId: string) {
+  if (!STOCKS.some((item) => item.id === stockId) || room.phase !== 'fold') return
+  const seat = room.seats.find((s) => s.token === token && s.kind === 'human')
+  if (!seat || seat.waiting) return
+  if (room.seats.some((other) => other !== seat && other.kind === 'human' && netFolds(other.ops) > 0)) return
+  room.stockId = stockId
+  seat.ops = []
+  seat.ready = false
+  seat.aim = null
+  assignBotCast(room)
+}
+
 export function setFolds(room: Room, token: string, ops: unknown) {
   const seat = room.seats.find((s) => s.token === token)
   if (!seat || room.phase !== 'fold' || seat.waiting) return
@@ -347,7 +374,7 @@ function launch(room: Room) {
       yaw: aim.yaw,
       speed: aim.speed,
     }
-    const result: FlightResult = simulateFlight(deriveShape(applyOps(seat.ops)), launchAim)
+    const result: FlightResult = simulateFlight(deriveShape(applyOps(seat.ops, stockById(room.stockId))), launchAim)
     return {
       seat: index,
       distance: result.distance,

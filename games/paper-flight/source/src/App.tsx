@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { AimInput, PublicRoom } from './sim/room'
-import type { FoldOp } from './sim/geometry'
+import type { FoldOp, SheetStep } from './sim/geometry'
+import { stockById } from './sim/stock'
 import { DYES, dyeById } from './sim/dyes'
 import { applySolo, openSolo, shouldTrySocket, type SoloSession } from './solo'
 import { FoldView } from './ui/FoldView'
@@ -20,7 +21,7 @@ export function App() {
   const [bookOpen, setBookOpen] = useState(false)
   const [bookPage, setBookPage] = useState(0)
   const [practice, setPractice] = useState<{ id: number; op: FoldOp } | null>(null)
-  const [localOps, setLocalOps] = useState<FoldOp[] | null>(null)
+  const [localOps, setLocalOps] = useState<SheetStep[] | null>(null)
   const wsRef = useRef<WebSocket | null>(null)
   const soloRef = useRef<SoloSession | null>(null)
   const modeRef = useRef<LinkMode>('pending')
@@ -231,10 +232,13 @@ export function App() {
         {room && room.phase === 'fold' && me && (
           <FoldView
             ops={ops}
+            stock={stockById(room.stock)}
             dye={dyeById(me.dye)}
             dyes={DYES}
             taken={room.seats.filter((seat) => seat.dye !== me.dye).map((seat) => seat.dye)}
             onDye={(id) => send({ type: 'color', color: id })}
+            onStock={(id) => send({ type: 'stock', stock: id })}
+            onNewSheet={(id) => send({ type: 'newSheet', stock: id })}
             practice={practice}
             onOps={(next) => {
               setLocalOps(next)

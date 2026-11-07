@@ -54,9 +54,9 @@ export interface FoldOp {
 
 const EPS = 1e-8
 
-export function blankSheet(): Paper {
-  const w = SHEET.width / 2
-  const h = SHEET.height / 2
+export function blankSheet(size: { width: number; height: number } = SHEET): Paper {
+  const w = size.width / 2
+  const h = size.height / 2
   return {
     facets: [
       {
@@ -412,7 +412,7 @@ export function buildFold(paper: Paper, op: FoldOp): FoldBuild {
     placed.push({ poly: p.poly, layer: base + 1, faceUp: p.faceUp })
   }
 
-  const creases = paper.creases.slice()
+  const creases = transformMarks(paper.creases, frame, movingSign)
   for (const p of pieces) {
     if (p.crease) creases.push(p.crease)
   }
@@ -452,14 +452,133 @@ export function buildFold(paper: Paper, op: FoldOp): FoldBuild {
   }
 }
 
-export function applyOps(ops: FoldOp[]): Paper {
-  let paper = blankSheet()
-  const list = ops.slice(0, LIMITS.maxFolds)
-  for (const op of list) {
-    const built = buildFold(paper, sanitizeOp(op) ?? op)
+export interface UnfoldStep {
+  unfold: true
+}
+
+export type SheetStep = FoldOp | UnfoldStep
+
+export function isUnfold(step: unknown): step is UnfoldStep {
+  return !!step && typeof step === 'object' && (step as UnfoldStep).unfold === true
+}
+
+/** Still-folded creases. Unfold removes one. Undo removes a history step instead. */
+export function netFolds(steps: readonly SheetStep[]): number {
+  let n = 0
+  for (const step of steps) {
+    if (isUnfold(step)) n = Math.max(0, n - 1)
+    else n += 1
+  }
+  return n
+}
+
+export function openCreaseCount(steps: readonly SheetStep[]): number {
+  let folds = 0
+  let opens = 0
+  for (const step of steps) {
+    if (isUnfold(step)) {
+      if (folds > 0) {
+        folds -= 1
+        opens += 1
+      }
+    } else folds += 1
+  }
+  return opens
+}
+
+export function longestCrease(marks: CreaseMark[]): CreaseMark | null {
+  let best: CreaseMark | null = null
+  let bestD = 0
+  for (const mark of marks) {
+    const d = (mark.a.x - mark.b.x) ** 2 + (mark.a.y - mark.b.y) ** 2
+    if (d > bestD) {
+      bestD = d
+      best = mark
+    }
+  }
+  return best
+}
+
+function foldOnly(ops: FoldOp[], size: { width: number; height: number }): Paper {
+  let paper = blankSheet(size)
+  for (const op of ops) {
+    const built = buildFold(paper, op)
     if (built.valid) paper = built.paper
   }
   return paper
+}
+
+/**
+ * Replay folds and unfolds.
+ * Unfold opens only the most recent still-folded crease and keeps that crease
+ * as a mark. Later folds carry the mark with the paper that moves.
+ */
+export function applyOps(steps: readonly SheetStep[], size: { width: number; height: number } = SHEET): Paper {
+  const folds: FoldOp[] = []
+  const kept: { at: number; marks: CreaseMark[] }[] = []
+  for (const step of steps) {
+    if (isUnfold(step)) {
+      if (!folds.length) continue
+      const prior = foldOnly(folds.slice(0, -1), size)
+      const built = buildFold(prior, folds[folds.length - 1])
+      const added = built.valid ? built.paper.creases.slice(prior.creases.length) : []
+      folds.pop()
+      kept.push({ at: folds.length, marks: added.map((mark) => ({ a: { ...mark.a }, b: { ...mark.b } })) })
+      continue
+    }
+    if (folds.length >= LIMITS.maxFolds) continue
+    const op = sanitizeOp(step) ?? step
+    folds.push(op)
+  }
+  let paper = blankSheet(size)
+  const carry: CreaseMark[] = []
+  const take = (at: number) => {
+    for (const item of kept) if (item.at === at) carry.push(...item.marks)
+  }
+  for (let i = 0; i < folds.length; i++) {
+    take(i)
+    if (carry.length) paper = { ...paper, creases: [...paper.creases, ...carry.splice(0)] }
+    const built = buildFold(paper, folds[i])
+    if (!built.valid) break
+    paper = built.paper
+  }
+  take(folds.length)
+  if (carry.length) paper = { ...paper, creases: [...paper.creases, ...carry] }
+  return paper
+}
+
+/** Split a mark by a crease and reflect the portion on the moving side. */
+export function transformMarks(
+  marks: CreaseMark[],
+  frame: ReturnType<typeof lineFrame>,
+  movingSign: 1 | -1,
+): CreaseMark[] {
+  const out: CreaseMark[] = []
+  for (const mark of marks) {
+    for (const part of clipSegment(mark, frame)) {
+      const da = signedDistance(part.a, frame)
+      const db = signedDistance(part.b, frame)
+      if (Math.abs(da) < 1e-7 && Math.abs(db) < 1e-7) {
+        out.push(part)
+        continue
+      }
+      const sign: 1 | -1 = da + db >= 0 ? 1 : -1
+      out.push(sign === movingSign ? { a: reflectPoint(part.a, frame), b: reflectPoint(part.b, frame) } : part)
+    }
+  }
+  return out.filter((mark) => Math.hypot(mark.a.x - mark.b.x, mark.a.y - mark.b.y) > 1e-6)
+}
+
+function clipSegment(mark: CreaseMark, frame: ReturnType<typeof lineFrame>): CreaseMark[] {
+  const da = signedDistance(mark.a, frame)
+  const db = signedDistance(mark.b, frame)
+  if (da === 0 || db === 0 || da * db > 0) return [mark]
+  const t = da / (da - db)
+  const mid = { x: mark.a.x + (mark.b.x - mark.a.x) * t, y: mark.a.y + (mark.b.y - mark.a.y) * t }
+  return [
+    { a: mark.a, b: mid },
+    { a: mid, b: mark.b },
+  ]
 }
 
 export function sanitizeOp(input: unknown): FoldOp | null {
@@ -514,10 +633,14 @@ export function suggestCrease(paper: Paper, previous?: FoldOp): FoldOp {
   return { angle, ax: cx, ay: cy, side: 1 }
 }
 
-export function sanitizeOps(input: unknown): FoldOp[] {
+export function sanitizeOps(input: unknown): SheetStep[] {
   if (!Array.isArray(input)) return []
-  const out: FoldOp[] = []
-  for (const item of input.slice(0, LIMITS.maxFolds)) {
+  const out: SheetStep[] = []
+  for (const item of input.slice(0, LIMITS.maxFolds * 2)) {
+    if (isUnfold(item)) {
+      out.push({ unfold: true })
+      continue
+    }
     const op = sanitizeOp(item)
     if (op) out.push(op)
   }

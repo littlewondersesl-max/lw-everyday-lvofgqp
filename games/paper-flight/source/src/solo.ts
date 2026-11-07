@@ -8,10 +8,12 @@ import {
   joinRoom,
   markFoldReady,
   publicView,
+  newSheet,
   renameSeat,
   requestNewRound,
   setDye,
   setFolds,
+  setStock,
   throwSeat,
   type PublicRoom,
   type Room,
@@ -50,6 +52,8 @@ export function applySolo(session: SoloSession, msg: Record<string, unknown>): P
   if (type === 'rename' && typeof msg.name === 'string') renameSeat(room, token, msg.name)
   else if (type === 'color' && typeof msg.color === 'string') setDye(room, token, msg.color)
   else if (type === 'folds') setFolds(room, token, msg.ops)
+  else if (type === 'stock' && typeof msg.stock === 'string') setStock(room, token, msg.stock)
+  else if (type === 'newSheet' && typeof msg.stock === 'string') newSheet(room, token, msg.stock)
   else if (type === 'ready') markFoldReady(room, token)
   else if (type === 'throw') throwSeat(room, token, msg.aim)
   else if (type === 'newRound') requestNewRound(room)
