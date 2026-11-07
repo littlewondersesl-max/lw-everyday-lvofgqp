@@ -296,7 +296,7 @@ export function App() {
               This is a fixed-step rigid-body model, not a claim that a real sheet of paper would match it fold for fold.
             </p>
             <ul>
-              <li>The sheet is letter paper at 80 g/m². A fold reflects the smaller side across the crease and stacks it. Area of paper is kept; overlapping layers are the same paper twice.</li>
+              <li>The sheet is letter paper at 80 g/m². A fold reflects the marked side across the crease and stacks it. By default that is the smaller side. Area of paper is kept; overlapping layers are the same paper twice.</li>
               <li>The hall air is still. Density is 1.20 kg/m³ and gravity is 9.81 m/s². Drag and lift use the craft’s own speed, so a moving sheet feels air even with no wind.</li>
               <li>Lift and drag follow a flat-plate angle of attack, with an aspect-ratio lift slope, parasite drag from how blunt the nose is, and induced drag. Past stall the plate law takes over and the sheet drops.</li>
               <li>Force acts at a neutral point estimated from the outline. Nose-heavy, pointed, symmetric folds also get a small crease-reflex couple so they can hold a shallow angle and glide. Lopsided or blunt folds do not.</li>

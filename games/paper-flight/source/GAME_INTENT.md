@@ -18,7 +18,8 @@ This file is the design the game is supposed to keep. Later changes should exten
 - Everyone starts from one flat letter sheet.
 - The player places a crease line anywhere, translates it freely, and rotates it through a full turn.
 - They can preview, then commit.
-- The smaller portion folds over the larger. If the two sides match, either side may be chosen.
+- By default the smaller portion folds over. The player can choose either side, including the larger one. The marked side and an arrow show the source and where it lands. Left and right are not the labels, because the crease can sit at any angle.
+- Fold commits one crease and does not finish the sheet. The crease stays movable and rotatable on the new shape until a separate action sends it to the hall. If a line misses the folded paper, it can be dragged or placed back onto it.
 - Folds are successive real geometry: split, reflect, stack layers. Not a swap between premade airplane meshes.
 - Corner folds of adjustable size fall out of placing the line, and the guide demonstrates a few.
 - Undo and reset.
@@ -58,7 +59,7 @@ Do not play a scripted curve and call it flight. The trajectory has to come from
 
 - Each competitor's sheet has its own light dye. The dye stays through folding, flight, and the results. Names stay readable beside it.
 - The player can pick a free dye. Two seats never share one.
-- A small Book control sits off the side of the menu. Open, it is a paged book: how to move and turn the crease, how the smaller side folds over, and recipes the folder can actually run (beginner plane, pointed dart, envelope, flat hat). Pictures are drawn from those creases. Placing a recipe crease uses the live sheet. The envelope and the hat are not meant to fly well, and the book says so.
+- A small Book control sits off the side of the menu. Open, it is a paged book: how to move and turn the crease, how to choose which side folds, and recipes the folder can actually run (beginner plane, pointed dart, envelope, flat hat). Pictures are drawn from those creases. Placing a recipe crease uses the live sheet. The envelope and the hat are not meant to fly well, and the book says so.
 
 ## Feel
 

@@ -130,7 +130,7 @@ const titles = heads.map((h) => h.h)
 const expectTitles = [
   'Move the crease',
   'Turn the crease',
-  'The smaller side folds over',
+  'Choose which side folds',
   'Beginner plane',
   'Pointed dart',
   'Envelope',

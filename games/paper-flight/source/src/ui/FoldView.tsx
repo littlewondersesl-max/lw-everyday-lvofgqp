@@ -5,9 +5,12 @@ import { dyeFill, type Dye } from '../sim/dyes'
 import {
   applyOps,
   buildFold,
+  facetCentroid,
   lineFrame,
+  polygonArea,
   reflectPoint,
   signedDistance,
+  suggestCrease,
   type FoldOp,
   type Paper,
   type Vec2,
@@ -34,16 +37,14 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [crease, setCrease] = useState<FoldOp>(GUIDE_STEPS[0].op)
   const [guide, setGuide] = useState(false)
-  const [side, setSide] = useState<1 | -1>(1)
+  /** null keeps the smaller side. A number forces that side of the line. */
+  const [pinned, setPinned] = useState<1 | -1 | null>(null)
   const [busy, setBusy] = useState(false)
   const animRef = useRef<Anim | null>(null)
-  const creaseRef = useRef(crease)
+  const creaseRef = useRef<FoldOp>(crease)
   const opsRef = useRef(ops)
-  const sideRef = useRef(side)
   const dyeRef = useRef(dye)
-  creaseRef.current = { ...crease, side }
   opsRef.current = ops
-  sideRef.current = side
   dyeRef.current = dye
 
   useEffect(() => {
@@ -102,8 +103,22 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
   useEffect(() => {
     if (!practice) return
     setCrease(practice.op)
-    setSide(practice.op.side)
+    setPinned(null)
   }, [practice])
+
+  useEffect(() => {
+    const paperNow = applyOps(ops)
+    const trial: FoldOp = { angle: crease.angle, ax: crease.ax, ay: crease.ay, side: pinned ?? crease.side, ...(pinned != null ? { explicit: true } : {}) }
+    if (buildFold(paperNow, trial).valid) return
+    const open: FoldOp = { angle: crease.angle, ax: crease.ax, ay: crease.ay, side: crease.side }
+    if (pinned != null && buildFold(paperNow, open).valid) {
+      setPinned(null)
+      return
+    }
+    const next = suggestCrease(paperNow, crease)
+    setCrease(next)
+    setPinned(null)
+  }, [ops])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -154,15 +169,28 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
   }, [])
 
   const paper = applyOps(ops)
-  const preview = buildFold(paper, { ...crease, side })
-  const small = Math.min(preview.areaPos, preview.areaNeg)
-  const total = preview.areaPos + preview.areaNeg
-  const pct = total > 0 ? Math.round((100 * small) / total) : 0
+  const previewOp: FoldOp = {
+    angle: crease.angle,
+    ax: crease.ax,
+    ay: crease.ay,
+    side: pinned ?? crease.side,
+    ...(pinned != null ? { explicit: true } : {}),
+  }
+  const preview = buildFold(paper, previewOp)
+  creaseRef.current = previewOp
+  const smallSign: 1 | -1 = preview.areaPos <= preview.areaNeg ? 1 : -1
+  const markedIsSmaller = preview.tie || preview.movingSign === smallSign
   const matched = prefixMatch(ops)
 
   function commit() {
     if (!preview.valid || animRef.current || ops.length >= LIMITS.maxFolds) return
-    const op = { ...crease, side: preview.movingSign }
+    const op: FoldOp = {
+      angle: crease.angle,
+      ax: crease.ax,
+      ay: crease.ay,
+      side: preview.movingSign,
+      explicit: true,
+    }
     animRef.current = { from: paper, op, started: performance.now() }
     setBusy(true)
     const finish = () => {
@@ -181,27 +209,40 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
   }
 
   return (
-    <div className="fold" data-dye={dye.id}>
+    <div className="fold" data-dye={dye.id} data-folds={ops.length}>
       <canvas ref={canvasRef} className="fold-canvas" />
       <div className="fold-readout">
+        <span>{ops.length} {ops.length === 1 ? 'fold' : 'folds'}</span>
         <span>{formatDeg(crease.angle)}</span>
         {preview.valid ? (
           preview.tie ? (
-            <span>Sides match. Choose which way.</span>
+            <span>Sides match. Folding the marked side across the arrow.</span>
+          ) : markedIsSmaller ? (
+            <span>Folding the marked side across the arrow.</span>
           ) : (
-            <span>Folding the smaller side, {pct}% of the sheet.</span>
+            <span>Folding the larger marked side across the arrow.</span>
           )
         ) : (
-          <span>{preview.reason}</span>
+          <span>{preview.reason} Drag the line back onto the paper.</span>
         )}
       </div>
-      {preview.tie && preview.valid && (
-        <div className="side-choice">
-          <button className={side === 1 ? 'on' : ''} onClick={() => setSide(1)} type="button">
-            Fold this way
+      {preview.valid && (
+        <div className="side-choice" role="group" aria-label="Which side folds">
+          <button
+            className={preview.movingSign === 1 ? 'on' : ''}
+            aria-pressed={preview.movingSign === 1}
+            onClick={() => setPinned(1)}
+            type="button"
+          >
+            {preview.movingSign === 1 ? 'Marked side' : 'Opposite side'}
           </button>
-          <button className={side === -1 ? 'on' : ''} onClick={() => setSide(-1)} type="button">
-            Fold the other way
+          <button
+            className={preview.movingSign === -1 ? 'on' : ''}
+            aria-pressed={preview.movingSign === -1}
+            onClick={() => setPinned(-1)}
+            type="button"
+          >
+            {preview.movingSign === -1 ? 'Marked side' : 'Opposite side'}
           </button>
         </div>
       )}
@@ -231,9 +272,26 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
         <button type="button" onClick={() => onOps([])} disabled={!ops.length}>
           Reset
         </button>
-        <button type="button" className="primary" onClick={commit} disabled={!preview.valid || busy || ops.length >= LIMITS.maxFolds}>
+        <button
+          type="button"
+          className="primary"
+          onClick={commit}
+          disabled={!preview.valid || busy || ops.length >= LIMITS.maxFolds}
+          title={preview.valid ? 'Commit this crease. The sheet stays here for another fold.' : preview.reason}
+        >
           Fold
         </button>
+        {!preview.valid && (
+          <button
+            type="button"
+            onClick={() => {
+              setCrease(suggestCrease(paper, crease))
+              setPinned(null)
+            }}
+          >
+            Place on the paper
+          </button>
+        )}
         <button type="button" className="quiet" onClick={() => setGuide((g) => !g)}>
           {guide ? 'Hide guide' : 'Guide'}
         </button>
@@ -252,7 +310,7 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
                   type="button"
                   onClick={() => {
                     setCrease(step.op)
-                    setSide(step.op.side)
+                    setPinned(null)
                   }}
                 >
                   <strong>
@@ -265,7 +323,7 @@ export function FoldView({ ops, dye, dyes, taken, onDye, practice, onOps, onDone
           </ol>
         </aside>
       )}
-      <p className="fold-hint">Drag the crease, spin the round handle, then fold. Arrows nudge. Q and E rotate.</p>
+      <p className="fold-hint">Drag the crease and spin the round handle after every fold. To the hall when you are finished. Arrows nudge. Q and E rotate.</p>
     </div>
   )
 }
@@ -336,28 +394,21 @@ function paint(
     drawFacets(ctx, view, paper.facets, dye)
     drawCreases(ctx, view, paper.creases)
     const built = buildFold(paper, crease)
+    let landing: Vec2[][] = []
     if (built.valid) {
       ctx.save()
-      ctx.setLineDash([5, 4])
-      ctx.strokeStyle = dye.ink
-      ctx.lineWidth = 1.5
-      for (const poly of built.moving) {
-        pathPoly(ctx, view, poly)
-        ctx.stroke()
-      }
+      ctx.globalAlpha = 0.38
+      drawPolys(ctx, view, built.moving, dye.ink, dye.ink)
       ctx.restore()
+      const frame = lineFrame(crease.angle, crease.ax, crease.ay)
+      landing = built.moving.map((poly) => poly.map((p) => reflectPoint(p, frame)))
       ctx.save()
       ctx.globalAlpha = 0.55
-      drawPolys(
-        ctx,
-        view,
-        built.moving.map((poly) => poly.map((p) => reflectPoint(p, lineFrame(crease.angle, crease.ax, crease.ay)))),
-        dyeFill(dye, false, 0),
-        dye.ink,
-      )
+      drawPolys(ctx, view, landing, dyeFill(dye, false, 0), dye.ink)
       ctx.restore()
-      strokeLine(ctx, view, crease, dye.ink)
     }
+    strokeLine(ctx, view, crease, built.valid ? '#1c1915' : dye.ink)
+    if (built.valid) drawFoldArrow(ctx, view, built.moving, landing, '#1c1915')
   }
 
   drawRuler(ctx, view)
@@ -405,6 +456,88 @@ function drawCreases(ctx: CanvasRenderingContext2D, view: View, creases: { a: Ve
     ctx.lineTo(b.x, b.y)
     ctx.stroke()
   }
+  ctx.restore()
+}
+
+function areaCentroid(polys: Vec2[][]): Vec2 | null {
+  let weight = 0
+  let x = 0
+  let y = 0
+  for (const poly of polys) {
+    const area = Math.abs(polygonArea(poly))
+    if (area < 1e-12) continue
+    const c = facetCentroid(poly)
+    weight += area
+    x += c.x * area
+    y += c.y * area
+  }
+  if (weight < 1e-12) return null
+  return { x: x / weight, y: y / weight }
+}
+
+function drawFoldArrow(ctx: CanvasRenderingContext2D, view: View, source: Vec2[][], landing: Vec2[][], ink: string) {
+  const from = areaCentroid(source)
+  const to = areaCentroid(landing)
+  if (!from || !to) return
+  const a = paperToScreen(view, from)
+  const b = paperToScreen(view, to)
+  let ax = a.x
+  let ay = a.y
+  let bx = b.x
+  let by = b.y
+  const dx0 = bx - ax
+  const dy0 = by - ay
+  const len0 = Math.hypot(dx0, dy0) || 1
+  if (len0 < 70) {
+    const grow = 70 / len0
+    const mx = (ax + bx) / 2
+    const my = (ay + by) / 2
+    ax = mx + (ax - mx) * grow
+    ay = my + (ay - my) * grow
+    bx = mx + (bx - mx) * grow
+    by = my + (by - my) * grow
+  }
+  const dx = bx - ax
+  const dy = by - ay
+  const len = Math.hypot(dx, dy) || 1
+  const bow = Math.min(78, Math.max(32, len * 0.45))
+  const cx = (ax + bx) / 2 + (-dy / len) * bow
+  const cy = (ay + by) / 2 + (dx / len) * bow
+  const paintCurve = () => {
+    ctx.beginPath()
+    ctx.moveTo(ax, ay)
+    ctx.quadraticCurveTo(cx, cy, bx, by)
+  }
+  ctx.save()
+  ctx.lineCap = 'round'
+  paintCurve()
+  ctx.strokeStyle = '#fffaf2'
+  ctx.lineWidth = 10
+  ctx.stroke()
+  paintCurve()
+  ctx.strokeStyle = ink
+  ctx.lineWidth = 4
+  ctx.stroke()
+  const tx = bx - cx
+  const ty = by - cy
+  const tlen = Math.hypot(tx, ty) || 1
+  const ux = tx / tlen
+  const uy = ty / tlen
+  const head = 22
+  ctx.fillStyle = ink
+  ctx.beginPath()
+  ctx.moveTo(bx, by)
+  ctx.lineTo(bx - ux * head - uy * 9, by - uy * head + ux * 9)
+  ctx.lineTo(bx - ux * head + uy * 9, by - uy * head - ux * 9)
+  ctx.closePath()
+  ctx.fill()
+  ctx.beginPath()
+  ctx.arc(ax, ay, 6, 0, Math.PI * 2)
+  ctx.fillStyle = '#fffaf2'
+  ctx.fill()
+  ctx.lineWidth = 2
+  ctx.strokeStyle = ink
+  ctx.stroke()
   ctx.restore()
 }
 

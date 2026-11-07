@@ -8,7 +8,9 @@ import {
   layersAt,
   materialArea,
   polygonArea,
+  suggestCrease,
   type FoldOp,
+  type Paper,
 } from '../src/sim/geometry'
 import { deriveShape } from '../src/sim/shape'
 
@@ -16,6 +18,13 @@ const ORIGINAL = SHEET.width * SHEET.height
 
 function rel(paperArea: number) {
   return Math.abs(paperArea - ORIGINAL) / ORIGINAL
+}
+
+function outline(paper: Paper) {
+  return paper.facets
+    .map((facet) => facet.poly.map((p) => `${p.x.toFixed(4)},${p.y.toFixed(4)}`).join(' '))
+    .sort()
+    .join(';')
 }
 
 describe('paper folds', () => {
@@ -75,12 +84,42 @@ describe('paper folds', () => {
     }
   })
 
-  it('always moves the smaller portion when the crease is offset', () => {
-    const built = buildFold(blankSheet(), { angle: 0.4, ax: 0.04, ay: 0.02, side: 1 })
-    expect(built.tie).toBe(false)
-    const smallSign = built.areaPos < built.areaNeg ? 1 : -1
-    expect(built.movingSign).toBe(smallSign)
-    expect(rel(materialArea(built.paper))).toBeLessThan(1e-8)
+  it('defaults to the smaller portion, and an explicit side can fold the larger one', () => {
+    const angle = 0.4
+    const ax = 0.04
+    const ay = 0.02
+    const sheet = blankSheet()
+    const smaller = buildFold(sheet, { angle, ax, ay, side: 1 })
+    const ignored = buildFold(sheet, { angle, ax, ay, side: -1 })
+    expect(smaller.tie).toBe(false)
+    expect(smaller.valid).toBe(true)
+    const smallSign: 1 | -1 = smaller.areaPos < smaller.areaNeg ? 1 : -1
+    expect(smaller.movingSign).toBe(smallSign)
+    expect(ignored.movingSign).toBe(smallSign)
+    const larger = buildFold(sheet, { angle, ax, ay, side: smallSign === 1 ? -1 : 1, explicit: true })
+    expect(larger.valid).toBe(true)
+    expect(larger.movingSign).not.toBe(smallSign)
+    expect(outline(smaller.paper)).not.toBe(outline(larger.paper))
+    expect(rel(materialArea(larger.paper))).toBeLessThan(1e-8)
+    const stored: FoldOp = { angle, ax, ay, side: larger.movingSign, explicit: true }
+    expect(outline(applyOps([stored]))).toBe(outline(larger.paper))
+  })
+
+  it('places another cutting crease after a fold whose line no longer hits', () => {
+    const first = buildFold(blankSheet(), DART_OPS[0])
+    expect(first.valid).toBe(true)
+    expect(buildFold(first.paper, DART_OPS[0]).valid).toBe(false)
+    let paper = first.paper
+    let crease = suggestCrease(paper, DART_OPS[0])
+    for (let i = 0; i < 5; i++) {
+      const built = buildFold(paper, crease)
+      expect(built.valid, `fold ${i + 1}`).toBe(true)
+      paper = built.paper
+      const same = buildFold(paper, crease)
+      crease = same.valid ? { ...crease, ay: crease.ay + 0.01, explicit: true, side: built.movingSign === 1 ? -1 : 1 } : suggestCrease(paper, crease)
+      if (!buildFold(paper, crease).valid) crease = suggestCrease(paper, crease)
+      expect(buildFold(paper, crease).valid, `next ${i + 1}`).toBe(true)
+    }
   })
 
   it('stacks four layers after two successive half folds', () => {
