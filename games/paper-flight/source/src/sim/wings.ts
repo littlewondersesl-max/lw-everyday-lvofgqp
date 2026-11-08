@@ -28,8 +28,17 @@ export interface PosedVertex extends Vec2 {
 
 export function wingHinges(paper: Paper): WingHinge[] {
   const areaOf = new Map<number, number>()
+  const box = new Map<number, { minX: number; maxX: number; minY: number; maxY: number }>()
   for (const facet of paper.facets) {
     areaOf.set(facet.ply, (areaOf.get(facet.ply) ?? 0) + Math.abs(polygonArea(facet.poly)))
+    const span = box.get(facet.ply) ?? { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity }
+    for (const point of facet.poly) {
+      span.minX = Math.min(span.minX, point.x)
+      span.maxX = Math.max(span.maxX, point.x)
+      span.minY = Math.min(span.minY, point.y)
+      span.maxY = Math.max(span.maxY, point.y)
+    }
+    box.set(facet.ply, span)
   }
   let fuselage = 0
   let fuselageArea = -1
@@ -43,9 +52,17 @@ export function wingHinges(paper: Paper): WingHinge[] {
   const body = paper.facets.filter((facet) => facet.ply === fuselage)
   const hinges: WingHinge[] = []
   for (const [ply, area] of areaOf) {
-    if (ply === fuselage || area < total * 0.05 || area > total * 0.72) continue
+    const frac = area / total
+    const span = box.get(ply)
+    if (!span || ply === fuselage || frac < 0.08 || frac > 0.28) continue
+    const long = Math.max(span.maxX - span.minX, span.maxY - span.minY)
+    const short = Math.min(span.maxX - span.minX, span.maxY - span.minY)
+    // Nose darts are compact. A wing folded along the body is a long strip.
+    if (short < 1e-4 || long / short < 2.4) continue
     const hinge = hingeOf(paper, ply, body)
     if (!hinge) continue
+    const hingeLen = Math.hypot(hinge.a.x - hinge.b.x, hinge.a.y - hinge.b.y)
+    if (hingeLen < 0.08 || hingeLen / short < 1.6) continue
     hinges.push(hinge)
   }
   return hinges
@@ -62,7 +79,7 @@ export function poseFacets(paper: Paper): { ply: number; layer: number; faceUp: 
     const hinge = hinges.get(facet.ply)
     const poly = hinge
       ? facet.poly.map((point) => liftPoint(point, hinge, angle, facet.layer))
-      : facet.poly.map((point) => ({ x: point.x, y: point.y, z: 0.001 + facet.layer * 0.0008 }))
+      : facet.poly.map((point) => ({ x: point.x, y: point.y, z: 0.0012 + facet.layer * 0.0034 }))
     return { ply: facet.ply, layer: facet.layer, faceUp: facet.faceUp, poly }
   })
 }

@@ -285,25 +285,15 @@ function makeActor(seat: HallSeatView, shadowTex: THREE.Texture, stock: string):
       roughness: 0.86,
       metalness: 0,
       side: THREE.DoubleSide,
+      polygonOffset: true,
+      polygonOffsetFactor: 1,
+      polygonOffsetUnits: 1,
     }),
   )
   group.add(mesh)
 
-  const edges: number[] = []
-  for (const facet of posed) {
-    for (let i = 0; i < facet.poly.length; i++) {
-      const a = facet.poly[i]
-      const b = facet.poly[(i + 1) % facet.poly.length]
-      edges.push(a.x, a.y, a.z, b.x, b.y, b.z)
-    }
-  }
-  for (const crease of shape.creases) {
-    const z = 0.004 + LAYER
-    edges.push(crease.a.x, crease.a.y, z, crease.b.x, crease.b.y, z)
-  }
-  const lineGeom = new THREE.BufferGeometry()
-  lineGeom.setAttribute('position', new THREE.Float32BufferAttribute(edges, 3))
-  group.add(new THREE.LineSegments(lineGeom, new THREE.LineBasicMaterial({ color: seat.color })))
+  const edgeGeom = new THREE.EdgesGeometry(geom, 25)
+  group.add(new THREE.LineSegments(edgeGeom, new THREE.LineBasicMaterial({ color: 0x1a1612 })))
 
   const hand = buildHand()
   group.add(hand)
