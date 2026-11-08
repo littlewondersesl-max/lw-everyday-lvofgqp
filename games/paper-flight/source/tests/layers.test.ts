@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { SHEET } from '../src/sim/constants'
+import { reflectFold } from '../src/sim/dragFold'
 import {
   applyOps,
   blankSheet,
   materialArea,
   netFolds,
   openCreaseCount,
+  plyAt,
   polygonArea,
   type FoldOp,
 } from '../src/sim/geometry'
@@ -61,18 +63,35 @@ describe('layers, flip, and wing lift', () => {
   })
 
   it('lifts a folded wing into a non-flat pose and refuses a blank sheet', () => {
-    const packet = applyOps([half])
-    const top = packet.facets.find((facet) => facet.ply !== 0)!
-    const wing: FoldOp = { angle: 0, ax: 0, ay: 0.04, side: 1, explicit: true, plies: [top.ply] }
-    const flat = applyOps([half, wing])
+    const w = SHEET.width
+    const h = SHEET.height
+    let paper = blankSheet()
+    const steps: FoldOp[] = []
+    const drag = (from: { x: number; y: number }, to: { x: number; y: number }, all = false) => {
+      const ply = all ? null : plyAt(paper, from, 0.03)
+      const folded = reflectFold(paper, from, to, ply == null ? undefined : [ply])
+      expect(folded, `${from.x},${from.y}`).toBeTruthy()
+      steps.push(folded!.op)
+      paper = folded!.paper
+    }
+    drag({ x: -w / 2, y: h / 2 }, { x: 0, y: h / 2 - w / 2 })
+    drag({ x: w / 2, y: h / 2 }, { x: 0, y: h / 2 - w / 2 })
+    drag({ x: -w / 2, y: 0 }, { x: w / 2, y: 0 }, true)
+    expect(canLift(paper)).toBe(false)
+    drag({ x: w / 2, y: 0 }, { x: 0.02, y: 0 })
+    const flat = applyOps(steps)
     expect(canLift(blankSheet())).toBe(false)
     expect(canLift(flat)).toBe(true)
-    expect(wingHinges(flat).every((hinge) => hinge.ply !== 0)).toBe(true)
-    const raised = applyOps([half, wing, { lift: 0.4 }])
+    const hinges = wingHinges(flat)
+    expect(hinges).toHaveLength(1)
+    expect(hinges[0].ply).not.toBe(0)
+    const raised = applyOps([...steps, { lift: 0.4 }])
     expect(materialArea(raised)).toBeCloseTo(materialArea(flat), 6)
     const posed = poseFacets(raised)
-    const wingZ = posed.filter((facet) => facet.ply !== 0).flatMap((facet) => facet.poly.map((point) => point.z))
+    const wingZ = posed.filter((facet) => facet.ply === hinges[0].ply).flatMap((facet) => facet.poly.map((point) => point.z))
     expect(Math.max(...wingZ)).toBeGreaterThan(0.01)
+    const body = posed.filter((facet) => facet.ply === 0)
+    expect(Math.max(...body.flatMap((facet) => facet.poly.map((point) => point.z)))).toBeLessThan(0.02)
     const shape = deriveShape(raised)
     const flatShape = deriveShape(flat)
     expect(shape.dihedral).toBeCloseTo(0.4)

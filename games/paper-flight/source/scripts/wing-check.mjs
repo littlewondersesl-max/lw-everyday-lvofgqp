@@ -69,35 +69,28 @@ const halfH = 0.1397
 let state = await info()
 if (state.wings !== '0') fail('blank can lift', state)
 
-await dragPaper(-halfW, halfH, -halfW + 0.05, halfH - 0.05)
-await dragPaper(halfW, halfH, halfW - 0.05, halfH - 0.05)
+await dragPaper(-halfW, halfH, 0, halfH - halfW)
+await dragPaper(halfW, halfH, 0, halfH - halfW)
 state = await info()
 if (state.folds !== '2') fail('nose folds', state)
+await page.screenshot({ path: '/tmp/wing-nose.jpg', type: 'jpeg', quality: 74 })
 
 await page.click('button::-p-text(Top sheet)')
-await dragPaper(halfW, 0, -0.05, 0)
+await dragPaper(-halfW, 0, halfW, 0)
 state = await info()
-if (state.folds !== '3' || state.layers !== 'all') fail('packet', state)
+if (state.folds !== '3' || state.layers !== 'all' || state.wings !== '0') fail('packet', state)
 await page.click('button::-p-text(All layers)')
+await page.screenshot({ path: '/tmp/wing-packet.jpg', type: 'jpeg', quality: 74 })
 
-await dragPaper(-halfW, 0.02, -0.03, 0.07)
+await dragPaper(halfW, 0, 0.02, 0)
 state = await info()
-if (state.folds !== '4') fail('first wing', state)
+if (state.folds !== '4' || state.wings !== '1') fail('first wing', state)
 await page.screenshot({ path: '/tmp/wing-one.jpg', type: 'jpeg', quality: 74 })
 
 await page.click('button::-p-text(Flip paper)')
 await new Promise((r) => setTimeout(r, 50))
-for (const [x0, y0, x1, y1] of [
-  [0.1, -0.1, 0.02, -0.02],
-  [-0.1, -0.1, -0.02, -0.02],
-  [halfW, 0, 0.03, 0.04],
-  [-halfW, 0, -0.02, 0.05],
-  [0, -halfH, 0.02, -0.04],
-]) {
-  await dragPaper(x0, y0, x1, y1)
-  state = await info()
-  if (state.folds === '5') break
-}
+await dragPaper(-halfW, 0, -0.02, 0)
+state = await info()
 if (state.folds !== '5') fail('second wing', state)
 await page.screenshot({ path: '/tmp/wing-two.jpg', type: 'jpeg', quality: 74 })
 
