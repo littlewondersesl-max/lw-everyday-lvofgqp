@@ -50,38 +50,20 @@ export function drawMini(
   strokeCrease(ctx, view, crease, dye.ink)
 }
 
-/** A clear ruler, slid by its circle or turned by the ring. */
-export function drawLesson(ctx: CanvasRenderingContext2D, w: number, h: number, kind: 'move' | 'rotate', dye: Dye) {
+/** A corner dragged inward. The lesson no longer draws a separate guide. */
+export function drawLesson(ctx: CanvasRenderingContext2D, w: number, h: number, _kind: 'move' | 'rotate', dye: Dye) {
   ctx.clearRect(0, 0, w, h)
   ctx.fillStyle = '#f3ead8'
   ctx.fillRect(0, 0, w, h)
   const view = fit(w, h, 16)
   drawPaper(ctx, view, applyOps([]), dye)
-  const a = paperToScreen(view, { x: -SHEET.width / 2, y: 0.02 })
-  const b = paperToScreen(view, { x: SHEET.width / 2, y: -0.02 })
-  const hub = paperToScreen(view, { x: 0, y: 0 })
+  const corner = paperToScreen(view, { x: -SHEET.width / 2, y: SHEET.height / 2 })
+  const land = paperToScreen(view, { x: -SHEET.width / 2 + 0.06, y: SHEET.height / 2 - 0.05 })
   ctx.save()
   ctx.strokeStyle = dye.ink
   ctx.fillStyle = dye.ink
-  ctx.globalAlpha = 0.35
-  ctx.lineWidth = 10
-  ctx.lineCap = 'round'
-  ctx.beginPath()
-  ctx.moveTo(a.x, a.y)
-  ctx.lineTo(b.x, b.y)
-  ctx.stroke()
-  ctx.globalAlpha = 1
   ctx.lineWidth = 1.5
-  ctx.beginPath()
-  ctx.arc(hub.x, hub.y, 5, 0, Math.PI * 2)
-  ctx.fill()
-  if (kind === 'move') {
-    arrow(ctx, hub.x, hub.y, hub.x + 36, hub.y - 18)
-  } else {
-    ctx.beginPath()
-    ctx.arc(hub.x + 28, hub.y - 8, 8, 0, Math.PI * 2)
-    ctx.stroke()
-  }
+  arrow(ctx, corner.x, corner.y, land.x, land.y)
   ctx.restore()
 }
 

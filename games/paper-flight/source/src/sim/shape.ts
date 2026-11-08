@@ -9,6 +9,7 @@
  */
 
 import { SHEET } from './constants'
+import { openedPaper } from './wings'
 import {
   areaMoments,
   convexHull,
@@ -40,6 +41,8 @@ export interface AeroShape {
   asymmetry: number
   /** Planform centroid in the body frame. The origin is the center of mass. */
   planformCentroid: Vec2
+  /** Wings raised from the sheet, radians. Zero is the flat packet. */
+  dihedral: number
   /** Nose is +X. */
   xLead: number
   xTrail: number
@@ -51,8 +54,10 @@ export interface AeroShape {
 
 const CELL = 0.0018
 
-export function deriveShape(paper: Paper): AeroShape {
-  const mArea = Math.max(materialArea(paper), 1e-8)
+export function deriveShape(input: Paper): AeroShape {
+  const dihedral = input.dihedral ?? 0
+  const paper = dihedral ? openedPaper(input) : input
+  const mArea = Math.max(materialArea(input), 1e-8)
   const mass = SHEET.arealDensity * mArea
 
   let comX = 0
@@ -172,6 +177,7 @@ export function deriveShape(paper: Paper): AeroShape {
     planformCentroid: { x: pcx, y: pcy },
     xLead: maxX,
     xTrail: minX,
+    dihedral,
     inertia: { xx: ixx, yy: iyy, zz: izz },
     facets,
     creases,

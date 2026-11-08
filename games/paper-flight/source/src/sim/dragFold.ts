@@ -71,7 +71,7 @@ export function aimAngle(previous: number, hub: Vec2, pointer: Vec2, minLever = 
  * Reflection sends that point to the cursor, so dragging up or down tilts the fold.
  * Moving the ruler does not call this.
  */
-export function foldOpForDrag(grab: Vec2, cursor: Vec2): FoldOp | null {
+export function foldOpForDrag(grab: Vec2, cursor: Vec2, plies?: number[]): FoldOp | null {
   const dx = cursor.x - grab.x
   const dy = cursor.y - grab.y
   if (dx * dx + dy * dy < MIN_FLAP * MIN_FLAP) return null
@@ -81,11 +81,13 @@ export function foldOpForDrag(grab: Vec2, cursor: Vec2): FoldOp | null {
   const frame = lineFrame(angle, ax, ay)
   const signed = (grab.x - ax) * frame.nx + (grab.y - ay) * frame.ny
   const side: 1 | -1 = signed >= 0 ? 1 : -1
-  return { angle, ax, ay, side, explicit: true }
+  const op: FoldOp = { angle, ax, ay, side, explicit: true }
+  if (plies?.length) op.plies = plies
+  return op
 }
 
-export function reflectFold(paper: Paper, grab: Vec2, cursor: Vec2): { op: FoldOp; paper: Paper } | null {
-  const op = foldOpForDrag(grab, cursor)
+export function reflectFold(paper: Paper, grab: Vec2, cursor: Vec2, plies?: number[]): { op: FoldOp; paper: Paper } | null {
+  const op = foldOpForDrag(grab, cursor, plies)
   if (!op) return null
   const built = buildFold(paper, op)
   if (!built.valid) return null

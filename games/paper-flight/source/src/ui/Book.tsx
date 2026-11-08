@@ -116,12 +116,12 @@ export const BOOK_PAGE_COUNT = PAGES.length
 function MovePage({ dye }: { dye: Dye }) {
   return (
     <>
-      <h2>The clear ruler</h2>
+      <h2>Drag the paper</h2>
       <p>
-        The slim bar is a ruler you can see the paper through. Drag the filled circle and the whole ruler slides. That does not fold anything.
+        Pinch a corner or an edge and drag. The sheet follows your hand, so dragging up and dragging down make different folds. Let go and the fold is done.
       </p>
       <Sketch kind="move" dye={dye} />
-      <p>Use it to judge a straight line. The fold itself follows your hand, not the ruler.</p>
+      <p>Top sheet moves only the face you see. All layers folds every sheet on that side, which is how a center fold makes a packet.</p>
     </>
   )
 }
@@ -129,12 +129,12 @@ function MovePage({ dye }: { dye: Dye }) {
 function RotatePage({ dye }: { dye: Dye }) {
   return (
     <>
-      <h2>Turn the ruler</h2>
+      <h2>Flip, then the other wing</h2>
       <p>
-        The ring with the arrows turns the ruler through a full circle. It stays next to the circle, and a small drag makes a small turn.
+        After the packet is folded, drag the top sheet back into one wing. Flip paper turns the whole stack over, left to right, so the other half is on top. Drag that half into the second wing.
       </p>
-      <Sketch kind="rotate" dye={dye} />
-      <p>Q and E turn it from the keyboard. The arrow keys slide it.</p>
+      <Mini ops={[]} dye={dye} label="Sheet" />
+      <p>The board ticks stay put, with zero at the center of the sheet, so you can see whether an edge is straight.</p>
     </>
   )
 }
@@ -142,17 +142,17 @@ function RotatePage({ dye }: { dye: Dye }) {
 function RulePage({ dye }: { dye: Dye }) {
   return (
     <>
-      <h2>Drag, then let go</h2>
+      <h2>Lift the wings</h2>
       <p>
-        Pinch a corner or an edge, on either side, and drag it. The paper follows. Dragging up and dragging down do not make the same fold: the flap tilts with your hand. Let go and the fold is done.
+        Lift wings opens wings that were folded back, on their hinges, into the shape that flies. It does not replace your sheet with a stock plane. If you have not folded a wing, the button stays quiet.
       </p>
       <div className="book-trio">
         <Mini ops={[]} dye={dye} label="Before" />
-        <Mini ops={[]} crease={RULE} dye={dye} label="Ruler" />
+        <Mini ops={[]} crease={RULE} dye={dye} label="A fold" />
         <Mini ops={[RULE]} dye={dye} label="After" />
       </div>
       <p>
-        Unfold opens only the latest fold and keeps its crease. Undo takes the last fold back. Reset clears the sheet.
+        Unfold opens only the latest fold and keeps its crease. Undo takes the last action back, including a flip. Reset clears the sheet. The flight model uses this opened outline. It is a flat-plate estimate, not a wind tunnel.
       </p>
     </>
   )
@@ -161,8 +161,6 @@ function RulePage({ dye }: { dye: Dye }) {
 function RecipePage({
   recipe,
   dye,
-  canPractice,
-  onPlace,
 }: {
   recipe: Recipe
   dye: Dye
@@ -188,9 +186,7 @@ function RecipePage({
                   {index + 1}. {step.title}
                 </strong>
                 <p>{step.detail}</p>
-                <button type="button" disabled={!canPractice} onClick={() => onPlace(step.op)}>
-                  {canPractice ? 'Place this crease' : 'Place it while folding'}
-                </button>
+                <p>Drag this on the sheet yourself. Letting go folds it.</p>
               </div>
             </li>
           )
