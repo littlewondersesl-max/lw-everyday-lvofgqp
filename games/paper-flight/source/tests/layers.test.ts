@@ -7,7 +7,7 @@ import {
   materialArea,
   netFolds,
   openCreaseCount,
-  plyAt,
+  pliesForGrab,
   polygonArea,
   type FoldOp,
 } from '../src/sim/geometry'
@@ -21,6 +21,35 @@ function polysOf(paper: ReturnType<typeof applyOps>, ply: number) {
 }
 
 describe('layers, flip, and wing lift', () => {
+  it('drags the roof base as one half, corner included', () => {
+    const w = SHEET.width
+    const h = SHEET.height
+    let paper = blankSheet()
+    const landY = h / 2 - w / 2
+    for (const from of [
+      { x: -w / 2, y: h / 2 },
+      { x: w / 2, y: h / 2 },
+    ]) {
+      const joined = pliesForGrab(paper, from, 0.02)
+      const folded = reflectFold(paper, from, { x: 0, y: landY }, joined ?? undefined)
+      expect(folded).toBeTruthy()
+      paper = folded!.paper
+    }
+    const noseArea = paper.facets
+      .filter((facet) => facet.ply !== 0)
+      .reduce((sum, facet) => sum + Math.abs(polygonArea(facet.poly)), 0)
+    const roofBase = { x: -w / 2, y: landY }
+    const joined = pliesForGrab(paper, roofBase, 0.02)
+    expect(joined).toContain(0)
+    const across = reflectFold(paper, roofBase, { x: w / 4, y: landY }, joined ?? undefined)
+    expect(across).toBeTruthy()
+    const moved = across!.paper.facets.filter((facet) => !paper.facets.some((old) => old.ply === facet.ply))
+    const movedArea = moved.reduce((sum, facet) => sum + Math.abs(polygonArea(facet.poly)), 0)
+    expect(movedArea).toBeGreaterThan(noseArea)
+    expect(movedArea).toBeGreaterThan(materialArea(paper) * 0.2)
+    expect(materialArea(across!.paper)).toBeCloseTo(materialArea(paper), 6)
+  })
+
   it('folds only the selected sheet and keeps the other ply still', () => {
     const packet = applyOps([half])
     const area = materialArea(packet)
@@ -68,8 +97,8 @@ describe('layers, flip, and wing lift', () => {
     let paper = blankSheet()
     const steps: FoldOp[] = []
     const drag = (from: { x: number; y: number }, to: { x: number; y: number }, all = false) => {
-      const ply = all ? null : plyAt(paper, from, 0.03)
-      const folded = reflectFold(paper, from, to, ply == null ? undefined : [ply])
+      const joined = all ? null : pliesForGrab(paper, from, 0.03)
+      const folded = reflectFold(paper, from, to, joined ?? undefined)
       expect(folded, `${from.x},${from.y}`).toBeTruthy()
       steps.push(folded!.op)
       paper = folded!.paper

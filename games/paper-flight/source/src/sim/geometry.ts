@@ -28,6 +28,8 @@ export interface Facet {
   faceUp: 1 | -1
   /** One physical sheet or flap. A fold of that sheet does not move the others. */
   ply: number
+  /** Sheet this flap is still joined to. Null means it is its own sheet. */
+  plyParent: number | null
 }
 
 export interface CreaseMark {
@@ -76,6 +78,7 @@ export function blankSheet(size: { width: number; height: number } = SHEET): Pap
         layer: 0,
         faceUp: 1,
         ply: 0,
+        plyParent: null,
       },
     ],
     creases: [],
@@ -274,20 +277,73 @@ export function pointInConvex(poly: Vec2[], x: number, y: number): boolean {
   return true
 }
 
-/** The top sheet touching this edge. Higher layer wins when two halves share the edge. */
-export function plyAt(paper: Paper, point: Vec2, maxDist: number): number | null {
-  let best: { ply: number; layer: number; dist: number } | null = null
-  for (const facet of paper.facets) {
-    const poly = facet.poly
-    for (let i = 0; i < poly.length; i++) {
-      const hit = closestPoint(point, poly[i], poly[(i + 1) % poly.length])
-      if (hit.dist > maxDist) continue
-      if (!best || facet.layer > best.layer || (facet.layer === best.layer && hit.dist < best.dist)) {
-        best = { ply: facet.ply, layer: facet.layer, dist: hit.dist }
+function plyParentOf(paper: Paper, ply: number): number | null {
+  const facet = paper.facets.find((item) => item.ply === ply)
+  return facet ? facet.plyParent : null
+}
+
+function plyRoot(paper: Paper, ply: number): number {
+  let current = ply
+  const seen = new Set<number>()
+  while (!seen.has(current)) {
+    seen.add(current)
+    const parent = plyParentOf(paper, current)
+    if (parent == null) return current
+    current = parent
+  }
+  return ply
+}
+
+/** A ply plus the flaps still joined to the same sheet. A crease is not a cut. */
+export function joinedPlies(paper: Paper, ply: number): number[] {
+  const root = plyRoot(paper, ply)
+  const wanted = new Set<number>([root])
+  let grew = true
+  while (grew) {
+    grew = false
+    for (const facet of paper.facets) {
+      if (facet.plyParent != null && wanted.has(facet.plyParent) && !wanted.has(facet.ply)) {
+        wanted.add(facet.ply)
+        grew = true
       }
     }
   }
-  return best ? best.ply : null
+  return [...wanted]
+}
+
+function plyTouches(paper: Paper, ply: number, point: Vec2, maxDist: number): boolean {
+  for (const facet of paper.facets) {
+    if (facet.ply !== ply) continue
+    const poly = facet.poly
+    for (let i = 0; i < poly.length; i++) {
+      if (closestPoint(point, poly[i], poly[(i + 1) % poly.length]).dist <= maxDist) return true
+    }
+    if (pointInConvex(poly, point.x, point.y)) return true
+  }
+  return false
+}
+
+/**
+ * Sheets that must move together from this grab.
+ * A point on the seam of an attached flap selects the sheet under it, so the
+ * flap cannot tear off. A point only on the top flap selects that flap.
+ */
+export function pliesForGrab(paper: Paper, point: Vec2, maxDist: number): number[] | null {
+  let top: { ply: number; layer: number } | null = null
+  for (const facet of paper.facets) {
+    if (!plyTouches(paper, facet.ply, point, maxDist)) continue
+    if (!top || facet.layer > top.layer) top = { ply: facet.ply, layer: facet.layer }
+  }
+  if (!top) return null
+  const root = plyRoot(paper, top.ply)
+  if (root !== top.ply && plyTouches(paper, root, point, maxDist)) return joinedPlies(paper, root)
+  return joinedPlies(paper, top.ply)
+}
+
+/** The top sheet touching this edge. Higher layer wins when two halves share the edge. */
+export function plyAt(paper: Paper, point: Vec2, maxDist: number): number | null {
+  const plies = pliesForGrab(paper, point, maxDist)
+  return plies ? plies[0] : null
 }
 
 function closestPoint(p: Vec2, a: Vec2, b: Vec2) {
@@ -328,6 +384,7 @@ interface Piece {
   layer: number
   faceUp: 1 | -1
   ply: number
+  plyParent: number | null
   sign: 1 | -1
   crease: CreaseMark | null
 }
@@ -337,23 +394,23 @@ function splitFacet(facet: Facet, frame: ReturnType<typeof lineFrame>): Piece[] 
   const anyPos = ds.some((d) => d > EPS)
   const anyNeg = ds.some((d) => d < -EPS)
   if (!anyPos && !anyNeg) {
-    return [{ poly: facet.poly, layer: facet.layer, faceUp: facet.faceUp, ply: facet.ply, sign: 1, crease: null }]
+    return [{ poly: facet.poly, layer: facet.layer, faceUp: facet.faceUp, ply: facet.ply, plyParent: facet.plyParent, sign: 1, crease: null }]
   }
   if (!anyNeg) {
-    return [{ poly: facet.poly, layer: facet.layer, faceUp: facet.faceUp, ply: facet.ply, sign: 1, crease: null }]
+    return [{ poly: facet.poly, layer: facet.layer, faceUp: facet.faceUp, ply: facet.ply, plyParent: facet.plyParent, sign: 1, crease: null }]
   }
   if (!anyPos) {
-    return [{ poly: facet.poly, layer: facet.layer, faceUp: facet.faceUp, ply: facet.ply, sign: -1, crease: null }]
+    return [{ poly: facet.poly, layer: facet.layer, faceUp: facet.faceUp, ply: facet.ply, plyParent: facet.plyParent, sign: -1, crease: null }]
   }
   const pos = clipHalfPlane(facet.poly, frame, true)
   const neg = clipHalfPlane(facet.poly, frame, false)
   const crease = creaseOnPiece(pos.length >= neg.length ? pos : neg, frame)
   const parts: Piece[] = []
   if (pos.length >= 3) {
-    parts.push({ poly: pos, layer: facet.layer, faceUp: facet.faceUp, ply: facet.ply, sign: 1, crease })
+    parts.push({ poly: pos, layer: facet.layer, faceUp: facet.faceUp, ply: facet.ply, plyParent: facet.plyParent, sign: 1, crease })
   }
   if (neg.length >= 3) {
-    parts.push({ poly: neg, layer: facet.layer, faceUp: facet.faceUp, ply: facet.ply, sign: -1, crease })
+    parts.push({ poly: neg, layer: facet.layer, faceUp: facet.faceUp, ply: facet.ply, plyParent: facet.plyParent, sign: -1, crease })
   }
   return parts
 }
@@ -426,10 +483,11 @@ export function buildFold(paper: Paper, op: FoldOp): FoldBuild {
   const stationary = pieces.filter((p) => p.sign !== movingSign)
   const moving = pieces.filter((p) => p.sign === movingSign)
 
-  const movedPolys: { poly: Vec2[]; layer: number; faceUp: 1 | -1 }[] = moving.map((p) => ({
+  const movedPolys: { poly: Vec2[]; layer: number; faceUp: 1 | -1; ply: number }[] = moving.map((p) => ({
     poly: ensureCCW(p.poly.map((v) => reflectPoint(v, frame))),
     layer: p.layer,
     faceUp: (p.faceUp * -1) as 1 | -1,
+    ply: p.ply,
   }))
 
   // Highest former layer lands first, against whatever it covers.
@@ -437,7 +495,7 @@ export function buildFold(paper: Paper, op: FoldOp): FoldBuild {
     .map((p, i) => ({ p, i }))
     .sort((a, b) => b.p.layer - a.p.layer || a.i - b.i)
 
-  const placed: { poly: Vec2[]; layer: number; faceUp: 1 | -1 }[] = []
+  const placed: { poly: Vec2[]; layer: number; faceUp: 1 | -1; ply: number }[] = []
   for (const { p } of order) {
     let base = -1
     for (const s of stationary) {
@@ -449,7 +507,7 @@ export function buildFold(paper: Paper, op: FoldOp): FoldBuild {
     for (const s of placed) {
       if (convexOverlap(p.poly, s.poly)) base = Math.max(base, s.layer)
     }
-    placed.push({ poly: p.poly, layer: base + 1, faceUp: p.faceUp })
+    placed.push({ poly: p.poly, layer: base + 1, faceUp: p.faceUp, ply: p.ply })
   }
 
   const creases = transformMarks(paper.creases, frame, movingSign)
@@ -459,6 +517,12 @@ export function buildFold(paper: Paper, op: FoldOp): FoldBuild {
 
   let nextId = paper.nextId
   const newPly = paper.facets.reduce((max, facet) => Math.max(max, facet.ply), 0) + 1
+  const activeArea = pieces.reduce((sum, piece) => sum + Math.abs(polygonArea(piece.poly)), 0)
+  const movedArea = placed.reduce((sum, piece) => sum + Math.abs(polygonArea(piece.poly)), 0)
+  const source = placed[0] ? plyRoot(paper, placed[0].ply) : 0
+  // A large fold lays one half onto the other and becomes its own sheet.
+  // A small flap stays joined, so a later fold of that half carries the flap.
+  const plyParent = activeArea > 0 && movedArea / activeArea >= 0.38 ? null : source
   const facets: Facet[] = frozen.map((facet) => ({
     ...facet,
     poly: facet.poly.map((point) => ({ x: point.x, y: point.y })),
@@ -470,6 +534,7 @@ export function buildFold(paper: Paper, op: FoldOp): FoldBuild {
       layer: s.layer,
       faceUp: s.faceUp,
       ply: s.ply,
+      plyParent: s.plyParent,
     })
   }
   for (const s of placed) {
@@ -479,6 +544,7 @@ export function buildFold(paper: Paper, op: FoldOp): FoldBuild {
       layer: s.layer,
       faceUp: s.faceUp,
       ply: newPly,
+      plyParent,
     })
   }
 

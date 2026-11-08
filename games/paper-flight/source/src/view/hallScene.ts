@@ -48,8 +48,6 @@ export interface HallHandlers {
   onCinemaDone: () => void
 }
 
-const LAYER = 0.0034
-
 export function mountHall(canvas: HTMLCanvasElement, handlers: HallHandlers) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
   renderer.outputColorSpace = THREE.SRGBColorSpace
