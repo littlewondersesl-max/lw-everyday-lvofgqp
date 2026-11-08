@@ -8,7 +8,7 @@ import {
   lineFrame,
   netFolds,
   openCreaseCount,
-  plyAt,
+  pliesForGrab,
   signedDistance,
   type FoldOp,
   type Paper,
@@ -105,11 +105,11 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
       const tol = tolOf()
       const edge = nearestSilhouette(paperNow, p, tol)
       if (!edge) return
-      const ply = allRef.current ? null : plyAt(paperNow, edge, tol)
-      if (!allRef.current && ply == null) return
+      const joined = allRef.current ? null : pliesForGrab(paperNow, edge, tol)
+      if (!allRef.current && !joined) return
       mode = 'flap'
       grab = edge
-      plies = ply == null ? undefined : [ply]
+      plies = joined ?? undefined
       canvas.setPointerCapture(event.pointerId)
     }
     const move = (event: PointerEvent) => {
