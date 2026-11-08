@@ -116,12 +116,12 @@ export const BOOK_PAGE_COUNT = PAGES.length
 function MovePage({ dye }: { dye: Dye }) {
   return (
     <>
-      <h2>Point A, then point B</h2>
+      <h2>The clear ruler</h2>
       <p>
-        Click the edge of the paper for point A. A line follows the cursor. Click the edge again for point B. The straight line between them is only a limit. It does not crease the paper, and it does not move if you click it.
+        The slim bar is a ruler you can see the paper through. Drag the filled circle and the whole ruler slides. That does not fold anything.
       </p>
       <Sketch kind="move" dye={dye} />
-      <p>Right-click A or B to remove that point. Reset nodes clears both. Escape does the same. Folds you already pressed stay.</p>
+      <p>Use it to judge a straight line. The fold itself follows your hand, not the ruler.</p>
     </>
   )
 }
@@ -129,12 +129,12 @@ function MovePage({ dye }: { dye: Dye }) {
 function RotatePage({ dye }: { dye: Dye }) {
   return (
     <>
-      <h2>Drag either side</h2>
+      <h2>Turn the ruler</h2>
       <p>
-        Once A and B are set, pinch an edge or corner on either side of the line and drag it inward. The paper follows. Stop short of the line, or take it all the way. Let go and the fold stays. Drag the flap again to change it.
+        The ring with the arrows turns the ruler through a full circle. It stays next to the circle, and a small drag makes a small turn.
       </p>
       <Sketch kind="rotate" dye={dye} />
-      <p>The side you grab is the side that folds. You do not have to press a side button first.</p>
+      <p>Q and E turn it from the keyboard. The arrow keys slide it.</p>
     </>
   )
 }
@@ -142,17 +142,17 @@ function RotatePage({ dye }: { dye: Dye }) {
 function RulePage({ dye }: { dye: Dye }) {
   return (
     <>
-      <h2>Press the ridge</h2>
+      <h2>Drag, then let go</h2>
       <p>
-        These three pictures are the real folder. The dashed line is the limit. The fold itself is the ridge where the flap stopped.
+        Pinch a corner or an edge, on either side, and drag it. The paper follows. Dragging up and dragging down do not make the same fold: the flap tilts with your hand. Let go and the fold is done.
       </p>
       <div className="book-trio">
         <Mini ops={[]} dye={dye} label="Before" />
-        <Mini ops={[]} crease={RULE} dye={dye} label="Limit" />
+        <Mini ops={[]} crease={RULE} dye={dye} label="Ruler" />
         <Mini ops={[RULE]} dye={dye} label="After" />
       </div>
       <p>
-        Press along that new ridge, from one end toward the other. A tap does not crease it. When the ridge is pressed, the points disappear and the crease stays in the paper. Then you can choose a new A and B. Unfold opens only the latest fold and keeps its crease. Undo drops the last sealed action, or a fold you have not pressed in. Reset clears the sheet. Reset nodes clears only A and B.
+        Unfold opens only the latest fold and keeps its crease. Undo takes the last fold back. Reset clears the sheet.
       </p>
     </>
   )

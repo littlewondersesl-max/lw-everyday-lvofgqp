@@ -53,6 +53,45 @@ export function flapMoved(grabDepth: number, depth: number): boolean {
   return grabDepth - depth >= MIN_FLAP
 }
 
+/**
+ * Continue a ruler angle toward the pointer without a jump at ±180°.
+ * A pointer sitting on the hub keeps the current angle.
+ */
+export function aimAngle(previous: number, hub: Vec2, pointer: Vec2, minLever = 0.008): number {
+  const dx = pointer.x - hub.x
+  const dy = pointer.y - hub.y
+  if (dx * dx + dy * dy < minLever * minLever) return previous
+  const raw = Math.atan2(dy, dx)
+  const delta = Math.atan2(Math.sin(raw - previous), Math.cos(raw - previous))
+  return previous + delta
+}
+
+/**
+ * The crease is the perpendicular bisector of the grabbed point and the cursor.
+ * Reflection sends that point to the cursor, so dragging up or down tilts the fold.
+ * Moving the ruler does not call this.
+ */
+export function foldOpForDrag(grab: Vec2, cursor: Vec2): FoldOp | null {
+  const dx = cursor.x - grab.x
+  const dy = cursor.y - grab.y
+  if (dx * dx + dy * dy < MIN_FLAP * MIN_FLAP) return null
+  const ax = (grab.x + cursor.x) / 2
+  const ay = (grab.y + cursor.y) / 2
+  const angle = Math.atan2(-dx, dy)
+  const frame = lineFrame(angle, ax, ay)
+  const signed = (grab.x - ax) * frame.nx + (grab.y - ay) * frame.ny
+  const side: 1 | -1 = signed >= 0 ? 1 : -1
+  return { angle, ax, ay, side, explicit: true }
+}
+
+export function reflectFold(paper: Paper, grab: Vec2, cursor: Vec2): { op: FoldOp; paper: Paper } | null {
+  const op = foldOpForDrag(grab, cursor)
+  if (!op) return null
+  const built = buildFold(paper, op)
+  if (!built.valid) return null
+  return { op, paper: built.paper }
+}
+
 export function nearestBoundary(paper: Paper, point: Vec2, maxDist: number): Vec2 | null {
   let best: Vec2 | null = null
   let bestD = maxDist
