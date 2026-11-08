@@ -292,7 +292,8 @@ function aeroForces(q: Quat, vx: number, vy: number, vz: number, shape: AeroShap
   const forwardGate = clamp(forward, 0, 1)
   const cnAttached = liftSlope * sinA * Math.sqrt(Math.max(0, 1 - sinA * sinA)) * forwardGate
   const cnSeparated = 1.15 * sinA * absSin
-  const CN = (1 - sep) * cnAttached + sep * cnSeparated
+  const wingLift = Math.cos(shape.dihedral) ** 2
+  const CN = ((1 - sep) * cnAttached + sep * cnSeparated) * wingLift
 
   const profile = aeroProfile(shape)
   const qDyn = 0.5 * AIR.density * speed * speed

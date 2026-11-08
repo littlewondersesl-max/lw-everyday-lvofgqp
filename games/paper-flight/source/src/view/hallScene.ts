@@ -8,6 +8,7 @@ import * as THREE from 'three'
 import { HALL, LANES, LIMITS, releaseHeight } from '../sim/constants'
 import { dyeById, dyeUnit } from '../sim/dyes'
 import { applyOps, type SheetStep } from '../sim/geometry'
+import { poseFacets } from '../sim/wings'
 import { stockById } from '../sim/stock'
 import type { PublicFlight } from '../sim/room'
 import { deriveShape } from '../sim/shape'
@@ -257,19 +258,20 @@ interface Actor {
 }
 
 function makeActor(seat: HallSeatView, shadowTex: THREE.Texture, stock: string): Actor {
-  const shape = deriveShape(applyOps(seat.ops, stockById(stock)))
+  const folded = applyOps(seat.ops, stockById(stock))
+  const shape = deriveShape(folded)
+  const posed = poseFacets(folded)
   const group = new THREE.Group()
   const positions: number[] = []
   const colors: number[] = []
-  for (const facet of shape.facets) {
-    const z = 0.001 + facet.layer * LAYER
+  for (const facet of posed) {
     const dye = dyeById(seat.dye)
     const rgb = dyeUnit(facet.faceUp > 0 ? dye.paper : dye.back, facet.layer, facet.faceUp > 0)
     const poly = facet.poly
     for (let i = 1; i < poly.length - 1; i++) {
-      push(positions, colors, poly[0], z, rgb)
-      push(positions, colors, poly[i], z, rgb)
-      push(positions, colors, poly[i + 1], z, rgb)
+      push(positions, colors, poly[0], poly[0].z, rgb)
+      push(positions, colors, poly[i], poly[i].z, rgb)
+      push(positions, colors, poly[i + 1], poly[i + 1].z, rgb)
     }
   }
   const geom = new THREE.BufferGeometry()
@@ -288,12 +290,11 @@ function makeActor(seat: HallSeatView, shadowTex: THREE.Texture, stock: string):
   group.add(mesh)
 
   const edges: number[] = []
-  for (const facet of shape.facets) {
-    const z = 0.0016 + facet.layer * LAYER
+  for (const facet of posed) {
     for (let i = 0; i < facet.poly.length; i++) {
       const a = facet.poly[i]
       const b = facet.poly[(i + 1) % facet.poly.length]
-      edges.push(a.x, a.y, z, b.x, b.y, z)
+      edges.push(a.x, a.y, a.z, b.x, b.y, b.z)
     }
   }
   for (const crease of shape.creases) {
