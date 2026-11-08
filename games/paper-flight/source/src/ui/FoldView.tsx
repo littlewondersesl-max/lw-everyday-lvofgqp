@@ -1,14 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import {
-  applyNodeEdit,
-  assessPair,
-  clearedNodes,
-  edgePointsOnLine,
-  endpointHit,
-  guideForGrab,
-  nearestSilhouette,
-  type Endpoints,
-} from '../sim/abGuide'
+import { nearestSilhouette } from '../sim/abGuide'
 import { GUIDE_STEPS } from '../sim/bots'
 import { SHEET } from '../sim/constants'
 import { dyeFill, type Dye } from '../sim/dyes'
@@ -25,29 +16,12 @@ import {
   type SheetStep,
   type Vec2,
 } from '../sim/geometry'
-import {
-  coverSamples,
-  depthFromDrag,
-  depthOf,
-  edgeDepth,
-  flapMoved,
-  previewFold,
-  ridgeOf,
-  sampleRidge,
-  SEAL_COVERAGE,
-  type Guide,
-} from '../sim/dragFold'
+import { aimAngle, reflectFold } from '../sim/dragFold'
 import { scaleFoldOp, STOCKS, stockById, type Stock } from '../sim/stock'
-import { boardTickSpans, fitSheet } from './creaseClamp'
+import { boardTickSpans, clampCrease, fitSheet, HANDLE_PX } from './creaseClamp'
 
 const PINCH =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M9 22c1-6 4-9 7-9 1 2 1 4 0 6 3-4 6-4 8-1 1 2-1 5-3 6l-5 3c-4 2-8 0-7-5z' fill='%23f7f3ea' stroke='%231c1915' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M14 14c1-3 3-5 5-4' fill='none' stroke='%231c1915' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E\") 8 8, grab"
-
-interface Hold {
-  op: FoldOp
-  depth: number
-  grabDepth: number
-}
 
 interface Props {
   ops: SheetStep[]
@@ -71,33 +45,15 @@ type Anim = {
 
 export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSheet, practice, onOps, onDone }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [ends, setEndsState] = useState<Endpoints>(clearedNodes())
-  const endsRef = useRef<Endpoints>(clearedNodes())
-  const cursorRef = useRef<Vec2 | null>(null)
+  const [crease, setCreaseState] = useState<FoldOp>({ angle: 0, ax: 0, ay: 0, side: 1 })
+  const creaseRef = useRef<FoldOp>(crease)
+  const previewRef = useRef<FoldOp | null>(null)
   const [helperOpen, setHelperOpen] = useState(false)
-  /** null keeps the smaller side for Hold at the line. A drag uses the side you grab. */
-  const [pinned, setPinned] = useState<1 | -1 | null>(null)
   const [draftId, setDraftId] = useState(stock.id)
   const [note, setNote] = useState<string | null>(null)
   const busy = false
   const stockRef = useRef(stock)
   stockRef.current = stock
-  const holdRef = useRef<Hold | null>(null)
-  const [hold, setHoldState] = useState<Hold | null>(null)
-  const [seal, setSeal] = useState(0)
-  const traceRef = useRef<{ samples: Vec2[]; covered: boolean[] } | null>(null)
-  function setHold(next: Hold | null) {
-    holdRef.current = next
-    setHoldState(next)
-    if (!next) {
-      traceRef.current = null
-      setSeal(0)
-    }
-  }
-  function setEnds(next: Endpoints) {
-    endsRef.current = next
-    setEndsState(next)
-  }
   const animRef = useRef<Anim | null>(null)
   const opsRef = useRef(ops)
   const dyeRef = useRef(dye)
@@ -105,6 +61,15 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
   opsRef.current = ops
   dyeRef.current = dye
   onOpsRef.current = onOps
+  function setCrease(raw: FoldOp, lockHub = false) {
+    const canvas = canvasRef.current
+    const rect = canvas?.getBoundingClientRect()
+    const next = !lockHub && rect && rect.width >= 80
+      ? clampCrease(raw, rect.width, rect.height, stockRef.current)
+      : raw
+    creaseRef.current = next
+    setCreaseState(next)
+  }
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -123,7 +88,7 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
         canvas.height = h
       }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      paint(ctx, rect.width, rect.height, opsRef.current, endsRef.current, cursorRef.current, animRef.current, dyeRef.current, stockRef.current, holdRef.current, traceRef.current)
+      paint(ctx, rect.width, rect.height, opsRef.current, creaseRef.current, previewRef.current, animRef.current, dyeRef.current, stockRef.current)
     }
     frame = requestAnimationFrame(draw)
     return () => cancelAnimationFrame(frame)
@@ -133,12 +98,17 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
     const onKey = (event: KeyboardEvent) => {
       if (document.body.dataset.book === 'open') return
       if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return
-      if (event.key !== 'Escape') return
+      const step = event.shiftKey ? 0.012 : 0.004
+      const turn = ((event.shiftKey ? 15 : 2) * Math.PI) / 180
+      const current = creaseRef.current
+      if (event.key === 'ArrowLeft') setCrease({ ...current, ax: current.ax - step })
+      else if (event.key === 'ArrowRight') setCrease({ ...current, ax: current.ax + step })
+      else if (event.key === 'ArrowUp') setCrease({ ...current, ay: current.ay + step })
+      else if (event.key === 'ArrowDown') setCrease({ ...current, ay: current.ay - step })
+      else if (event.key === 'q' || event.key === 'Q') setCrease({ ...current, angle: current.angle + turn }, true)
+      else if (event.key === 'e' || event.key === 'E') setCrease({ ...current, angle: current.angle - turn }, true)
+      else return
       event.preventDefault()
-      const edit = applyNodeEdit(endsRef.current, !!holdRef.current, { type: 'reset' })
-      if (edit.ends === endsRef.current && !holdRef.current) return
-      setEnds(edit.ends)
-      setNote(edit.note)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -146,286 +116,134 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
 
   useEffect(() => {
     if (!practice) return
-    if (holdRef.current) {
-      setNote('Undo the held fold before placing a line.')
-      return
-    }
-    const paperNow = applyOps(opsRef.current, stockRef.current)
     const op = scaleFoldOp(practice.op, SHEET, stockRef.current)
-    const pts = edgePointsOnLine(paperNow, op.angle, op.ax, op.ay)
-    if (!pts?.a || !pts.b) {
-      setNote('That line does not cut this sheet.')
-      return
-    }
-    setEnds(pts)
-    setPinned(null)
-    setNote('Line set. Drag either edge inward. The line is the limit.')
+    setCrease({ angle: op.angle, ax: op.ax, ay: op.ay, side: 1 })
+    setNote('Ruler placed. Drag a corner or an edge. Letting go folds the paper.')
   }, [practice])
-
-  const opsSeen = useRef(ops)
-  const stockSeen = useRef(stock.id)
-  useEffect(() => {
-    if (opsSeen.current !== ops) {
-      opsSeen.current = ops
-      setEnds(clearedNodes())
-    }
-  }, [ops])
-  useEffect(() => {
-    if (stockSeen.current !== stock.id) {
-      stockSeen.current = stock.id
-      setEnds(clearedNodes())
-    }
-  }, [stock.id])
 
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-    let mode: 'flap' | 'trace' | null = null
-    let grabDepth = 0
-    let dragGuide: Guide | null = null
-    let samples: Vec2[] = []
-    let covered: boolean[] = []
-    let travel = 0
-    let last: Vec2 | null = null
+    let mode: 'move' | 'rotate' | 'flap' | null = null
+    let grab: Vec2 | null = null
+    let rotateHub: Vec2 | null = null
+    let rotateAngle = 0
     const base = () => applyOps(opsRef.current, stockRef.current)
     const metrics = () => {
       const rect = canvas.getBoundingClientRect()
       const view = fit(rect.width, rect.height, stockRef.current)
-      return { rect, view, tol: 16 / Math.max(view.scale, 1), nodeR: 14 / Math.max(view.scale, 1) }
-    }
-    const limitOf = (paperNow: Paper): { angle: number; ax: number; ay: number } | null => {
-      const ends = endsRef.current
-      if (!ends.a || !ends.b) return null
-      const check = assessPair(paperNow, ends.a, ends.b)
-      return check.ok ? check : null
+      return { view, tol: 16 / Math.max(view.scale, 1) }
     }
     const down = (event: PointerEvent) => {
-      if (animRef.current) return
+      if (event.button !== 0 || animRef.current) return
       const p = toPaper(canvas, event.clientX, event.clientY, stockRef.current)
       if (!p) return
-      const { tol, nodeR } = metrics()
-      const paperNow = base()
-      if (event.button === 2) {
-        const which = endpointHit(endsRef.current, p, nodeR)
-        if (!which) return
-        const edit = applyNodeEdit(endsRef.current, !!holdRef.current, { type: 'remove', which })
-        setEnds(edit.ends)
-        setNote(edit.note)
+      const hit = hitRuler(canvas, creaseRef.current, event.clientX, event.clientY, stockRef.current)
+      if (hit === 'rotate') {
+        mode = 'rotate'
+        rotateHub = { x: creaseRef.current.ax, y: creaseRef.current.ay }
+        rotateAngle = creaseRef.current.angle
+        canvas.setPointerCapture(event.pointerId)
         return
       }
-      if (event.button !== 0) return
-      const limit = limitOf(paperNow)
-      const held = holdRef.current
-      if (held && limit) {
-        const built = buildFold(paperNow, held.op)
-        const ridge = built.valid ? ridgeOf(built.paper, held.op) : null
-        if (ridge && segmentDistance(p, ridge.a, ridge.b) < 0.022) {
-          mode = 'trace'
-          samples = sampleRidge(ridge)
-          covered = samples.map(() => false)
-          traceRef.current = { samples, covered }
-          travel = 0
-          last = p
-          setSeal(coverSamples(samples, covered, p, 0.01))
-          canvas.setPointerCapture(event.pointerId)
-          return
-        }
-        const movingSign: 1 | -1 = held.op.side === -1 ? -1 : 1
-        const holdLimit: Guide = { angle: limit.angle, ax: limit.ax, ay: limit.ay, movingSign }
-        if (depthOf(p, holdLimit) < held.depth && !endpointHit(endsRef.current, p, nodeR)) {
-          mode = 'flap'
-          dragGuide = holdLimit
-          grabDepth = held.grabDepth
-          canvas.setPointerCapture(event.pointerId)
-          return
-        }
-      }
-      if (endpointHit(endsRef.current, p, nodeR)) return
-      if (limit && !held) {
-        const edge = nearestSilhouette(paperNow, p, tol)
-        const grabbed = edge ? guideForGrab(limit, edge) : null
-        const depth = edge && grabbed ? depthOf(edge, grabbed) : 0
-        if (edge && grabbed && depth >= 0.01) {
-          mode = 'flap'
-          dragGuide = grabbed
-          grabDepth = depth
-          canvas.setPointerCapture(event.pointerId)
-          return
-        }
-      }
-      if (held) return
-      const edge = nearestSilhouette(paperNow, p, tol)
-      if (!edge) {
-        const aiming = (endsRef.current.a || endsRef.current.b) && !(endsRef.current.a && endsRef.current.b)
-        if (aiming) setNote('Click the edge of the paper.')
+      if (hit === 'move') {
+        mode = 'move'
+        canvas.setPointerCapture(event.pointerId)
         return
       }
-      if (endsRef.current.a && endsRef.current.b) return
-      const edit = applyNodeEdit(endsRef.current, false, { type: 'place', point: edge, paper: paperNow })
-      setEnds(edit.ends)
-      if (edit.note) setNote(edit.note)
+      const edge = nearestSilhouette(base(), p, metrics().tol)
+      if (!edge) return
+      mode = 'flap'
+      grab = edge
+      canvas.setPointerCapture(event.pointerId)
     }
     const move = (event: PointerEvent) => {
       const p = toPaper(canvas, event.clientX, event.clientY, stockRef.current)
       if (!p) return
-      cursorRef.current = p
       if (!mode) {
-        const { tol } = metrics()
-        const paperNow = base()
-        const limit = limitOf(paperNow)
-        const edge = limit ? nearestSilhouette(paperNow, p, tol) : null
-        const grabbed = edge && limit ? guideForGrab(limit, edge) : null
-        const pinch = !!(edge && grabbed && depthOf(edge, grabbed) > 0.01)
-        canvas.style.cursor = pinch ? PINCH : 'crosshair'
+        const edge = nearestSilhouette(base(), p, metrics().tol)
+        const overHandle = hitRuler(canvas, creaseRef.current, event.clientX, event.clientY, stockRef.current)
+        canvas.style.cursor = edge && !overHandle ? PINCH : 'crosshair'
         return
       }
-      if (mode === 'flap') {
-        const guide = dragGuide
-        if (!guide) return
-        const depth = depthFromDrag(grabDepth, depthOf(p, guide))
-        const preview = flapMoved(grabDepth, depth) ? previewFold(base(), guide, depth) : null
-        holdRef.current = preview ? { op: preview.op, depth, grabDepth } : null
+      const current = creaseRef.current
+      if (mode === 'rotate' && rotateHub) {
+        rotateAngle = aimAngle(rotateAngle, rotateHub, p)
+        setCrease({ ...current, ax: rotateHub.x, ay: rotateHub.y, angle: rotateAngle }, true)
         return
       }
-      if (mode === 'trace' && last) {
-        const step = Math.hypot(p.x - last.x, p.y - last.y)
-        if (step > 0.0012) {
-          travel += step
-          last = p
-          setSeal(coverSamples(samples, covered, p, 0.012))
-        }
+      if (mode === 'move') {
+        const prev = toPaper(canvas, event.clientX - event.movementX, event.clientY - event.movementY, stockRef.current)
+        if (!prev) return
+        setCrease({ ...current, ax: current.ax + (p.x - prev.x), ay: current.ay + (p.y - prev.y) })
+        return
+      }
+      if (mode === 'flap' && grab) {
+        previewRef.current = reflectFold(base(), grab, p)?.op ?? null
       }
     }
     const up = () => {
       if (mode === 'flap') {
-        const next = holdRef.current
-        if (next && flapMoved(next.grabDepth, next.depth)) setHold(next)
-        else setHold(null)
-        setNote(next && flapMoved(next.grabDepth, next.depth) ? 'Fold held. Drag it again, or press along the new ridge.' : null)
-      }
-      if (mode === 'trace' && holdRef.current) {
-        const frac = covered.length ? covered.filter(Boolean).length / covered.length : 0
-        const span = samples.length > 1 ? Math.hypot(samples[samples.length - 1].x - samples[0].x, samples[samples.length - 1].y - samples[0].y) : 0
-        setSeal(frac)
-        if (frac >= SEAL_COVERAGE && travel >= Math.max(0.012, span * 0.62)) {
-          const op = holdRef.current.op
-          setHold(null)
-          setEnds(clearedNodes())
-          setNote('Crease pressed in.')
+        const op = previewRef.current
+        previewRef.current = null
+        if (op) {
+          setNote('Folded.')
           onOpsRef.current([...opsRef.current, op])
-        } else setNote('Keep pressing along the ridge. A tap does not set it.')
+        }
       }
       mode = null
-      dragGuide = null
-    }
-    const menu = (event: MouseEvent) => {
-      event.preventDefault()
+      grab = null
+      rotateHub = null
     }
     canvas.addEventListener('pointerdown', down)
     canvas.addEventListener('pointermove', move)
     canvas.addEventListener('pointerup', up)
     canvas.addEventListener('pointercancel', up)
-    canvas.addEventListener('contextmenu', menu)
     return () => {
       canvas.removeEventListener('pointerdown', down)
       canvas.removeEventListener('pointermove', move)
       canvas.removeEventListener('pointerup', up)
       canvas.removeEventListener('pointercancel', up)
-      canvas.removeEventListener('contextmenu', menu)
     }
   }, [])
 
-  const paper = applyOps(ops, stock)
   const folds = netFolds(ops)
   const opens = openCreaseCount(ops)
-  const heldPaper = hold ? buildFold(paper, hold.op) : null
-  const heldRidge = heldPaper?.valid && hold ? ridgeOf(heldPaper.paper, hold.op) : null
   const draft = stockById(draftId)
   const stockDirty = draft.id !== stock.id
-  const line = ends.a && ends.b ? assessPair(paper, ends.a, ends.b) : null
-  const guideLine = line && line.ok ? line : null
-  const previewOp: FoldOp | null = guideLine
-    ? { angle: guideLine.angle, ax: guideLine.ax, ay: guideLine.ay, side: pinned ?? 1, ...(pinned != null ? { explicit: true } : {}) }
-    : null
-  const preview = previewOp ? buildFold(paper, previewOp) : null
   const matched = prefixMatch(ops, stock)
-  const pointLabel = (point: Vec2 | null) => point ? `${point.x.toFixed(4)} ${point.y.toFixed(4)}` : ''
+  const last = lastFold(ops)
 
   function chooseStock(id: string) {
     setDraftId(id)
     if (netFolds(opsRef.current) === 0) onStock(id)
   }
 
-  function resetNodes() {
-    const edit = applyNodeEdit(endsRef.current, !!holdRef.current, { type: 'reset' })
-    setEnds(edit.ends)
-    setNote(edit.note)
-  }
-
   function placeHelper(op: FoldOp) {
-    if (holdRef.current) {
-      setNote('Undo the held fold before placing a line.')
-      return
-    }
-    const pts = edgePointsOnLine(applyOps(opsRef.current, stockRef.current), op.angle, op.ax, op.ay)
-    if (!pts?.a || !pts.b) {
-      setNote('That helper line does not cut this sheet.')
-      return
-    }
-    setEnds(pts)
-    setPinned(null)
-    setNote('Line set. Drag either edge inward. The line is the limit.')
+    setCrease({ angle: op.angle, ax: op.ax, ay: op.ay, side: 1 })
+    setNote('Ruler placed. Drag a corner or an edge. Letting go folds the paper.')
   }
 
   function unfold() {
     if (netFolds(opsRef.current) === 0 || animRef.current) return
-    const next: SheetStep[] = [...opsRef.current, { unfold: true }]
-    onOps(next)
+    onOps([...opsRef.current, { unfold: true }])
     setNote('Opened the last fold. Its crease stays on the paper. Unfold again for the one before it.')
   }
 
   return (
-    <div className="fold" data-dye={dye.id} data-folds={folds} data-open={opens} data-provisional={hold ? '1' : '0'} data-seal={seal.toFixed(2)} data-stock={stock.id} data-guide={guideLine ? 'set' : ends.a || ends.b ? 'aim' : 'idle'} data-a={pointLabel(ends.a)} data-b={pointLabel(ends.b)} data-ax={guideLine?.ax ?? ''} data-ay={guideLine?.ay ?? ''} data-angle={guideLine?.angle ?? ''} data-rx1={heldRidge?.a.x ?? ''} data-ry1={heldRidge?.a.y ?? ''} data-rx2={heldRidge?.b.x ?? ''} data-ry2={heldRidge?.b.y ?? ''}>
+    <div className="fold" data-dye={dye.id} data-folds={folds} data-open={opens} data-stock={stock.id} data-ax={crease.ax} data-ay={crease.ay} data-angle={crease.angle} data-fold-angle={last ? last.angle : ''}>
       <div className="fold-bar">
       <div className="fold-readout">
         <span>{folds} {folds === 1 ? 'fold' : 'folds'}</span>
-        {guideLine && <span>{formatDeg(guideLine.angle)}</span>}
-        {hold ? (
-          <span>Held fold. Press along the ridge. {Math.round(seal * 100)}%</span>
-        ) : guideLine ? (
-          <span>Drag an edge on either side. The line is the limit.</span>
-        ) : ends.a || ends.b ? (
-          <span>Click the edge again for the other point.</span>
-        ) : (
-          <span>Click an edge for point A, then another for point B.</span>
-        )}
+        <span>{formatDeg(crease.angle)}</span>
+        <span>Drag a corner or an edge. Letting go folds it. The ruler only shows a straight line.</span>
         {opens > 0 && <span>{opens} open {opens === 1 ? 'crease' : 'creases'}</span>}
       </div>
       {note && <p className="fold-note" role="status">{note}</p>}
-      <p className="fold-hint">Click two edge points. Drag either side inward, and stop short if you want. Then press along the new ridge. Right-click a point to remove it.</p>
+      <p className="fold-hint">Slide the filled circle to move the ruler. Turn it with the arrows. Pinch any edge and drag. Up and down tilt the fold.</p>
       </div>
       <div className="fold-stage">
       <canvas ref={canvasRef} className="fold-canvas" />
-      {preview?.valid && (
-        <div className="side-choice" role="group" aria-label="Which side folds">
-          <button
-            className={preview.movingSign === 1 ? 'on' : ''}
-            aria-pressed={preview.movingSign === 1}
-            onClick={() => setPinned(1)}
-            type="button"
-          >
-            {preview.movingSign === 1 ? 'Marked side' : 'Opposite side'}
-          </button>
-          <button
-            className={preview.movingSign === -1 ? 'on' : ''}
-            aria-pressed={preview.movingSign === -1}
-            onClick={() => setPinned(-1)}
-            type="button"
-          >
-            {preview.movingSign === -1 ? 'Marked side' : 'Opposite side'}
-          </button>
-        </div>
-      )}
       <div className="dyes" role="group" aria-label="Your sheet color">
         {dyes.map((item) => {
           const used = taken.includes(item.id) && item.id !== dye.id
@@ -448,7 +266,7 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
       {helperOpen && (
         <aside className="guide">
           <h2>A dart, if you want one</h2>
-          <p>Each of these places point A and point B. Drag either edge after that, or fold something else.</p>
+          <p>Each of these sets the ruler. Drag the corner yourself. Moving the ruler does not fold the paper.</p>
           <ol>
             {GUIDE_STEPS.map((step, index) => (
               <li key={step.title} className={index === matched ? 'next' : index < matched ? 'done' : ''}>
@@ -491,44 +309,34 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
       </div>
       <div className="fold-dock">
       <div className="fold-tools">
-        <button type="button" onClick={() => { setNote(null); if (holdRef.current) { setHold(null); return } onOps(ops.slice(0, -1)) }} disabled={(!ops.length && !hold) || busy} title="Drop a held fold, or take back the last sealed action">
+        <button type="button" onClick={() => { setNote(null); onOps(ops.slice(0, -1)) }} disabled={!ops.length || busy} title="Take back the last fold">
           Undo
         </button>
         <button type="button" className="unfold" onClick={unfold} disabled={folds === 0 || busy} title="Open the last fold and keep its crease on the paper">
           Unfold
         </button>
-        <button type="button" onClick={() => { setHold(null); setNote(null); onOps([]) }} disabled={(!ops.length && !hold) || busy} title="Clear every fold and every open crease">
+        <button type="button" onClick={() => { setNote(null); onOps([]) }} disabled={!ops.length || busy} title="Clear every fold and every open crease">
           Reset
-        </button>
-        <button type="button" onClick={resetNodes} disabled={(!ends.a && !ends.b) || busy} title="Clear points A and B. Folds and creases stay.">
-          Reset nodes
-        </button>
-        <button
-          type="button"
-          className="primary"
-          onClick={() => {
-            if (!preview?.valid || !previewOp) return
-            const guide = { angle: previewOp.angle, ax: previewOp.ax, ay: previewOp.ay, movingSign: preview.movingSign }
-            const previewHold = previewFold(paper, guide, 0)
-            if (!previewHold) return
-            setHold({ op: previewHold.op, depth: 0, grabDepth: Math.max(0.02, edgeDepth(paper, guide)) })
-            setNote('Held at the line. Press along the ridge to set the crease.')
-          }}
-          disabled={!preview?.valid || busy || !!hold}
-          title="Hold the fold at the limit line. You still press along the ridge."
-        >
-          Hold at the line
         </button>
         <button type="button" className="quiet" onClick={() => setHelperOpen((g) => !g)}>
           {helperOpen ? 'Hide guide' : 'Guide'}
         </button>
-        <button type="button" className="go" onClick={() => { if (holdRef.current) { setNote('Press along the new crease before the hall.'); return } onDone() }}>
+        <button type="button" className="go" onClick={() => onDone()}>
           To the hall
         </button>
       </div>
       </div>
     </div>
   )
+}
+
+function lastFold(steps: SheetStep[]): FoldOp | null {
+  const ops: FoldOp[] = []
+  for (const step of steps) {
+    if (isUnfold(step)) ops.pop()
+    else ops.push(step)
+  }
+  return ops.length ? ops[ops.length - 1] : null
 }
 
 function prefixMatch(steps: SheetStep[], stock: Stock) {
@@ -553,13 +361,11 @@ function paint(
   w: number,
   h: number,
   ops: SheetStep[],
-  ends: Endpoints,
-  cursor: Vec2 | null,
+  crease: FoldOp,
+  preview: FoldOp | null,
   anim: Anim | null,
   dye: Dye,
   stock: Stock,
-  hold: Hold | null,
-  trace: { samples: Vec2[]; covered: boolean[] } | null,
 ) {
   ctx.clearRect(0, 0, w, h)
   ctx.fillStyle = '#2c2825'
@@ -592,15 +398,11 @@ function paint(
     const swung = built.moving.map((poly) => poly.map((p) => swingPoint(p, frame, swing)))
     drawPolys(ctx, view, swung, dyeFill(dye, true, 1), dye.ink)
   } else {
-    const shown = hold ? buildFold(paper, hold.op) : null
+    const shown = preview ? buildFold(paper, preview) : null
     const drawing = shown?.valid ? shown.paper : paper
     drawFacets(ctx, view, drawing.facets, dye)
-    drawCreases(ctx, view, paper.creases)
-    if (shown?.valid) {
-      const ridge = ridgeOf(shown.paper, hold!.op)
-      if (ridge) drawRidge(ctx, view, ridge, trace)
-    }
-    drawEndpoints(ctx, view, paper, ends, cursor)
+    drawCreases(ctx, view, shown?.valid ? shown.paper.creases : paper.creases)
+    drawRuler(ctx, view, crease, stock, w, h)
   }
 
   drawBoardTicks(ctx, view)
@@ -650,96 +452,153 @@ function drawCreases(ctx: CanvasRenderingContext2D, view: View, creases: { a: Ve
   ctx.restore()
 }
 
-function drawEndpoints(
+function drawRuler(
   ctx: CanvasRenderingContext2D,
   view: View,
-  paper: Paper,
-  ends: Endpoints,
-  cursor: Vec2 | null,
+  crease: FoldOp,
+  stock: Stock,
+  width: number,
+  height: number,
 ) {
-  const pair = ends.a && ends.b ? assessPair(paper, ends.a, ends.b) : null
+  const frame = lineFrame(crease.angle, crease.ax, crease.ay)
+  const span = clipToSheet(crease.ax, crease.ay, frame.dx, frame.dy, stock.width / 2, stock.height / 2)
+  const a = span ? span[0] : { x: crease.ax - frame.dx * 0.08, y: crease.ay - frame.dy * 0.08 }
+  const b = span ? span[1] : { x: crease.ax + frame.dx * 0.08, y: crease.ay + frame.dy * 0.08 }
+  const sa = paperToScreen(view, a)
+  const sb = paperToScreen(view, b)
+  const dx = sb.x - sa.x
+  const dy = sb.y - sa.y
+  const len = Math.hypot(dx, dy) || 1
+  const px = -dy / len
+  const py = dx / len
+  const half = 7
   ctx.save()
-  ctx.lineWidth = 2
-  ctx.setLineDash([7, 6])
-  ctx.strokeStyle = '#f4efe4'
-  ctx.lineCap = 'round'
-  if (pair && pair.ok && ends.a && ends.b) {
-    const a = paperToScreen(view, ends.a)
-    const b = paperToScreen(view, ends.b)
+  ctx.beginPath()
+  ctx.moveTo(sa.x + px * half, sa.y + py * half)
+  ctx.lineTo(sb.x + px * half, sb.y + py * half)
+  ctx.lineTo(sb.x - px * half, sb.y - py * half)
+  ctx.lineTo(sa.x - px * half, sa.y - py * half)
+  ctx.closePath()
+  ctx.fillStyle = 'rgba(244, 239, 228, 0.22)'
+  ctx.fill()
+  ctx.strokeStyle = 'rgba(244, 239, 228, 0.7)'
+  ctx.lineWidth = 1
+  ctx.stroke()
+  ctx.strokeStyle = 'rgba(28, 25, 21, 0.55)'
+  for (let cm = -30; cm <= 30; cm++) {
+    const point = { x: crease.ax + frame.dx * cm * 0.01, y: crease.ay + frame.dy * cm * 0.01 }
+    if (Math.abs(point.x) > stock.width / 2 + 0.002 || Math.abs(point.y) > stock.height / 2 + 0.002) continue
+    const s = paperToScreen(view, point)
+    const tick = cm % 5 === 0 ? 6 : 3
     ctx.beginPath()
-    ctx.moveTo(a.x, a.y)
-    ctx.lineTo(b.x, b.y)
-    ctx.stroke()
-  } else if (cursor && (ends.a || ends.b)) {
-    const from = paperToScreen(view, (ends.a || ends.b)!)
-    const to = paperToScreen(view, cursor)
-    ctx.beginPath()
-    ctx.moveTo(from.x, from.y)
-    ctx.lineTo(to.x, to.y)
+    ctx.moveTo(s.x - px * tick, s.y - py * tick)
+    ctx.lineTo(s.x + px * tick, s.y + py * tick)
     ctx.stroke()
   }
   ctx.restore()
-  if (ends.a) drawPoint(ctx, view, ends.a, 'A')
-  if (ends.b) drawPoint(ctx, view, ends.b, 'B')
-}
-
-function drawPoint(ctx: CanvasRenderingContext2D, view: View, point: Vec2, label: string) {
-  const s = paperToScreen(view, point)
+  const hub = paperToScreen(view, { x: crease.ax, y: crease.ay })
+  const handle = rotateOnScreen(view, crease, width, height)
   ctx.save()
+  ctx.strokeStyle = '#f4efe4'
+  ctx.lineWidth = 1.5
   ctx.beginPath()
-  ctx.arc(s.x, s.y, 4, 0, Math.PI * 2)
+  ctx.moveTo(hub.x, hub.y)
+  ctx.lineTo(handle.x, handle.y)
+  ctx.stroke()
+  ctx.beginPath()
+  ctx.arc(hub.x, hub.y, 6, 0, Math.PI * 2)
   ctx.fillStyle = '#f4efe4'
   ctx.fill()
-  ctx.lineWidth = 1
-  ctx.strokeStyle = '#1c1915'
+  ctx.beginPath()
+  ctx.arc(handle.x, handle.y, 11, 0, Math.PI * 2)
+  ctx.fillStyle = 'rgba(247, 243, 234, 0.92)'
+  ctx.fill()
   ctx.stroke()
-  ctx.fillStyle = '#f4efe4'
-  ctx.font = '12px "Segoe UI", sans-serif'
-  ctx.textAlign = 'left'
-  ctx.textBaseline = 'bottom'
-  ctx.fillText(label, s.x + 6, s.y - 4)
+  drawSpinArrows(ctx, handle.x, handle.y)
   ctx.restore()
 }
 
-function drawRidge(
-  ctx: CanvasRenderingContext2D,
-  view: View,
-  ridge: { a: Vec2; b: Vec2 },
-  trace: { samples: Vec2[]; covered: boolean[] } | null,
-) {
-  const a = paperToScreen(view, ridge.a)
-  const b = paperToScreen(view, ridge.b)
+function rotateOnScreen(view: View, crease: FoldOp, width: number, height: number) {
+  const frame = lineFrame(crease.angle, crease.ax, crease.ay)
+  let reach = HANDLE_PX / Math.max(view.scale, 1)
+  const margin = 18
+  for (let i = 0; i < 8; i++) {
+    const s = paperToScreen(view, { x: crease.ax + frame.dx * reach, y: crease.ay + frame.dy * reach })
+    if (s.x >= margin && s.x <= width - margin && s.y >= margin && s.y <= height - margin) return s
+    reach *= 0.72
+  }
+  return paperToScreen(view, { x: crease.ax, y: crease.ay })
+}
+
+function drawSpinArrows(ctx: CanvasRenderingContext2D, x: number, y: number) {
   ctx.save()
-  ctx.lineCap = 'round'
-  ctx.strokeStyle = '#e2b15a'
-  ctx.lineWidth = 5
-  ctx.beginPath()
-  ctx.moveTo(a.x, a.y)
-  ctx.lineTo(b.x, b.y)
-  ctx.stroke()
-  if (trace) {
-    ctx.fillStyle = '#1c1915'
-    for (let i = 0; i < trace.samples.length; i++) {
-      if (!trace.covered[i]) continue
-      const p = paperToScreen(view, trace.samples[i])
-      ctx.beginPath()
-      ctx.arc(p.x, p.y, 3.4, 0, Math.PI * 2)
-      ctx.fill()
-    }
+  ctx.translate(x, y)
+  ctx.strokeStyle = '#1c1915'
+  ctx.fillStyle = '#1c1915'
+  ctx.lineWidth = 1.3
+  for (const turn of [0, Math.PI]) {
+    ctx.beginPath()
+    ctx.arc(0, 0, 6, turn + 0.35, turn + 2.15)
+    ctx.stroke()
+    const a = turn + 2.15
+    const px = Math.cos(a) * 6
+    const py = Math.sin(a) * 6
+    ctx.beginPath()
+    ctx.moveTo(px, py)
+    ctx.lineTo(px - 4 * Math.cos(a + 0.9), py - 4 * Math.sin(a + 0.9))
+    ctx.lineTo(px - 4 * Math.cos(a - 0.2), py - 4 * Math.sin(a - 0.2))
+    ctx.fill()
   }
   ctx.restore()
 }
 
-function segmentDistance(p: Vec2, a: Vec2, b: Vec2) {
-  const dx = b.x - a.x
-  const dy = b.y - a.y
-  const len = dx * dx + dy * dy || 1
-  let t = ((p.x - a.x) * dx + (p.y - a.y) * dy) / len
-  t = Math.max(0, Math.min(1, t))
-  return Math.hypot(p.x - (a.x + t * dx), p.y - (a.y + t * dy))
+function hitRuler(
+  canvas: HTMLCanvasElement,
+  crease: FoldOp,
+  clientX: number,
+  clientY: number,
+  stock: Stock,
+): 'move' | 'rotate' | null {
+  const rect = canvas.getBoundingClientRect()
+  const view = fit(rect.width, rect.height, stock)
+  const x = clientX - rect.left
+  const y = clientY - rect.top
+  const hub = paperToScreen(view, { x: crease.ax, y: crease.ay })
+  const handle = rotateOnScreen(view, crease, rect.width, rect.height)
+  if (Math.hypot(x - handle.x, y - handle.y) < 12) return 'rotate'
+  if (Math.hypot(x - hub.x, y - hub.y) < 11) return 'move'
+  return null
 }
 
-/** Paired ticks on the board, outside the sheet, at the same sheet coordinates on opposite edges. */
+function clipToSheet(ax: number, ay: number, dx: number, dy: number, halfW: number, halfH: number): [Vec2, Vec2] | null {
+  let t0 = -1e6
+  let t1 = 1e6
+  const slabs: [number, number, number, number][] = [
+    [dx, ax, -halfW, halfW],
+    [dy, ay, -halfH, halfH],
+  ]
+  for (const [d, p, min, max] of slabs) {
+    if (Math.abs(d) < 1e-9) {
+      if (p < min || p > max) return null
+      continue
+    }
+    let a = (min - p) / d
+    let b = (max - p) / d
+    if (a > b) {
+      const swap = a
+      a = b
+      b = swap
+    }
+    t0 = Math.max(t0, a)
+    t1 = Math.min(t1, b)
+    if (t0 > t1) return null
+  }
+  return [
+    { x: ax + dx * t0, y: ay + dy * t0 },
+    { x: ax + dx * t1, y: ay + dy * t1 },
+  ]
+}
+
 function drawBoardTicks(ctx: CanvasRenderingContext2D, view: View) {
   const spans = boardTickSpans(view, { width: view.sheetW, height: view.sheetH })
   ctx.save()
