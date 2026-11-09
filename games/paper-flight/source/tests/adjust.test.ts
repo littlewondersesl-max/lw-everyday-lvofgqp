@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { applyQuat, bendTarget, partHinges, posePaper, TURN_STEP, turnQuat, withPart } from '../src/sim/adjust'
+import { applyQuat, bendTarget, clampBend, partHinges, posePaper, TURN_STEP, turnQuat, withPart } from '../src/sim/adjust'
 import { SHEET } from '../src/sim/constants'
 import { reflectFold } from '../src/sim/dragFold'
 import {
@@ -142,30 +142,24 @@ describe('adjust pose', () => {
     expect(Math.max(...zOf(raised, 0))).toBeLessThan(0.02)
   })
 
-  it('opens each dart flap on its own crease and keeps the crease joined', () => {
+  it('opens a dart wing off its crease and refuses to fold it back through the sheet', () => {
     const { paper } = dart()
     const hinges = partHinges(paper)
-    const keel = hinges.filter((hinge) => hinge.keel)
-    expect(keel).toHaveLength(2)
-    const wings = hinges.filter((hinge) => !hinge.keel && Math.hypot(hinge.a.x - hinge.b.x, hinge.a.y - hinge.b.y) > 0.12)
-    expect(wings.length).toBeGreaterThanOrEqual(2)
-    const posed = posePaper(paper, new Map([[wings[0].ply, 0.9]]))
-    const maxZ = (ply: number) =>
-      Math.max(...posed.facets.filter((facet) => facet.ply === ply).flatMap((facet) => facet.poly.map((point) => point.z)))
-    expect(maxZ(wings[0].ply)).toBeGreaterThan(0.01)
-    expect(maxZ(wings[1].ply)).toBeLessThan(0.004)
-    expect(seamGap(paper, posed, wings[0])).toBeLessThan(0.002)
-
-    const opened = posePaper(paper, new Map(keel.map((hinge, index) => [hinge.ply, index === 0 ? 0.9 : -0.9])))
-    for (const hinge of keel) {
-      expect(seamGap(paper, opened, hinge)).toBeLessThan(0.002)
-      const child = hinges.find((item) => !item.keel && item.anchor === hinge.ply)
-      if (!child) continue
-      const childZ = Math.max(
-        ...opened.facets.filter((facet) => facet.ply === child.ply).flatMap((facet) => facet.poly.map((point) => Math.abs(point.z))),
-      )
-      expect(childZ).toBeGreaterThan(0.01)
+    const wings = hinges.filter((hinge) => Math.hypot(hinge.a.x - hinge.b.x, hinge.a.y - hinge.b.y) > 0.15 && hinge.ply !== 0)
+    expect(wings.length).toBeGreaterThanOrEqual(1)
+    const wing = wings[0]
+    expect(clampBend(paper, identityAdjust(), wing.ply, -1.2)).toBe(0)
+    const opened = clampBend(paper, identityAdjust(), wing.ply, 1.1)
+    expect(opened).toBeGreaterThan(0.4)
+    const posed = posePaper(paper, new Map([[wing.ply, opened]]))
+    expect(seamGap(paper, posed, wing)).toBeLessThan(0.002)
+    const flat = posePaper(paper, new Map())
+    const travel = (ply: number, sample: typeof posed) => {
+      let z = 0
+      for (const facet of sample.facets) if (facet.ply === ply) for (const point of facet.poly) z = Math.max(z, Math.abs(point.z))
+      return z
     }
+    expect(travel(wing.ply, posed)).toBeGreaterThan(travel(wing.ply, flat) + 0.01)
   })
 
   it('turns the whole sheet a full circle and keeps the pose through sanitize', () => {

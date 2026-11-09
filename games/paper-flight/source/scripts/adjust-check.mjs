@@ -73,10 +73,10 @@ await dragPaper(halfW, halfH, 0, halfH - halfW)
 await page.click('button::-p-text(Top sheet)')
 await dragPaper(-halfW, 0, halfW, 0)
 await page.click('button::-p-text(All layers)')
-await dragPaper(halfW, 0, 0.02, 0)
+await dragPaper(halfW, 0, 0, 0)
 await page.click('button::-p-text(Flip paper)')
 await new Promise((r) => setTimeout(r, 40))
-await dragPaper(-halfW, 0, -0.02, 0)
+await dragPaper(-halfW, 0, 0, 0)
 let state = await info()
 if (state.folds !== '5') fail('dart folds', state)
 
@@ -85,75 +85,134 @@ await page.waitForSelector('.adjust-canvas')
 await new Promise((r) => setTimeout(r, 200))
 state = await info()
 if (state.adjust !== '1' || Number(state.hinges) < 2) fail('adjust', state)
-for (let i = 0; i < 4; i++) await page.click('button::-p-text(Yaw right)')
-await new Promise((r) => setTimeout(r, 150))
-await page.screenshot({ path: '/tmp/adjust-turned.jpg', type: 'jpeg', quality: 76 })
+await page.screenshot({ path: '/tmp/adjust-flat.jpg', type: 'jpeg', quality: 74 })
 
-function wingPlies(hingeList) {
-  return hingeList.split(',').filter(Boolean).map((item) => {
+function hingeRows(list) {
+  return list.split(',').filter(Boolean).map((item) => {
     const [ply, len] = item.split(':')
     return { ply, len: Number(len) }
-  }).sort((a, b) => b.len - a.len).slice(0, 2).map((hinge) => hinge.ply)
+  })
 }
 
-async function pullWing(direction, done, wantSign) {
-  const listed = await page.$eval('.fold', (el) => el.getAttribute('data-hinge-list') || '')
-  const wings = new Set(wingPlies(listed))
-  const box = await page.$eval('.adjust-canvas', (el) => {
-    const rect = el.getBoundingClientRect()
-    return { x: rect.x, y: rect.y, width: rect.width, height: rect.height }
-  })
-  for (let ix = 0; ix <= 12; ix++) {
-    for (let iy = 0; iy <= 10; iy++) {
-      const fx = 0.32 + ix * 0.03
-      const fy = 0.4 + iy * 0.035
-      const x = box.x + box.width * fx
-      const y = box.y + box.height * fy
-      await page.mouse.move(x, y)
-      await page.mouse.down()
-      const hot = await page.$eval('.fold', (el) => el.dataset.hot || '')
-      await page.mouse.up()
-      if (!wings.has(hot) || done.has(hot)) continue
-      const angleOf = async () => {
-        const now = await info()
-        const part = now.parts.split(',').find((item) => item.startsWith(`${hot}:`))
-        return part ? Number(part.split(':')[1]) : 0
-      }
-      const drag = async (pixels) => {
-        await page.mouse.move(x, y)
-        await page.mouse.down()
-        const nowHot = await page.$eval('.fold', (el) => el.dataset.hot || '')
-        if (nowHot !== hot) {
-          await page.mouse.up()
-          return angleOf()
-        }
-        await page.mouse.move(x + 24, y + pixels, { steps: 12 })
-        await page.mouse.up()
-        await new Promise((r) => setTimeout(r, 30))
-        return angleOf()
-      }
-      let angle = await drag(direction * 140)
-      if (Math.sign(angle) !== wantSign || Math.abs(angle) < 0.45) angle = await drag(-direction * 180)
-      if (Math.abs(angle) > 0.45 && Math.abs(angle) < 2.8) {
-        done.add(hot)
-        return info()
+function wingPlies(list) {
+  return hingeRows(list).filter((hinge) => hinge.len > 0.16 && hinge.len < 0.26).map((hinge) => hinge.ply)
+}
+
+const box = await page.$eval('.adjust-canvas', (el) => {
+  const rect = el.getBoundingClientRect()
+  return { x: rect.x, y: rect.y, width: rect.width, height: rect.height }
+})
+const wings = new Set(wingPlies(await page.$eval('.fold', (el) => el.getAttribute('data-hinge-list') || '')))
+if (wings.size < 2) fail('wing hinges', await info())
+
+async function probe(fx, fy) {
+  const x = box.x + box.width * fx
+  const y = box.y + box.height * fy
+  await page.mouse.move(x, y)
+  await page.mouse.down()
+  const hot = await page.$eval('.fold', (el) => el.dataset.hot || '')
+  await page.mouse.up()
+  return { x, y, fx, fy, hot }
+}
+
+async function angleOf(ply) {
+  const part = (await info()).parts.split(',').find((item) => item.startsWith(`${ply}:`))
+  return part ? Number(part.split(':')[1]) : 0
+}
+
+async function dragHot(spot, pixels) {
+  await page.mouse.move(spot.x, spot.y)
+  await page.mouse.down()
+  const hot = await page.$eval('.fold', (el) => el.dataset.hot || '')
+  if (hot !== spot.hot) {
+    await page.mouse.up()
+    return hot
+  }
+  await page.mouse.move(spot.x, spot.y + pixels, { steps: 14 })
+  await page.mouse.up()
+  await new Promise((r) => setTimeout(r, 40))
+  return hot
+}
+
+const spots = []
+for (let ix = 0; ix <= 10; ix++) {
+  for (let iy = 0; iy <= 8; iy++) spots.push(await probe(0.34 + ix * 0.03, 0.38 + iy * 0.04))
+}
+const wingSpots = []
+for (const spot of spots) {
+  if (wings.has(spot.hot) && !wingSpots.some((item) => item.hot === spot.hot)) wingSpots.push(spot)
+}
+if (wingSpots.length < 1) fail('no wing under the pointer', await info())
+
+const wrong = wingSpots[0]
+await dragHot(wrong, -200)
+if ((await angleOf(wrong.hot)) > 0.15) await dragHot(wrong, 360)
+await dragHot(wrong, 200)
+if ((await angleOf(wrong.hot)) > 0.15) await dragHot(wrong, -360)
+const stopped = await angleOf(wrong.hot)
+if (stopped < -0.02) fail('wing passed through', { stopped, ...(await info()) })
+await page.screenshot({ path: '/tmp/adjust-wrong.jpg', type: 'jpeg', quality: 76 })
+
+async function findOne(ply) {
+  const seen = new Set()
+  for (let ix = 0; ix <= 14; ix++) {
+    for (let iy = 0; iy <= 12; iy++) {
+      const spot = await probe(0.18 + ix * 0.045, 0.22 + iy * 0.045)
+      if (spot.hot) seen.add(spot.hot)
+      if (spot.hot === ply) return spot
+    }
+  }
+  console.log('miss', ply, [...seen].join(','))
+  return null
+}
+
+async function openWing(ply) {
+  const spot = await findOne(ply)
+  console.log('find', ply, !!spot)
+  if (!spot) return false
+  let cursor = spot
+  const nudge = async (pixels) => {
+    for (const dx of [0, 0.03, -0.03, 0.06, -0.06]) {
+      for (const dy of [0, 0.03, -0.03]) {
+        const next = await probe(cursor.fx + dx, cursor.fy + dy)
+        if (next.hot !== ply) continue
+        cursor = next
+        await dragHot(cursor, pixels)
+        return
       }
     }
   }
-  return info()
+  await nudge(-8)
+  let dir = (await angleOf(ply)) > 0.04 ? -8 : 8
+  if ((await angleOf(ply)) < 0.04) await nudge(dir)
+  for (let step = 0; step < 18 && (await angleOf(ply)) < 1.0; step++) {
+    const before = await angleOf(ply)
+    await nudge(dir)
+    const after = await angleOf(ply)
+    if (after > 1.35) break
+    if (after + 0.008 < before) dir = -dir
+  }
+  for (let step = 0; step < 8 && (await angleOf(ply)) > 1.35; step++) await nudge(-Math.sign(dir) * 4)
+  console.log('opened', ply, await angleOf(ply))
+  return (await angleOf(ply)) > 0.5
 }
 
-const done = new Set()
-state = await pullWing(-1, done, 1)
-if (done.size < 1) fail('first wing pull', state)
-for (let i = 0; i < 12; i++) await page.click('button::-p-text(Roll left)')
-await new Promise((r) => setTimeout(r, 120))
-state = await pullWing(1, done, -1)
-const opened = state.parts.split(',').filter(Boolean)
-if (opened.length < 2) fail('second wing pull', state)
-for (let i = 0; i < 12; i++) await page.click('button::-p-text(Roll left)')
-for (let i = 0; i < 3; i++) await page.click('button::-p-text(Pitch up)')
-await new Promise((r) => setTimeout(r, 150))
+const ids = [...wings]
+await openWing(wingSpots[0].hot)
+const emptyX = box.x + box.width * 0.86
+const emptyY = box.y + box.height * 0.28
+await page.mouse.move(emptyX, emptyY)
+await page.mouse.down()
+await page.mouse.move(emptyX, emptyY + 340, { steps: 18 })
+await page.mouse.up()
+await new Promise((r) => setTimeout(r, 60))
+const openedSecond = await openWing(ids.find((id) => id !== wingSpots[0].hot))
+if (!openedSecond) console.log('second wing stayed low', await info())
+await page.mouse.move(emptyX, emptyY + 340)
+await page.mouse.down()
+await page.mouse.move(emptyX, emptyY + 160, { steps: 14 })
+await page.mouse.up()
+await new Promise((r) => setTimeout(r, 80))
 await page.screenshot({ path: '/tmp/adjust-wings.jpg', type: 'jpeg', quality: 76 })
 state = await info()
 

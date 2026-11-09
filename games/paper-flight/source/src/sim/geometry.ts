@@ -800,7 +800,7 @@ export function sanitizeAdjust(input: unknown): AdjustPose | null {
       const ply = Number((item as { ply: unknown }).ply)
       const angle = Number((item as { angle: unknown }).angle)
       if (!Number.isInteger(ply) || ply < 0 || ply > 39 || !Number.isFinite(angle)) continue
-      parts.push({ ply, angle: Math.max(-Math.PI, Math.min(Math.PI, angle)) })
+      parts.push({ ply, angle: Math.max(0, Math.min(Math.PI, angle)) })
       if (parts.length >= 12) break
     }
   }
