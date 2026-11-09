@@ -381,6 +381,8 @@ export interface FoldBuild {
   areaPos: number
   areaNeg: number
   paper: Paper
+  /** Crease segments this fold itself made. Unfold keeps these, not older marks. */
+  freshCreases: CreaseMark[]
   /** Original polygons on the moving side, for the fold animation. */
   moving: Vec2[][]
   resting: { poly: Vec2[]; layer: number; faceUp: 1 | -1 }[]
@@ -448,11 +450,40 @@ function creaseOnPiece(poly: Vec2[], frame: ReturnType<typeof lineFrame>): Creas
   return { a: bestA, b: bestB }
 }
 
+/** Flat flaps stacked on the grabbed sheet fold with it, instead of staying behind as stray triangles. */
+function facetsForFold(paper: Paper, op: FoldOp, frame: ReturnType<typeof lineFrame>): Facet[] {
+  if (!op.plies?.length) return paper.facets
+  const ids = new Set(op.plies)
+  const addChildren = () => {
+    let grew = true
+    while (grew) {
+      grew = false
+      for (const facet of paper.facets) {
+        if (facet.plyParent != null && ids.has(facet.plyParent) && !ids.has(facet.ply)) {
+          ids.add(facet.ply)
+          grew = true
+        }
+      }
+    }
+  }
+  addChildren()
+  const movingSign: 1 | -1 = op.side === -1 ? -1 : 1
+  for (const facet of paper.facets) {
+    if (ids.has(facet.ply) || facet.plyParent == null) continue
+    const onMoving = facet.poly.some((point) => signedDistance(point, frame) * movingSign > 0.0015)
+    if (!onMoving) continue
+    const overlaps = paper.facets.some((other) => ids.has(other.ply) && convexOverlap(facet.poly, other.poly))
+    if (overlaps) ids.add(facet.ply)
+  }
+  addChildren()
+  return paper.facets.filter((facet) => ids.has(facet.ply))
+}
+
 export function buildFold(paper: Paper, op: FoldOp): FoldBuild {
   const frame = lineFrame(op.angle, op.ax, op.ay)
-  const chosen = op.plies?.length ? new Set(op.plies) : null
-  const frozen = chosen ? paper.facets.filter((facet) => !chosen.has(facet.ply)) : []
-  const active = chosen ? paper.facets.filter((facet) => chosen.has(facet.ply)) : paper.facets
+  const active = facetsForFold(paper, op, frame)
+  const activePly = new Set(active.map((facet) => facet.ply))
+  const frozen = paper.facets.filter((facet) => !activePly.has(facet.ply))
   const pieces: Piece[] = []
   for (const facet of active) pieces.push(...splitFacet(facet, frame))
   let areaPos = 0
@@ -470,6 +501,7 @@ export function buildFold(paper: Paper, op: FoldOp): FoldBuild {
     areaPos,
     areaNeg,
     paper,
+    freshCreases: [] as CreaseMark[],
     moving: [] as Vec2[][],
     resting: [] as { poly: Vec2[]; layer: number; faceUp: 1 | -1 }[],
     nx: frame.nx,
@@ -521,19 +553,21 @@ export function buildFold(paper: Paper, op: FoldOp): FoldBuild {
     placed.push({ poly: p.poly, layer: base + 1, faceUp: p.faceUp, ply: p.ply })
   }
 
-  const creases = transformMarks(paper.creases, frame, movingSign)
-  for (const p of pieces) {
-    if (p.crease) creases.push(p.crease)
-  }
+  const movingPly = new Set(moving.map((piece) => piece.ply))
+  const creases = transformMarks(paper.creases, frame, paper.facets, movingPly)
+  const freshCreases = dedupeMarks(pieces.flatMap((piece) => (piece.crease ? [piece.crease] : [])))
+  creases.push(...freshCreases)
 
   let nextId = paper.nextId
   const newPly = paper.facets.reduce((max, facet) => Math.max(max, facet.ply), 0) + 1
-  const activeArea = pieces.reduce((sum, piece) => sum + Math.abs(polygonArea(piece.poly)), 0)
-  const movedArea = placed.reduce((sum, piece) => sum + Math.abs(polygonArea(piece.poly)), 0)
   const source = placed[0] ? plyRoot(paper, placed[0].ply) : 0
-  // A large fold lays one half onto the other and becomes its own sheet.
-  // A small flap stays joined, so a later fold of that half carries the flap.
-  const plyParent = activeArea > 0 && movedArea / activeArea >= 0.38 ? null : source
+  const grabbed = op.plies?.length ? new Set(op.plies) : null
+  const inGrab = (ply: number) => !grabbed || grabbed.has(ply)
+  const grabbedActive = pieces.filter((piece) => inGrab(piece.ply)).reduce((sum, piece) => sum + Math.abs(polygonArea(piece.poly)), 0)
+  const grabbedMoved = moving.filter((piece) => inGrab(piece.ply)).reduce((sum, piece) => sum + Math.abs(polygonArea(piece.poly)), 0)
+  // A large fold of the sheet you grabbed becomes its own sheet. A small flap,
+  // and a flat crease already on that sheet, stays joined to it.
+  const plyParent = grabbedActive > 0 && grabbedMoved / grabbedActive >= 0.38 ? null : source
   const facets: Facet[] = frozen.map((facet) => ({
     ...facet,
     poly: facet.poly.map((point) => ({ x: point.x, y: point.y })),
@@ -565,7 +599,8 @@ export function buildFold(paper: Paper, op: FoldOp): FoldBuild {
     movingSign,
     areaPos,
     areaNeg,
-    paper: { facets, creases, nextId, dihedral: paper.dihedral },
+    paper: { facets, creases: dedupeMarks(creases), nextId, dihedral: paper.dihedral },
+    freshCreases,
     moving: moving.map((p) => p.poly),
     resting: stationary.map((p) => ({ poly: p.poly, layer: p.layer, faceUp: p.faceUp })),
     nx: frame.nx,
@@ -660,34 +695,6 @@ export function longestCrease(marks: CreaseMark[]): CreaseMark | null {
   return best
 }
 
-type ReplayAction = { kind: 'fold'; op: FoldOp } | { kind: 'flip' }
-
-function replayActions(
-  actions: readonly ReplayAction[],
-  size: { width: number; height: number },
-  kept: { at: number; marks: CreaseMark[] }[] = [],
-): Paper {
-  let paper = blankSheet(size)
-  const carry: CreaseMark[] = []
-  const take = (at: number) => {
-    for (const item of kept) if (item.at === at) carry.push(...item.marks)
-  }
-  for (let i = 0; i < actions.length; i++) {
-    take(i)
-    if (carry.length) paper = { ...paper, creases: [...paper.creases, ...carry.splice(0)] }
-    const action = actions[i]
-    if (action.kind === 'flip') paper = flipPaper(paper)
-    else {
-      const built = buildFold(paper, action.op)
-      if (!built.valid) break
-      paper = built.paper
-    }
-  }
-  take(actions.length)
-  if (carry.length) paper = { ...paper, creases: [...paper.creases, ...carry] }
-  return paper
-}
-
 /** Turn the sheet over about its vertical axis and reverse which face is on top. */
 export function flipPaper(paper: Paper): Paper {
   const maxLayer = paper.facets.reduce((max, facet) => Math.max(max, facet.layer), 0)
@@ -706,29 +713,26 @@ export function flipPaper(paper: Paper): Paper {
 
 /**
  * Replay folds, flips, and unfolds.
- * Unfold opens only the most recent still-folded crease and keeps that crease
- * as a mark. Later folds and flips carry the mark with the paper.
+ * An unfolded fold is not applied. Its crease is kept, on the paper as it
+ * stands, and later folds carry that mark. Reset (no steps) leaves no creases.
  */
 export function applyOps(steps: readonly SheetStep[], size: { width: number; height: number } = SHEET): Paper {
-  const actions: ReplayAction[] = []
-  const kept: { at: number; marks: CreaseMark[] }[] = []
+  const pending: ({ kind: 'flip' } | { kind: 'fold'; op: FoldOp; open: boolean })[] = []
   let dihedral = 0
   let adjust: AdjustPose | null = null
   for (const step of steps) {
     if (isUnfold(step)) {
-      let index = actions.length - 1
-      while (index >= 0 && actions[index].kind !== 'fold') index -= 1
-      if (index < 0) continue
-      const prior = replayActions(actions.slice(0, index), size)
-      const fold = actions[index] as { kind: 'fold'; op: FoldOp }
-      const built = buildFold(prior, fold.op)
-      const added = built.valid ? built.paper.creases.slice(prior.creases.length) : []
-      actions.splice(index, 1)
-      kept.push({ at: index, marks: added.map((mark) => ({ a: { ...mark.a }, b: { ...mark.b } })) })
+      for (let index = pending.length - 1; index >= 0; index -= 1) {
+        const item = pending[index]
+        if (item.kind === 'fold' && !item.open) {
+          item.open = true
+          break
+        }
+      }
       continue
     }
     if (isFlip(step)) {
-      actions.push({ kind: 'flip' })
+      pending.push({ kind: 'flip' })
       continue
     }
     if (isLift(step)) {
@@ -739,49 +743,156 @@ export function applyOps(steps: readonly SheetStep[], size: { width: number; hei
       adjust = step.adjust
       continue
     }
-    const folds = actions.filter((action) => action.kind === 'fold').length
-    if (folds >= LIMITS.maxFolds) continue
+    if (pending.filter((item) => item.kind === 'fold' && !item.open).length >= LIMITS.maxFolds) continue
     const op = sanitizeOp(step) ?? step
-    actions.push({ kind: 'fold', op })
+    pending.push({ kind: 'fold', op, open: false })
   }
-  const paper = replayActions(actions, size, kept)
+  const beforeFold = (ordinal: number, applyOpen: boolean) => {
+    let ghost = blankSheet(size)
+    let seen = 0
+    for (const item of pending) {
+      if (item.kind === 'flip') {
+        ghost = flipPaper(ghost)
+        continue
+      }
+      if (seen === ordinal) break
+      seen += 1
+      if (item.open && !applyOpen) continue
+      const built = buildFold(ghost, item.op)
+      if (built.valid) ghost = built.paper
+    }
+    return ghost
+  }
+  let paper = blankSheet(size)
+  let ordinal = 0
+  for (const item of pending) {
+    if (item.kind === 'flip') {
+      paper = flipPaper(paper)
+      continue
+    }
+    if (!item.open) {
+      const built = buildFold(paper, item.op)
+      if (built.valid) paper = built.paper
+      ordinal += 1
+      continue
+    }
+    const madeOn = beforeFold(ordinal, true)
+    let marks = buildFold(madeOn, item.op).freshCreases
+    const folds = pending.filter((entry): entry is { kind: 'fold'; op: FoldOp; open: boolean } => entry.kind === 'fold')
+    for (let earlier = ordinal - 1; earlier >= 0; earlier -= 1) {
+      if (!folds[earlier].open) continue
+      marks = invertFoldMarks(marks, beforeFold(earlier, true), folds[earlier].op)
+    }
+    paper = { ...paper, creases: dedupeMarks([...paper.creases, ...marks]) }
+    ordinal += 1
+  }
   if (!adjust) return dihedral > 0 ? { ...paper, dihedral } : paper
   const peak = adjust.parts.reduce((max, part) => Math.max(max, Math.abs(part.angle)), 0)
   return peak > 0.001 ? { ...paper, adjust, dihedral: Math.min(peak, Math.PI / 2) } : { ...paper, adjust }
 }
 
-/** Split a mark by a crease and reflect the portion on the moving side. */
+/**
+ * Keep each crease only where it lies on a facet. Reflect it only when that
+ * facet actually moves, so a mark cannot float off the paper.
+ */
 export function transformMarks(
   marks: CreaseMark[],
   frame: ReturnType<typeof lineFrame>,
-  movingSign: 1 | -1,
+  facets: readonly Facet[],
+  movingPly: ReadonlySet<number>,
 ): CreaseMark[] {
   const out: CreaseMark[] = []
   for (const mark of marks) {
-    for (const part of clipSegment(mark, frame)) {
-      const da = signedDistance(part.a, frame)
-      const db = signedDistance(part.b, frame)
-      if (Math.abs(da) < 1e-7 && Math.abs(db) < 1e-7) {
-        out.push(part)
-        continue
-      }
-      const sign: 1 | -1 = da + db >= 0 ? 1 : -1
-      out.push(sign === movingSign ? { a: reflectPoint(part.a, frame), b: reflectPoint(part.b, frame) } : part)
+    for (const facet of facets) {
+      const clipped = clipSegmentToConvex(mark.a, mark.b, facet.poly)
+      if (!clipped) continue
+      out.push(movingPly.has(facet.ply) ? { a: reflectPoint(clipped.a, frame), b: reflectPoint(clipped.b, frame) } : clipped)
     }
   }
-  return out.filter((mark) => Math.hypot(mark.a.x - mark.b.x, mark.a.y - mark.b.y) > 1e-6)
+  return dedupeMarks(out)
 }
 
-function clipSegment(mark: CreaseMark, frame: ReturnType<typeof lineFrame>): CreaseMark[] {
-  const da = signedDistance(mark.a, frame)
-  const db = signedDistance(mark.b, frame)
-  if (da === 0 || db === 0 || da * db > 0) return [mark]
-  const t = da / (da - db)
-  const mid = { x: mark.a.x + (mark.b.x - mark.a.x) * t, y: mark.a.y + (mark.b.y - mark.a.y) * t }
-  return [
-    { a: mark.a, b: mid },
-    { a: mid, b: mark.b },
-  ]
+/** Crease ink that sits on this sheet. A segment in empty space is dropped. */
+export function marksOnPaper(paper: Paper): CreaseMark[] {
+  const out: CreaseMark[] = []
+  for (const mark of paper.creases) {
+    for (const facet of paper.facets) {
+      const clipped = clipSegmentToConvex(mark.a, mark.b, facet.poly)
+      if (clipped) out.push(clipped)
+    }
+  }
+  return dedupeMarks(out)
+}
+
+export function clipSegmentToConvex(a: Vec2, b: Vec2, poly: Vec2[]): CreaseMark | null {
+  if (poly.length < 3) return null
+  const ring = polygonArea(poly) < 0 ? [...poly].reverse() : poly
+  let start = a
+  let end = b
+  for (let i = 0; i < ring.length; i++) {
+    const c = ring[i]
+    const d = ring[(i + 1) % ring.length]
+    const cross = (point: Vec2) => (d.x - c.x) * (point.y - c.y) - (d.y - c.y) * (point.x - c.x)
+    const startIn = cross(start) >= -1e-8
+    const endIn = cross(end) >= -1e-8
+    if (!startIn && !endIn) return null
+    if (startIn && endIn) continue
+    const hit = segmentCross(start, end, c, d)
+    if (!hit) return null
+    if (!startIn) start = hit
+    else end = hit
+  }
+  if (Math.hypot(start.x - end.x, start.y - end.y) < 1e-5) return null
+  return { a: start, b: end }
+}
+
+/** Send marks back across a fold that has been opened, if they sat on the flap. */
+function invertFoldMarks(marks: CreaseMark[], before: Paper, op: FoldOp): CreaseMark[] {
+  const built = buildFold(before, op)
+  if (!built.valid) return marks
+  const frame = lineFrame(op.angle, op.ax, op.ay)
+  const newPly = built.paper.facets.reduce((max, facet) => Math.max(max, facet.ply), 0)
+  const moved = built.paper.facets.filter((facet) => facet.ply === newPly)
+  const onMoved = (point: Vec2) => {
+    for (const facet of moved) {
+      if (pointInConvex(facet.poly, point.x, point.y)) return true
+      const poly = facet.poly
+      for (let i = 0; i < poly.length; i++) {
+        if (closestPoint(point, poly[i], poly[(i + 1) % poly.length]).dist < 0.0008) return true
+      }
+    }
+    return false
+  }
+  return marks.map((mark) => {
+    const mid = { x: (mark.a.x + mark.b.x) / 2, y: (mark.a.y + mark.b.y) / 2 }
+    if (!onMoved(mid)) return mark
+    return { a: reflectPoint(mark.a, frame), b: reflectPoint(mark.b, frame) }
+  })
+}
+
+function dedupeMarks(marks: CreaseMark[]): CreaseMark[] {
+  const out: CreaseMark[] = []
+  for (const mark of marks) {
+    if (Math.hypot(mark.a.x - mark.b.x, mark.a.y - mark.b.y) < 1e-4) continue
+    const dup = out.some((have) => {
+      const direct = Math.hypot(have.a.x - mark.a.x, have.a.y - mark.a.y) + Math.hypot(have.b.x - mark.b.x, have.b.y - mark.b.y)
+      const flip = Math.hypot(have.a.x - mark.b.x, have.a.y - mark.b.y) + Math.hypot(have.b.x - mark.a.x, have.b.y - mark.a.y)
+      return Math.min(direct, flip) < 0.0015
+    })
+    if (!dup) out.push(mark)
+  }
+  return out
+}
+
+function segmentCross(a: Vec2, b: Vec2, c: Vec2, d: Vec2): Vec2 | null {
+  const rx = b.x - a.x
+  const ry = b.y - a.y
+  const sx = d.x - c.x
+  const sy = d.y - c.y
+  const denom = rx * sy - ry * sx
+  if (Math.abs(denom) < 1e-12) return null
+  const t = ((c.x - a.x) * sy - (c.y - a.y) * sx) / denom
+  return { x: a.x + t * rx, y: a.y + t * ry }
 }
 
 export function sanitizeAdjust(input: unknown): AdjustPose | null {

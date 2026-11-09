@@ -9,6 +9,7 @@ import {
   identityAdjust,
   isAdjust,
   lineFrame,
+  marksOnPaper,
   netFolds,
   openCreaseCount,
   pliesForGrab,
@@ -180,7 +181,7 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
   }
 
   return (
-    <div className="fold" data-dye={dye.id} data-folds={folds} data-open={opens} data-stock={stock.id} data-dihedral={(paperNow.dihedral ?? 0).toFixed(3)} data-layers={allLayers ? 'all' : 'top'} data-wings={hinges > 0 ? '1' : '0'} data-adjust={adjusting ? '1' : '0'} data-hinges={hinges} data-hinge-list={partHinges(paperNow).map((hinge) => `${hinge.ply}:${Math.hypot(hinge.a.x - hinge.b.x, hinge.a.y - hinge.b.y).toFixed(3)}`).join(',')} data-qx={pose.qx.toFixed(4)} data-qy={pose.qy.toFixed(4)} data-qz={pose.qz.toFixed(4)} data-qw={pose.qw.toFixed(4)} data-parts={pose.parts.map((part) => `${part.ply}:${part.angle.toFixed(3)}`).join(',')}>
+    <div className="fold" data-dye={dye.id} data-folds={folds} data-open={opens} data-creases={marksOnPaper(paperNow).length} data-stock={stock.id} data-dihedral={(paperNow.dihedral ?? 0).toFixed(3)} data-layers={allLayers ? 'all' : 'top'} data-wings={hinges > 0 ? '1' : '0'} data-adjust={adjusting ? '1' : '0'} data-hinges={hinges} data-hinge-list={partHinges(paperNow).map((hinge) => `${hinge.ply}:${Math.hypot(hinge.a.x - hinge.b.x, hinge.a.y - hinge.b.y).toFixed(3)}`).join(',')} data-qx={pose.qx.toFixed(4)} data-qy={pose.qy.toFixed(4)} data-qz={pose.qz.toFixed(4)} data-qw={pose.qw.toFixed(4)} data-parts={pose.parts.map((part) => `${part.ply}:${part.angle.toFixed(3)}`).join(',')}>
       <div className="fold-bar">
       <div className="fold-readout">
         <span>{folds} {folds === 1 ? 'fold' : 'folds'}</span>
@@ -324,7 +325,7 @@ function paint(
     if (!preview && (drawing.dihedral ?? 0) > 0.02) drawPosed(ctx, view, drawing, dye)
     else {
       drawFacets(ctx, view, drawing.facets, dye)
-      drawCreases(ctx, view, drawing.creases)
+      drawCreases(ctx, view, marksOnPaper(drawing))
     }
   }
 

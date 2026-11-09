@@ -106,7 +106,7 @@ describe('adjust pose', () => {
         {
           id: 2,
           ply: 1,
-          plyParent: 0,
+          plyParent: null,
           layer: 1,
           faceUp: -1,
           poly: [
