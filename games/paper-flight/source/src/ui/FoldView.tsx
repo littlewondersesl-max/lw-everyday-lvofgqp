@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { nearestSilhouette } from '../sim/abGuide'
-import { partHinges, TURN_STEP, withTurn } from '../sim/adjust'
+import { partHinges } from '../sim/adjust'
 import { dyeFill, type Dye } from '../sim/dyes'
 import {
   adjustPoseOf,
@@ -189,7 +189,7 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
         {opens > 0 && <span>{opens} open {opens === 1 ? 'crease' : 'creases'}</span>}
       </div>
       {note && <p className="fold-note" role="status">{note}</p>}
-      <p className="fold-hint">{adjusting ? 'The arrows turn the whole sheet. Dragging a flap bends only that flap on its crease, and it stays where you leave it.' : 'Top sheet grabs the face you see. All layers folds the packet. Flip turns it over. Adjust turns the finished sheet and bends each flap on its crease.'}</p>
+      <p className="fold-hint">{adjusting ? 'Drag the empty space around the sheet to turn it. Drag a flap to open it off its crease. It will not fold through the paper it lies on.' : 'Top sheet grabs the face you see. All layers folds the packet. Flip turns it over. Adjust turns the finished sheet and opens each flap off its crease.'}</p>
       </div>
       <div className="fold-stage">
       <canvas ref={canvasRef} className="fold-canvas" hidden={adjusting} />
@@ -245,12 +245,6 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
         {adjusting ? (
           <>
             <button type="button" onClick={() => setAdjusting(false)}>Back</button>
-            <button type="button" onClick={() => writePose(withTurn(pose, 'yaw', TURN_STEP))} title="Turn the whole sheet about the vertical axis">Yaw left</button>
-            <button type="button" onClick={() => writePose(withTurn(pose, 'yaw', -TURN_STEP))} title="Turn the whole sheet about the vertical axis">Yaw right</button>
-            <button type="button" onClick={() => writePose(withTurn(pose, 'pitch', TURN_STEP))} title="Tilt the whole sheet about the side axis">Pitch up</button>
-            <button type="button" onClick={() => writePose(withTurn(pose, 'pitch', -TURN_STEP))} title="Tilt the whole sheet about the side axis">Pitch down</button>
-            <button type="button" onClick={() => writePose(withTurn(pose, 'roll', TURN_STEP))} title="Tilt the whole sheet about the forward axis">Roll left</button>
-            <button type="button" onClick={() => writePose(withTurn(pose, 'roll', -TURN_STEP))} title="Tilt the whole sheet about the forward axis">Roll right</button>
             <button type="button" className="go" onClick={() => onDone()}>Go to hall</button>
           </>
         ) : (
@@ -270,7 +264,7 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
             <button type="button" onClick={() => { setNote('Turned the sheet over, left to right. The other face is on top.'); onOps([...ops.filter((step) => !isAdjust(step)), { flip: true }]) }} disabled={!ops.length || busy} title="Turn the sheet over so the other half is on top">
               Flip paper
             </button>
-            <button type="button" onClick={() => { setNote('The sheet is floating. Arrows turn all of it. Drag a flap to bend that flap.'); setAdjusting(true) }} title="Turn the finished sheet and bend flaps on their creases">
+            <button type="button" onClick={() => { setNote('Drag the space around the sheet to turn it. Drag a flap to open that flap.'); setAdjusting(true) }} title="Turn the finished sheet and open flaps off their creases">
               Adjust
             </button>
             <button type="button" className="go" onClick={() => onDone()}>

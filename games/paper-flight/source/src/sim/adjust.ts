@@ -31,8 +31,6 @@ export interface PartHinge {
   b: Vec2
   axis: Vec3
   outward: Vec2
-  /** Both sides of the sheet's main crease. They turn about that fixed crease, not about each other. */
-  keel?: boolean
 }
 
 export interface HingeFrame {
@@ -51,42 +49,19 @@ export interface PosedFacet {
 export const TURN_STEP = Math.PI / 12
 
 export function partHinges(paper: Paper): PartHinge[] {
-  const area = plyArea(paper)
   const hinges: PartHinge[] = []
-  const keel = keelPair(paper, area)
-  const used = new Set<number>()
-  if (keel) {
-    const spun = hingeAxis(paper, keel.ply, keel.a, keel.b)
-    hinges.push({
-      ply: keel.ply,
-      anchor: keel.anchor,
-      a: keel.a,
-      b: keel.b,
-      axis: spun.axis,
-      outward: spun.outward,
-      keel: true,
-    })
-    const other = sharedBoundary(paper, keel.anchor, keel.ply)
-    if (other) {
-      hinges.push({
-        ply: keel.anchor,
-        anchor: keel.ply,
-        a: other.a,
-        b: other.b,
-        axis: { x: -spun.axis.x, y: -spun.axis.y, z: 0 },
-        outward: { x: -spun.outward.x, y: -spun.outward.y },
-        keel: true,
-      })
-      used.add(keel.ply)
-      used.add(keel.anchor)
-    }
-  }
-  for (const ply of area.keys()) {
-    if (used.has(ply)) continue
+  for (const ply of plyArea(paper).keys()) {
     const hinge = hingeFor(paper, ply)
     if (hinge) hinges.push(hinge)
   }
-  return hinges
+  const drop = new Set<number>()
+  for (const hinge of hinges) {
+    const back = hinges.find((other) => other.ply === hinge.anchor && other.anchor === hinge.ply)
+    if (!back || drop.has(hinge.ply) || drop.has(back.ply)) continue
+    const keep = meanLayer(paper, hinge.ply) >= meanLayer(paper, back.ply) ? hinge.ply : back.ply
+    drop.add(keep === hinge.ply ? back.ply : hinge.ply)
+  }
+  return hinges.filter((hinge) => !drop.has(hinge.ply))
 }
 
 /** The flap a grab should bend. A joined child with no hinge of its own uses its parent. */
@@ -123,7 +98,7 @@ export function posePaper(
       const parentId = parentOf(paper, ply)
       made = parentId == null ? (point) => point : transformOf(parentId)
     } else {
-      const parent = hinge.keel ? (point: Vec3) => point : transformOf(hinge.anchor)
+      const parent = transformOf(hinge.anchor)
       const a = parent({ x: hinge.a.x, y: hinge.a.y, z: 0 })
       const b = parent({ x: hinge.b.x, y: hinge.b.y, z: 0 })
       const mid = { x: (hinge.a.x + hinge.b.x) / 2, y: (hinge.a.y + hinge.b.y) / 2, z: 0 }
@@ -200,14 +175,38 @@ export function withTurn(pose: AdjustPose, axis: 'yaw' | 'pitch' | 'roll', delta
   return { ...pose, qx: q.x, qy: q.y, qz: q.z, qw: q.w }
 }
 
-/** Far enough to open a wing, not far enough to fold a flap through the sheet it is joined to. */
-export const BEND_LIMIT = 2.15
+/** A flap opens away from the sheet it lies on, and stops before it crosses other paper. */
+export const BEND_LIMIT = Math.PI * 0.92
 
-export function withPart(pose: AdjustPose, ply: number, angle: number): AdjustPose {
-  const next = Math.max(-BEND_LIMIT, Math.min(BEND_LIMIT, angle))
+export function withPart(pose: AdjustPose, ply: number, angle: number, paper?: Paper): AdjustPose {
+  const next = paper ? clampBend(paper, pose, ply, angle) : Math.max(0, Math.min(BEND_LIMIT, angle))
   const parts = pose.parts.filter((part) => part.ply !== ply)
-  if (Math.abs(next) > 1e-3) parts.push({ ply, angle: next })
+  if (next > 1e-3) parts.push({ ply, angle: next })
   return { ...pose, parts }
+}
+
+export function orbitPose(pose: AdjustPose, axis: Vec3, angle: number): AdjustPose {
+  const q = normalizeQuat(mulQuat(axisAngle(axis.x, axis.y, axis.z, angle), quatOf(pose)))
+  return { ...pose, qx: q.x, qy: q.y, qz: q.z, qw: q.w }
+}
+
+export function clampBend(paper: Paper, pose: AdjustPose, ply: number, angle: number): number {
+  const proposed = Math.max(0, Math.min(BEND_LIMIT, angle))
+  const base = new Map(pose.parts.filter((part) => part.ply !== ply).map((part) => [part.ply, part.angle]))
+  const at = (value: number) => {
+    const angles = new Map(base)
+    if (value > 1e-4) angles.set(ply, value)
+    return angles
+  }
+  if (!crosses(paper, at(proposed), ply)) return proposed
+  let lo = 0
+  let hi = proposed
+  for (let step = 0; step < 10; step++) {
+    const mid = (lo + hi) / 2
+    if (crosses(paper, at(mid), ply)) hi = mid
+    else lo = mid
+  }
+  return lo
 }
 
 export function applyQuat(q: Quat, point: Vec3): Vec3 {
@@ -244,66 +243,82 @@ export function normalizeQuat(q: Quat): Quat {
 
 function hingeFor(paper: Paper, ply: number): PartHinge | null {
   const parent = parentOf(paper, ply)
-  const shared = parent != null ? sharedBoundary(paper, ply, parent) : null
-  const edge = shared ?? sharedWithLarger(paper, ply)
-  if (!edge) return null
-  const spun = hingeAxis(paper, ply, edge.a, edge.b)
-  return { ply, anchor: edge.anchor, a: edge.a, b: edge.b, axis: spun.axis, outward: spun.outward }
-}
-
-function sharedWithLarger(paper: Paper, ply: number): { a: Vec2; b: Vec2; anchor: number; len: number } | null {
-  const mine = plyArea(paper).get(ply) ?? 0
   let best: { a: Vec2; b: Vec2; anchor: number; len: number } | null = null
-  const seen = new Set<number>()
-  for (const facet of paper.facets) {
-    if (facet.ply === ply || seen.has(facet.ply)) continue
-    seen.add(facet.ply)
-    const other = plyArea(paper).get(facet.ply) ?? 0
-    if (other <= mine) continue
-    const edge = sharedBoundary(paper, ply, facet.ply)
-    if (edge && (!best || edge.len > best.len)) best = edge
+  for (const edge of plyEdges(paper, ply)) {
+    if (edge.len < 0.025 || !oneSided(paper, ply, edge.a, edge.b)) continue
+    const mid = { x: (edge.a.x + edge.b.x) / 2, y: (edge.a.y + edge.b.y) / 2 }
+    let anchor: number | null = null
+    if (parent != null && edgeNearPly(paper, parent, mid, 0.0022)) anchor = parent
+    else anchor = lyingOn(paper, ply, mid)
+    if (anchor == null) continue
+    if (!best || edge.len > best.len) best = { a: edge.a, b: edge.b, anchor, len: edge.len }
   }
-  return best
+  if (!best) return null
+  const spun = hingeAxis(paper, ply, best.a, best.b)
+  // A flap under another sheet opens downward, away from that sheet. A flap on top opens upward.
+  if (meanLayer(paper, ply) + 0.25 < meanLayer(paper, best.anchor)) {
+    spun.axis = { x: -spun.axis.x, y: -spun.axis.y, z: 0 }
+  }
+  return { ply, anchor: best.anchor, a: best.a, b: best.b, axis: spun.axis, outward: spun.outward }
 }
 
-function keelPair(paper: Paper, area: Map<number, number>): { ply: number; anchor: number; a: Vec2; b: Vec2 } | null {
-  const total = [...area.values()].reduce((sum, value) => sum + value, 0)
-  let best: { ply: number; anchor: number; a: Vec2; b: Vec2; len: number } | null = null
-  const ids = [...area.keys()]
-  for (let i = 0; i < ids.length; i++) {
-    for (let j = i + 1; j < ids.length; j++) {
-      const left = ids[i]
-      const right = ids[j]
-      if ((area.get(left) ?? 0) < total * 0.18 || (area.get(right) ?? 0) < total * 0.18) continue
-      const edge = sharedBoundary(paper, left, right)
-      if (!edge || edge.len < 0.12) continue
-      if (!best || edge.len > best.len) best = { ply: left, anchor: right, a: edge.a, b: edge.b, len: edge.len }
-    }
-  }
-  return best
-}
-
-/** Longest edge of `ply` that lies on the boundary of `other`. A gap is not a hinge. */
-function sharedBoundary(
-  paper: Paper,
-  ply: number,
-  other: number,
-): { a: Vec2; b: Vec2; anchor: number; len: number } | null {
-  let best: { a: Vec2; b: Vec2; anchor: number; len: number } | null = null
+function plyEdges(paper: Paper, ply: number): { a: Vec2; b: Vec2; len: number }[] {
+  const edges: { a: Vec2; b: Vec2; len: number }[] = []
   for (const facet of paper.facets) {
     if (facet.ply !== ply) continue
     const poly = facet.poly
     for (let i = 0; i < poly.length; i++) {
       const a = poly[i]
       const b = poly[(i + 1) % poly.length]
-      const len = Math.hypot(a.x - b.x, a.y - b.y)
-      if (len < 0.02) continue
-      const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }
-      if (!edgeNearPly(paper, other, mid, 0.0018)) continue
-      if (!best || len > best.len) best = { a, b, anchor: other, len }
+      edges.push({ a, b, len: Math.hypot(a.x - b.x, a.y - b.y) })
+    }
+  }
+  return edges
+}
+
+function oneSided(paper: Paper, ply: number, a: Vec2, b: Vec2): boolean {
+  const len = Math.hypot(b.x - a.x, b.y - a.y) || 1
+  const nx = -(b.y - a.y) / len
+  const ny = (b.x - a.x) / len
+  let min = Infinity
+  let max = -Infinity
+  for (const facet of paper.facets) {
+    if (facet.ply !== ply) continue
+    for (const point of facet.poly) {
+      const side = (point.x - a.x) * nx + (point.y - a.y) * ny
+      min = Math.min(min, side)
+      max = Math.max(max, side)
+    }
+  }
+  const tol = 0.002
+  return (min < -tol) !== (max > tol) && Math.max(Math.abs(min), max) > 0.004
+}
+
+/** The sheet this flap is folded against: the larger ply on this crease whose layer is nearest. */
+function lyingOn(paper: Paper, ply: number, mid: Vec2): number | null {
+  const mineLayer = meanLayer(paper, ply)
+  const mineArea = plyArea(paper).get(ply) ?? 0
+  let best: number | null = null
+  let bestGap = Infinity
+  const seen = new Set<number>()
+  for (const facet of paper.facets) {
+    if (facet.ply === ply || seen.has(facet.ply)) continue
+    seen.add(facet.ply)
+    if ((plyArea(paper).get(facet.ply) ?? 0) <= mineArea) continue
+    if (!edgeNearPly(paper, facet.ply, mid, 0.0022)) continue
+    const gap = Math.abs(meanLayer(paper, facet.ply) - mineLayer)
+    if (gap < bestGap - 0.05) {
+      best = facet.ply
+      bestGap = gap
     }
   }
   return best
+}
+
+function meanLayer(paper: Paper, ply: number): number {
+  const layers = paper.facets.filter((facet) => facet.ply === ply).map((facet) => facet.layer)
+  if (!layers.length) return 0
+  return layers.reduce((sum, layer) => sum + layer, 0) / layers.length
 }
 
 function hingeAxis(paper: Paper, ply: number, a: Vec2, b: Vec2): { axis: Vec3; outward: Vec2 } {
@@ -390,6 +405,126 @@ function unit(v: Vec3): Vec3 {
 function unit2(v: Vec2): Vec2 {
   const n = Math.hypot(v.x, v.y) || 1
   return { x: v.x / n, y: v.y / n }
+}
+
+function crosses(paper: Paper, angles: Map<number, number>, ply: number): boolean {
+  const posed = posePaper(paper, angles)
+  const moving = movedPlies(partHinges(paper), ply)
+  const tris: Tri[] = []
+  for (const facet of posed.facets) {
+    const poly = facet.poly
+    for (let i = 1; i < poly.length - 1; i++) {
+      const a = poly[0]
+      const b = poly[i]
+      const c = poly[i + 1]
+      tris.push({ ply: facet.ply, a, b, c, n: triNormal(a, b, c) })
+    }
+  }
+  for (const left of tris) {
+    if (!moving.has(left.ply)) continue
+    for (const right of tris) {
+      if (moving.has(right.ply)) continue
+      if (Math.abs(dot3(left.n, right.n)) > 0.96) continue
+      if (sharesEdge(left, right)) continue
+      if (trianglesCross(left, right)) return true
+    }
+  }
+  return false
+}
+
+function movedPlies(hinges: PartHinge[], ply: number): Set<number> {
+  const moving = new Set<number>([ply])
+  let grew = true
+  while (grew) {
+    grew = false
+    for (const hinge of hinges) {
+      if (moving.has(hinge.anchor) && !moving.has(hinge.ply)) {
+        moving.add(hinge.ply)
+        grew = true
+      }
+    }
+  }
+  return moving
+}
+
+interface Tri {
+  ply: number
+  a: Vec3
+  b: Vec3
+  c: Vec3
+  n: Vec3
+}
+
+function trianglesCross(left: Tri, right: Tri): boolean {
+  const d1 = [side(left.a, right), side(left.b, right), side(left.c, right)]
+  if (d1.every((value) => value >= -1e-4) || d1.every((value) => value <= 1e-4)) return false
+  const d2 = [side(right.a, left), side(right.b, left), side(right.c, left)]
+  if (d2.every((value) => value >= -1e-4) || d2.every((value) => value <= 1e-4)) return false
+  return segmentsOverlap(left, d1, right) && segmentsOverlap(right, d2, left)
+}
+
+function side(point: Vec3, tri: Tri): number {
+  return dot3(tri.n, sub(point, tri.a))
+}
+
+function segmentsOverlap(tri: Tri, depth: number[], other: Tri): boolean {
+  const points = [tri.a, tri.b, tri.c]
+  let a: Vec3 | null = null
+  let b: Vec3 | null = null
+  for (let i = 0; i < 3; i++) {
+    const j = (i + 1) % 3
+    if (depth[i] * depth[j] > 0) continue
+    const denom = depth[i] - depth[j]
+    const t = Math.abs(denom) < 1e-8 ? 0 : depth[i] / denom
+    const hit = {
+      x: points[i].x + (points[j].x - points[i].x) * t,
+      y: points[i].y + (points[j].y - points[i].y) * t,
+      z: points[i].z + (points[j].z - points[i].z) * t,
+    }
+    if (!a) a = hit
+    else b = hit
+  }
+  if (!a || !b) return false
+  return pointInTri(a, other) || pointInTri(b, other) || pointInTri(mid3(a, b), other)
+}
+
+function pointInTri(point: Vec3, tri: Tri): boolean {
+  const area = (p: Vec3, q: Vec3, r: Vec3) => dot3(tri.n, cross(sub(q, p), sub(r, p)))
+  const whole = area(tri.a, tri.b, tri.c)
+  if (Math.abs(whole) < 1e-12) return false
+  const u = area(point, tri.b, tri.c) / whole
+  const v = area(tri.a, point, tri.c) / whole
+  const w = area(tri.a, tri.b, point) / whole
+  return u >= -0.02 && v >= -0.02 && w >= -0.02 && u + v + w <= 1.05
+}
+
+function sharesEdge(left: Tri, right: Tri): boolean {
+  let close = 0
+  for (const p of [left.a, left.b, left.c]) {
+    for (const q of [right.a, right.b, right.c]) {
+      if ((p.x - q.x) ** 2 + (p.y - q.y) ** 2 + (p.z - q.z) ** 2 < 0.0025 ** 2) {
+        close += 1
+        break
+      }
+    }
+  }
+  return close >= 2
+}
+
+function triNormal(a: Vec3, b: Vec3, c: Vec3): Vec3 {
+  return unit(cross(sub(b, a), sub(c, a)))
+}
+
+function cross(a: Vec3, b: Vec3): Vec3 {
+  return { x: a.y * b.z - a.z * b.y, y: a.z * b.x - a.x * b.z, z: a.x * b.y - a.y * b.x }
+}
+
+function dot3(a: Vec3, b: Vec3): number {
+  return a.x * b.x + a.y * b.y + a.z * b.z
+}
+
+function mid3(a: Vec3, b: Vec3): Vec3 {
+  return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, z: (a.z + b.z) / 2 }
 }
 
 function segmentDistance(p: Vec2, a: Vec2, b: Vec2) {

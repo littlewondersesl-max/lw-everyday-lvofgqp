@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
-import { bendTarget, posePaper, quatOf, withPart, type HingeFrame } from '../sim/adjust'
+import { bendTarget, orbitPose, posePaper, quatOf, withPart, type HingeFrame } from '../sim/adjust'
 import type { Dye } from '../sim/dyes'
 import { identityAdjust, type AdjustPose, type Paper } from '../sim/geometry'
 import { fillPaperShell } from '../view/paperMesh'
@@ -58,11 +58,20 @@ export function AdjustView({ paper, dye, pose, onPose }: Props) {
     const pointer = new THREE.Vector2()
     const frames = new Map<number, HingeFrame>()
     let drag: {
+      kind: 'flap'
       ply: number
       start: number
+      downX: number
+      downY: number
+      openX: number
+      openY: number
       axis: THREE.Vector3
       origin: THREE.Vector3
       radius: THREE.Vector3
+    } | {
+      kind: 'orbit'
+      x: number
+      y: number
     } | null = null
 
     const resize = () => {
@@ -166,12 +175,17 @@ export function AdjustView({ paper, dye, pose, onPose }: Props) {
     const down = (event: PointerEvent) => {
       if (event.button !== 0) return
       group.updateMatrixWorld(true)
+      camera.updateMatrixWorld(true)
       ray(event)
       const hits = raycaster.intersectObjects(sheets.children, false)
       const bend = hits[0]?.object.userData.bend as number | null | undefined
       const fold = canvas.closest('.fold') as HTMLElement | null
       if (fold) fold.dataset.hot = bend == null ? '' : String(bend)
-      if (bend == null) return
+      if (bend == null) {
+        drag = { kind: 'orbit', x: event.clientX, y: event.clientY }
+        canvas.setPointerCapture(event.pointerId)
+        return
+      }
       const frame = frames.get(bend)
       if (!frame) return
       const origin = new THREE.Vector3(frame.a.x, frame.a.y, frame.a.z)
@@ -179,7 +193,23 @@ export function AdjustView({ paper, dye, pose, onPose }: Props) {
       const radius = localRadius(event, origin, axis)
       if (!radius) return
       const start = poseRef.current.parts.find((part) => part.ply === bend)?.angle ?? 0
-      drag = { ply: bend, start, axis, origin, radius }
+      const toScreen = (local: THREE.Vector3) => {
+        const ndc = local.clone().applyMatrix4(group.matrixWorld).project(camera)
+        const rect = canvas.getBoundingClientRect()
+        return {
+          x: (ndc.x * 0.5 + 0.5) * rect.width + rect.left,
+          y: (-ndc.y * 0.5 + 0.5) * rect.height + rect.top,
+        }
+      }
+      const ahead = radius.clone().applyAxisAngle(axis, 1)
+      const from = toScreen(origin.clone().add(radius.clone().multiplyScalar(0.04)))
+      const toward = toScreen(origin.clone().add(ahead.multiplyScalar(0.04)))
+      let openX = toward.x - from.x
+      let openY = toward.y - from.y
+      const span = Math.hypot(openX, openY) || 1
+      openX /= span
+      openY /= span
+      drag = { kind: 'flap', ply: bend, start, downX: event.clientX, downY: event.clientY, openX, openY, axis, origin, radius }
       canvas.setPointerCapture(event.pointerId)
     }
     const move = (event: PointerEvent) => {
@@ -187,14 +217,24 @@ export function AdjustView({ paper, dye, pose, onPose }: Props) {
         ray(event)
         const hits = raycaster.intersectObjects(sheets.children, false)
         const bend = hits[0]?.object.userData.bend as number | null | undefined
-        canvas.style.cursor = bend == null ? 'default' : 'grab'
+        canvas.style.cursor = bend == null ? 'grab' : 'pointer'
         return
       }
-      const radius = localRadius(event, drag.origin, drag.axis)
-      if (!radius) return
-      const cross = new THREE.Vector3().crossVectors(drag.radius, radius)
-      const delta = Math.atan2(drag.axis.dot(cross), drag.radius.dot(radius))
-      onPoseRef.current(withPart(poseRef.current, drag.ply, drag.start + delta))
+      if (drag.kind === 'orbit') {
+        const dx = event.clientX - drag.x
+        const dy = event.clientY - drag.y
+        drag.x = event.clientX
+        drag.y = event.clientY
+        if (dx === 0 && dy === 0) return
+        const right = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0).normalize()
+        const up = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1).normalize()
+        let next = orbitPose(poseRef.current, { x: up.x, y: up.y, z: up.z }, -dx * 0.008)
+        next = orbitPose(next, { x: right.x, y: right.y, z: right.z }, -dy * 0.008)
+        onPoseRef.current(next)
+        return
+      }
+      const along = (event.clientX - drag.downX) * drag.openX + (event.clientY - drag.downY) * drag.openY
+      onPoseRef.current(withPart(poseRef.current, drag.ply, drag.start + along * 0.012, paperRef.current))
     }
     const up = () => {
       drag = null
