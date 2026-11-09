@@ -52,7 +52,12 @@ export function partHinges(paper: Paper): PartHinge[] {
   const hinges: PartHinge[] = []
   for (const ply of plyArea(paper).keys()) {
     const hinge = hingeFor(paper, ply)
-    if (hinge) hinges.push(hinge)
+    if (!hinge) continue
+    const span = Math.hypot(hinge.a.x - hinge.b.x, hinge.a.y - hinge.b.y)
+    // A short crease lying flat inside a larger sheet does not split that sheet.
+    // The fold that made a wing is long enough to be its own flap.
+    if (parentOf(paper, ply) != null && span < 0.14) continue
+    hinges.push(hinge)
   }
   const drop = new Set<number>()
   for (const hinge of hinges) {
