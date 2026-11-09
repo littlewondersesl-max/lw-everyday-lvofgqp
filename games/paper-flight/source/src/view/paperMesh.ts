@@ -6,19 +6,22 @@ interface Vec3 {
   z: number
 }
 
-/** A thin shell so a rotated sheet still has a visible paper face and rim. */
+/**
+ * One sheet, drawn as faces. A rim is added only on an edge that no neighbour
+ * shares, so a crease stays a hinge and an internal boundary is not a cut.
+ */
 export function fillPaperShell(
   positions: number[],
   colors: number[],
   facets: { faceUp: 1 | -1; layer: number; poly: Vec3[] }[],
   dye: Dye,
 ) {
-  const half = 0.0007
-  for (const facet of facets) {
+  const half = 0.00035
+  facets.forEach((facet, index) => {
     const rgb = dyeUnit(facet.faceUp > 0 ? dye.paper : dye.back, facet.layer, facet.faceUp > 0)
-    const rim: [number, number, number] = [rgb[0] * 0.72, rgb[1] * 0.72, rgb[2] * 0.72]
+    const rim: [number, number, number] = [rgb[0] * 0.55, rgb[1] * 0.55, rgb[2] * 0.55]
     const poly = facet.poly
-    if (poly.length < 3) continue
+    if (poly.length < 3) return
     const normal = faceNormal(poly)
     for (let i = 1; i < poly.length - 1; i++) {
       const tri = [poly[0], poly[i], poly[i + 1]]
@@ -26,17 +29,45 @@ export function fillPaperShell(
       const bottom = tri.map((point) => offset(point, normal, -half))
       pushTri(positions, colors, top[0], top[1], top[2], rgb)
       pushTri(positions, colors, bottom[0], bottom[2], bottom[1], rgb)
-      const sides: [number, number][] = [
+      const edges: [number, number][] = [
         [0, 1],
         [1, 2],
         [2, 0],
       ]
-      for (const [a, b] of sides) {
+      for (const [a, b] of edges) {
+        if (edgeIsShared(tri[a], tri[b], facets, index)) continue
         pushTri(positions, colors, top[a], bottom[a], bottom[b], rim)
         pushTri(positions, colors, top[a], bottom[b], top[b], rim)
       }
     }
+  })
+}
+
+function edgeIsShared(a: Vec3, b: Vec3, facets: { poly: Vec3[] }[], self: number): boolean {
+  for (let index = 0; index < facets.length; index++) {
+    if (index === self) continue
+    const poly = facets[index].poly
+    for (let i = 0; i < poly.length; i++) {
+      const c = poly[i]
+      const d = poly[(i + 1) % poly.length]
+      if (pointOnSegment(a, c, d) && pointOnSegment(b, c, d)) return true
+      if (pointOnSegment(c, a, b) && pointOnSegment(d, a, b)) return true
+    }
   }
+  return false
+}
+
+function pointOnSegment(p: Vec3, a: Vec3, b: Vec3): boolean {
+  const abx = b.x - a.x
+  const aby = b.y - a.y
+  const abz = b.z - a.z
+  const len = abx * abx + aby * aby + abz * abz || 1
+  let t = ((p.x - a.x) * abx + (p.y - a.y) * aby + (p.z - a.z) * abz) / len
+  t = Math.max(0, Math.min(1, t))
+  const dx = p.x - (a.x + abx * t)
+  const dy = p.y - (a.y + aby * t)
+  const dz = p.z - (a.z + abz * t)
+  return dx * dx + dy * dy + dz * dz <= 0.0016 * 0.0016
 }
 
 function faceNormal(poly: Vec3[]): Vec3 {

@@ -279,9 +279,6 @@ function makeActor(seat: HallSeatView, shadowTex: THREE.Texture, stock: string):
   )
   group.add(mesh)
 
-  const edgeGeom = new THREE.EdgesGeometry(geom, 25)
-  group.add(new THREE.LineSegments(edgeGeom, new THREE.LineBasicMaterial({ color: 0x1a1612 })))
-
   const hand = buildHand()
   group.add(hand)
 

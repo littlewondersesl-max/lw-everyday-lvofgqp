@@ -31,6 +31,8 @@ export interface PartHinge {
   b: Vec2
   axis: Vec3
   outward: Vec2
+  /** Both sides of the sheet's main crease. They turn about that fixed crease, not about each other. */
+  keel?: boolean
 }
 
 export interface HingeFrame {
@@ -51,8 +53,37 @@ export const TURN_STEP = Math.PI / 12
 export function partHinges(paper: Paper): PartHinge[] {
   const area = plyArea(paper)
   const hinges: PartHinge[] = []
+  const keel = keelPair(paper, area)
+  const used = new Set<number>()
+  if (keel) {
+    const spun = hingeAxis(paper, keel.ply, keel.a, keel.b)
+    hinges.push({
+      ply: keel.ply,
+      anchor: keel.anchor,
+      a: keel.a,
+      b: keel.b,
+      axis: spun.axis,
+      outward: spun.outward,
+      keel: true,
+    })
+    const other = sharedBoundary(paper, keel.anchor, keel.ply)
+    if (other) {
+      hinges.push({
+        ply: keel.anchor,
+        anchor: keel.ply,
+        a: other.a,
+        b: other.b,
+        axis: { x: -spun.axis.x, y: -spun.axis.y, z: 0 },
+        outward: { x: -spun.outward.x, y: -spun.outward.y },
+        keel: true,
+      })
+      used.add(keel.ply)
+      used.add(keel.anchor)
+    }
+  }
   for (const ply of area.keys()) {
-    const hinge = hingeFor(paper, ply, area)
+    if (used.has(ply)) continue
+    const hinge = hingeFor(paper, ply)
     if (hinge) hinges.push(hinge)
   }
   return hinges
@@ -92,7 +123,7 @@ export function posePaper(
       const parentId = parentOf(paper, ply)
       made = parentId == null ? (point) => point : transformOf(parentId)
     } else {
-      const parent = transformOf(hinge.anchor)
+      const parent = hinge.keel ? (point: Vec3) => point : transformOf(hinge.anchor)
       const a = parent({ x: hinge.a.x, y: hinge.a.y, z: 0 })
       const b = parent({ x: hinge.b.x, y: hinge.b.y, z: 0 })
       const mid = { x: (hinge.a.x + hinge.b.x) / 2, y: (hinge.a.y + hinge.b.y) / 2, z: 0 }
@@ -127,9 +158,13 @@ export function posePaper(
 
   const facets = paper.facets.map((facet) => {
     const place = carrier(facet.ply)
-    const lift = 0.0012 + facet.layer * 0.0034
     const poly = facet.poly.map((point) => {
       const base = place({ x: point.x, y: point.y, z: 0 })
+      const seam = hinges.some((hinge) => segmentDistance(point, hinge.a, hinge.b) < 0.0016)
+      // The crease is one line. A layer's face sits a hair off it, so the
+      // stack reads as one sheet instead of a pile of plates.
+      const lift = seam ? 0 : 0.00016 * (facet.layer + 1)
+      if (lift === 0) return base
       const up = place({ x: point.x, y: point.y, z: 1 })
       const normal = unit(sub(up, base))
       return {
@@ -165,8 +200,11 @@ export function withTurn(pose: AdjustPose, axis: 'yaw' | 'pitch' | 'roll', delta
   return { ...pose, qx: q.x, qy: q.y, qz: q.z, qw: q.w }
 }
 
+/** Far enough to open a wing, not far enough to fold a flap through the sheet it is joined to. */
+export const BEND_LIMIT = 2.15
+
 export function withPart(pose: AdjustPose, ply: number, angle: number): AdjustPose {
-  const next = Math.max(-Math.PI, Math.min(Math.PI, angle))
+  const next = Math.max(-BEND_LIMIT, Math.min(BEND_LIMIT, angle))
   const parts = pose.parts.filter((part) => part.ply !== ply)
   if (Math.abs(next) > 1e-3) parts.push({ ply, angle: next })
   return { ...pose, parts }
@@ -204,9 +242,54 @@ export function normalizeQuat(q: Quat): Quat {
   return { x: q.x / n, y: q.y / n, z: q.z / n, w: q.w / n }
 }
 
-function hingeFor(paper: Paper, ply: number, area: Map<number, number>): PartHinge | null {
-  const mine = area.get(ply) ?? 0
-  let best: { a: Vec2; b: Vec2; len: number; anchor: number } | null = null
+function hingeFor(paper: Paper, ply: number): PartHinge | null {
+  const parent = parentOf(paper, ply)
+  const shared = parent != null ? sharedBoundary(paper, ply, parent) : null
+  const edge = shared ?? sharedWithLarger(paper, ply)
+  if (!edge) return null
+  const spun = hingeAxis(paper, ply, edge.a, edge.b)
+  return { ply, anchor: edge.anchor, a: edge.a, b: edge.b, axis: spun.axis, outward: spun.outward }
+}
+
+function sharedWithLarger(paper: Paper, ply: number): { a: Vec2; b: Vec2; anchor: number; len: number } | null {
+  const mine = plyArea(paper).get(ply) ?? 0
+  let best: { a: Vec2; b: Vec2; anchor: number; len: number } | null = null
+  const seen = new Set<number>()
+  for (const facet of paper.facets) {
+    if (facet.ply === ply || seen.has(facet.ply)) continue
+    seen.add(facet.ply)
+    const other = plyArea(paper).get(facet.ply) ?? 0
+    if (other <= mine) continue
+    const edge = sharedBoundary(paper, ply, facet.ply)
+    if (edge && (!best || edge.len > best.len)) best = edge
+  }
+  return best
+}
+
+function keelPair(paper: Paper, area: Map<number, number>): { ply: number; anchor: number; a: Vec2; b: Vec2 } | null {
+  const total = [...area.values()].reduce((sum, value) => sum + value, 0)
+  let best: { ply: number; anchor: number; a: Vec2; b: Vec2; len: number } | null = null
+  const ids = [...area.keys()]
+  for (let i = 0; i < ids.length; i++) {
+    for (let j = i + 1; j < ids.length; j++) {
+      const left = ids[i]
+      const right = ids[j]
+      if ((area.get(left) ?? 0) < total * 0.18 || (area.get(right) ?? 0) < total * 0.18) continue
+      const edge = sharedBoundary(paper, left, right)
+      if (!edge || edge.len < 0.12) continue
+      if (!best || edge.len > best.len) best = { ply: left, anchor: right, a: edge.a, b: edge.b, len: edge.len }
+    }
+  }
+  return best
+}
+
+/** Longest edge of `ply` that lies on the boundary of `other`. A gap is not a hinge. */
+function sharedBoundary(
+  paper: Paper,
+  ply: number,
+  other: number,
+): { a: Vec2; b: Vec2; anchor: number; len: number } | null {
+  let best: { a: Vec2; b: Vec2; anchor: number; len: number } | null = null
   for (const facet of paper.facets) {
     if (facet.ply !== ply) continue
     const poly = facet.poly
@@ -214,60 +297,32 @@ function hingeFor(paper: Paper, ply: number, area: Map<number, number>): PartHin
       const a = poly[i]
       const b = poly[(i + 1) % poly.length]
       const len = Math.hypot(a.x - b.x, a.y - b.y)
-      if (len < 0.03) continue
+      if (len < 0.02) continue
       const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }
-      const anchor = anchorAt(paper, ply, mid, area, mine)
-      if (anchor == null) continue
-      if (!best || len > best.len) best = { a, b, len, anchor }
-    }
-  }
-  if (!best) return null
-  const mid = { x: (best.a.x + best.b.x) / 2, y: (best.a.y + best.b.y) / 2 }
-  const toward = sub2(centroid(paper, ply), mid)
-  const edge = unit2({ x: best.b.x - best.a.x, y: best.b.y - best.a.y })
-  let outward = { x: -edge.y, y: edge.x }
-  if (outward.x * toward.x + outward.y * toward.y < 0) outward = { x: -outward.x, y: -outward.y }
-  let axis = { x: edge.x, y: edge.y, z: 0 }
-  if (axis.x * outward.y - axis.y * outward.x < 0) axis = { x: -axis.x, y: -axis.y, z: 0 }
-  return { ply, anchor: best.anchor, a: best.a, b: best.b, axis, outward }
-}
-
-function anchorAt(
-  paper: Paper,
-  ply: number,
-  mid: Vec2,
-  area: Map<number, number>,
-  mine: number,
-): number | null {
-  const candidates: number[] = []
-  const seen = new Set<number>()
-  for (const facet of paper.facets) {
-    if (facet.ply === ply || seen.has(facet.ply)) continue
-    seen.add(facet.ply)
-    if ((area.get(facet.ply) ?? 0) < mine * 1.15) continue
-    if (!edgeNearPly(paper, facet.ply, mid)) continue
-    candidates.push(facet.ply)
-  }
-  const parent = parentOf(paper, ply)
-  if (parent != null && candidates.includes(parent)) return parent
-  let best: number | null = null
-  let bestArea = 0
-  for (const id of candidates) {
-    const size = area.get(id) ?? 0
-    if (size > bestArea) {
-      best = id
-      bestArea = size
+      if (!edgeNearPly(paper, other, mid, 0.0018)) continue
+      if (!best || len > best.len) best = { a, b, anchor: other, len }
     }
   }
   return best
 }
 
-function edgeNearPly(paper: Paper, ply: number, mid: Vec2): boolean {
+function hingeAxis(paper: Paper, ply: number, a: Vec2, b: Vec2): { axis: Vec3; outward: Vec2 } {
+  const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }
+  const toward = sub2(centroid(paper, ply), mid)
+  const edge = unit2({ x: b.x - a.x, y: b.y - a.y })
+  let outward = { x: -edge.y, y: edge.x }
+  if (outward.x * toward.x + outward.y * toward.y < 0) outward = { x: -outward.x, y: -outward.y }
+  let axis = { x: edge.x, y: edge.y, z: 0 }
+  if (axis.x * outward.y - axis.y * outward.x < 0) axis = { x: -axis.x, y: -axis.y, z: 0 }
+  return { axis, outward }
+}
+
+function edgeNearPly(paper: Paper, ply: number, mid: Vec2, tol: number): boolean {
   for (const facet of paper.facets) {
     if (facet.ply !== ply) continue
     const poly = facet.poly
     for (let i = 0; i < poly.length; i++) {
-      if (segmentDistance(mid, poly[i], poly[(i + 1) % poly.length]) <= 0.005) return true
+      if (segmentDistance(mid, poly[i], poly[(i + 1) % poly.length]) <= tol) return true
     }
   }
   return false
