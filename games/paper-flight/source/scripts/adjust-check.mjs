@@ -120,18 +120,18 @@ async function angleOf(ply) {
   return part ? Number(part.split(':')[1]) : 0
 }
 
-async function dragHot(spot, pixels) {
+async function dragHot(spot, dx, dy) {
   await page.mouse.move(spot.x, spot.y)
   await page.mouse.down()
   const hot = await page.$eval('.fold', (el) => el.dataset.hot || '')
   if (hot !== spot.hot) {
     await page.mouse.up()
-    return hot
+    return false
   }
-  await page.mouse.move(spot.x, spot.y + pixels, { steps: 14 })
+  await page.mouse.move(spot.x + dx, spot.y + dy, { steps: 8 })
   await page.mouse.up()
-  await new Promise((r) => setTimeout(r, 40))
-  return hot
+  await new Promise((r) => setTimeout(r, 30))
+  return true
 }
 
 const spots = []
@@ -145,19 +145,19 @@ for (const spot of spots) {
 if (wingSpots.length < 1) fail('no wing under the pointer', await info())
 
 const wrong = wingSpots[0]
-await dragHot(wrong, -200)
-if ((await angleOf(wrong.hot)) > 0.15) await dragHot(wrong, 360)
-await dragHot(wrong, 200)
-if ((await angleOf(wrong.hot)) > 0.15) await dragHot(wrong, -360)
+await dragHot(wrong, 0, -30)
+if ((await angleOf(wrong.hot)) > 0.08) await dragHot(wrong, 0, 80)
+await dragHot(wrong, 40, 0)
+if ((await angleOf(wrong.hot)) > 0.08) await dragHot(wrong, -80, 0)
 const stopped = await angleOf(wrong.hot)
 if (stopped < -0.02) fail('wing passed through', { stopped, ...(await info()) })
 await page.screenshot({ path: '/tmp/adjust-wrong.jpg', type: 'jpeg', quality: 76 })
 
 async function findOne(ply) {
   const seen = new Set()
-  for (let ix = 0; ix <= 14; ix++) {
-    for (let iy = 0; iy <= 12; iy++) {
-      const spot = await probe(0.18 + ix * 0.045, 0.22 + iy * 0.045)
+  for (let ix = 0; ix <= 8; ix++) {
+    for (let iy = 0; iy <= 6; iy++) {
+      const spot = await probe(0.28 + ix * 0.055, 0.3 + iy * 0.06)
       if (spot.hot) seen.add(spot.hot)
       if (spot.hot === ply) return spot
     }
@@ -166,53 +166,80 @@ async function findOne(ply) {
   return null
 }
 
-async function openWing(ply) {
-  const spot = await findOne(ply)
-  console.log('find', ply, !!spot)
-  if (!spot) return false
-  let cursor = spot
-  const nudge = async (pixels) => {
-    for (const dx of [0, 0.03, -0.03, 0.06, -0.06]) {
-      for (const dy of [0, 0.03, -0.03]) {
-        const next = await probe(cursor.fx + dx, cursor.fy + dy)
-        if (next.hot !== ply) continue
-        cursor = next
-        await dragHot(cursor, pixels)
-        return
-      }
+async function near(ply, around) {
+  for (const dx of [0, 0.04, -0.04, 0.08, -0.08, 0.12, -0.12]) {
+    for (const dy of [0, 0.05, -0.05, 0.1, -0.1]) {
+      const spot = await probe(around.fx + dx, around.fy + dy)
+      if (spot.hot === ply) return spot
     }
   }
-  await nudge(-8)
-  let dir = (await angleOf(ply)) > 0.04 ? -8 : 8
-  if ((await angleOf(ply)) < 0.04) await nudge(dir)
-  for (let step = 0; step < 18 && (await angleOf(ply)) < 1.0; step++) {
+  return null
+}
+
+async function openWing(ply) {
+  let spot = await findOne(ply)
+  console.log('find', ply, !!spot)
+  if (!spot) return false
+  const ways = [[0, 18], [0, -18], [18, 0], [-18, 0]]
+  let best = ways[0]
+  let bestGain = -1
+  for (const way of ways) {
     const before = await angleOf(ply)
-    await nudge(dir)
-    const after = await angleOf(ply)
-    if (after > 1.35) break
-    if (after + 0.008 < before) dir = -dir
+    const grabbed = await near(ply, spot)
+    if (!grabbed) break
+    spot = grabbed
+    await dragHot(spot, way[0], way[1])
+    const gain = (await angleOf(ply)) - before
+    if (gain > bestGain) {
+      best = way
+      bestGain = gain
+    }
   }
-  for (let step = 0; step < 8 && (await angleOf(ply)) > 1.35; step++) await nudge(-Math.sign(dir) * 4)
+  console.log('way', ply, best.join(','), 'gain', bestGain.toFixed(3), 'angle', (await angleOf(ply)).toFixed(3))
+  for (let step = 0; step < 18; step++) {
+    const before = await angleOf(ply)
+    if (before > 1.0 && before < 1.4) break
+    const grabbed = await near(ply, spot)
+    if (!grabbed) break
+    spot = grabbed
+    const sign = before > 1.4 ? -1 : 1
+    await dragHot(spot, best[0] * sign, best[1] * sign)
+  }
   console.log('opened', ply, await angleOf(ply))
-  return (await angleOf(ply)) > 0.5
+  return (await angleOf(ply)) > 0.85
 }
 
 const ids = [...wings]
-await openWing(wingSpots[0].hot)
-const emptyX = box.x + box.width * 0.86
-const emptyY = box.y + box.height * 0.28
-await page.mouse.move(emptyX, emptyY)
-await page.mouse.down()
-await page.mouse.move(emptyX, emptyY + 340, { steps: 18 })
-await page.mouse.up()
-await new Promise((r) => setTimeout(r, 60))
-const openedSecond = await openWing(ids.find((id) => id !== wingSpots[0].hot))
-if (!openedSecond) console.log('second wing stayed low', await info())
-await page.mouse.move(emptyX, emptyY + 340)
-await page.mouse.down()
-await page.mouse.move(emptyX, emptyY + 160, { steps: 14 })
-await page.mouse.up()
-await new Promise((r) => setTimeout(r, 80))
+const firstId = wingSpots[0].hot
+const secondId = ids.find((id) => id !== firstId)
+await openWing(firstId)
+const emptyX = box.x + box.width * 0.88
+let emptyY = box.y + box.height * 0.16
+let openedSecond = false
+for (let turn = 0; turn < 14 && !openedSecond; turn++) {
+  await page.mouse.move(emptyX, emptyY)
+  await page.mouse.down()
+  await page.mouse.move(emptyX, emptyY + 32, { steps: 5 })
+  await page.mouse.up()
+  emptyY += 32
+  const spot = await findOne(secondId)
+  if (!spot) continue
+  const before = await angleOf(secondId)
+  await dragHot(spot, 0, -24)
+  const gain = Math.abs((await angleOf(secondId)) - before)
+  console.log('peek', secondId, 'gain', gain.toFixed(3))
+  if (gain > 0.12) openedSecond = await openWing(secondId)
+}
+let yawX = emptyX
+for (let shot = 0; shot < 4; shot++) {
+  await page.mouse.move(yawX, emptyY)
+  await page.mouse.down()
+  await page.mouse.move(yawX - 90, emptyY, { steps: 8 })
+  await page.mouse.up()
+  yawX -= 90
+  await new Promise((r) => setTimeout(r, 60))
+  await page.screenshot({ path: `/tmp/adjust-wings-${shot}.jpg`, type: 'jpeg', quality: 76 })
+}
 await page.screenshot({ path: '/tmp/adjust-wings.jpg', type: 'jpeg', quality: 76 })
 state = await info()
 

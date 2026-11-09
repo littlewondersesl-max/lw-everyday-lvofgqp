@@ -142,6 +142,56 @@ describe('adjust pose', () => {
     expect(Math.max(...zOf(raised, 0))).toBeLessThan(0.02)
   })
 
+  it('opens the wing folded after the flip off the half it lies on, matching the other wing', () => {
+    const w = SHEET.width
+    const h = SHEET.height
+    let paper = blankSheet()
+    const steps: FoldOp[] = []
+    const drag = (from: { x: number; y: number }, to: { x: number; y: number }, all = false) => {
+      const joined = all ? null : pliesForGrab(paper, from, 0.03)
+      const folded = reflectFold(paper, from, to, joined ?? undefined)
+      if (!folded) throw new Error('fold')
+      steps.push(folded.op)
+      paper = folded.paper
+    }
+    drag({ x: -w / 2, y: h / 2 }, { x: 0, y: h / 2 - w / 2 })
+    drag({ x: w / 2, y: h / 2 }, { x: 0, y: h / 2 - w / 2 })
+    drag({ x: -w / 2, y: 0 }, { x: w / 2, y: 0 }, true)
+    drag({ x: w / 2, y: 0 }, { x: 0, y: 0 })
+    paper = applyOps([...steps, { flip: true }])
+    const from = { x: -w / 2, y: 0 }
+    const second = reflectFold(paper, from, { x: 0, y: 0 }, pliesForGrab(paper, from, 0.03) ?? undefined)
+    if (!second) throw new Error('second wing')
+    paper = applyOps([...steps, { flip: true }, second.op])
+    const wings = partHinges(paper).filter((hinge) => {
+      const len = Math.hypot(hinge.a.x - hinge.b.x, hinge.a.y - hinge.b.y)
+      return len > 0.16 && len < 0.26
+    })
+    expect(wings).toHaveLength(2)
+    expect(new Set(wings.map((hinge) => hinge.anchor)).size).toBe(2)
+    const travel = new Map<number, number>()
+    for (const wing of wings) {
+      expect(clampBend(paper, identityAdjust(), wing.ply, -1)).toBe(0)
+      const opened = clampBend(paper, identityAdjust(), wing.ply, 1.15)
+      expect(opened).toBeGreaterThan(1)
+      const posed = posePaper(paper, new Map([[wing.ply, opened]]))
+      let z = 0
+      let count = 0
+      for (const facet of posed.facets) {
+        if (facet.ply !== wing.ply) continue
+        for (const point of facet.poly) {
+          z += point.z
+          count += 1
+        }
+      }
+      travel.set(wing.ply, z / count)
+      expect(seamGap(paper, posed, wing)).toBeLessThan(0.002)
+    }
+    const [first, secondWing] = [...travel.values()]
+    expect(Math.sign(first)).not.toBe(Math.sign(secondWing))
+    expect(Math.abs(Math.abs(first) - Math.abs(secondWing))).toBeLessThan(0.008)
+  })
+
   it('opens a dart wing off its crease and refuses to fold it back through the sheet', () => {
     const { paper } = dart()
     const hinges = partHinges(paper)

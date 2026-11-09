@@ -61,6 +61,10 @@ export function AdjustView({ paper, dye, pose, onPose }: Props) {
       kind: 'flap'
       ply: number
       start: number
+      downX: number
+      downY: number
+      openX: number
+      openY: number
       axis: THREE.Vector3
       origin: THREE.Vector3
       radius: THREE.Vector3
@@ -171,6 +175,7 @@ export function AdjustView({ paper, dye, pose, onPose }: Props) {
     const down = (event: PointerEvent) => {
       if (event.button !== 0) return
       group.updateMatrixWorld(true)
+      camera.updateMatrixWorld(true)
       ray(event)
       const hits = raycaster.intersectObjects(sheets.children, false)
       const bend = hits[0]?.object.userData.bend as number | null | undefined
@@ -188,7 +193,23 @@ export function AdjustView({ paper, dye, pose, onPose }: Props) {
       const radius = localRadius(event, origin, axis)
       if (!radius) return
       const start = poseRef.current.parts.find((part) => part.ply === bend)?.angle ?? 0
-      drag = { kind: 'flap', ply: bend, start, axis, origin, radius }
+      const toScreen = (local: THREE.Vector3) => {
+        const ndc = local.clone().applyMatrix4(group.matrixWorld).project(camera)
+        const rect = canvas.getBoundingClientRect()
+        return {
+          x: (ndc.x * 0.5 + 0.5) * rect.width + rect.left,
+          y: (-ndc.y * 0.5 + 0.5) * rect.height + rect.top,
+        }
+      }
+      const ahead = radius.clone().applyAxisAngle(axis, 1)
+      const from = toScreen(origin.clone().add(radius.clone().multiplyScalar(0.04)))
+      const toward = toScreen(origin.clone().add(ahead.multiplyScalar(0.04)))
+      let openX = toward.x - from.x
+      let openY = toward.y - from.y
+      const span = Math.hypot(openX, openY) || 1
+      openX /= span
+      openY /= span
+      drag = { kind: 'flap', ply: bend, start, downX: event.clientX, downY: event.clientY, openX, openY, axis, origin, radius }
       canvas.setPointerCapture(event.pointerId)
     }
     const move = (event: PointerEvent) => {
@@ -212,11 +233,8 @@ export function AdjustView({ paper, dye, pose, onPose }: Props) {
         onPoseRef.current(next)
         return
       }
-      const radius = localRadius(event, drag.origin, drag.axis)
-      if (!radius) return
-      const cross = new THREE.Vector3().crossVectors(drag.radius, radius)
-      const delta = Math.atan2(drag.axis.dot(cross), drag.radius.dot(radius))
-      onPoseRef.current(withPart(poseRef.current, drag.ply, drag.start + delta, paperRef.current))
+      const along = (event.clientX - drag.downX) * drag.openX + (event.clientY - drag.downY) * drag.openY
+      onPoseRef.current(withPart(poseRef.current, drag.ply, drag.start + along * 0.012, paperRef.current))
     }
     const up = () => {
       drag = null

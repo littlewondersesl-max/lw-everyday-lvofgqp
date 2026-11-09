@@ -249,7 +249,7 @@ function hingeFor(paper: Paper, ply: number): PartHinge | null {
     const mid = { x: (edge.a.x + edge.b.x) / 2, y: (edge.a.y + edge.b.y) / 2 }
     let anchor: number | null = null
     if (parent != null && edgeNearPly(paper, parent, mid, 0.0022)) anchor = parent
-    else anchor = largerTouching(paper, ply, mid)
+    else anchor = lyingOn(paper, ply, mid)
     if (anchor == null) continue
     if (!best || edge.len > best.len) best = { a: edge.a, b: edge.b, anchor, len: edge.len }
   }
@@ -294,19 +294,23 @@ function oneSided(paper: Paper, ply: number, a: Vec2, b: Vec2): boolean {
   return (min < -tol) !== (max > tol) && Math.max(Math.abs(min), max) > 0.004
 }
 
-function largerTouching(paper: Paper, ply: number, mid: Vec2): number | null {
-  const mine = plyArea(paper).get(ply) ?? 0
+/** The sheet this flap is folded against: the larger ply on this crease whose layer is nearest. */
+function lyingOn(paper: Paper, ply: number, mid: Vec2): number | null {
+  const mineLayer = meanLayer(paper, ply)
+  const mineArea = plyArea(paper).get(ply) ?? 0
   let best: number | null = null
-  let bestArea = mine
+  let bestGap = Infinity
   const seen = new Set<number>()
   for (const facet of paper.facets) {
     if (facet.ply === ply || seen.has(facet.ply)) continue
     seen.add(facet.ply)
-    const size = plyArea(paper).get(facet.ply) ?? 0
-    if (size <= bestArea) continue
+    if ((plyArea(paper).get(facet.ply) ?? 0) <= mineArea) continue
     if (!edgeNearPly(paper, facet.ply, mid, 0.0022)) continue
-    best = facet.ply
-    bestArea = size
+    const gap = Math.abs(meanLayer(paper, facet.ply) - mineLayer)
+    if (gap < bestGap - 0.05) {
+      best = facet.ply
+      bestGap = gap
+    }
   }
   return best
 }
