@@ -35,8 +35,8 @@ export function AdjustView({ paper, dye, pose, onPose }: Props) {
     scene.background = new THREE.Color(0x241f1b)
     const camera = new THREE.PerspectiveCamera(38, 1, 0.02, 10)
     camera.up.set(0, 0, 1)
-    camera.position.set(-0.36, -0.22, 0.24)
-    camera.lookAt(0, 0, 0.02)
+    camera.position.set(-0.26, -0.2, 0.2)
+    camera.lookAt(0, 0, 0.015)
     scene.add(new THREE.HemisphereLight(0xf2efe6, 0x3a322c, 0.85))
     const sun = new THREE.DirectionalLight(0xfff6ea, 1.25)
     sun.position.set(0.4, -0.6, 1.2)
@@ -93,6 +93,24 @@ export function AdjustView({ paper, dye, pose, onPose }: Props) {
       const q = quatOf(current)
       group.position.set(0, 0, 0)
       group.quaternion.set(q.x, q.y, q.z, q.w)
+      const positions: number[] = []
+      const colors: number[] = []
+      fillPaperShell(positions, colors, posed.facets, dyeRef.current)
+      const geom = new THREE.BufferGeometry()
+      geom.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
+      geom.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3))
+      geom.computeVertexNormals()
+      const sheet = new THREE.Mesh(
+        geom,
+        new THREE.MeshStandardMaterial({
+          vertexColors: true,
+          roughness: 0.86,
+          metalness: 0,
+          side: THREE.DoubleSide,
+        }),
+      )
+      sheet.raycast = () => {}
+      sheets.add(sheet)
       const byPly = new Map<number, typeof posed.facets>()
       for (const facet of posed.facets) {
         const list = byPly.get(facet.ply) ?? []
@@ -100,30 +118,21 @@ export function AdjustView({ paper, dye, pose, onPose }: Props) {
         byPly.set(facet.ply, list)
       }
       for (const [ply, facets] of byPly) {
-        const positions: number[] = []
-        const colors: number[] = []
-        fillPaperShell(positions, colors, facets, dyeRef.current)
-        const geom = new THREE.BufferGeometry()
-        geom.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
-        geom.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3))
-        geom.computeVertexNormals()
-        const mesh = new THREE.Mesh(
-          geom,
-          new THREE.MeshStandardMaterial({
-            vertexColors: true,
-            roughness: 0.86,
-            metalness: 0,
-            side: THREE.DoubleSide,
-          }),
+        const pickPositions: number[] = []
+        for (const facet of facets) {
+          const poly = facet.poly
+          for (let i = 1; i < poly.length - 1; i++) {
+            pickPositions.push(poly[0].x, poly[0].y, poly[0].z, poly[i].x, poly[i].y, poly[i].z, poly[i + 1].x, poly[i + 1].y, poly[i + 1].z)
+          }
+        }
+        const pickGeom = new THREE.BufferGeometry()
+        pickGeom.setAttribute('position', new THREE.Float32BufferAttribute(pickPositions, 3))
+        const picker = new THREE.Mesh(
+          pickGeom,
+          new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }),
         )
-        mesh.userData.bend = bendTarget(paperRef.current, ply)
-        sheets.add(mesh)
-        const edges = new THREE.LineSegments(
-          new THREE.EdgesGeometry(geom, 28),
-          new THREE.LineBasicMaterial({ color: 0x1a1612 }),
-        )
-        edges.raycast = () => {}
-        sheets.add(edges)
+        picker.userData.bend = bendTarget(paperRef.current, ply)
+        sheets.add(picker)
       }
       group.updateMatrixWorld(true)
       const center = new THREE.Box3().setFromObject(group).getCenter(new THREE.Vector3())

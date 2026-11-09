@@ -13,6 +13,52 @@ import {
   type Paper,
 } from '../src/sim/geometry'
 
+function seamGap(
+  paper: Paper,
+  posed: { facets: { poly: { x: number; y: number; z: number }[] }[] },
+  hinge: { ply: number; anchor: number; a: { x: number; y: number }; b: { x: number; y: number } },
+) {
+  let worst = 0
+  paper.facets.forEach((facet, index) => {
+    if (facet.ply !== hinge.ply && facet.ply !== hinge.anchor) return
+    facet.poly.forEach((point, vertex) => {
+      if (segmentDistance(point, hinge.a, hinge.b) > 0.0016) return
+      const posedPoint = posed.facets[index].poly[vertex]
+      worst = Math.max(worst, hingeDistance(posedPoint, hinge.a, hinge.b))
+    })
+  })
+  return worst
+}
+
+function hingeDistance(
+  point: { x: number; y: number; z: number },
+  a: { x: number; y: number },
+  b: { x: number; y: number },
+) {
+  const abx = b.x - a.x
+  const aby = b.y - a.y
+  const len = Math.hypot(abx, aby) || 1
+  const apx = point.x - a.x
+  const apy = point.y - a.y
+  const cx = aby * point.z
+  const cy = -abx * point.z
+  const cz = abx * apy - aby * apx
+  return Math.hypot(cx, cy, cz) / len
+}
+
+function segmentDistance(
+  point: { x: number; y: number },
+  a: { x: number; y: number },
+  b: { x: number; y: number },
+) {
+  const dx = b.x - a.x
+  const dy = b.y - a.y
+  const len = dx * dx + dy * dy || 1
+  let t = ((point.x - a.x) * dx + (point.y - a.y) * dy) / len
+  t = Math.max(0, Math.min(1, t))
+  return Math.hypot(point.x - (a.x + t * dx), point.y - (a.y + t * dy))
+}
+
 function dart(): { paper: Paper; steps: FoldOp[] } {
   const w = SHEET.width
   const h = SHEET.height
@@ -96,19 +142,30 @@ describe('adjust pose', () => {
     expect(Math.max(...zOf(raised, 0))).toBeLessThan(0.02)
   })
 
-  it('opens the two dart wings independently', () => {
+  it('opens each dart flap on its own crease and keeps the crease joined', () => {
     const { paper } = dart()
-    const hinges = partHinges(paper).sort((a, b) => b.a.y - b.b.y - (a.a.y - a.b.y))
-    const wings = hinges.filter((hinge) => Math.hypot(hinge.a.x - hinge.b.x, hinge.a.y - hinge.b.y) > 0.08)
+    const hinges = partHinges(paper)
+    const keel = hinges.filter((hinge) => hinge.keel)
+    expect(keel).toHaveLength(2)
+    const wings = hinges.filter((hinge) => !hinge.keel && Math.hypot(hinge.a.x - hinge.b.x, hinge.a.y - hinge.b.y) > 0.12)
     expect(wings.length).toBeGreaterThanOrEqual(2)
-    const [first, second] = wings
-    const flat = posePaper(paper, new Map())
-    const posed = posePaper(paper, new Map([[first.ply, 0.9]]))
-    const maxZ = (posedPaper: typeof flat, ply: number) =>
-      Math.max(...posedPaper.facets.filter((facet) => facet.ply === ply).flatMap((facet) => facet.poly.map((point) => point.z)))
-    expect(maxZ(posed, first.ply) - maxZ(flat, first.ply)).toBeGreaterThan(0.02)
-    expect(Math.abs(maxZ(posed, second.ply) - maxZ(flat, second.ply))).toBeLessThan(0.005)
-    expect(Math.abs(maxZ(posed, first.anchor) - maxZ(flat, first.anchor))).toBeLessThan(0.005)
+    const posed = posePaper(paper, new Map([[wings[0].ply, 0.9]]))
+    const maxZ = (ply: number) =>
+      Math.max(...posed.facets.filter((facet) => facet.ply === ply).flatMap((facet) => facet.poly.map((point) => point.z)))
+    expect(maxZ(wings[0].ply)).toBeGreaterThan(0.01)
+    expect(maxZ(wings[1].ply)).toBeLessThan(0.004)
+    expect(seamGap(paper, posed, wings[0])).toBeLessThan(0.002)
+
+    const opened = posePaper(paper, new Map(keel.map((hinge, index) => [hinge.ply, index === 0 ? 0.9 : -0.9])))
+    for (const hinge of keel) {
+      expect(seamGap(paper, opened, hinge)).toBeLessThan(0.002)
+      const child = hinges.find((item) => !item.keel && item.anchor === hinge.ply)
+      if (!child) continue
+      const childZ = Math.max(
+        ...opened.facets.filter((facet) => facet.ply === child.ply).flatMap((facet) => facet.poly.map((point) => Math.abs(point.z))),
+      )
+      expect(childZ).toBeGreaterThan(0.01)
+    }
   })
 
   it('turns the whole sheet a full circle and keeps the pose through sanitize', () => {

@@ -93,7 +93,7 @@ function wingPlies(hingeList) {
   return hingeList.split(',').filter(Boolean).map((item) => {
     const [ply, len] = item.split(':')
     return { ply, len: Number(len) }
-  }).filter((hinge) => hinge.len > 0.14 && hinge.len < 0.25).map((hinge) => hinge.ply)
+  }).sort((a, b) => b.len - a.len).slice(0, 2).map((hinge) => hinge.ply)
 }
 
 async function pullWing(direction, done, wantSign) {
@@ -158,7 +158,12 @@ await page.screenshot({ path: '/tmp/adjust-wings.jpg', type: 'jpeg', quality: 76
 state = await info()
 
 await page.click('button::-p-text(Go to hall)')
-await page.waitForSelector('.hall-canvas', { timeout: 4000 })
+try {
+  await page.waitForSelector('.hall-canvas', { timeout: 4000 })
+} catch (err) {
+  console.log(JSON.stringify({ errors, text: await page.evaluate(() => document.body.innerText.slice(0, 500)) }, null, 2))
+  throw err
+}
 await new Promise((r) => setTimeout(r, 500))
 await page.screenshot({ path: '/tmp/adjust-hall.jpg', type: 'jpeg', quality: 76 })
 console.log(JSON.stringify({ ok: true, state, errors }, null, 2))
