@@ -5,13 +5,15 @@
  */
 
 import * as THREE from 'three'
+import { composeAim } from '../sim/adjust'
 import { HALL, LANES, LIMITS, releaseHeight } from '../sim/constants'
-import { dyeById, dyeUnit } from '../sim/dyes'
-import { applyOps, type SheetStep } from '../sim/geometry'
+import { dyeById } from '../sim/dyes'
+import { adjustPoseOf, applyOps, type SheetStep } from '../sim/geometry'
 import { poseFacets } from '../sim/wings'
 import { stockById } from '../sim/stock'
 import type { PublicFlight } from '../sim/room'
 import { deriveShape } from '../sim/shape'
+import { fillPaperShell } from './paperMesh'
 
 export interface HallAim {
   height: number
@@ -75,10 +77,6 @@ export function mountHall(canvas: HTMLCanvasElement, handlers: HallHandlers) {
   const actors = new Map<number, Actor>()
   const qA = new THREE.Quaternion()
   const qB = new THREE.Quaternion()
-  const qYaw = new THREE.Quaternion()
-  const qPitch = new THREE.Quaternion()
-  const yAxis = new THREE.Vector3(0, 1, 0)
-  const zAxis = new THREE.Vector3(0, 0, 1)
   const look = new THREE.Vector3(4.2, 0, 0.85)
   const shadowTex = makeShadowTexture()
 
@@ -174,7 +172,7 @@ export function mountHall(canvas: HTMLCanvasElement, handlers: HallHandlers) {
       const flight = snap.flights?.find((f) => f.seat === seat.index) ?? null
       const delay = seat.index * 0.42
       const elapsed = snap.flights ? (now - cinemaStart) / 1000 - delay : -10
-      const pose = poseFor(seat, snap, flight, elapsed, qYaw, qPitch, yAxis, zAxis, qA, qB)
+      const pose = poseFor(seat, snap, flight, elapsed, qA, qB)
       actor.group.position.copy(pose.position)
       actor.group.quaternion.copy(pose.quaternion)
       actor.aim.visible = snap.phase === 'aim' && seat.you && snap.aim.lifted
@@ -262,16 +260,7 @@ function makeActor(seat: HallSeatView, shadowTex: THREE.Texture, stock: string):
   const group = new THREE.Group()
   const positions: number[] = []
   const colors: number[] = []
-  for (const facet of posed) {
-    const dye = dyeById(seat.dye)
-    const rgb = dyeUnit(facet.faceUp > 0 ? dye.paper : dye.back, facet.layer, facet.faceUp > 0)
-    const poly = facet.poly
-    for (let i = 1; i < poly.length - 1; i++) {
-      push(positions, colors, poly[0], poly[0].z, rgb)
-      push(positions, colors, poly[i], poly[i].z, rgb)
-      push(positions, colors, poly[i + 1], poly[i + 1].z, rgb)
-    }
-  }
+  fillPaperShell(positions, colors, posed, dyeById(seat.dye))
   const geom = new THREE.BufferGeometry()
   geom.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
   geom.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3))
@@ -340,10 +329,6 @@ function poseFor(
   snap: HallSnapshot,
   flight: PublicFlight | null,
   elapsed: number,
-  qYaw: THREE.Quaternion,
-  qPitch: THREE.Quaternion,
-  yAxis: THREE.Vector3,
-  zAxis: THREE.Vector3,
   qA: THREE.Quaternion,
   qB: THREE.Quaternion,
 ): Pose {
@@ -361,7 +346,7 @@ function poseFor(
   if (!flight || elapsed < -0.46) {
     return {
       position: new THREE.Vector3(hold.x, hold.y, hold.z),
-      quaternion: aimQuat(hold.yaw, hold.pitch, qYaw, qPitch, yAxis, zAxis),
+      quaternion: orientQuat(hold.yaw, hold.pitch, seat.ops),
       noseX: hold.x,
       hand: false,
       handPull: 0,
@@ -370,7 +355,7 @@ function poseFor(
   if (elapsed < 0) {
     const u = (elapsed + 0.46) / 0.46
     const amount = (u < 0.55 ? u / 0.55 : 1 - (u - 0.55) / 0.45) * 0.15
-    const q = aimQuat(launch.yaw, launch.pitch + amount * 0.35, qYaw, qPitch, yAxis, zAxis)
+    const q = orientQuat(launch.yaw, launch.pitch + amount * 0.35, seat.ops)
     const position = new THREE.Vector3(launch.x, launch.y, launch.z)
     position.addScaledVector(new THREE.Vector3(-1, 0, 0).applyQuaternion(q), amount)
     return { position, quaternion: q, noseX: position.x, hand: true, handPull: amount }
@@ -397,17 +382,11 @@ function poseFor(
   }
 }
 
-function aimQuat(
-  yaw: number,
-  pitch: number,
-  qYaw: THREE.Quaternion,
-  qPitch: THREE.Quaternion,
-  yAxis: THREE.Vector3,
-  zAxis: THREE.Vector3,
-) {
-  qPitch.setFromAxisAngle(yAxis, -pitch)
-  qYaw.setFromAxisAngle(zAxis, yaw)
-  return qYaw.clone().multiply(qPitch)
+function orientQuat(yaw: number, pitch: number, ops: SheetStep[]) {
+  const pose = adjustPoseOf(ops)
+  const orient = pose ? { x: pose.qx, y: pose.qy, z: pose.qz, w: pose.qw } : { x: 0, y: 0, z: 0, w: 1 }
+  const q = composeAim(yaw, pitch, orient)
+  return new THREE.Quaternion(q.x, q.y, q.z, q.w)
 }
 
 function buildHand() {
@@ -555,11 +534,6 @@ function makeShadowTexture() {
   g.fillRect(0, 0, 128, 128)
   const tex = new THREE.CanvasTexture(canvas)
   return tex
-}
-
-function push(positions: number[], colors: number[], p: { x: number; y: number }, z: number, rgb: number[]) {
-  positions.push(p.x, p.y, z)
-  colors.push(rgb[0], rgb[1], rgb[2])
 }
 
 function project(pos: THREE.Vector3, camera: THREE.PerspectiveCamera, rect: DOMRect) {

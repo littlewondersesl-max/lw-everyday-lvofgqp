@@ -142,9 +142,9 @@ function RotatePage({ dye }: { dye: Dye }) {
 function RulePage({ dye }: { dye: Dye }) {
   return (
     <>
-      <h2>Lift the wings</h2>
+      <h2>Adjust the sheet</h2>
       <p>
-        Lift wings opens wings that were folded back, on their hinges, into the shape that flies. It does not replace your sheet with a stock plane. If you have not folded a wing, the button stays quiet.
+        Adjust lifts the finished sheet into the air. The arrows turn the whole thing. Dragging a flap bends only that flap around the crease it already has, and it stays where you leave it. Go to hall flies that same shape, in the orientation you left it.
       </p>
       <div className="book-trio">
         <Mini ops={[]} dye={dye} label="Before" />
@@ -152,7 +152,7 @@ function RulePage({ dye }: { dye: Dye }) {
         <Mini ops={[RULE]} dye={dye} label="After" />
       </div>
       <p>
-        Unfold opens only the latest fold and keeps its crease. Undo takes the last action back, including a flip. Reset clears the sheet. The flight model uses this opened outline. It is a flat-plate estimate, not a wind tunnel.
+        Unfold opens only the latest fold and keeps its crease. Undo takes the last action back, including a flip. Reset clears the sheet. The flight model uses this opened outline and the orientation you set. It is a flat-plate estimate, not a wind tunnel.
       </p>
     </>
   )

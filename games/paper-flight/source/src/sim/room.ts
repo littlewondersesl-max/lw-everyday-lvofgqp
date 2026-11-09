@@ -7,7 +7,8 @@
 import { LANES, LIMITS, releaseHeight, SHEET } from './constants'
 import { DYES, dyeById } from './dyes'
 import { BOT_FILL, archetypeById, type ArchetypeId } from './bots'
-import { applyOps, netFolds, sanitizeOps, type SheetStep } from './geometry'
+import { quatOf } from './adjust'
+import { adjustPoseOf, applyOps, netFolds, sanitizeOps, type SheetStep } from './geometry'
 import { DEFAULT_STOCK, scaleFoldOp, stockById, STOCKS } from './stock'
 import { simulateFlight, type FlightResult, type Launch } from './flight'
 import { deriveShape } from './shape'
@@ -374,7 +375,11 @@ function launch(room: Room) {
       yaw: aim.yaw,
       speed: aim.speed,
     }
-    const result: FlightResult = simulateFlight(deriveShape(applyOps(seat.ops, stockById(room.stockId))), launchAim)
+    const folded = applyOps(seat.ops, stockById(room.stockId))
+    const pose = adjustPoseOf(seat.ops)
+    const result: FlightResult = simulateFlight(deriveShape(folded), launchAim, {
+      orient: pose ? quatOf(pose) : undefined,
+    })
     return {
       seat: index,
       distance: result.distance,
