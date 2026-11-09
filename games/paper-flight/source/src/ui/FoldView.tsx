@@ -1,15 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { nearestSilhouette } from '../sim/abGuide'
+import { partHinges, TURN_STEP, withTurn } from '../sim/adjust'
 import { dyeFill, type Dye } from '../sim/dyes'
 import {
+  adjustPoseOf,
   applyOps,
   buildFold,
-  isLift,
+  identityAdjust,
+  isAdjust,
   lineFrame,
   netFolds,
   openCreaseCount,
   pliesForGrab,
   signedDistance,
+  type AdjustPose,
   type FoldOp,
   type Paper,
   type SheetStep,
@@ -17,7 +21,8 @@ import {
 } from '../sim/geometry'
 import { reflectFold } from '../sim/dragFold'
 import { STOCKS, stockById, type Stock } from '../sim/stock'
-import { canLift, poseFacets } from '../sim/wings'
+import { poseFacets } from '../sim/wings'
+import { AdjustView } from './AdjustView'
 import { boardTickSpans, fitSheet } from './creaseClamp'
 
 const PINCH =
@@ -47,6 +52,9 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const previewRef = useRef<FoldOp | null>(null)
   const [allLayers, setAllLayers] = useState(false)
+  const [adjusting, setAdjusting] = useState(false)
+  const adjustingRef = useRef(false)
+  adjustingRef.current = adjusting
   const allRef = useRef(false)
   allRef.current = allLayers
   const [draftId, setDraftId] = useState(stock.id)
@@ -98,7 +106,7 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
       return 16 / Math.max(view.scale, 1)
     }
     const down = (event: PointerEvent) => {
-      if (event.button !== 0 || animRef.current) return
+      if (event.button !== 0 || animRef.current || adjustingRef.current) return
       const p = toPaper(canvas, event.clientX, event.clientY, stockRef.current)
       if (!p) return
       const paperNow = base()
@@ -128,7 +136,7 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
         previewRef.current = null
         if (op) {
           setNote(op.plies ? 'Folded the top sheet only.' : 'Folded every layer on that side.')
-          onOpsRef.current([...opsRef.current, op])
+          onOpsRef.current([...opsRef.current.filter((step) => !isAdjust(step)), op])
         }
       }
       mode = null
@@ -152,8 +160,8 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
   const draft = stockById(draftId)
   const stockDirty = draft.id !== stock.id
   const paperNow = applyOps(ops, stock)
-  const wingsReady = canLift(paperNow)
-  const lifted = paperNow.dihedral ?? 0
+  const pose = adjustPoseOf(ops) ?? identityAdjust()
+  const hinges = partHinges(paperNow).length
 
   function chooseStock(id: string) {
     setDraftId(id)
@@ -162,39 +170,34 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
 
   function unfold() {
     if (netFolds(opsRef.current) === 0 || animRef.current) return
-    onOps([...opsRef.current, { unfold: true }])
+    onOps([...opsRef.current.filter((step) => !isAdjust(step)), { unfold: true }])
     setNote('Opened the last fold. Its crease stays on the paper. Unfold again for the one before it.')
   }
 
-  function setLift(radians: number) {
-    const kept = ops.filter((step) => !isLift(step))
-    if (radians <= 0.02) {
-      onOps(kept)
-      setNote('Wings laid flat on the packet.')
-      return
-    }
-    if (!canLift(applyOps(kept, stock))) {
-      setNote('Fold a wing back first. Lift wings opens those sheets. It does not invent a plane.')
-      return
-    }
-    onOps([...kept, { lift: radians }])
-    setNote('Wings opened on their hinges. The hall flies this same shape.')
+  function writePose(next: AdjustPose) {
+    const kept = ops.filter((step) => !isAdjust(step))
+    onOps([...kept, { adjust: next }])
   }
 
   return (
-    <div className="fold" data-dye={dye.id} data-folds={folds} data-open={opens} data-stock={stock.id} data-dihedral={lifted.toFixed(3)} data-layers={allLayers ? 'all' : 'top'} data-wings={wingsReady ? '1' : '0'}>
+    <div className="fold" data-dye={dye.id} data-folds={folds} data-open={opens} data-stock={stock.id} data-dihedral={(paperNow.dihedral ?? 0).toFixed(3)} data-layers={allLayers ? 'all' : 'top'} data-wings={hinges > 0 ? '1' : '0'} data-adjust={adjusting ? '1' : '0'} data-hinges={hinges} data-hinge-list={partHinges(paperNow).map((hinge) => `${hinge.ply}:${Math.hypot(hinge.a.x - hinge.b.x, hinge.a.y - hinge.b.y).toFixed(3)}`).join(',')} data-qx={pose.qx.toFixed(4)} data-qy={pose.qy.toFixed(4)} data-qz={pose.qz.toFixed(4)} data-qw={pose.qw.toFixed(4)} data-parts={pose.parts.map((part) => `${part.ply}:${part.angle.toFixed(3)}`).join(',')}>
       <div className="fold-bar">
       <div className="fold-readout">
         <span>{folds} {folds === 1 ? 'fold' : 'folds'}</span>
-        <span>{allLayers ? 'All layers' : 'Top sheet'}</span>
-        <span>{lifted > 0.02 ? `Wings ${Math.round((lifted * 180) / Math.PI)}°` : 'Drag a corner or an edge. Letting go folds it.'}</span>
+        <span>{adjusting ? 'Adjust' : allLayers ? 'All layers' : 'Top sheet'}</span>
+        <span>{adjusting ? 'Turn the sheet, or drag a flap.' : 'Drag a corner or an edge. Letting go folds it.'}</span>
         {opens > 0 && <span>{opens} open {opens === 1 ? 'crease' : 'creases'}</span>}
       </div>
       {note && <p className="fold-note" role="status">{note}</p>}
-      <p className="fold-hint">Top sheet grabs the face you see. All layers folds the packet. Flip turns it over. Lift wings opens folded wings into the shape that flies.</p>
+      <p className="fold-hint">{adjusting ? 'The arrows turn the whole sheet. Dragging a flap bends only that flap on its crease, and it stays where you leave it.' : 'Top sheet grabs the face you see. All layers folds the packet. Flip turns it over. Adjust turns the finished sheet and bends each flap on its crease.'}</p>
       </div>
       <div className="fold-stage">
-      <canvas ref={canvasRef} className="fold-canvas" />
+      <canvas ref={canvasRef} className="fold-canvas" hidden={adjusting} />
+      {adjusting && (
+        <div className="adjust-view">
+          <AdjustView paper={paperNow} dye={dye} pose={pose} onPose={writePose} />
+        </div>
+      )}
       <div className="dyes" role="group" aria-label="Your sheet color">
         {dyes.map((item) => {
           const used = taken.includes(item.id) && item.id !== dye.id
@@ -239,31 +242,42 @@ export function FoldView({ ops, stock, dye, dyes, taken, onDye, onStock, onNewSh
       </div>
       <div className="fold-dock">
       <div className="fold-tools">
-        <button type="button" onClick={() => { setNote(null); onOps(ops.slice(0, -1)) }} disabled={!ops.length || busy} title="Take back the last fold">
-          Undo
-        </button>
-        <button type="button" className="unfold" onClick={unfold} disabled={folds === 0 || busy} title="Open the last fold and keep its crease on the paper">
-          Unfold
-        </button>
-        <button type="button" onClick={() => { setNote(null); onOps([]) }} disabled={!ops.length || busy} title="Clear every fold and every open crease">
-          Reset
-        </button>
-        <button type="button" className={allLayers ? 'on' : ''} aria-pressed={allLayers} onClick={() => setAllLayers((value) => !value)} title="Top sheet folds only the face you see. All layers folds every sheet on that side.">
-          {allLayers ? 'All layers' : 'Top sheet'}
-        </button>
-        <button type="button" onClick={() => { setNote('Turned the sheet over, left to right. The other face is on top.'); onOps([...ops, { flip: true }]) }} disabled={!ops.length || busy} title="Turn the sheet over so the other half is on top">
-          Flip paper
-        </button>
-        <button type="button" onClick={() => setLift(lifted > 0.02 ? 0 : 0.4)} disabled={!wingsReady && lifted <= 0.02} title={wingsReady || lifted > 0.02 ? 'Open the folded wings on their hinges' : 'Fold a wing back before lifting'}>
-          {lifted > 0.02 ? 'Lay wings flat' : 'Lift wings'}
-        </button>
-        <label className="wing-lift">
-          Lift
-          <input type="range" min={0} max={40} step={1} value={Math.round((lifted * 180) / Math.PI)} disabled={!wingsReady && lifted <= 0.02} aria-label="Wing opening angle" onChange={(event) => setLift((Number(event.target.value) * Math.PI) / 180)} />
-        </label>
-        <button type="button" className="go" onClick={() => onDone()}>
-          To the hall
-        </button>
+        {adjusting ? (
+          <>
+            <button type="button" onClick={() => setAdjusting(false)}>Back</button>
+            <button type="button" onClick={() => writePose(withTurn(pose, 'yaw', TURN_STEP))} title="Turn the whole sheet about the vertical axis">Yaw left</button>
+            <button type="button" onClick={() => writePose(withTurn(pose, 'yaw', -TURN_STEP))} title="Turn the whole sheet about the vertical axis">Yaw right</button>
+            <button type="button" onClick={() => writePose(withTurn(pose, 'pitch', TURN_STEP))} title="Tilt the whole sheet about the side axis">Pitch up</button>
+            <button type="button" onClick={() => writePose(withTurn(pose, 'pitch', -TURN_STEP))} title="Tilt the whole sheet about the side axis">Pitch down</button>
+            <button type="button" onClick={() => writePose(withTurn(pose, 'roll', TURN_STEP))} title="Tilt the whole sheet about the forward axis">Roll left</button>
+            <button type="button" onClick={() => writePose(withTurn(pose, 'roll', -TURN_STEP))} title="Tilt the whole sheet about the forward axis">Roll right</button>
+            <button type="button" className="go" onClick={() => onDone()}>Go to hall</button>
+          </>
+        ) : (
+          <>
+            <button type="button" onClick={() => { setNote(null); onOps(ops.slice(0, -1)) }} disabled={!ops.length || busy} title="Take back the last fold">
+              Undo
+            </button>
+            <button type="button" className="unfold" onClick={unfold} disabled={folds === 0 || busy} title="Open the last fold and keep its crease on the paper">
+              Unfold
+            </button>
+            <button type="button" onClick={() => { setNote(null); onOps([]) }} disabled={!ops.length || busy} title="Clear every fold and every open crease">
+              Reset
+            </button>
+            <button type="button" className={allLayers ? 'on' : ''} aria-pressed={allLayers} onClick={() => setAllLayers((value) => !value)} title="Top sheet folds only the face you see. All layers folds every sheet on that side.">
+              {allLayers ? 'All layers' : 'Top sheet'}
+            </button>
+            <button type="button" onClick={() => { setNote('Turned the sheet over, left to right. The other face is on top.'); onOps([...ops.filter((step) => !isAdjust(step)), { flip: true }]) }} disabled={!ops.length || busy} title="Turn the sheet over so the other half is on top">
+              Flip paper
+            </button>
+            <button type="button" onClick={() => { setNote('The sheet is floating. Arrows turn all of it. Drag a flap to bend that flap.'); setAdjusting(true) }} title="Turn the finished sheet and bend flaps on their creases">
+              Adjust
+            </button>
+            <button type="button" className="go" onClick={() => onDone()}>
+              To the hall
+            </button>
+          </>
+        )}
       </div>
       </div>
     </div>

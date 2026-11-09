@@ -149,14 +149,8 @@ main { flex: 1; min-height: 0; position: relative; }
   flex-wrap: wrap;
   justify-content: center;
 }
-.wing-lift {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #f4efe4;
-  font-size: 12px;
-}
-.wing-lift input { width: 88px; }
+.adjust-view { position: absolute; inset: 0; }
+.adjust-canvas { width: 100%; height: 100%; display: block; touch-action: none; cursor: default; }
 .fold-canvas, .hall-canvas { width: 100%; height: 100%; display: block; touch-action: none; }
 .fold-bar .fold-readout {
   position: static;

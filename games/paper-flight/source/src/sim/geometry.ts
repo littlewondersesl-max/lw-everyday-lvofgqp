@@ -43,6 +43,17 @@ export interface Paper {
   nextId: number
   /** Wings raised from the flat packet, radians. Zero keeps the packet flat. */
   dihedral?: number
+  /** Whole-sheet orientation and per-crease angles from Adjust. */
+  adjust?: AdjustPose
+}
+
+/** Orientation of the finished sheet, plus the angle of each bent flap. */
+export interface AdjustPose {
+  qx: number
+  qy: number
+  qz: number
+  qw: number
+  parts: { ply: number; angle: number }[]
 }
 
 export interface FoldOp {
@@ -578,7 +589,12 @@ export interface LiftStep {
   lift: number
 }
 
-export type SheetStep = FoldOp | UnfoldStep | FlipStep | LiftStep
+/** Pose chosen in Adjust. Not a fold. */
+export interface AdjustStep {
+  adjust: AdjustPose
+}
+
+export type SheetStep = FoldOp | UnfoldStep | FlipStep | LiftStep | AdjustStep
 
 export function isUnfold(step: unknown): step is UnfoldStep {
   return !!step && typeof step === 'object' && (step as UnfoldStep).unfold === true
@@ -592,12 +608,27 @@ export function isLift(step: unknown): step is LiftStep {
   return !!step && typeof step === 'object' && Number.isFinite((step as LiftStep).lift)
 }
 
+export function isAdjust(step: unknown): step is AdjustStep {
+  const pose = !!step && typeof step === 'object' ? (step as AdjustStep).adjust : null
+  return !!pose && typeof pose === 'object' && Array.isArray(pose.parts)
+}
+
+export function adjustPoseOf(steps: readonly SheetStep[]): AdjustPose | null {
+  let pose: AdjustPose | null = null
+  for (const step of steps) if (isAdjust(step)) pose = step.adjust
+  return pose
+}
+
+export function identityAdjust(): AdjustPose {
+  return { qx: 0, qy: 0, qz: 0, qw: 1, parts: [] }
+}
+
 /** Still-folded creases. Unfold removes one. A flip or a wing lift is not a fold. */
 export function netFolds(steps: readonly SheetStep[]): number {
   let n = 0
   for (const step of steps) {
     if (isUnfold(step)) n = Math.max(0, n - 1)
-    else if (!isFlip(step) && !isLift(step)) n += 1
+    else if (!isFlip(step) && !isLift(step) && !isAdjust(step)) n += 1
   }
   return n
 }
@@ -611,7 +642,7 @@ export function openCreaseCount(steps: readonly SheetStep[]): number {
         folds -= 1
         opens += 1
       }
-    } else if (!isFlip(step) && !isLift(step)) folds += 1
+    } else if (!isFlip(step) && !isLift(step) && !isAdjust(step)) folds += 1
   }
   return opens
 }
@@ -682,6 +713,7 @@ export function applyOps(steps: readonly SheetStep[], size: { width: number; hei
   const actions: ReplayAction[] = []
   const kept: { at: number; marks: CreaseMark[] }[] = []
   let dihedral = 0
+  let adjust: AdjustPose | null = null
   for (const step of steps) {
     if (isUnfold(step)) {
       let index = actions.length - 1
@@ -703,13 +735,19 @@ export function applyOps(steps: readonly SheetStep[], size: { width: number; hei
       dihedral = Math.max(0, Math.min(1.2, step.lift))
       continue
     }
+    if (isAdjust(step)) {
+      adjust = step.adjust
+      continue
+    }
     const folds = actions.filter((action) => action.kind === 'fold').length
     if (folds >= LIMITS.maxFolds) continue
     const op = sanitizeOp(step) ?? step
     actions.push({ kind: 'fold', op })
   }
   const paper = replayActions(actions, size, kept)
-  return dihedral > 0 ? { ...paper, dihedral } : paper
+  if (!adjust) return dihedral > 0 ? { ...paper, dihedral } : paper
+  const peak = adjust.parts.reduce((max, part) => Math.max(max, Math.abs(part.angle)), 0)
+  return peak > 0.001 ? { ...paper, adjust, dihedral: Math.min(peak, Math.PI / 2) } : { ...paper, adjust }
 }
 
 /** Split a mark by a crease and reflect the portion on the moving side. */
@@ -744,6 +782,29 @@ function clipSegment(mark: CreaseMark, frame: ReturnType<typeof lineFrame>): Cre
     { a: mark.a, b: mid },
     { a: mid, b: mark.b },
   ]
+}
+
+export function sanitizeAdjust(input: unknown): AdjustPose | null {
+  if (!input || typeof input !== 'object') return null
+  const pose = input as Record<string, unknown>
+  const qx = Number(pose.qx)
+  const qy = Number(pose.qy)
+  const qz = Number(pose.qz)
+  const qw = Number(pose.qw)
+  if (![qx, qy, qz, qw].every((n) => Number.isFinite(n))) return null
+  const len = Math.hypot(qx, qy, qz, qw) || 1
+  const parts: { ply: number; angle: number }[] = []
+  if (Array.isArray(pose.parts)) {
+    for (const item of pose.parts) {
+      if (!item || typeof item !== 'object') continue
+      const ply = Number((item as { ply: unknown }).ply)
+      const angle = Number((item as { angle: unknown }).angle)
+      if (!Number.isInteger(ply) || ply < 0 || ply > 39 || !Number.isFinite(angle)) continue
+      parts.push({ ply, angle: Math.max(-Math.PI, Math.min(Math.PI, angle)) })
+      if (parts.length >= 12) break
+    }
+  }
+  return { qx: qx / len, qy: qy / len, qz: qz / len, qw: qw / len, parts }
 }
 
 export function sanitizeOp(input: unknown): FoldOp | null {
@@ -817,6 +878,11 @@ export function sanitizeOps(input: unknown): SheetStep[] {
     if (isLift(item)) {
       const lift = Math.max(0, Math.min(1.2, Number((item as LiftStep).lift)))
       if (lift > 0) out.push({ lift })
+      continue
+    }
+    if (isAdjust(item)) {
+      const pose = sanitizeAdjust((item as AdjustStep).adjust)
+      if (pose) out.push({ adjust: pose })
       continue
     }
     const op = sanitizeOp(item)

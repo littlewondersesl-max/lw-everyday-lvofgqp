@@ -4,6 +4,7 @@
  * This is a rigid pose for preview and flight, not a new crease and not a stock airplane.
  */
 
+import { posePaper } from './adjust'
 import {
   facetCentroid,
   lineFrame,
@@ -73,6 +74,10 @@ export function canLift(paper: Paper): boolean {
 }
 
 export function poseFacets(paper: Paper): { ply: number; layer: number; faceUp: 1 | -1; poly: PosedVertex[] }[] {
+  if (paper.adjust) {
+    const angles = new Map(paper.adjust.parts.map((part) => [part.ply, part.angle]))
+    return posePaper(paper, angles).facets
+  }
   const angle = paper.dihedral ?? 0
   const hinges = angle > 0.01 ? new Map(wingHinges(paper).map((hinge) => [hinge.ply, hinge])) : new Map()
   return paper.facets.map((facet) => {

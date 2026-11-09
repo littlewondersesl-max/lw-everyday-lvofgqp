@@ -28,6 +28,7 @@
  *   other's air. No ground effect.
  */
 
+import { composeAim, type Quat as Orient } from './adjust'
 import { AIR, DT, HALL, LIMITS, SAMPLE_HZ, releaseHeight } from './constants'
 import type { AeroShape } from './shape'
 
@@ -99,7 +100,7 @@ export function clampAim(partial: Partial<Launch>): Launch {
 export function simulateFlight(
   shape: AeroShape,
   launch: Launch,
-  options?: { trace?: boolean; aero?: boolean; unclamped?: boolean },
+  options?: { trace?: boolean; aero?: boolean; unclamped?: boolean; orient?: Orient },
 ): FlightResult {
   const aim = options?.unclamped
     ? {
@@ -112,7 +113,7 @@ export function simulateFlight(
       }
     : clampAim(launch)
   const aeroOn = options?.aero !== false
-  const q = quatYawPitch(aim.yaw, aim.pitch)
+  const q = options?.orient ? composeAim(aim.yaw, aim.pitch, options.orient) : quatYawPitch(aim.yaw, aim.pitch)
   const nose0 = bodyX(q)
   const state = {
     px: aim.x,
