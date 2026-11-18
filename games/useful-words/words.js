@@ -7,7 +7,11 @@ window.UW_WORDS={
 "ipa": "/həˈləʊ/",
 "def": "A word you say when you meet someone.",
 "ex": "Hello! My name is Mia.",
-"why": "It is the first word you say to start a talk with anyone."
+"why": "It is the first word you say to start a talk with anyone.",
+"zw": "你好",
+"zd": "见到别人时说的话。",
+"ze": "{{你好}}！我叫米娅。",
+"zy": "它是和任何人开始交谈的第一句话。"
 },
 {
 "w": "please",
@@ -16,7 +20,11 @@ window.UW_WORDS={
 "ipa": "/pliːz/",
 "def": "A polite word you add when you ask for something.",
 "ex": "Can I have some water, please?",
-"why": "This one word makes every question kind and polite."
+"why": "This one word makes every question kind and polite.",
+"zw": "请",
+"zd": "你向别人请求东西时加上的礼貌用语。",
+"ze": "{{请}}给我一点水，好吗？",
+"zy": "这一个词能让每个问题都变得友好、有礼貌。"
 },
 {
 "w": "thanks",
@@ -25,7 +33,11 @@ window.UW_WORDS={
 "ipa": "/θæŋks/",
 "def": "A word you say when someone is kind or gives you something.",
 "ex": "Thanks for your help!",
-"why": "Saying it shows you are friendly and have good manners."
+"why": "Saying it shows you are friendly and have good manners.",
+"zw": "谢谢",
+"zd": "别人帮了你或给了你东西时说的话。",
+"ze": "{{谢谢}}你的帮助！",
+"zy": "说“谢谢”表示你友好、有礼貌。"
 },
 {
 "w": "sorry",
@@ -34,7 +46,11 @@ window.UW_WORDS={
 "ipa": "/ˈsɒri/",
 "def": "A word you say when you did something wrong or feel sad about it.",
 "ex": "I am sorry for my mistake.",
-"why": "It fixes small problems fast and keeps friends happy."
+"why": "It fixes small problems fast and keeps friends happy.",
+"zw": "对不起；抱歉",
+"zd": "做错事或为某件事难过时说的话。",
+"ze": "我为我的错误感到{{抱歉}}。",
+"zy": "它能很快解决小问题，让朋友们保持开心。"
 },
 {
 "w": "help",
@@ -43,7 +59,11 @@ window.UW_WORDS={
 "ipa": "/help/",
 "def": "To do something so that another person has an easier time.",
 "ex": "Can you help me, please?",
-"why": "It is the most important word to know in an emergency."
+"why": "It is the most important word to know in an emergency.",
+"zw": "帮助；帮忙",
+"zd": "做一件事，让别人轻松一些。",
+"ze": "你能{{帮}}我一下吗？",
+"zy": "遇到紧急情况时，它是最重要的一个词。"
 },
 {
 "w": "name",
@@ -52,7 +72,11 @@ window.UW_WORDS={
 "ipa": "/neɪm/",
 "def": "The word that people call you. Everything has a name.",
 "ex": "Hello, my name is Tom.",
-"why": "You use it every time you meet someone new."
+"why": "You use it every time you meet someone new.",
+"zw": "名字",
+"zd": "别人称呼你的那个词。每样东西都有名字。",
+"ze": "你好，我的{{名字}}是汤姆。",
+"zy": "每次认识新朋友都会用到它。"
 },
 {
 "w": "friend",
@@ -61,7 +85,11 @@ window.UW_WORDS={
 "ipa": "/frend/",
 "def": "A person you like and enjoy being with.",
 "ex": "Ben is my best friend.",
-"why": "You will talk about your friends all the time in English."
+"why": "You will talk about your friends all the time in English.",
+"zw": "朋友",
+"zd": "你喜欢、也愿意和他在一起的人。",
+"ze": "本是我最好的{{朋友}}。",
+"zy": "你会常常用英语谈论自己的朋友。"
 },
 {
 "w": "family",
@@ -70,7 +98,11 @@ window.UW_WORDS={
 "ipa": "/ˈfæməli/",
 "def": "Your parents, brothers, sisters and other close people at home.",
 "ex": "My mom, dad and I are a happy family.",
-"why": "It is one of the first topics in every English class."
+"why": "It is one of the first topics in every English class.",
+"zw": "家人；家庭",
+"zd": "你的父母、兄弟姐妹和家里其他亲近的人。",
+"ze": "妈妈、爸爸和我是幸福的一{{家人}}。",
+"zy": "它是每堂英语课最先出现的话题之一。"
 },
 {
 "w": "home",
@@ -79,7 +111,11 @@ window.UW_WORDS={
 "ipa": "/həʊm/",
 "def": "The place where you live.",
 "ex": "I go home at four o'clock.",
-"why": "You use it to talk about where you are going and where you live."
+"why": "You use it to talk about where you are going and where you live.",
+"zw": "家",
+"zd": "你住的地方。",
+"ze": "我四点钟回{{家}}。",
+"zy": "用它来说你住在哪里、要去哪里。"
 },
 {
 "w": "school",
@@ -88,7 +124,11 @@ window.UW_WORDS={
 "ipa": "/skuːl/",
 "def": "A place where children go to learn.",
 "ex": "I walk to school with my friend.",
-"why": "You spend a lot of time there, so you talk about it a lot."
+"why": "You spend a lot of time there, so you talk about it a lot.",
+"zw": "学校",
+"zd": "孩子们去学习的地方。",
+"ze": "我和朋友一起走路去{{学校}}。",
+"zy": "你在那里待很多时间，所以常常要聊到它。"
 },
 {
 "w": "eat",
@@ -97,7 +137,11 @@ window.UW_WORDS={
 "ipa": "/iːt/",
 "def": "To put food in your mouth and swallow it.",
 "ex": "I eat rice for lunch.",
-"why": "Everyone needs to talk about food and meals."
+"why": "Everyone needs to talk about food and meals.",
+"zw": "吃",
+"zd": "把食物放进嘴里咽下去。",
+"ze": "我午饭{{吃}}米饭。",
+"zy": "每个人都需要谈论食物和饭菜。"
 },
 {
 "w": "drink",
@@ -106,7 +150,11 @@ window.UW_WORDS={
 "ipa": "/drɪŋk/",
 "def": "To take water or juice into your mouth and swallow it.",
 "ex": "I drink milk every morning.",
-"why": "You use it at every meal and in every café."
+"why": "You use it at every meal and in every café.",
+"zw": "喝",
+"zd": "把水或果汁含进嘴里咽下去。",
+"ze": "我每天早上{{喝}}牛奶。",
+"zy": "吃饭和去咖啡店时都会用到它。"
 },
 {
 "w": "water",
@@ -115,7 +163,11 @@ window.UW_WORDS={
 "ipa": "/ˈwɔːtə/",
 "def": "The clear liquid in rivers and rain that we drink.",
 "ex": "Can I have a glass of water?",
-"why": "It is a very common word and also one of the first you need when travelling."
+"why": "It is a very common word and also one of the first you need when travelling.",
+"zw": "水",
+"zd": "河里、雨里清澈的液体，我们可以喝。",
+"ze": "我可以喝一杯{{水}}吗？",
+"zy": "它很常用，旅行时也是最先需要的词之一。"
 },
 {
 "w": "food",
@@ -124,7 +176,11 @@ window.UW_WORDS={
 "ipa": "/fuːd/",
 "def": "Things that people and animals eat.",
 "ex": "My favourite food is noodles.",
-"why": "You need it to order a meal or talk about what you like."
+"why": "You need it to order a meal or talk about what you like.",
+"zw": "食物",
+"zd": "人和动物吃的东西。",
+"ze": "我最喜欢的{{食物}}是面条。",
+"zy": "点餐或说你喜欢什么时都需要它。"
 },
 {
 "w": "like",
@@ -133,7 +189,11 @@ window.UW_WORDS={
 "ipa": "/laɪk/",
 "def": "To enjoy something or think that something is good.",
 "ex": "I like dogs.",
-"why": "It is the easiest way to say what you enjoy."
+"why": "It is the easiest way to say what you enjoy.",
+"zw": "喜欢",
+"zd": "享受某件事，或觉得某样东西好。",
+"ze": "我{{喜欢}}小狗。",
+"zy": "这是表达你爱好的最简单办法。"
 },
 {
 "w": "want",
@@ -142,7 +202,11 @@ window.UW_WORDS={
 "ipa": "/wɒnt/",
 "def": "To feel that you would like to have or do something.",
 "ex": "I want an apple.",
-"why": "You use it every day to ask for what you need."
+"why": "You use it every day to ask for what you need.",
+"zw": "想要",
+"zd": "觉得自己希望拥有或做某件事。",
+"ze": "我{{想要}}一个苹果。",
+"zy": "你每天都会用它来说出自己想要什么。"
 },
 {
 "w": "have",
@@ -151,7 +215,11 @@ window.UW_WORDS={
 "ipa": "/hæv/",
 "def": "To own something or to have something with you.",
 "ex": "I have a red bag.",
-"why": "It is one of the most common verbs in English."
+"why": "It is one of the most common verbs in English.",
+"zw": "有",
+"zd": "拥有某样东西，或东西在你身边。",
+"ze": "我{{有}}一个红色的书包。",
+"zy": "它是英语里最常用的动词之一。"
 },
 {
 "w": "go",
@@ -160,7 +228,11 @@ window.UW_WORDS={
 "ipa": "/gəʊ/",
 "def": "To move from one place to another place.",
 "ex": "We go to school by bus.",
-"why": "You use it to talk about all places and trips."
+"why": "You use it to talk about all places and trips.",
+"zw": "去",
+"zd": "从一个地方移动到另一个地方。",
+"ze": "我们坐公共汽车{{去}}学校。",
+"zy": "说到所有的地点和旅行都会用到它。"
 },
 {
 "w": "come",
@@ -169,7 +241,11 @@ window.UW_WORDS={
 "ipa": "/kʌm/",
 "def": "To move towards the person who is speaking.",
 "ex": "Come here, please.",
-"why": "You need it to invite people and to say where you are from."
+"why": "You need it to invite people and to say where you are from.",
+"zw": "来",
+"zd": "朝着说话的人移动。",
+"ze": "请到这里{{来}}。",
+"zy": "邀请别人和说你来自哪里都要用它。"
 },
 {
 "w": "see",
@@ -178,7 +254,11 @@ window.UW_WORDS={
 "ipa": "/siː/",
 "def": "To use your eyes to notice something.",
 "ex": "I see a bird in the tree.",
-"why": "It helps you talk about the world around you."
+"why": "It helps you talk about the world around you.",
+"zw": "看见",
+"zd": "用眼睛注意到某样东西。",
+"ze": "我{{看见}}树上有一只鸟。",
+"zy": "它帮你谈论身边的世界。"
 },
 {
 "w": "look",
@@ -187,7 +267,11 @@ window.UW_WORDS={
 "ipa": "/lʊk/",
 "def": "To turn your eyes towards something on purpose.",
 "ex": "Look at this picture!",
-"why": "Teachers say it all the time in class, so you will hear it a lot."
+"why": "Teachers say it all the time in class, so you will hear it a lot.",
+"zw": "看",
+"zd": "有意把目光转向某样东西。",
+"ze": "{{看}}这张图片！",
+"zy": "老师在课堂上常说它，所以你会经常听到。"
 },
 {
 "w": "listen",
@@ -196,7 +280,11 @@ window.UW_WORDS={
 "ipa": "/ˈlɪsn/",
 "def": "To pay attention to a sound so that you can hear it.",
 "ex": "Listen to the teacher.",
-"why": "Good listening is the first step to speaking well."
+"why": "Good listening is the first step to speaking well.",
+"zw": "听",
+"zd": "专心去听某种声音，好让自己听到。",
+"ze": "{{听}}老师讲。",
+"zy": "听得好，是说好英语的第一步。"
 },
 {
 "w": "say",
@@ -205,7 +293,11 @@ window.UW_WORDS={
 "ipa": "/seɪ/",
 "def": "To use your voice to speak words.",
 "ex": "How do you say this word?",
-"why": "You need it to ask for words and to tell people what was said."
+"why": "You need it to ask for words and to tell people what was said.",
+"zw": "说",
+"zd": "用声音讲出话来。",
+"ze": "你怎么{{说}}这个词？",
+"zy": "你要用它问词语怎么说，也用它转述别人说的话。"
 },
 {
 "w": "ask",
@@ -214,7 +306,11 @@ window.UW_WORDS={
 "ipa": "/ɑːsk/",
 "def": "To say something to get an answer or help.",
 "ex": "I ask my teacher a question.",
-"why": "Asking questions is the best way to learn new things."
+"why": "Asking questions is the best way to learn new things.",
+"zw": "问",
+"zd": "说话来得到答案或帮助。",
+"ze": "我{{问}}老师一个问题。",
+"zy": "提问是学习新东西的最好办法。"
 },
 {
 "w": "know",
@@ -223,7 +319,11 @@ window.UW_WORDS={
 "ipa": "/nəʊ/",
 "def": "To have information in your head.",
 "ex": "I know her name.",
-"why": "You use it to say what you understand, and what you do not."
+"why": "You use it to say what you understand, and what you do not.",
+"zw": "知道",
+"zd": "脑子里有某种信息。",
+"ze": "我{{知道}}她的名字。",
+"zy": "你可以用它说出自己懂什么、不懂什么。"
 },
 {
 "w": "think",
@@ -232,7 +332,11 @@ window.UW_WORDS={
 "ipa": "/θɪŋk/",
 "def": "To use your mind to have an idea or an opinion.",
 "ex": "I think it is a good idea.",
-"why": "It lets you share your ideas with other people."
+"why": "It lets you share your ideas with other people.",
+"zw": "想；认为",
+"zd": "用头脑产生想法或看法。",
+"ze": "我{{觉得}}这是个好主意。",
+"zy": "它让你和别人分享自己的想法。"
 },
 {
 "w": "need",
@@ -241,7 +345,11 @@ window.UW_WORDS={
 "ipa": "/niːd/",
 "def": "To have to have something, because it is very important.",
 "ex": "I need some help.",
-"why": "It is stronger than \"want\", so people take it seriously."
+"why": "It is stronger than \"want\", so people take it seriously.",
+"zw": "需要",
+"zd": "因为非常重要，所以必须拥有。",
+"ze": "我{{需要}}一些帮助。",
+"zy": "它比“想要”更强烈，所以别人会认真对待。"
 },
 {
 "w": "give",
@@ -250,7 +358,11 @@ window.UW_WORDS={
 "ipa": "/gɪv/",
 "def": "To let someone have something that is yours.",
 "ex": "Please give me the pen.",
-"why": "You use it for gifts, help and sharing."
+"why": "You use it for gifts, help and sharing.",
+"zw": "给",
+"zd": "让别人拥有属于你的东西。",
+"ze": "请{{给}}我那支笔。",
+"zy": "送礼物、帮助别人和分享都会用到它。"
 },
 {
 "w": "take",
@@ -259,7 +371,11 @@ window.UW_WORDS={
 "ipa": "/teɪk/",
 "def": "To get something and carry it with you.",
 "ex": "Take your bag with you.",
-"why": "It is part of many common phrases like \"take a photo\" and \"take a bus\"."
+"why": "It is part of many common phrases like \"take a photo\" and \"take a bus\".",
+"zw": "拿；带",
+"zd": "拿到某样东西并带在身边。",
+"ze": "把你的书包{{带}}上。",
+"zy": "很多常用短语里都有它，比如“拍照”和“坐公共汽车”。"
 },
 {
 "w": "make",
@@ -268,7 +384,11 @@ window.UW_WORDS={
 "ipa": "/meɪk/",
 "def": "To build or create something.",
 "ex": "I make tea for my mom.",
-"why": "You can make a cake, a plan, a friend, or a mistake."
+"why": "You can make a cake, a plan, a friend, or a mistake.",
+"zw": "做；制作",
+"zd": "建造或创造某样东西。",
+"ze": "我给妈妈{{泡}}茶。",
+"zy": "你可以做蛋糕、做计划、交朋友，也可能犯错。"
 },
 {
 "w": "good",
@@ -277,7 +397,11 @@ window.UW_WORDS={
 "ipa": "/gʊd/",
 "def": "Nice, right, or of a high quality.",
 "ex": "This is a good book.",
-"why": "It is the simplest way to say something is nice."
+"why": "It is the simplest way to say something is nice.",
+"zw": "好",
+"zd": "很棒、正确，或者质量高。",
+"ze": "这是一本{{好}}书。",
+"zy": "它是说某样东西不错的最简单方式。"
 },
 {
 "w": "bad",
@@ -286,7 +410,11 @@ window.UW_WORDS={
 "ipa": "/bæd/",
 "def": "Not good. Making you feel unhappy or not safe.",
 "ex": "The weather is bad today.",
-"why": "It helps you say when something is wrong."
+"why": "It helps you say when something is wrong.",
+"zw": "坏；糟糕",
+"zd": "不好。让你不开心或觉得不安全。",
+"ze": "今天天气很{{糟}}。",
+"zy": "它帮你说出哪里不对劲。"
 },
 {
 "w": "big",
@@ -295,7 +423,11 @@ window.UW_WORDS={
 "ipa": "/bɪɡ/",
 "def": "Large in size.",
 "ex": "An elephant is a big animal.",
-"why": "Size is one of the first things we describe."
+"why": "Size is one of the first things we describe.",
+"zw": "大",
+"zd": "尺寸很大。",
+"ze": "大象是一种{{大}}动物。",
+"zy": "大小是我们最先描述的东西之一。"
 },
 {
 "w": "small",
@@ -304,7 +436,11 @@ window.UW_WORDS={
 "ipa": "/smɔːl/",
 "def": "Not large in size. Little.",
 "ex": "I have a small dog.",
-"why": "It is the opposite of big, so they go well together."
+"why": "It is the opposite of big, so they go well together.",
+"zw": "小",
+"zd": "尺寸不大。很小。",
+"ze": "我有一只{{小}}狗。",
+"zy": "它和“大”是反义词，所以放在一起好记。"
 },
 {
 "w": "hot",
@@ -313,7 +449,11 @@ window.UW_WORDS={
 "ipa": "/hɒt/",
 "def": "Having a high temperature. Making you feel warm.",
 "ex": "The sun is hot in summer.",
-"why": "You use it about weather, food and drinks every day."
+"why": "You use it about weather, food and drinks every day.",
+"zw": "热；烫",
+"zd": "温度很高。让你觉得暖和。",
+"ze": "夏天太阳很{{热}}。",
+"zy": "天气、食物和饮料每天都会用到它。"
 },
 {
 "w": "cold",
@@ -322,7 +462,11 @@ window.UW_WORDS={
 "ipa": "/kəʊld/",
 "def": "Having a low temperature. Making you feel chilly.",
 "ex": "It is cold in winter, so I wear a coat.",
-"why": "You need it to talk about the weather and drinks."
+"why": "You need it to talk about the weather and drinks.",
+"zw": "冷",
+"zd": "温度很低。让你觉得凉。",
+"ze": "冬天很{{冷}}，所以我穿外套。",
+"zy": "聊天气和饮料时需要它。"
 },
 {
 "w": "new",
@@ -331,7 +475,11 @@ window.UW_WORDS={
 "ipa": "/njuː/",
 "def": "Not old. Just made or just bought.",
 "ex": "I have a new bike.",
-"why": "We are always talking about new things."
+"why": "We are always talking about new things.",
+"zw": "新",
+"zd": "不旧。刚做好或刚买的。",
+"ze": "我有一辆{{新}}自行车。",
+"zy": "我们总是在谈论新的东西。"
 },
 {
 "w": "old",
@@ -340,7 +488,11 @@ window.UW_WORDS={
 "ipa": "/əʊld/",
 "def": "Having lived or existed for a long time.",
 "ex": "My grandpa is very old.",
-"why": "You use it for people, things and places."
+"why": "You use it for people, things and places.",
+"zw": "老；旧",
+"zd": "已经生活或存在了很长时间。",
+"ze": "我爷爷年纪很{{大}}了。",
+"zy": "你可以用它说人、物品和地方。"
 },
 {
 "w": "happy",
@@ -349,7 +501,11 @@ window.UW_WORDS={
 "ipa": "/ˈhæpi/",
 "def": "Feeling good and pleased.",
 "ex": "I am happy today!",
-"why": "It helps you say how you feel."
+"why": "It helps you say how you feel.",
+"zw": "开心；高兴",
+"zd": "感觉很好、很满意。",
+"ze": "我今天很{{开心}}！",
+"zy": "它帮你说出自己的心情。"
 },
 {
 "w": "tired",
@@ -358,7 +514,11 @@ window.UW_WORDS={
 "ipa": "/ˈtaɪəd/",
 "def": "Feeling that you need to sleep or rest.",
 "ex": "I am tired after school.",
-"why": "It tells people why you are quiet or slow."
+"why": "It tells people why you are quiet or slow.",
+"zw": "累",
+"zd": "觉得需要睡觉或休息。",
+"ze": "放学后我很{{累}}。",
+"zy": "它能告诉别人你为什么安静或动作慢。"
 },
 {
 "w": "today",
@@ -367,7 +527,11 @@ window.UW_WORDS={
 "ipa": "/təˈdeɪ/",
 "def": "This day. The day that is now.",
 "ex": "Today is Monday.",
-"why": "You use it every day to talk about plans."
+"why": "You use it every day to talk about plans.",
+"zw": "今天",
+"zd": "这一天。就是现在的这一天。",
+"ze": "{{今天}}是星期一。",
+"zy": "你每天都会用它来说计划。"
 },
 {
 "w": "tomorrow",
@@ -376,7 +540,11 @@ window.UW_WORDS={
 "ipa": "/təˈmɒrəʊ/",
 "def": "The day after today.",
 "ex": "See you tomorrow!",
-"why": "It is useful for plans, and for saying goodbye."
+"why": "It is useful for plans, and for saying goodbye.",
+"zw": "明天",
+"zd": "今天的后一天。",
+"ze": "{{明天}}见！",
+"zy": "它可以用来说计划，也可以用来道别。"
 },
 {
 "w": "morning",
@@ -385,7 +553,11 @@ window.UW_WORDS={
 "ipa": "/ˈmɔːnɪŋ/",
 "def": "The early part of the day, from sunrise to lunch.",
 "ex": "I get up at seven in the morning.",
-"why": "\"Good morning\" is a happy way to begin the day."
+"why": "\"Good morning\" is a happy way to begin the day.",
+"zw": "早上",
+"zd": "一天的早些时候，从日出到午饭前。",
+"ze": "我{{早上}}七点起床。",
+"zy": "“早上好”是开始新一天的快乐方式。"
 },
 {
 "w": "night",
@@ -394,7 +566,11 @@ window.UW_WORDS={
 "ipa": "/naɪt/",
 "def": "The dark part of the day when we sleep.",
 "ex": "The stars come out at night.",
-"why": "You use it to say goodnight and to talk about your day."
+"why": "You use it to say goodnight and to talk about your day.",
+"zw": "夜晚；晚上",
+"zd": "一天里天黑、我们睡觉的时间。",
+"ze": "星星在{{夜晚}}出来。",
+"zy": "你用它说晚安，也用它聊自己的一天。"
 },
 {
 "w": "time",
@@ -403,7 +579,11 @@ window.UW_WORDS={
 "ipa": "/taɪm/",
 "def": "What a clock tells you. Hours and minutes.",
 "ex": "What time is it?",
-"why": "\"What time?\" is a question you will ask all your life."
+"why": "\"What time?\" is a question you will ask all your life.",
+"zw": "时间；几点",
+"zd": "钟表告诉你的东西：几点几分。",
+"ze": "现在是{{几点}}？",
+"zy": "“几点了？”是你一辈子都会问的问题。"
 },
 {
 "w": "always",
@@ -412,7 +592,11 @@ window.UW_WORDS={
 "ipa": "/ˈɔːlweɪz/",
 "def": "Every time. Without any exception.",
 "ex": "I always brush my teeth at night.",
-"why": "It lets you talk about habits."
+"why": "It lets you talk about habits.",
+"zw": "总是",
+"zd": "每一次。没有例外。",
+"ze": "我晚上{{总是}}刷牙。",
+"zy": "它让你谈论自己的习惯。"
 },
 {
 "w": "never",
@@ -421,7 +605,11 @@ window.UW_WORDS={
 "ipa": "/ˈnevə/",
 "def": "Not at any time. Not ever.",
 "ex": "I never eat fish.",
-"why": "It is the opposite of always, and a key word for talking about habits."
+"why": "It is the opposite of always, and a key word for talking about habits.",
+"zw": "从不",
+"zd": "任何时候都不。永远不。",
+"ze": "我{{从不}}吃鱼。",
+"zy": "它和“总是”相反，是谈论习惯的关键词。"
 },
 {
 "w": "again",
@@ -430,7 +618,11 @@ window.UW_WORDS={
 "ipa": "/əˈɡen/",
 "def": "One more time.",
 "ex": "Please say it again.",
-"why": "It is a polite way to ask for help when you did not hear."
+"why": "It is a polite way to ask for help when you did not hear.",
+"zw": "再一次",
+"zd": "再来一次。",
+"ze": "请{{再}}说一遍。",
+"zy": "当你没听清时，它是请别人帮忙的礼貌说法。"
 },
 {
 "w": "very",
@@ -439,7 +631,11 @@ window.UW_WORDS={
 "ipa": "/ˈveri/",
 "def": "A word that makes another word stronger.",
 "ex": "The soup is very hot.",
-"why": "It makes your English sound more natural and lively."
+"why": "It makes your English sound more natural and lively.",
+"zw": "很；非常",
+"zd": "让另一个词变得更强的词。",
+"ze": "这碗汤{{非常}}烫。",
+"zy": "它让你的英语听起来更自然、更生动。"
 },
 {
 "w": "now",
@@ -448,7 +644,11 @@ window.UW_WORDS={
 "ipa": "/naʊ/",
 "def": "At this moment. Not before or after.",
 "ex": "I am eating now.",
-"why": "You use it to say what you are doing at the moment."
+"why": "You use it to say what you are doing at the moment.",
+"zw": "现在",
+"zd": "在这一刻。不是之前或之后。",
+"ze": "我{{现在}}正在吃东西。",
+"zy": "你用它说你此刻正在做什么。"
 }
 ],
 "A2": [
@@ -459,7 +659,11 @@ window.UW_WORDS={
 "ipa": "/bɪˈkɒz/",
 "def": "A word that gives the reason for something.",
 "ex": "I am happy because it is my birthday.",
-"why": "It lets you explain your ideas, and the answer to every \"Why?\" begins with it."
+"why": "It lets you explain your ideas, and the answer to every \"Why?\" begins with it.",
+"zw": "因为",
+"zd": "说明某件事原因的词。",
+"ze": "我很开心，{{因为}}今天是我的生日。",
+"zy": "你可以用它解释自己的想法，每个“为什么”的回答都以它开头。"
 },
 {
 "w": "before",
@@ -468,7 +672,11 @@ window.UW_WORDS={
 "ipa": "/bɪˈfɔː/",
 "def": "Earlier than something else.",
 "ex": "Wash your hands before you eat.",
-"why": "It helps you put events in the right order."
+"why": "It helps you put events in the right order.",
+"zw": "在……之前",
+"zd": "比另一件事更早。",
+"ze": "吃饭{{前}}要洗手。",
+"zy": "它帮你把事情按正确的顺序说出来。"
 },
 {
 "w": "after",
@@ -477,7 +685,11 @@ window.UW_WORDS={
 "ipa": "/ˈɑːftə/",
 "def": "Later than something else.",
 "ex": "We play football after school.",
-"why": "It is the opposite of before and shows the order of events."
+"why": "It is the opposite of before and shows the order of events.",
+"zw": "在……之后",
+"zd": "比另一件事更晚。",
+"ze": "放学{{后}}我们踢足球。",
+"zy": "它和“之前”相反，用来说事情的先后。"
 },
 {
 "w": "usually",
@@ -486,7 +698,11 @@ window.UW_WORDS={
 "ipa": "/ˈjuːʒuəli/",
 "def": "Most of the time. In the normal way.",
 "ex": "I usually walk to school.",
-"why": "It is perfect for talking about your normal day."
+"why": "It is perfect for talking about your normal day.",
+"zw": "通常",
+"zd": "大多数时候。平常的情况。",
+"ze": "我{{通常}}走路去学校。",
+"zy": "用来说你平常的一天再合适不过了。"
 },
 {
 "w": "sometimes",
@@ -495,7 +711,11 @@ window.UW_WORDS={
 "ipa": "/ˈsʌmtaɪmz/",
 "def": "Not always, but on some days.",
 "ex": "Sometimes we have pizza for dinner.",
-"why": "It is more exact than \"always\" or \"never\", so you sound more natural."
+"why": "It is more exact than \"always\" or \"never\", so you sound more natural.",
+"zw": "有时",
+"zd": "不是总是，只在某些日子。",
+"ze": "我们{{有时}}晚饭吃披萨。",
+"zy": "它比“总是”和“从不”更准确，让你听起来更自然。"
 },
 {
 "w": "also",
@@ -504,7 +724,11 @@ window.UW_WORDS={
 "ipa": "/ˈɔːlsəʊ/",
 "def": "In addition. Too.",
 "ex": "She likes cats and she also likes dogs.",
-"why": "It helps you add more information without repeating yourself."
+"why": "It helps you add more information without repeating yourself.",
+"zw": "也；还",
+"zd": "另外。还有。",
+"ze": "她喜欢猫，她{{还}}喜欢狗。",
+"zy": "它让你补充信息，不用重复自己的话。"
 },
 {
 "w": "maybe",
@@ -513,7 +737,11 @@ window.UW_WORDS={
 "ipa": "/ˈmeɪbi/",
 "def": "Possibly. It could be true, but you are not sure.",
 "ex": "Maybe it will rain tomorrow.",
-"why": "It is a safe, polite way to say you are not sure."
+"why": "It is a safe, polite way to say you are not sure.",
+"zw": "也许",
+"zd": "可能。有可能是真的，但你不确定。",
+"ze": "{{也许}}明天会下雨。",
+"zy": "当你不确定时，这是一种安全又礼貌的说法。"
 },
 {
 "w": "enough",
@@ -522,7 +750,11 @@ window.UW_WORDS={
 "ipa": "/ɪˈnʌf/",
 "def": "As much as you need. Not too little.",
 "ex": "I have enough money for a drink.",
-"why": "You need it to say when you have what you want."
+"why": "You need it to say when you have what you want.",
+"zw": "足够",
+"zd": "和你需要的一样多。不会太少。",
+"ze": "我有{{足够}}的钱买一杯饮料。",
+"zy": "当你已经有了想要的东西，就用它来说。"
 },
 {
 "w": "really",
@@ -531,7 +763,11 @@ window.UW_WORDS={
 "ipa": "/ˈrɪəli/",
 "def": "Very much. Truly.",
 "ex": "I really like your drawing.",
-"why": "It makes your feelings sound strong and honest."
+"why": "It makes your feelings sound strong and honest.",
+"zw": "真的；确实",
+"zd": "很。确实。",
+"ze": "我{{真}}喜欢你的画。",
+"zy": "它让你的感受听起来更强烈、更真诚。"
 },
 {
 "w": "almost",
@@ -540,7 +776,11 @@ window.UW_WORDS={
 "ipa": "/ˈɔːlməʊst/",
 "def": "Nearly, but not completely.",
 "ex": "I am almost ready.",
-"why": "You use it when you are very close to finishing something."
+"why": "You use it when you are very close to finishing something.",
+"zw": "几乎",
+"zd": "差不多，但还不完全。",
+"ze": "我{{几乎}}准备好了。",
+"zy": "当你快要完成一件事时就用它。"
 },
 {
 "w": "decide",
@@ -549,7 +789,11 @@ window.UW_WORDS={
 "ipa": "/dɪˈsaɪd/",
 "def": "To choose what to do after you think about it.",
 "ex": "Let's decide where to go for lunch.",
-"why": "Making choices is part of everyday life."
+"why": "Making choices is part of everyday life.",
+"zw": "决定",
+"zd": "想过之后选择要做什么。",
+"ze": "我们来{{决定}}午饭去哪里吃吧。",
+"zy": "做选择是日常生活的一部分。"
 },
 {
 "w": "remember",
@@ -558,7 +802,11 @@ window.UW_WORDS={
 "ipa": "/rɪˈmembə/",
 "def": "To keep something in your mind and not forget it.",
 "ex": "I remember my first day at school.",
-"why": "You use it to talk about the past and to keep important things in mind."
+"why": "You use it to talk about the past and to keep important things in mind.",
+"zw": "记得",
+"zd": "把某件事记在脑子里，不忘记。",
+"ze": "我{{记得}}我上学的第一天。",
+"zy": "你用它谈过去，也用它记住重要的事。"
 },
 {
 "w": "forget",
@@ -567,7 +815,11 @@ window.UW_WORDS={
 "ipa": "/fəˈɡet/",
 "def": "To not remember something.",
 "ex": "Don't forget your homework!",
-"why": "You hear it a lot as a friendly warning."
+"why": "You hear it a lot as a friendly warning.",
+"zw": "忘记",
+"zd": "想不起来某件事。",
+"ze": "别{{忘}}了你的作业！",
+"zy": "你常常会听到这句友好的提醒。"
 },
 {
 "w": "learn",
@@ -576,7 +828,11 @@ window.UW_WORDS={
 "ipa": "/lɜːn/",
 "def": "To get new knowledge or a new skill.",
 "ex": "I learn ten new words every week.",
-"why": "It describes exactly what you are doing right now."
+"why": "It describes exactly what you are doing right now.",
+"zw": "学习；学会",
+"zd": "获得新知识或新本领。",
+"ze": "我每周{{学}}十个新单词。",
+"zy": "它正好描述了你现在在做的事。"
 },
 {
 "w": "practise",
@@ -585,7 +841,11 @@ window.UW_WORDS={
 "ipa": "/ˈpræktɪs/",
 "def": "To do something again and again to get better.",
 "ex": "I practise the piano every day.",
-"why": "It is the secret to learning anything."
+"why": "It is the secret to learning anything.",
+"zw": "练习",
+"zd": "一遍又一遍地做某件事，让自己变得更好。",
+"ze": "我每天{{练习}}钢琴。",
+"zy": "它是学会任何东西的秘诀。"
 },
 {
 "w": "travel",
@@ -594,7 +854,11 @@ window.UW_WORDS={
 "ipa": "/ˈtrævl/",
 "def": "To go from one place to another, often far away.",
 "ex": "We travel to the beach every summer.",
-"why": "You need it for trips and holidays."
+"why": "You need it for trips and holidays.",
+"zw": "旅行",
+"zd": "从一个地方去另一个地方，常常很远。",
+"ze": "每年夏天我们都去海边{{旅行}}。",
+"zy": "出行和度假都会用到它。"
 },
 {
 "w": "visit",
@@ -603,7 +867,11 @@ window.UW_WORDS={
 "ipa": "/ˈvɪzɪt/",
 "def": "To go to see a person or a place.",
 "ex": "We visit my grandma on Sundays.",
-"why": "It is the right word for trips, friends and family."
+"why": "It is the right word for trips, friends and family.",
+"zw": "拜访；参观",
+"zd": "去看望一个人或参观一个地方。",
+"ze": "星期天我们{{去看望}}奶奶。",
+"zy": "说出行、朋友和家人时，它是很合适的词。"
 },
 {
 "w": "wait",
@@ -612,7 +880,11 @@ window.UW_WORDS={
 "ipa": "/weɪt/",
 "def": "To stay in a place until something happens.",
 "ex": "Please wait here for a minute.",
-"why": "You use it every day for buses, friends and lunch."
+"why": "You use it every day for buses, friends and lunch.",
+"zw": "等；等待",
+"zd": "待在一个地方，直到某件事发生。",
+"ze": "请在这里{{等}}一分钟。",
+"zy": "每天等公共汽车、朋友和午饭时你都会用到它。"
 },
 {
 "w": "invite",
@@ -621,7 +893,11 @@ window.UW_WORDS={
 "ipa": "/ɪnˈvaɪt/",
 "def": "To ask someone to come to a party or event.",
 "ex": "I invite my friends to my party.",
-"why": "Inviting people is a kind thing to do."
+"why": "Inviting people is a kind thing to do.",
+"zw": "邀请",
+"zd": "请别人来参加聚会或活动。",
+"ze": "我{{邀请}}朋友来参加我的聚会。",
+"zy": "邀请别人是一件友善的事。"
 },
 {
 "w": "borrow",
@@ -630,7 +906,11 @@ window.UW_WORDS={
 "ipa": "/ˈbɒrəʊ/",
 "def": "To take something for a short time and then give it back.",
 "ex": "Can I borrow your pencil?",
-"why": "Many people mix it up with \"lend\", so it is good to know it well."
+"why": "Many people mix it up with \"lend\", so it is good to know it well.",
+"zw": "借（入）",
+"zd": "把东西拿来用一小段时间，然后还回去。",
+"ze": "我可以{{借}}你的铅笔吗？",
+"zy": "很多人会把它和“借出”弄混，所以要好好记住它。"
 },
 {
 "w": "important",
@@ -639,7 +919,11 @@ window.UW_WORDS={
 "ipa": "/ɪmˈpɔːtnt/",
 "def": "Something that matters a lot.",
 "ex": "It is important to sleep well.",
-"why": "It tells people what to pay attention to."
+"why": "It tells people what to pay attention to.",
+"zw": "重要",
+"zd": "很要紧的事。",
+"ze": "睡好觉很{{重要}}。",
+"zy": "它告诉别人要注意什么。"
 },
 {
 "w": "different",
@@ -648,7 +932,11 @@ window.UW_WORDS={
 "ipa": "/ˈdɪfrənt/",
 "def": "Not the same as another thing.",
 "ex": "My bag is different from yours.",
-"why": "You use it to compare things, people and places."
+"why": "You use it to compare things, people and places.",
+"zw": "不同",
+"zd": "和别的东西不一样。",
+"ze": "我的书包和你的{{不同}}。",
+"zy": "你用它来比较东西、人和地方。"
 },
 {
 "w": "difficult",
@@ -657,7 +945,11 @@ window.UW_WORDS={
 "ipa": "/ˈdɪfɪkəlt/",
 "def": "Not easy. Hard to do or understand.",
 "ex": "This question is difficult.",
-"why": "You can ask for help when something is difficult."
+"why": "You can ask for help when something is difficult.",
+"zw": "困难；难",
+"zd": "不容易。很难做或很难懂。",
+"ze": "这个问题很{{难}}。",
+"zy": "东西很难的时候，你可以请别人帮忙。"
 },
 {
 "w": "easy",
@@ -666,7 +958,11 @@ window.UW_WORDS={
 "ipa": "/ˈiːzi/",
 "def": "Not hard. Simple to do.",
 "ex": "The test was easy.",
-"why": "It is the opposite of difficult, so you can describe everything."
+"why": "It is the opposite of difficult, so you can describe everything.",
+"zw": "容易",
+"zd": "不难。做起来很简单。",
+"ze": "考试很{{容易}}。",
+"zy": "它和“困难”相反，所以你可以描述一切。"
 },
 {
 "w": "ready",
@@ -675,7 +971,11 @@ window.UW_WORDS={
 "ipa": "/ˈredi/",
 "def": "Prepared. You can start now.",
 "ex": "I am ready for school.",
-"why": "\"Are you ready?\" is a question people ask all the time."
+"why": "\"Are you ready?\" is a question people ask all the time.",
+"zw": "准备好",
+"zd": "已经预备好了。你可以开始了。",
+"ze": "我已经{{准备好}}去上学了。",
+"zy": "“你准备好了吗？”是大家常常会问的问题。"
 },
 {
 "w": "busy",
@@ -684,7 +984,11 @@ window.UW_WORDS={
 "ipa": "/ˈbɪzi/",
 "def": "Having a lot to do. Not free.",
 "ex": "I am busy on Monday.",
-"why": "It is a polite way to say no to a plan."
+"why": "It is a polite way to say no to a plan.",
+"zw": "忙",
+"zd": "有很多事要做。没有空。",
+"ze": "星期一我很{{忙}}。",
+"zy": "这是礼貌地拒绝邀请的说法。"
 },
 {
 "w": "careful",
@@ -693,7 +997,11 @@ window.UW_WORDS={
 "ipa": "/ˈkeəfl/",
 "def": "Paying attention so you do not make a mistake or get hurt.",
 "ex": "Be careful on the stairs!",
-"why": "It is a kind warning and a good habit."
+"why": "It is a kind warning and a good habit.",
+"zw": "小心",
+"zd": "集中注意力，不犯错也不受伤。",
+"ze": "走楼梯要{{小心}}！",
+"zy": "这是一句友好的提醒，也是一个好习惯。"
 },
 {
 "w": "dangerous",
@@ -702,7 +1010,11 @@ window.UW_WORDS={
 "ipa": "/ˈdeɪndʒərəs/",
 "def": "Likely to cause harm or injury.",
 "ex": "It is dangerous to run across the road.",
-"why": "It keeps you and other people safe."
+"why": "It keeps you and other people safe.",
+"zw": "危险",
+"zd": "很可能造成伤害。",
+"ze": "跑着过马路很{{危险}}。",
+"zy": "它能保护你和别人的安全。"
 },
 {
 "w": "popular",
@@ -711,7 +1023,11 @@ window.UW_WORDS={
 "ipa": "/ˈpɒpjələ/",
 "def": "Liked by many people.",
 "ex": "Football is a popular sport.",
-"why": "It is a good way to talk about trends and fashions."
+"why": "It is a good way to talk about trends and fashions.",
+"zw": "受欢迎",
+"zd": "很多人都喜欢。",
+"ze": "足球是一项{{受欢迎}}的运动。",
+"zy": "用它谈流行的事物和时尚很合适。"
 },
 {
 "w": "favourite",
@@ -720,7 +1036,11 @@ window.UW_WORDS={
 "ipa": "/ˈfeɪvərɪt/",
 "def": "The one you like best.",
 "ex": "Blue is my favourite colour.",
-"why": "\"What's your favourite…?\" is a very common question."
+"why": "\"What's your favourite…?\" is a very common question.",
+"zw": "最喜欢的",
+"zd": "你最喜欢的那一个。",
+"ze": "蓝色是我{{最喜欢}}的颜色。",
+"zy": "“你最喜欢的……是什么？”是很常见的问题。"
 },
 {
 "w": "weather",
@@ -729,7 +1049,11 @@ window.UW_WORDS={
 "ipa": "/ˈweðə/",
 "def": "How hot, cold, wet or sunny it is outside.",
 "ex": "The weather is nice today.",
-"why": "It is the most common small-talk subject in English."
+"why": "It is the most common small-talk subject in English.",
+"zw": "天气",
+"zd": "外面是热、冷、下雨还是晴天。",
+"ze": "今天{{天气}}很好。",
+"zy": "它是英语里最常见的闲聊话题。"
 },
 {
 "w": "holiday",
@@ -738,7 +1062,11 @@ window.UW_WORDS={
 "ipa": "/ˈhɒlədeɪ/",
 "def": "A time when you do not go to school or work.",
 "ex": "We go to the beach for our summer holiday.",
-"why": "Everyone loves to talk about their holidays."
+"why": "Everyone loves to talk about their holidays.",
+"zw": "假期",
+"zd": "你不用上学或上班的时间。",
+"ze": "我们去海边过夏天的{{假期}}。",
+"zy": "人人都喜欢谈自己的假期。"
 },
 {
 "w": "hobby",
@@ -747,7 +1075,11 @@ window.UW_WORDS={
 "ipa": "/ˈhɒbi/",
 "def": "Something you enjoy doing in your free time.",
 "ex": "My hobby is drawing.",
-"why": "\"What's your hobby?\" is a classic question for making friends."
+"why": "\"What's your hobby?\" is a classic question for making friends.",
+"zw": "爱好",
+"zd": "你在空闲时间喜欢做的事。",
+"ze": "我的{{爱好}}是画画。",
+"zy": "“你的爱好是什么？”是交朋友的经典问题。"
 },
 {
 "w": "price",
@@ -756,7 +1088,11 @@ window.UW_WORDS={
 "ipa": "/praɪs/",
 "def": "How much money you pay for something.",
 "ex": "What is the price of this book?",
-"why": "You need it to shop and to compare things."
+"why": "You need it to shop and to compare things.",
+"zw": "价格",
+"zd": "你为某样东西付多少钱。",
+"ze": "这本书的{{价格}}是多少？",
+"zy": "买东西和比较东西都需要它。"
 },
 {
 "w": "ticket",
@@ -765,7 +1101,11 @@ window.UW_WORDS={
 "ipa": "/ˈtɪkɪt/",
 "def": "A small paper or card that lets you enter a place or travel.",
 "ex": "I need a ticket for the film.",
-"why": "It is the first thing you buy for a trip or an event."
+"why": "It is the first thing you buy for a trip or an event.",
+"zw": "票",
+"zd": "一张小纸片或卡片，让你进入某个地方或乘车。",
+"ze": "我需要一张看电影的{{票}}。",
+"zy": "它是出行或参加活动要买的第一样东西。"
 },
 {
 "w": "problem",
@@ -774,7 +1114,11 @@ window.UW_WORDS={
 "ipa": "/ˈprɒbləm/",
 "def": "Something that is wrong and needs to be fixed.",
 "ex": "I have a problem with my phone.",
-"why": "It is the word you use to ask for help."
+"why": "It is the word you use to ask for help.",
+"zw": "问题；麻烦",
+"zd": "出了错、需要解决的事情。",
+"ze": "我的手机出了{{问题}}。",
+"zy": "求助时就用这个词。"
 },
 {
 "w": "idea",
@@ -783,7 +1127,11 @@ window.UW_WORDS={
 "ipa": "/aɪˈdɪə/",
 "def": "A thought or a plan in your mind.",
 "ex": "I have a good idea!",
-"why": "Sharing ideas is how people work and learn together."
+"why": "Sharing ideas is how people work and learn together.",
+"zw": "主意；想法",
+"zd": "你脑子里的想法或计划。",
+"ze": "我有一个好{{主意}}！",
+"zy": "分享主意是人们一起工作和学习的方式。"
 },
 {
 "w": "question",
@@ -792,7 +1140,11 @@ window.UW_WORDS={
 "ipa": "/ˈkwestʃən/",
 "def": "Words you ask when you want an answer.",
 "ex": "Can I ask a question?",
-"why": "It is the best way to learn and to start a talk."
+"why": "It is the best way to learn and to start a talk.",
+"zw": "问题",
+"zd": "你想得到答案时说的话。",
+"ze": "我可以问一个{{问题}}吗？",
+"zy": "它是学习和开始交谈的最好办法。"
 },
 {
 "w": "answer",
@@ -801,7 +1153,11 @@ window.UW_WORDS={
 "ipa": "/ˈɑːnsə/",
 "def": "What you say when someone asks you a question.",
 "ex": "I know the answer.",
-"why": "You use it in school and every day."
+"why": "You use it in school and every day.",
+"zw": "答案；回答",
+"zd": "别人问你问题时你说的话。",
+"ze": "我知道{{答案}}。",
+"zy": "在学校和日常生活中你都会用到它。"
 },
 {
 "w": "mistake",
@@ -810,7 +1166,11 @@ window.UW_WORDS={
 "ipa": "/mɪˈsteɪk/",
 "def": "Something you do wrong without wanting to.",
 "ex": "I made a mistake in my homework.",
-"why": "Everybody makes mistakes, and learning from them is how we improve."
+"why": "Everybody makes mistakes, and learning from them is how we improve.",
+"zw": "错误",
+"zd": "你不是故意做错的事。",
+"ze": "我作业里犯了一个{{错误}}。",
+"zy": "每个人都会犯错，从错误中学习才能进步。"
 },
 {
 "w": "agree",
@@ -819,7 +1179,11 @@ window.UW_WORDS={
 "ipa": "/əˈɡriː/",
 "def": "To have the same opinion as another person.",
 "ex": "I agree with you.",
-"why": "It is a friendly way to join a conversation."
+"why": "It is a friendly way to join a conversation.",
+"zw": "同意",
+"zd": "和别人有一样的看法。",
+"ze": "我{{同意}}你的看法。",
+"zy": "它是加入交谈的友好方式。"
 },
 {
 "w": "choose",
@@ -828,7 +1192,11 @@ window.UW_WORDS={
 "ipa": "/tʃuːz/",
 "def": "To pick one thing from many.",
 "ex": "You can choose a colour.",
-"why": "It is used in shops, menus and games."
+"why": "It is used in shops, menus and games.",
+"zw": "选择",
+"zd": "从很多东西里挑一个。",
+"ze": "你可以{{选}}一种颜色。",
+"zy": "商店、菜单和游戏里都会用到它。"
 },
 {
 "w": "enjoy",
@@ -837,7 +1205,11 @@ window.UW_WORDS={
 "ipa": "/ɪnˈdʒɔɪ/",
 "def": "To feel happy while you are doing something.",
 "ex": "I enjoy reading stories.",
-"why": "It is a warm way to say that you like something."
+"why": "It is a warm way to say that you like something.",
+"zw": "享受；喜爱",
+"zd": "做某件事时觉得开心。",
+"ze": "我{{享受}}读故事的时光。",
+"zy": "这是表达你喜欢某件事的温暖说法。"
 },
 {
 "w": "explain",
@@ -846,7 +1218,11 @@ window.UW_WORDS={
 "ipa": "/ɪkˈspleɪn/",
 "def": "To say something so that other people understand it.",
 "ex": "Can you explain this word?",
-"why": "You need it to ask for help in class."
+"why": "You need it to ask for help in class.",
+"zw": "解释",
+"zd": "把事情说清楚，让别人明白。",
+"ze": "你能{{解释}}一下这个词吗？",
+"zy": "在课堂上请别人帮忙时需要它。"
 },
 {
 "w": "improve",
@@ -855,7 +1231,11 @@ window.UW_WORDS={
 "ipa": "/ɪmˈpruːv/",
 "def": "To become better, or to make something better.",
 "ex": "My English will improve if I practise.",
-"why": "It is the goal of every learner."
+"why": "It is the goal of every learner.",
+"zw": "提高；改进",
+"zd": "变得更好，或让某样东西更好。",
+"ze": "如果我多练习，我的英语会{{提高}}。",
+"zy": "它是每个学习者的目标。"
 },
 {
 "w": "share",
@@ -864,7 +1244,11 @@ window.UW_WORDS={
 "ipa": "/ʃeə/",
 "def": "To let other people use or have a part of something.",
 "ex": "I share my snacks with my friends.",
-"why": "It is a kind thing to do, and a polite word to know."
+"why": "It is a kind thing to do, and a polite word to know.",
+"zw": "分享",
+"zd": "让别人使用或拥有一部分东西。",
+"ze": "我和朋友们{{分享}}我的零食。",
+"zy": "这是一件友善的事，也是一个有礼貌的词。"
 },
 {
 "w": "win",
@@ -873,7 +1257,11 @@ window.UW_WORDS={
 "ipa": "/wɪn/",
 "def": "To come first in a game or a race.",
 "ex": "Our team can win the match.",
-"why": "You will use it for games, sports and competitions."
+"why": "You will use it for games, sports and competitions.",
+"zw": "赢",
+"zd": "在游戏或比赛里得第一。",
+"ze": "我们队能{{赢}}这场比赛。",
+"zy": "比赛、运动和竞赛里你都会用到它。"
 },
 {
 "w": "lose",
@@ -882,7 +1270,11 @@ window.UW_WORDS={
 "ipa": "/luːz/",
 "def": "To not win. Or to not be able to find something.",
 "ex": "I lose my keys all the time.",
-"why": "It has two useful meanings, in games and in daily life."
+"why": "It has two useful meanings, in games and in daily life.",
+"zw": "输；丢失",
+"zd": "没有赢。或者找不到某样东西。",
+"ze": "我老是{{丢}}钥匙。",
+"zy": "它有两个有用的意思：游戏里和日常生活里。"
 },
 {
 "w": "repeat",
@@ -891,7 +1283,11 @@ window.UW_WORDS={
 "ipa": "/rɪˈpiːt/",
 "def": "To say or do something again.",
 "ex": "Please repeat the word.",
-"why": "It is great for asking people to say something again."
+"why": "It is great for asking people to say something again.",
+"zw": "重复",
+"zd": "再说一遍或再做一遍。",
+"ze": "请{{重复}}一遍这个词。",
+"zy": "它很适合请别人再说一遍。"
 },
 {
 "w": "describe",
@@ -900,7 +1296,11 @@ window.UW_WORDS={
 "ipa": "/dɪˈskraɪb/",
 "def": "To tell what someone or something is like.",
 "ex": "Describe your best friend.",
-"why": "It is an important skill for speaking and writing."
+"why": "It is an important skill for speaking and writing.",
+"zw": "描述",
+"zd": "说出某人或某物是什么样子。",
+"ze": "{{描述}}一下你最好的朋友。",
+"zy": "它是说话和写作的重要技能。"
 }
 ],
 "B1": [
@@ -911,7 +1311,11 @@ window.UW_WORDS={
 "ipa": "/əˈpɪnjən/",
 "def": "What you think or feel about something.",
 "ex": "In my opinion, this book is great.",
-"why": "\"In my opinion\" is the best way to join a discussion politely."
+"why": "\"In my opinion\" is the best way to join a discussion politely.",
+"zw": "观点；看法",
+"zd": "你对某件事的想法或感受。",
+"ze": "在我{{看来}}，这本书很棒。",
+"zy": "“在我看来”是礼貌地加入讨论的最好说法。"
 },
 {
 "w": "experience",
@@ -920,7 +1324,11 @@ window.UW_WORDS={
 "ipa": "/ɪkˈspɪəriəns/",
 "def": "Knowledge you get from doing something, or something that happened to you.",
 "ex": "Travelling alone was a great experience.",
-"why": "You will use it in interviews, stories and everyday talk."
+"why": "You will use it in interviews, stories and everyday talk.",
+"zw": "经历；经验",
+"zd": "你从做事中得到的知识，或发生在你身上的事。",
+"ze": "独自旅行是一次很棒的{{经历}}。",
+"zy": "你会在面试、讲故事和日常聊天中用到它。"
 },
 {
 "w": "advantage",
@@ -929,7 +1337,11 @@ window.UW_WORDS={
 "ipa": "/ədˈvɑːntɪdʒ/",
 "def": "Something good that helps you to do better than others.",
 "ex": "Being tall is an advantage in basketball.",
-"why": "You need it to compare and to give reasons in essays."
+"why": "You need it to compare and to give reasons in essays.",
+"zw": "优势",
+"zd": "某种好处，帮助你比别人做得更好。",
+"ze": "个子高在打篮球时是一种{{优势}}。",
+"zy": "你写文章要比较和给理由时需要它。"
 },
 {
 "w": "disadvantage",
@@ -938,7 +1350,11 @@ window.UW_WORDS={
 "ipa": "/ˌdɪsədˈvɑːntɪdʒ/",
 "def": "Something that makes things more difficult for you.",
 "ex": "Living far away is a disadvantage.",
-"why": "With \"advantage\", it lets you show both sides of an idea."
+"why": "With \"advantage\", it lets you show both sides of an idea.",
+"zw": "劣势；不利之处",
+"zd": "让事情对你更困难的地方。",
+"ze": "住得远是一个{{劣势}}。",
+"zy": "它和“优势”一起，让你能说明一个想法的两面。"
 },
 {
 "w": "environment",
@@ -947,7 +1363,11 @@ window.UW_WORDS={
 "ipa": "/ɪnˈvaɪrənmənt/",
 "def": "The air, water and land around us, where people and animals live.",
 "ex": "We must protect the environment.",
-"why": "It is a popular topic in school, news and exams."
+"why": "It is a popular topic in school, news and exams.",
+"zw": "环境",
+"zd": "我们周围的空气、水和土地，是人和动物生活的地方。",
+"ze": "我们必须保护{{环境}}。",
+"zy": "它是学校、新闻和考试里很热门的话题。"
 },
 {
 "w": "challenge",
@@ -956,7 +1376,11 @@ window.UW_WORDS={
 "ipa": "/ˈtʃælɪndʒ/",
 "def": "Something difficult that tests your skill.",
 "ex": "Learning a language is a challenge.",
-"why": "It makes difficult things sound exciting instead of scary."
+"why": "It makes difficult things sound exciting instead of scary.",
+"zw": "挑战",
+"zd": "考验你的本领、很困难的事。",
+"ze": "学一门语言是一个{{挑战}}。",
+"zy": "它让困难的事听起来令人兴奋，而不是可怕。"
 },
 {
 "w": "opportunity",
@@ -965,7 +1389,11 @@ window.UW_WORDS={
 "ipa": "/ˌɒpəˈtjuːnəti/",
 "def": "A chance to do something good.",
 "ex": "This trip is a great opportunity to practise English.",
-"why": "It is a positive word you will hear in school and at work."
+"why": "It is a positive word you will hear in school and at work.",
+"zw": "机会",
+"zd": "做一件好事的机会。",
+"ze": "这次旅行是练习英语的好{{机会}}。",
+"zy": "它是一个积极的词，你在学校和工作中常会听到。"
 },
 {
 "w": "achieve",
@@ -974,7 +1402,11 @@ window.UW_WORDS={
 "ipa": "/əˈtʃiːv/",
 "def": "To succeed in doing something after hard work.",
 "ex": "You can achieve your goals if you practise.",
-"why": "It is a motivating word for talking about goals."
+"why": "It is a motivating word for talking about goals.",
+"zw": "实现；取得",
+"zd": "经过努力成功完成某件事。",
+"ze": "如果你多练习，就能{{实现}}你的目标。",
+"zy": "谈目标时，这个词很能鼓舞人。"
 },
 {
 "w": "develop",
@@ -983,7 +1415,11 @@ window.UW_WORDS={
 "ipa": "/dɪˈveləp/",
 "def": "To grow or change slowly, or to make something better.",
 "ex": "Children develop new skills every year.",
-"why": "It is used for people, ideas, skills and technology."
+"why": "It is used for people, ideas, skills and technology.",
+"zw": "发展；培养",
+"zd": "慢慢成长或改变，或者让某样东西变得更好。",
+"ze": "孩子们每年都会{{发展}}出新的技能。",
+"zy": "它可用于人、想法、技能和科技。"
 },
 {
 "w": "produce",
@@ -992,7 +1428,11 @@ window.UW_WORDS={
 "ipa": "/prəˈdjuːs/",
 "def": "To make or grow something.",
 "ex": "Farms produce vegetables and milk.",
-"why": "It appears in science, business and news."
+"why": "It appears in science, business and news.",
+"zw": "生产；制造",
+"zd": "制造或种出某样东西。",
+"ze": "农场{{生产}}蔬菜和牛奶。",
+"zy": "它出现在科学、商业和新闻里。"
 },
 {
 "w": "although",
@@ -1001,7 +1441,11 @@ window.UW_WORDS={
 "ipa": "/ɔːlˈðəʊ/",
 "def": "A word that shows a surprising contrast.",
 "ex": "Although it was cold, we went outside.",
-"why": "It joins two opposite ideas into one smooth sentence."
+"why": "It joins two opposite ideas into one smooth sentence.",
+"zw": "虽然",
+"zd": "表示出人意料的对比的词。",
+"ze": "{{虽然}}天气很冷，我们还是出去了。",
+"zy": "它能把两个相反的想法连成一句通顺的话。"
 },
 {
 "w": "however",
@@ -1010,7 +1454,11 @@ window.UW_WORDS={
 "ipa": "/haʊˈevə/",
 "def": "A word that introduces a different or opposite idea.",
 "ex": "I like pizza. However, I do not like cheese.",
-"why": "It is the writer's favourite linking word and makes essays sound strong."
+"why": "It is the writer's favourite linking word and makes essays sound strong.",
+"zw": "然而；不过",
+"zd": "引出不同或相反想法的词。",
+"ze": "我喜欢披萨。{{不过}}，我不喜欢奶酪。",
+"zy": "它是写文章时最常用的连接词，让文章听起来更有力。"
 },
 {
 "w": "therefore",
@@ -1019,7 +1467,11 @@ window.UW_WORDS={
 "ipa": "/ˈðeəfɔː/",
 "def": "A word that shows a result. So.",
 "ex": "It was raining. Therefore, we stayed inside.",
-"why": "It makes your reasons and results clear."
+"why": "It makes your reasons and results clear.",
+"zw": "因此；所以",
+"zd": "表示结果的词。",
+"ze": "下雨了。{{因此}}，我们待在屋里。",
+"zy": "它让你的理由和结果更清楚。"
 },
 {
 "w": "instead",
@@ -1028,7 +1480,11 @@ window.UW_WORDS={
 "ipa": "/ɪnˈsted/",
 "def": "In place of something else.",
 "ex": "I had tea instead of coffee.",
-"why": "It is perfect for explaining a different choice."
+"why": "It is perfect for explaining a different choice.",
+"zw": "代替；而不是",
+"zd": "用来代替另一样东西。",
+"ze": "我喝了茶，{{而不是}}咖啡。",
+"zy": "它很适合解释你做了不同的选择。"
 },
 {
 "w": "unless",
@@ -1037,7 +1493,11 @@ window.UW_WORDS={
 "ipa": "/ənˈles/",
 "def": "A word that means \"if not\".",
 "ex": "We will go to the park unless it rains.",
-"why": "It makes your conditions short and clear."
+"why": "It makes your conditions short and clear.",
+"zw": "除非",
+"zd": "意思是“如果不”。",
+"ze": "我们会去公园，{{除非}}下雨。",
+"zy": "它让你的条件句又短又清楚。"
 },
 {
 "w": "despite",
@@ -1046,7 +1506,11 @@ window.UW_WORDS={
 "ipa": "/dɪˈspaɪt/",
 "def": "A word that shows something happened even though there was a problem.",
 "ex": "Despite the rain, we had a good time.",
-"why": "It is a shorter, stronger way to say \"although\"."
+"why": "It is a shorter, stronger way to say \"although\".",
+"zw": "尽管",
+"zd": "表示虽然有问题，事情还是发生了。",
+"ze": "{{尽管}}下雨，我们还是玩得很开心。",
+"zy": "它比“虽然”更短、更有力。"
 },
 {
 "w": "whereas",
@@ -1055,7 +1519,11 @@ window.UW_WORDS={
 "ipa": "/weərˈæz/",
 "def": "A word that compares two things that are different.",
 "ex": "My brother likes sports, whereas I like music.",
-"why": "It is perfect for writing about differences."
+"why": "It is perfect for writing about differences.",
+"zw": "而；然而",
+"zd": "用来比较两样不同的东西。",
+"ze": "我哥哥喜欢运动，{{而}}我喜欢音乐。",
+"zy": "它很适合写出事物的不同点。"
 },
 {
 "w": "otherwise",
@@ -1064,7 +1532,11 @@ window.UW_WORDS={
 "ipa": "/ˈʌðəwaɪz/",
 "def": "A word that tells what will happen if you do not do something.",
 "ex": "Hurry up, otherwise we will be late.",
-"why": "It is a clear way to give a warning."
+"why": "It is a clear way to give a warning.",
+"zw": "否则",
+"zd": "告诉你不做某事会发生什么。",
+"ze": "快点，{{否则}}我们要迟到了。",
+"zy": "这是一种清楚地给出警告的方式。"
 },
 {
 "w": "meanwhile",
@@ -1073,7 +1545,11 @@ window.UW_WORDS={
 "ipa": "/ˈmiːnwaɪl/",
 "def": "At the same time as another event.",
 "ex": "I cooked dinner. Meanwhile, my dad cleaned the house.",
-"why": "You need it to tell stories in order."
+"why": "You need it to tell stories in order.",
+"zw": "与此同时",
+"zd": "和另一件事在同一时间发生。",
+"ze": "我做晚饭。{{与此同时}}，爸爸打扫房子。",
+"zy": "你讲故事时需要它来排好顺序。"
 },
 {
 "w": "besides",
@@ -1082,7 +1558,11 @@ window.UW_WORDS={
 "ipa": "/bɪˈsaɪdz/",
 "def": "A word for adding one more reason or thing.",
 "ex": "I don't want to go. Besides, it is too late.",
-"why": "It is a useful way to give an extra reason."
+"why": "It is a useful way to give an extra reason.",
+"zw": "此外；再说",
+"zd": "用来再补充一个理由或一件事。",
+"ze": "我不想去。{{再说}}，时间太晚了。",
+"zy": "它是补充额外理由的好办法。"
 },
 {
 "w": "suggest",
@@ -1091,7 +1571,11 @@ window.UW_WORDS={
 "ipa": "/səˈdʒest/",
 "def": "To give an idea or a plan for someone to think about.",
 "ex": "I suggest we go to the museum.",
-"why": "It is a polite way to give advice."
+"why": "It is a polite way to give advice.",
+"zw": "建议",
+"zd": "提出一个想法或计划让别人考虑。",
+"ze": "我{{建议}}我们去博物馆。",
+"zy": "它是礼貌地给出意见的方式。"
 },
 {
 "w": "recommend",
@@ -1100,7 +1584,11 @@ window.UW_WORDS={
 "ipa": "/ˌrekəˈmend/",
 "def": "To say that something is good and that someone should try it.",
 "ex": "I recommend this film.",
-"why": "It is very useful when you talk about books, food and films."
+"why": "It is very useful when you talk about books, food and films.",
+"zw": "推荐",
+"zd": "说某样东西很好，别人应该试一试。",
+"ze": "我{{推荐}}这部电影。",
+"zy": "你谈书、美食和电影时很有用。"
 },
 {
 "w": "avoid",
@@ -1109,7 +1597,11 @@ window.UW_WORDS={
 "ipa": "/əˈvɔɪd/",
 "def": "To keep away from something on purpose.",
 "ex": "Avoid eating too much sugar.",
-"why": "It is used for health, safety and giving good advice."
+"why": "It is used for health, safety and giving good advice.",
+"zw": "避免；躲开",
+"zd": "故意远离某样东西。",
+"ze": "{{避免}}吃太多糖。",
+"zy": "它用于健康、安全和给出好建议。"
 },
 {
 "w": "prevent",
@@ -1118,7 +1610,11 @@ window.UW_WORDS={
 "ipa": "/prɪˈvent/",
 "def": "To stop something from happening.",
 "ex": "Washing your hands can prevent illness.",
-"why": "It is a powerful verb for health, safety and science."
+"why": "It is a powerful verb for health, safety and science.",
+"zw": "预防；阻止",
+"zd": "阻止某件事发生。",
+"ze": "洗手可以{{预防}}疾病。",
+"zy": "它是谈健康、安全和科学的有力动词。"
 },
 {
 "w": "require",
@@ -1127,7 +1623,11 @@ window.UW_WORDS={
 "ipa": "/rɪˈkwaɪə/",
 "def": "To need something because it is a rule or very important.",
 "ex": "Does this job require good English?",
-"why": "It is common in signs, rules and job adverts."
+"why": "It is common in signs, rules and job adverts.",
+"zw": "需要；要求",
+"zd": "因为是规定或非常重要而需要某样东西。",
+"ze": "这份工作{{要求}}英语好吗？",
+"zy": "它常见于标志、规则和招聘广告。"
 },
 {
 "w": "provide",
@@ -1136,7 +1636,11 @@ window.UW_WORDS={
 "ipa": "/prəˈvaɪd/",
 "def": "To give or supply something that is needed.",
 "ex": "The school will provide lunch.",
-"why": "It is used in business, news and formal speech."
+"why": "It is used in business, news and formal speech.",
+"zw": "提供",
+"zd": "给出或供应所需要的东西。",
+"ze": "学校会{{提供}}午餐。",
+"zy": "它用于商业、新闻和正式的场合。"
 },
 {
 "w": "depend",
@@ -1145,7 +1649,11 @@ window.UW_WORDS={
 "ipa": "/dɪˈpend/",
 "def": "To be decided by something else.",
 "ex": "It will depend on the weather.",
-"why": "\"It depends\" is one of the most useful English phrases."
+"why": "\"It depends\" is one of the most useful English phrases.",
+"zw": "取决于；依靠",
+"zd": "由另一件事决定。",
+"ze": "这要{{取决于}}天气。",
+"zy": "“看情况”是英语里最有用的短语之一。"
 },
 {
 "w": "consider",
@@ -1154,7 +1662,11 @@ window.UW_WORDS={
 "ipa": "/kənˈsɪdə/",
 "def": "To think about something carefully.",
 "ex": "Please consider my idea.",
-"why": "It makes you sound thoughtful and polite."
+"why": "It makes you sound thoughtful and polite.",
+"zw": "考虑",
+"zd": "认真地想一想某件事。",
+"ze": "请{{考虑}}一下我的想法。",
+"zy": "它让你听起来既周到又有礼貌。"
 },
 {
 "w": "predict",
@@ -1163,7 +1675,11 @@ window.UW_WORDS={
 "ipa": "/prɪˈdɪkt/",
 "def": "To say what you think will happen in the future.",
 "ex": "I predict that it will rain tomorrow.",
-"why": "It is a key word in science and reading skills."
+"why": "It is a key word in science and reading skills.",
+"zw": "预测",
+"zd": "说出你认为将来会发生什么。",
+"ze": "我{{预测}}明天会下雨。",
+"zy": "它是科学和阅读技巧里的关键词。"
 },
 {
 "w": "afford",
@@ -1172,7 +1688,11 @@ window.UW_WORDS={
 "ipa": "/əˈfɔːd/",
 "def": "To have enough money to pay for something.",
 "ex": "I cannot afford a new phone.",
-"why": "You need it to talk about money and shopping."
+"why": "You need it to talk about money and shopping.",
+"zw": "负担得起；买得起",
+"zd": "有足够的钱买某样东西。",
+"ze": "我{{买不起}}新手机。",
+"zy": "谈钱和购物时需要它。"
 },
 {
 "w": "knowledge",
@@ -1181,7 +1701,11 @@ window.UW_WORDS={
 "ipa": "/ˈnɒlɪdʒ/",
 "def": "The things you know and understand.",
 "ex": "Reading books gives you knowledge.",
-"why": "It is the goal of every student."
+"why": "It is the goal of every student.",
+"zw": "知识",
+"zd": "你知道和明白的事情。",
+"ze": "读书给你{{知识}}。",
+"zy": "它是每个学生的目标。"
 },
 {
 "w": "influence",
@@ -1190,7 +1714,11 @@ window.UW_WORDS={
 "ipa": "/ˈɪnfluəns/",
 "def": "The power to change how someone thinks or acts.",
 "ex": "My teacher has a big influence on me.",
-"why": "It helps you talk about people, media and ideas."
+"why": "It helps you talk about people, media and ideas.",
+"zw": "影响",
+"zd": "改变别人想法或行为的力量。",
+"ze": "我的老师对我有很大的{{影响}}。",
+"zy": "它帮你谈论人、媒体和想法。"
 },
 {
 "w": "behaviour",
@@ -1199,7 +1727,11 @@ window.UW_WORDS={
 "ipa": "/bɪˈheɪvjə/",
 "def": "The way a person acts.",
 "ex": "The students' behaviour was excellent.",
-"why": "Teachers and parents use this word all the time."
+"why": "Teachers and parents use this word all the time.",
+"zw": "行为；表现",
+"zd": "一个人做事的方式。",
+"ze": "学生们的{{行为}}非常好。",
+"zy": "老师和家长一直都在用这个词。"
 },
 {
 "w": "relationship",
@@ -1208,7 +1740,11 @@ window.UW_WORDS={
 "ipa": "/rɪˈleɪʃnʃɪp/",
 "def": "The way that two people or groups are connected.",
 "ex": "I have a good relationship with my sister.",
-"why": "It is a key word for talking about people."
+"why": "It is a key word for talking about people.",
+"zw": "关系",
+"zd": "两个人或两个团体之间的联系。",
+"ze": "我和姐姐的{{关系}}很好。",
+"zy": "它是谈论人的关键词。"
 },
 {
 "w": "responsibility",
@@ -1217,7 +1753,11 @@ window.UW_WORDS={
 "ipa": "/rɪˌspɒnsəˈbɪləti/",
 "def": "A duty that you must do, or something you must take care of.",
 "ex": "Feeding the dog is my responsibility.",
-"why": "It shows that you are grown-up and reliable."
+"why": "It shows that you are grown-up and reliable.",
+"zw": "责任",
+"zd": "你必须做的事，或你必须照顾的事。",
+"ze": "喂狗是我的{{责任}}。",
+"zy": "它表明你长大了，而且很可靠。"
 },
 {
 "w": "communication",
@@ -1226,7 +1766,11 @@ window.UW_WORDS={
 "ipa": "/kəˌmjuːnɪˈkeɪʃn/",
 "def": "Sharing information with other people by speaking, writing or signs.",
 "ex": "Good communication helps teams to work well.",
-"why": "It is the reason we learn languages."
+"why": "It is the reason we learn languages.",
+"zw": "沟通；交流",
+"zd": "通过说话、写字或手势和别人分享信息。",
+"ze": "良好的{{沟通}}能帮助团队顺利合作。",
+"zy": "它是我们学习语言的原因。"
 },
 {
 "w": "tradition",
@@ -1235,7 +1779,11 @@ window.UW_WORDS={
 "ipa": "/trəˈdɪʃn/",
 "def": "A custom that people have done for a very long time.",
 "ex": "Eating dumplings at the Spring Festival is a tradition.",
-"why": "It lets you talk about your culture."
+"why": "It lets you talk about your culture.",
+"zw": "传统",
+"zd": "人们很久很久以来一直在做的习俗。",
+"ze": "春节吃饺子是一种{{传统}}。",
+"zy": "它让你能谈谈自己的文化。"
 },
 {
 "w": "society",
@@ -1244,7 +1792,11 @@ window.UW_WORDS={
 "ipa": "/səˈsaɪəti/",
 "def": "All the people who live together in a country or place.",
 "ex": "Schools are important for society.",
-"why": "It is a key word in essays and news."
+"why": "It is a key word in essays and news.",
+"zw": "社会",
+"zd": "生活在同一个国家或地方的所有人。",
+"ze": "学校对{{社会}}很重要。",
+"zy": "它是文章和新闻里的关键词。"
 },
 {
 "w": "situation",
@@ -1253,7 +1805,11 @@ window.UW_WORDS={
 "ipa": "/ˌsɪtʃuˈeɪʃn/",
 "def": "What is happening at a certain time and place.",
 "ex": "It is a difficult situation.",
-"why": "It is a flexible word you can use in many conversations."
+"why": "It is a flexible word you can use in many conversations.",
+"zw": "情况；处境",
+"zd": "某个时间、某个地方正在发生的事。",
+"ze": "这是一个困难的{{情况}}。",
+"zy": "它用法灵活，能用在很多对话里。"
 },
 {
 "w": "solution",
@@ -1262,7 +1818,11 @@ window.UW_WORDS={
 "ipa": "/səˈluːʃn/",
 "def": "An answer to a problem.",
 "ex": "We need to find a solution.",
-"why": "It is a positive word for fixing problems."
+"why": "It is a positive word for fixing problems.",
+"zw": "解决办法",
+"zd": "问题的答案。",
+"ze": "我们需要找到一个{{解决办法}}。",
+"zy": "它是个积极的词，用来解决问题。"
 },
 {
 "w": "confident",
@@ -1271,7 +1831,11 @@ window.UW_WORDS={
 "ipa": "/ˈkɒnfɪdənt/",
 "def": "Sure that you can do something well.",
 "ex": "I feel confident about the test.",
-"why": "It is a great word to describe yourself in interviews."
+"why": "It is a great word to describe yourself in interviews.",
+"zw": "自信",
+"zd": "确信自己能把事情做好。",
+"ze": "我对这次考试感到很{{自信}}。",
+"zy": "面试时，用它来形容自己很棒。"
 },
 {
 "w": "nervous",
@@ -1280,7 +1844,11 @@ window.UW_WORDS={
 "ipa": "/ˈnɜːvəs/",
 "def": "Worried or a little afraid about something.",
 "ex": "I am nervous before the exam.",
-"why": "It is a common feeling, and you will want to say it."
+"why": "It is a common feeling, and you will want to say it.",
+"zw": "紧张",
+"zd": "对某件事担心或有点害怕。",
+"ze": "考试前我很{{紧张}}。",
+"zy": "这种感觉很常见，你会想说出来。"
 },
 {
 "w": "honest",
@@ -1289,7 +1857,11 @@ window.UW_WORDS={
 "ipa": "/ˈɒnɪst/",
 "def": "Telling the truth and not lying.",
 "ex": "Please be honest with me.",
-"why": "It describes a person people can trust."
+"why": "It describes a person people can trust.",
+"zw": "诚实",
+"zd": "说真话，不说谎。",
+"ze": "请对我{{诚实}}。",
+"zy": "它形容一个值得信任的人。"
 },
 {
 "w": "polite",
@@ -1298,7 +1870,11 @@ window.UW_WORDS={
 "ipa": "/pəˈlaɪt/",
 "def": "Having good manners and being kind to other people.",
 "ex": "It is polite to say thank you.",
-"why": "It is a very important quality in every country."
+"why": "It is a very important quality in every country.",
+"zw": "有礼貌",
+"zd": "有好的礼仪，对别人友善。",
+"ze": "说“谢谢”是{{有礼貌}}的。",
+"zy": "它在每个国家都是很重要的品质。"
 },
 {
 "w": "curious",
@@ -1307,7 +1883,11 @@ window.UW_WORDS={
 "ipa": "/ˈkjʊəriəs/",
 "def": "Wanting to learn or know about things.",
 "ex": "Children are curious about the world.",
-"why": "It describes a great learner."
+"why": "It describes a great learner.",
+"zw": "好奇",
+"zd": "想要学习或了解事物。",
+"ze": "孩子们对世界很{{好奇}}。",
+"zy": "它描述的是一个优秀的学习者。"
 },
 {
 "w": "patient",
@@ -1316,7 +1896,11 @@ window.UW_WORDS={
 "ipa": "/ˈpeɪʃnt/",
 "def": "Able to wait or stay calm when things are slow or difficult.",
 "ex": "Be patient. Learning takes time.",
-"why": "It is a quality that helps you to learn and live well."
+"why": "It is a quality that helps you to learn and live well.",
+"zw": "有耐心",
+"zd": "事情进行得慢或很难时，能等待或保持冷静。",
+"ze": "要有{{耐心}}。学习需要时间。",
+"zy": "它是帮你学习和生活得更好的品质。"
 },
 {
 "w": "generous",
@@ -1325,7 +1909,11 @@ window.UW_WORDS={
 "ipa": "/ˈdʒenərəs/",
 "def": "Happy to give your time, money or things to other people.",
 "ex": "My uncle is very generous.",
-"why": "It is a kind word you can use for people you love."
+"why": "It is a kind word you can use for people you love.",
+"zw": "慷慨",
+"zd": "乐意把时间、金钱或东西给别人。",
+"ze": "我叔叔非常{{慷慨}}。",
+"zy": "它是一个温暖的词，可以用来说你爱的人。"
 },
 {
 "w": "independent",
@@ -1334,7 +1922,11 @@ window.UW_WORDS={
 "ipa": "/ˌɪndɪˈpendənt/",
 "def": "Able to do things yourself and not needing help from others.",
 "ex": "She is an independent girl.",
-"why": "It describes the person you want to grow into."
+"why": "It describes the person you want to grow into.",
+"zw": "独立",
+"zd": "能自己做事，不需要别人帮助。",
+"ze": "她是一个{{独立}}的女孩。",
+"zy": "它描述的是你想成为的那种人。"
 },
 {
 "w": "creative",
@@ -1343,7 +1935,11 @@ window.UW_WORDS={
 "ipa": "/kriˈeɪtɪv/",
 "def": "Good at thinking of new ideas or making new things.",
 "ex": "He is a creative artist.",
-"why": "It is a strong word for CVs and school."
+"why": "It is a strong word for CVs and school.",
+"zw": "有创造力",
+"zd": "擅长想新点子或做新东西。",
+"ze": "他是一位{{有创造力}}的艺术家。",
+"zy": "它在简历和学校里都是很有分量的词。"
 },
 {
 "w": "reliable",
@@ -1352,7 +1948,11 @@ window.UW_WORDS={
 "ipa": "/rɪˈlaɪəbl/",
 "def": "Someone or something you can trust to do what is expected.",
 "ex": "My friend is always on time. He is reliable.",
-"why": "It is a high compliment for friends and workers."
+"why": "It is a high compliment for friends and workers.",
+"zw": "可靠",
+"zd": "你可以相信他会做到该做的事。",
+"ze": "我的朋友总是准时。他很{{可靠}}。",
+"zy": "对朋友和同事来说，这是很高的赞美。"
 }
 ],
 "B2": [
@@ -1363,7 +1963,11 @@ window.UW_WORDS={
 "ipa": "/ˈevɪdəns/",
 "def": "Facts or signs that show that something is true.",
 "ex": "There is clear evidence that exercise is good for health.",
-"why": "It is the key word for arguments, science and the news."
+"why": "It is the key word for arguments, science and the news.",
+"zw": "证据",
+"zd": "表明某件事是真的的事实或迹象。",
+"ze": "有明确的{{证据}}表明运动对健康有益。",
+"zy": "它是辩论、科学和新闻里的关键词。"
 },
 {
 "w": "assume",
@@ -1372,7 +1976,11 @@ window.UW_WORDS={
 "ipa": "/əˈsjuːm/",
 "def": "To believe that something is true without checking.",
 "ex": "Don't assume that everyone knows the rules.",
-"why": "It helps you see the difference between a fact and a guess."
+"why": "It helps you see the difference between a fact and a guess.",
+"zw": "假设；以为",
+"zd": "没有检查就相信某件事是真的。",
+"ze": "别{{以为}}每个人都知道规则。",
+"zy": "它帮你分清事实和猜测。"
 },
 {
 "w": "significant",
@@ -1381,7 +1989,11 @@ window.UW_WORDS={
 "ipa": "/sɪɡˈnɪfɪkənt/",
 "def": "Important or big enough to matter.",
 "ex": "There was a significant change in the weather.",
-"why": "It sounds more exact than \"big\" or \"important\" in essays."
+"why": "It sounds more exact than \"big\" or \"important\" in essays.",
+"zw": "重大；显著",
+"zd": "重要，或大到有影响。",
+"ze": "天气发生了{{显著}}的变化。",
+"zy": "在文章里，它比“大”或“重要”听起来更准确。"
 },
 {
 "w": "approach",
@@ -1390,7 +2002,11 @@ window.UW_WORDS={
 "ipa": "/əˈprəʊtʃ/",
 "def": "A way of dealing with a task or a problem.",
 "ex": "Her approach to learning is simple: practise every day.",
-"why": "It lets you compare different ways of doing things."
+"why": "It lets you compare different ways of doing things.",
+"zw": "方法；态度",
+"zd": "处理一项任务或问题的方式。",
+"ze": "她学习的{{方法}}很简单：每天练习。",
+"zy": "它让你比较做事的不同方式。"
 },
 {
 "w": "issue",
@@ -1399,7 +2015,11 @@ window.UW_WORDS={
 "ipa": "/ˈɪʃuː/",
 "def": "An important topic or problem that people talk about.",
 "ex": "Pollution is a serious issue.",
-"why": "It is used everywhere in news, school and business."
+"why": "It is used everywhere in news, school and business.",
+"zw": "议题；问题",
+"zd": "人们谈论的重要话题或问题。",
+"ze": "污染是一个严重的{{问题}}。",
+"zy": "新闻、学校和商业里到处都会用到它。"
 },
 {
 "w": "factor",
@@ -1408,7 +2028,11 @@ window.UW_WORDS={
 "ipa": "/ˈfæktə/",
 "def": "One of the things that affects a result.",
 "ex": "Sleep is a key factor in how well you study.",
-"why": "It helps you explain causes in an organised way."
+"why": "It helps you explain causes in an organised way.",
+"zw": "因素",
+"zd": "影响结果的其中一个条件。",
+"ze": "睡眠是影响你学习效果的一个关键{{因素}}。",
+"zy": "它帮你有条理地解释原因。"
 },
 {
 "w": "aspect",
@@ -1417,7 +2041,11 @@ window.UW_WORDS={
 "ipa": "/ˈæspekt/",
 "def": "One part or side of a subject or a situation.",
 "ex": "Which aspect of the film did you like most?",
-"why": "It helps you look at a topic from many sides."
+"why": "It helps you look at a topic from many sides.",
+"zw": "方面",
+"zd": "一个主题或情况的一个部分。",
+"ze": "你最喜欢这部电影的哪个{{方面}}？",
+"zy": "它帮你从多个角度看一个话题。"
 },
 {
 "w": "concept",
@@ -1426,7 +2054,11 @@ window.UW_WORDS={
 "ipa": "/ˈkɒnsept/",
 "def": "A big idea about how something works or what it means.",
 "ex": "Time is a hard concept for young children.",
-"why": "It lets you talk about ideas in science, art and life."
+"why": "It lets you talk about ideas in science, art and life.",
+"zw": "概念",
+"zd": "关于事物如何运作或是什么意思的大想法。",
+"ze": "时间对小孩子来说是一个很难的{{概念}}。",
+"zy": "它让你能谈科学、艺术和生活里的想法。"
 },
 {
 "w": "analyse",
@@ -1435,7 +2067,11 @@ window.UW_WORDS={
 "ipa": "/ˈænəlaɪz/",
 "def": "To study something carefully by looking at its parts.",
 "ex": "Scientists analyse the data to find the answer.",
-"why": "It is used in exams and in school projects."
+"why": "It is used in exams and in school projects.",
+"zw": "分析",
+"zd": "通过观察各个部分来仔细研究某样东西。",
+"ze": "科学家们{{分析}}数据来找出答案。",
+"zy": "它会用在考试和学校的项目里。"
 },
 {
 "w": "interpret",
@@ -1444,7 +2080,11 @@ window.UW_WORDS={
 "ipa": "/ɪnˈtɜːprɪt/",
 "def": "To explain what something means, or to understand it in your own way.",
 "ex": "People can interpret a poem in different ways.",
-"why": "It is a key reading and listening skill."
+"why": "It is a key reading and listening skill.",
+"zw": "解读；理解",
+"zd": "解释某样东西的意思，或用自己的方式去理解它。",
+"ze": "人们可以用不同的方式{{解读}}一首诗。",
+"zy": "它是关键的阅读和听力技能。"
 },
 {
 "w": "consequence",
@@ -1453,7 +2093,11 @@ window.UW_WORDS={
 "ipa": "/ˈkɒnsɪkwəns/",
 "def": "A result that follows from something that happened or that you did.",
 "ex": "If you skip breakfast, a consequence can be feeling tired.",
-"why": "It links actions to results, which is the heart of good thinking."
+"why": "It links actions to results, which is the heart of good thinking.",
+"zw": "后果",
+"zd": "某件事发生后，或你做了某件事之后出现的结果。",
+"ze": "如果不吃早餐，一个{{后果}}可能是觉得累。",
+"zy": "它把行动和结果联系起来，这是好好思考的核心。"
 },
 {
 "w": "tendency",
@@ -1462,7 +2106,11 @@ window.UW_WORDS={
 "ipa": "/ˈtendənsi/",
 "def": "Something that a person or thing often does.",
 "ex": "He has a tendency to talk very fast.",
-"why": "It lets you describe habits in a more polite way."
+"why": "It lets you describe habits in a more polite way.",
+"zw": "倾向；习惯",
+"zd": "一个人或一件事常常会做的事。",
+"ze": "他有说话很快的{{倾向}}。",
+"zy": "它让你用更礼貌的方式描述习惯。"
 },
 {
 "w": "objective",
@@ -1471,7 +2119,11 @@ window.UW_WORDS={
 "ipa": "/əbˈdʒektɪv/",
 "def": "A goal that you plan to reach.",
 "ex": "Our objective is to finish the project by Friday.",
-"why": "It is very common in school plans and at work."
+"why": "It is very common in school plans and at work.",
+"zw": "目标",
+"zd": "你计划要达到的目标。",
+"ze": "我们的{{目标}}是在星期五之前完成这个项目。",
+"zy": "它在学校计划和工作中很常见。"
 },
 {
 "w": "perspective",
@@ -1480,7 +2132,11 @@ window.UW_WORDS={
 "ipa": "/pəˈspektɪv/",
 "def": "A way of seeing or thinking about something.",
 "ex": "It helps to see the problem from your friend's perspective.",
-"why": "It teaches us to understand other people's views."
+"why": "It teaches us to understand other people's views.",
+"zw": "视角；角度",
+"zd": "看待或思考某件事的方式。",
+"ze": "从你朋友的{{角度}}看这个问题会有帮助。",
+"zy": "它教我们理解别人的看法。"
 },
 {
 "w": "priority",
@@ -1489,7 +2145,11 @@ window.UW_WORDS={
 "ipa": "/praɪˈɒrəti/",
 "def": "The thing that is most important and that you do first.",
 "ex": "Your health is the first priority.",
-"why": "It helps you to plan and to talk about what matters most."
+"why": "It helps you to plan and to talk about what matters most.",
+"zw": "优先事项；头等大事",
+"zd": "最重要、要先做的事情。",
+"ze": "你的健康是{{头等大事}}。",
+"zy": "它帮你做计划，也让你说出什么最重要。"
 },
 {
 "w": "strategy",
@@ -1498,7 +2158,11 @@ window.UW_WORDS={
 "ipa": "/ˈstrætədʒi/",
 "def": "A clever plan to reach a goal.",
 "ex": "My strategy for learning words is to use them in sentences.",
-"why": "It is useful for games, study and work."
+"why": "It is useful for games, study and work.",
+"zw": "策略；计策",
+"zd": "达到目标的聪明计划。",
+"ze": "我学单词的{{策略}}是把它们用在句子里。",
+"zy": "它在游戏、学习和工作中都很有用。"
 },
 {
 "w": "motivation",
@@ -1507,7 +2171,11 @@ window.UW_WORDS={
 "ipa": "/ˌməʊtɪˈveɪʃn/",
 "def": "The feeling that makes you want to do something.",
 "ex": "Her motivation is to become a doctor.",
-"why": "It explains why people work hard."
+"why": "It explains why people work hard.",
+"zw": "动力；动机",
+"zd": "让你想做某件事的感觉。",
+"ze": "她的{{动力}}是成为一名医生。",
+"zy": "它解释了人们为什么努力。"
 },
 {
 "w": "compromise",
@@ -1516,7 +2184,11 @@ window.UW_WORDS={
 "ipa": "/ˈkɒmprəmaɪz/",
 "def": "A way to agree when each person gives up a little of what they want.",
 "ex": "We could not agree, so we made a compromise.",
-"why": "It helps people to solve disagreements peacefully."
+"why": "It helps people to solve disagreements peacefully.",
+"zw": "妥协；折中",
+"zd": "大家都让一点步，达成一致的办法。",
+"ze": "我们意见不一致，所以最后达成了{{妥协}}。",
+"zy": "它帮助人们和平地解决分歧。"
 },
 {
 "w": "criticism",
@@ -1525,7 +2197,11 @@ window.UW_WORDS={
 "ipa": "/ˈkrɪtɪsɪzəm/",
 "def": "Words that say what is wrong with someone or something.",
 "ex": "She accepted the criticism and tried again.",
-"why": "It helps you to give and take feedback."
+"why": "It helps you to give and take feedback.",
+"zw": "批评",
+"zd": "指出某人或某事哪里不对的话。",
+"ze": "她接受了{{批评}}，然后再试了一次。",
+"zy": "它帮你给出和接受反馈。"
 },
 {
 "w": "flexible",
@@ -1534,7 +2210,11 @@ window.UW_WORDS={
 "ipa": "/ˈfleksəbl/",
 "def": "Able to change easily when something changes.",
 "ex": "I am flexible, so any day is fine.",
-"why": "It is a quality that employers and teachers like."
+"why": "It is a quality that employers and teachers like.",
+"zw": "灵活",
+"zd": "情况变化时能很容易地改变。",
+"ze": "我很{{灵活}}，哪一天都可以。",
+"zy": "雇主和老师都喜欢这种品质。"
 },
 {
 "w": "reluctant",
@@ -1543,7 +2223,11 @@ window.UW_WORDS={
 "ipa": "/rɪˈlʌktənt/",
 "def": "Not wanting to do something and slow to do it.",
 "ex": "He was reluctant to speak in front of the class.",
-"why": "It describes mixed feelings very clearly."
+"why": "It describes mixed feelings very clearly.",
+"zw": "不情愿；不愿意",
+"zd": "不想做某件事，行动很慢。",
+"ze": "他{{不愿意}}在全班面前讲话。",
+"zy": "它能很清楚地描述矛盾的心情。"
 },
 {
 "w": "ambitious",
@@ -1552,7 +2236,11 @@ window.UW_WORDS={
 "ipa": "/æmˈbɪʃəs/",
 "def": "Having a strong wish to be successful.",
 "ex": "She is an ambitious student who wants to study abroad.",
-"why": "It is a high-level word for talking about goals and dreams."
+"why": "It is a high-level word for talking about goals and dreams.",
+"zw": "有雄心；有抱负",
+"zd": "强烈地希望成功。",
+"ze": "她是个{{有雄心}}的学生，想去国外读书。",
+"zy": "谈目标和梦想时，这是个高级的词。"
 },
 {
 "w": "consistent",
@@ -1561,7 +2249,11 @@ window.UW_WORDS={
 "ipa": "/kənˈsɪstənt/",
 "def": "Always the same. Staying at the same level or doing the same thing.",
 "ex": "His grades are consistent, so he is a reliable student.",
-"why": "It is a key quality for success in everything you do."
+"why": "It is a key quality for success in everything you do.",
+"zw": "稳定；一致",
+"zd": "总是一样。保持在同一个水平或做同样的事。",
+"ze": "他的成绩很{{稳定}}，所以他是个可靠的学生。",
+"zy": "它是做什么事都能成功的关键品质。"
 },
 {
 "w": "efficient",
@@ -1570,7 +2262,11 @@ window.UW_WORDS={
 "ipa": "/ɪˈfɪʃnt/",
 "def": "Working well without wasting time or energy.",
 "ex": "This new method is more efficient.",
-"why": "It lets you compare ways of doing things."
+"why": "It lets you compare ways of doing things.",
+"zw": "高效",
+"zd": "做事好，不浪费时间或精力。",
+"ze": "这个新方法更{{高效}}。",
+"zy": "它让你比较做事的不同方式。"
 },
 {
 "w": "sufficient",
@@ -1579,7 +2275,11 @@ window.UW_WORDS={
 "ipa": "/səˈfɪʃnt/",
 "def": "Enough for what is needed.",
 "ex": "Do we have sufficient food for everyone?",
-"why": "It is a formal and exact word for \"enough\"."
+"why": "It is a formal and exact word for \"enough\".",
+"zw": "足够；充足",
+"zd": "够用。",
+"ze": "我们有{{足够}}的食物给大家吗？",
+"zy": "它是“足够”的正式说法。"
 },
 {
 "w": "essential",
@@ -1588,7 +2288,11 @@ window.UW_WORDS={
 "ipa": "/ɪˈsenʃl/",
 "def": "Absolutely necessary. You cannot do without it.",
 "ex": "Water is essential for life.",
-"why": "It is stronger than \"important\", so it gets attention."
+"why": "It is stronger than \"important\", so it gets attention.",
+"zw": "必不可少；极其重要",
+"zd": "绝对需要。没有它不行。",
+"ze": "水对生命{{必不可少}}。",
+"zy": "它比“重要”更强烈，所以会引起注意。"
 },
 {
 "w": "potential",
@@ -1597,7 +2301,11 @@ window.UW_WORDS={
 "ipa": "/pəˈtenʃl/",
 "def": "The ability to grow, to improve or to be successful in the future.",
 "ex": "The teacher said I have great potential.",
-"why": "It is a kind and positive word to hear from a teacher."
+"why": "It is a kind and positive word to hear from a teacher.",
+"zw": "潜力；潜在的",
+"zd": "将来能够成长、进步或成功的能力。",
+"ze": "老师说我很有{{潜力}}。",
+"zy": "这是老师说的话里很友善、很积极的词。"
 },
 {
 "w": "obvious",
@@ -1606,7 +2314,11 @@ window.UW_WORDS={
 "ipa": "/ˈɒbviəs/",
 "def": "Easy to see or to understand.",
 "ex": "It was obvious that she was nervous.",
-"why": "You use it to say when something is easy to notice."
+"why": "You use it to say when something is easy to notice.",
+"zw": "明显",
+"zd": "很容易看到或明白。",
+"ze": "她很紧张，这是很{{明显}}的。",
+"zy": "你用它来说某件事很容易就能发现。"
 },
 {
 "w": "controversial",
@@ -1615,7 +2327,11 @@ window.UW_WORDS={
 "ipa": "/ˌkɒntrəˈvɜːʃl/",
 "def": "Causing a lot of disagreement between people.",
 "ex": "School uniform is a controversial subject.",
-"why": "You will meet it in debates and in the news."
+"why": "You will meet it in debates and in the news.",
+"zw": "有争议",
+"zd": "引起很多人不同意见。",
+"ze": "校服是一个{{有争议}}的话题。",
+"zy": "你会在辩论和新闻里遇到它。"
 },
 {
 "w": "relevant",
@@ -1624,7 +2340,11 @@ window.UW_WORDS={
 "ipa": "/ˈreləvənt/",
 "def": "Connected to what is being talked about.",
 "ex": "Please give only relevant information.",
-"why": "It helps you to stay on topic in essays and speeches."
+"why": "It helps you to stay on topic in essays and speeches.",
+"zw": "相关；有关",
+"zd": "和正在谈论的内容有联系。",
+"ze": "请只给出{{相关}}的信息。",
+"zy": "它帮你在文章和演讲中不跑题。"
 },
 {
 "w": "maintain",
@@ -1633,7 +2353,11 @@ window.UW_WORDS={
 "ipa": "/meɪnˈteɪn/",
 "def": "To keep something in good condition or at the same level.",
 "ex": "It is important to maintain a healthy diet.",
-"why": "It is used for health, machines and friendships."
+"why": "It is used for health, machines and friendships.",
+"zw": "保持；维持",
+"zd": "让某样东西保持良好状态或同一水平。",
+"ze": "{{保持}}健康的饮食很重要。",
+"zy": "它用于健康、机器和友谊。"
 },
 {
 "w": "establish",
@@ -1642,7 +2366,11 @@ window.UW_WORDS={
 "ipa": "/ɪˈstæblɪʃ/",
 "def": "To start something, or to prove that something is true.",
 "ex": "They want to establish a new school.",
-"why": "It shows up in news, history and business."
+"why": "It shows up in news, history and business.",
+"zw": "建立；创立",
+"zd": "开始做某事，或证明某件事是真的。",
+"ze": "他们想{{建立}}一所新学校。",
+"zy": "它出现在新闻、历史和商业里。"
 },
 {
 "w": "emphasise",
@@ -1651,7 +2379,11 @@ window.UW_WORDS={
 "ipa": "/ˈemfəsaɪz/",
 "def": "To give special importance to something.",
 "ex": "Teachers often emphasise the need to practise.",
-"why": "It helps you to show what is most important in speech."
+"why": "It helps you to show what is most important in speech.",
+"zw": "强调",
+"zd": "特别重视某件事。",
+"ze": "老师们常常{{强调}}练习的必要性。",
+"zy": "它帮你在说话时表示什么最重要。"
 },
 {
 "w": "imply",
@@ -1660,7 +2392,11 @@ window.UW_WORDS={
 "ipa": "/ɪmˈplaɪ/",
 "def": "To suggest something without saying it directly.",
 "ex": "His smile can imply that he is happy.",
-"why": "It helps you understand hidden meanings in reading."
+"why": "It helps you understand hidden meanings in reading.",
+"zw": "暗示",
+"zd": "不直接说出来，而是暗示某件事。",
+"ze": "他的微笑可以{{暗示}}他很开心。",
+"zy": "它帮你读懂阅读材料里隐藏的意思。"
 },
 {
 "w": "convince",
@@ -1669,7 +2405,11 @@ window.UW_WORDS={
 "ipa": "/kənˈvɪns/",
 "def": "To make someone believe that something is true.",
 "ex": "I will try to convince my parents to let me go.",
-"why": "It is a key word for debates and speaking."
+"why": "It is a key word for debates and speaking.",
+"zw": "使信服；说服",
+"zd": "让别人相信某件事是真的。",
+"ze": "我会努力{{说服}}爸爸妈妈让我去。",
+"zy": "它是辩论和说话中的关键词。"
 },
 {
 "w": "persuade",
@@ -1678,7 +2418,11 @@ window.UW_WORDS={
 "ipa": "/pəˈsweɪd/",
 "def": "To make someone do something by giving good reasons.",
 "ex": "Can you persuade him to join the club?",
-"why": "It is a strong skill for writing and debates."
+"why": "It is a strong skill for writing and debates.",
+"zw": "劝说",
+"zd": "通过讲出好理由让别人去做某事。",
+"ze": "你能{{劝}}他加入俱乐部吗？",
+"zy": "它是写作和辩论中的强大技能。"
 },
 {
 "w": "overcome",
@@ -1687,7 +2431,11 @@ window.UW_WORDS={
 "ipa": "/ˌəʊvəˈkʌm/",
 "def": "To succeed in dealing with a problem or a fear.",
 "ex": "He wants to overcome his fear of speaking in public.",
-"why": "It is an inspiring word for success stories."
+"why": "It is an inspiring word for success stories.",
+"zw": "克服",
+"zd": "成功地处理一个问题或恐惧。",
+"ze": "他想{{克服}}在公共场合讲话的恐惧。",
+"zy": "它是个鼓舞人心的词，常用在成功的故事里。"
 },
 {
 "w": "adapt",
@@ -1696,7 +2444,11 @@ window.UW_WORDS={
 "ipa": "/əˈdæpt/",
 "def": "To change so that you can fit a new situation.",
 "ex": "Animals adapt to cold weather.",
-"why": "It describes how we survive and grow."
+"why": "It describes how we survive and grow.",
+"zw": "适应",
+"zd": "做出改变，以便适合新的情况。",
+"ze": "动物会{{适应}}寒冷的天气。",
+"zy": "它描述了我们如何生存和成长。"
 },
 {
 "w": "contribute",
@@ -1705,7 +2457,11 @@ window.UW_WORDS={
 "ipa": "/kənˈtrɪbjuːt/",
 "def": "To give something, such as help, money or ideas, to a group.",
 "ex": "Everyone should contribute to the team.",
-"why": "It shows teamwork and sharing."
+"why": "It shows teamwork and sharing.",
+"zw": "贡献；出力",
+"zd": "给团体提供帮助、金钱或想法等。",
+"ze": "每个人都应该为团队{{做出贡献}}。",
+"zy": "它体现了团队合作和分享。"
 },
 {
 "w": "resolve",
@@ -1714,7 +2470,11 @@ window.UW_WORDS={
 "ipa": "/rɪˈzɒlv/",
 "def": "To find an answer to a problem or an argument.",
 "ex": "We can resolve the problem by talking.",
-"why": "It is useful for school and work problems."
+"why": "It is useful for school and work problems.",
+"zw": "解决",
+"zd": "找到问题或争吵的答案。",
+"ze": "我们可以通过交谈来{{解决}}这个问题。",
+"zy": "它在学校和工作中解决问题时很有用。"
 },
 {
 "w": "sustainable",
@@ -1723,7 +2483,11 @@ window.UW_WORDS={
 "ipa": "/səˈsteɪnəbl/",
 "def": "Able to continue for a long time without harming the environment.",
 "ex": "Solar power is a sustainable energy.",
-"why": "It is a very popular word in modern news."
+"why": "It is a very popular word in modern news.",
+"zw": "可持续",
+"zd": "能长期持续而不破坏环境。",
+"ze": "太阳能是一种{{可持续}}的能源。",
+"zy": "它是现代新闻里很流行的词。"
 },
 {
 "w": "inevitable",
@@ -1732,7 +2496,11 @@ window.UW_WORDS={
 "ipa": "/ɪnˈevɪtəbl/",
 "def": "Impossible to stop or avoid.",
 "ex": "Change is inevitable.",
-"why": "It helps you to speak about things we cannot change."
+"why": "It helps you to speak about things we cannot change.",
+"zw": "不可避免",
+"zd": "不可能阻止或避免。",
+"ze": "变化是{{不可避免}}的。",
+"zy": "它帮你谈论我们无法改变的事。"
 },
 {
 "w": "vulnerable",
@@ -1741,7 +2509,11 @@ window.UW_WORDS={
 "ipa": "/ˈvʌlnərəbl/",
 "def": "Easy to hurt or to harm.",
 "ex": "Young animals are vulnerable to cold.",
-"why": "It shows care and understanding for people and animals."
+"why": "It shows care and understanding for people and animals.",
+"zw": "脆弱；易受伤害",
+"zd": "容易受到伤害。",
+"ze": "幼小的动物很{{脆弱}}，经不起寒冷。",
+"zy": "它表达了对人和动物的关心和理解。"
 },
 {
 "w": "ethical",
@@ -1750,7 +2522,11 @@ window.UW_WORDS={
 "ipa": "/ˈeθɪkl/",
 "def": "Connected with what is right and what is wrong.",
 "ex": "It is not ethical to copy someone else's work.",
-"why": "It is key in discussions about science, business and school."
+"why": "It is key in discussions about science, business and school.",
+"zw": "合乎道德",
+"zd": "和对与错有关。",
+"ze": "抄袭别人的作业是不{{合乎道德}}的。",
+"zy": "它是讨论科学、商业和学校时的关键词。"
 },
 {
 "w": "mutual",
@@ -1759,7 +2535,11 @@ window.UW_WORDS={
 "ipa": "/ˈmjuːtʃuəl/",
 "def": "Felt or done by both people in the same way.",
 "ex": "We have a mutual respect for each other.",
-"why": "It is perfect for describing friendships and agreements."
+"why": "It is perfect for describing friendships and agreements.",
+"zw": "相互",
+"zd": "双方以同样的方式感受或做到。",
+"ze": "我们之间有{{相互}}的尊重。",
+"zy": "它很适合描述友谊和约定。"
 },
 {
 "w": "apparent",
@@ -1768,7 +2548,11 @@ window.UW_WORDS={
 "ipa": "/əˈpærənt/",
 "def": "Clear and easy to see or to understand.",
 "ex": "It soon became apparent that he was lost.",
-"why": "It is used to say that something is easy to notice."
+"why": "It is used to say that something is easy to notice.",
+"zw": "显而易见",
+"zd": "清楚，很容易看出或明白。",
+"ze": "很快就{{显而易见}}，他迷路了。",
+"zy": "用来说某件事很容易被注意到。"
 },
 {
 "w": "rapid",
@@ -1777,7 +2561,11 @@ window.UW_WORDS={
 "ipa": "/ˈræpɪd/",
 "def": "Very fast.",
 "ex": "There has been rapid growth in technology.",
-"why": "It is a stronger and more formal word than \"fast\"."
+"why": "It is a stronger and more formal word than \"fast\".",
+"zw": "迅速",
+"zd": "非常快。",
+"ze": "科技出现了{{迅速}}的发展。",
+"zy": "它比“快”更有力、更正式。"
 },
 {
 "w": "subtle",
@@ -1786,7 +2574,11 @@ window.UW_WORDS={
 "ipa": "/ˈsʌtl/",
 "def": "Small and not easy to notice.",
 "ex": "There is a subtle difference between the two words.",
-"why": "It lets you talk about small details with confidence."
+"why": "It lets you talk about small details with confidence.",
+"zw": "细微",
+"zd": "很小，不容易注意到。",
+"ze": "这两个词之间有{{细微}}的差别。",
+"zy": "它让你能自信地谈小细节。"
 },
 {
 "w": "genuine",
@@ -1795,7 +2587,11 @@ window.UW_WORDS={
 "ipa": "/ˈdʒenjuɪn/",
 "def": "Real, true and not false.",
 "ex": "She gave me a genuine smile.",
-"why": "It is a high compliment, and it tells people you mean it."
+"why": "It is a high compliment, and it tells people you mean it.",
+"zw": "真诚；真正的",
+"zd": "真实的，不是假的。",
+"ze": "她给了我一个{{真诚}}的微笑。",
+"zy": "它是很高的赞美，告诉别人你是真心的。"
 },
 {
 "w": "accurate",
@@ -1804,7 +2600,11 @@ window.UW_WORDS={
 "ipa": "/ˈækjərət/",
 "def": "Correct and exact with no mistakes.",
 "ex": "The map is accurate.",
-"why": "It is key for science, news and school work."
+"why": "It is key for science, news and school work.",
+"zw": "准确",
+"zd": "正确，没有一点错误。",
+"ze": "这张地图很{{准确}}。",
+"zy": "它在科学、新闻和学校作业中很关键。"
 }
 ]
 };

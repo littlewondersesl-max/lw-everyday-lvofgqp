@@ -83,7 +83,49 @@ main{flex:1;width:100%}
 /* print */
 #printarea{display:none}
 @page{size:A4;margin:14mm}
+/* clickable words + popup */
+.uw-w{cursor:pointer;border-bottom:2px dotted transparent;transition:border-color .12s,background .12s;border-radius:3px}
+.uw-w:hover,.uw-w:active,.uw-w.sel{border-bottom-color:var(--c);background:var(--bgc)}
+.uw-w.hw{color:var(--c);font-weight:900;border-bottom:3px solid var(--c)}
+.uw-hint{text-align:center;color:#6b7390;font-weight:700;font-size:14px;margin:6px 0 0}
+.wp{position:fixed;inset:0;z-index:1000;display:none}
+.wp.on{display:block}
+.wp-bg{position:absolute;inset:0;background:rgba(40,30,70,.38)}
+.wp-sheet{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(640px,100%);max-height:78vh;overflow:auto;background:#fff;border-radius:26px 26px 0 0;border-top:10px solid var(--c);box-shadow:0 -10px 34px rgba(0,0,0,.25);padding:16px 22px 26px;animation:wpup .18s ease-out}
+@keyframes wpup{from{transform:translate(-50%,40px);opacity:.4}to{transform:translate(-50%,0);opacity:1}}
+.wp-x{position:absolute;right:12px;top:10px;width:44px;height:44px;border:0;border-radius:50%;background:var(--bgc);color:#1f2540;font-size:20px;font-weight:900;cursor:pointer}
+.wp-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-right:52px}
+.wp-word{font-weight:900;font-size:clamp(34px,7vw,54px);line-height:1.1;color:#1f2540}
+.wp-pos{background:var(--c);color:#fff;border-radius:999px;padding:2px 12px;font-weight:800;font-size:14px}
+.wp-form{margin:8px 0 0;background:var(--bgc);border-radius:12px;padding:6px 12px;font-weight:800;color:#1f2540;font-size:clamp(16px,2.4vw,19px)}
+.wp-sheet h4{margin:12px 0 2px;font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--c);font-weight:900}
+.wp-sheet p{margin:0;font-size:clamp(18px,2.8vw,24px);line-height:1.4;font-weight:700;color:#1f2540}
+.wp-sheet p.zh{color:#4a5a7a;font-weight:700}
+@media (prefers-reduced-motion:reduce){.wp-sheet{animation:none}}
+/* bilingual */
+.zh{font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC','Noto Sans CJK SC','Hiragino Sans GB','Source Han Sans SC','WenQuanYi Micro Hei',sans-serif;font-weight:600}
+.uw-lang{display:inline-flex;align-items:center;background:#fff;border-radius:999px;padding:3px;box-shadow:0 2px 8px rgba(108,78,160,.3);border:2px solid var(--pur);flex:none}
+.uw-lang button{border:0;background:none;font:inherit;font-weight:900;font-size:14px;color:var(--pur);border-radius:999px;padding:5px 12px;cursor:pointer;min-height:32px;white-space:nowrap}
+.uw-lang button.on{background:var(--pur);color:#fff}
+.uwmenu{margin-left:auto;display:flex;align-items:center;gap:8px;flex:0 0 auto}
+@media(max-width:560px){header.top .bk,header.top .brand small{display:none}.uwmenu{gap:6px}}
+.uw-lang button:focus-visible{outline:3px solid #f0a500;outline-offset:1px}
+.uw-zrow{margin-top:2px}
+.uw-zw{display:inline-block;background:var(--bgc);color:var(--c);border-radius:14px;padding:2px 14px;font-size:clamp(22px,3.6vw,36px);line-height:1.3;font-weight:800;border:2px solid var(--c)}
+.uw-sec p.zh,.uw-zl{margin-top:4px;font-size:clamp(16px,2.3vw,23px);font-weight:600;color:#4a5a7a;line-height:1.5}
+.uw-zl em{font-style:normal;color:var(--c);font-weight:800;border-bottom:3px solid var(--c)}
+.uw-why p.zh{font-size:clamp(15px,2.1vw,20px)}
+.uw-exwrap{flex:1}.uw-exwrap p{flex:none}
+.uw-q .zh.pz{font-size:.68em;font-weight:600;color:#4a5a7a;margin-top:6px;line-height:1.5}
+.uw-q .zh.pz u{min-width:2em;color:var(--c);border-bottom:0}
+.uw-fb .zh{display:block;font-size:.9em;color:#4a5a7a;margin-top:2px}
+.uw-wrong .zh{color:#4a5a7a;font-size:.92em}
 @media print{
+ #printarea .zh{font-size:9.5pt;color:#222;font-weight:500}
+ #printarea .match .zh{display:block;font-size:9pt}
+ #printarea li .zh{display:block;font-size:9.5pt;margin-top:1pt}
+ #printarea.bi li{margin:0 0 2pt;line-height:1.25}#printarea.bi li .zh{margin-top:0;font-size:9pt}#printarea.bi td{padding:1.5pt 5pt}#printarea.bi h2{margin:6pt 0 3pt}#printarea.bi .meta{margin-bottom:6pt}#printarea.bi h1{font-size:18pt}#printarea.bi .bank{margin-bottom:5pt;padding:4pt 8pt}
+
  body{background:#fff!important;display:block}
  .screen,header.top,.foot{display:none!important}
  #printarea{display:block;color:#000;font-family:'Nunito',Arial,sans-serif;font-size:11.5pt}
@@ -102,6 +144,7 @@ main{flex:1;width:100%}
 }
 @media (max-width:980px){.uw-cats{grid-template-columns:1fr 1fr}.uw-card.hasimg{grid-template-columns:1fr}}
 @media (max-width:640px){
+ .uw-lang button{padding:4px 9px;font-size:13px}
  .uw-cats{grid-template-columns:1fr}.uw-chips{grid-template-columns:1fr 1fr}.uw-opts{grid-template-columns:1fr}
  .uw-btn{padding:9px 14px;font-size:15px}.uw-wrap{padding:10px}
 }
@@ -109,11 +152,11 @@ main{flex:1;width:100%}
 </style></head>
 <body>
 <header class="top"><a class="brand" href="../../index.html"><img src="../../img/logo.png" alt="Little Wonders"><span>Little Wonders<small>Useful Words</small></span></a>
-<nav class="menu" style="margin-left:auto"><a class="ddb" style="text-decoration:none" href="../../index.html#lessons">← Back to the app</a></nav></header>
+<nav class="uwmenu"><span class="uw-lang" id="hdrLang" role="group" aria-label="Language"><button type="button" data-lang="en">EN</button><button type="button" data-lang="zh" class="zh">EN+中文</button></span><a class="ddb" style="text-decoration:none" href="../../index.html#lessons" aria-label="Back to the app">←<span class="bk"> Back to the app</span></a></nav></header>
 <main class="screen"><div class="uw-wrap" id="app"></div></main>
 <div id="printarea" aria-hidden="true"></div>
 <footer class="foot">Little Wonders · Useful Words · ← → keys = previous / next word</footer>
-<script src="words.js"></script><script src="images.js"></script>
+<script src="words.js"></script><script src="dict.js"></script><script src="images.js"></script>
 <script>
 (function(){
 const W=window.UW_WORDS,IMG=window.UW_IMG||{},LV=['A1','A2','B1','B2'];
@@ -121,6 +164,52 @@ const SUB={A1:'First words for everyday life',A2:'Words for stories, plans and f
 const $=s=>document.querySelector(s),app=$('#app');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const range=b=>`${(b-1)*10+1}–${b*10}`;
+// ---- bilingual option (EN / EN+中文): remembered in localStorage and carried in the URL as ?lang=zh
+let BI=(()=>{let q=null;try{q=new URLSearchParams(location.search).get('lang')}catch(e){}
+  if(q==='zh'||q==='en'){try{localStorage.setItem('uw.lang',q)}catch(e){}return q==='zh'}
+  try{return localStorage.getItem('uw.lang')==='zh'}catch(e){return false}})();
+function urlLang(){try{const u=new URL(location.href);if(BI)u.searchParams.set('lang','zh');else u.searchParams.delete('lang');history.replaceState(null,'',u.pathname+u.search+u.hash)}catch(e){}}
+function syncLang(){document.body.classList.toggle('bi',BI);document.querySelectorAll('.uw-lang button').forEach(b=>{const on=(b.dataset.lang==='zh')===BI;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)})}
+const langToggle=()=>`<span class="uw-lang" role="group" aria-label="Language"><button type="button" data-lang="en">EN</button><button type="button" data-lang="zh" class="zh">EN+中文</button></span>`;
+function setLang(on){BI=on;try{localStorage.setItem('uw.lang',on?'zh':'en')}catch(e){};urlLang();closeWP();rerender();syncLang()}
+const zhHi=z=>esc(z).replace(/\{\{(.+?)\}\}/,'<em>$1</em>');
+const zhGap=z=>esc(z).replace(/\{\{(.+?)\}\}/,'<u>＿＿</u>');
+const zhGapPrint=z=>esc(z).replace(/\{\{(.+?)\}\}/,'＿＿＿＿');
+// clickable words: every English word in a card sentence opens the word popup
+function clk(text,head){
+  const re=/[A-Za-zé]+(?:'[A-Za-z]+)?/g;let out='',last=0,m,hd=false;
+  while((m=re.exec(text))){out+=esc(text.slice(last,m.index));const w=m[0],lw=w.toLowerCase();const isH=head&&!hd&&lw===head.toLowerCase();if(isH)hd=true;out+=`<span class="uw-w${isH?' hw':''}" data-t="${esc(lw)}">${esc(w)}</span>`;last=m.index+w.length}
+  return out+esc(text.slice(last));
+}
+// ---- word popup (bottom sheet)
+const wp=document.createElement('div');wp.className='wp';wp.innerHTML='<div class="wp-bg"></div><div class="wp-sheet" role="dialog" aria-modal="true" aria-label="Word help"></div>';document.body.appendChild(wp);
+let wpSel=null;
+function closeWP(){wp.classList.remove('on');if(wpSel){wpSel.classList.remove('sel');wpSel=null}}
+function openWP(span){
+  const surface=span.textContent,t=span.dataset.t,f=(window.UW_FORM||{})[t],D=window.UW_DICT||{};
+  const sh=wp.querySelector('.wp-sheet');
+  if(wpSel)wpSel.classList.remove('sel');wpSel=span;span.classList.add('sel');
+  wp.className='wp on '+(app.className.match(/L(A1|A2|B1|B2)/)||[''])[0];
+  const e=f&&D[f[0]];
+  if(!e){sh.innerHTML=`<button class="wp-x" aria-label="Close">✕</button><div class="wp-top"><div class="wp-word">${esc(surface)}</div></div><p>No help for this word yet.</p>`}
+  else{
+    const base=f[0],note=f[1];
+    sh.innerHTML=`<button class="wp-x" aria-label="Close">✕</button>
+    <div class="wp-top"><div class="wp-word">${esc(surface)}</div>${speakBtn(surface,'sm','Say this word')}<span class="wp-pos">${esc(e.p)}</span></div>
+    ${note?`<div class="wp-form"><b>${esc(surface)}</b> = ${esc(note)}</div>`:''}
+    <h4>Meaning</h4><p>${esc(e.d)}</p>
+    <h4>How it works in English</h4><p>${esc(e.f)}</p>
+    ${BI?`<h4 class="zh">中文</h4><p class="zh">${esc(e.z)}</p>`:''}`;
+  }
+  sh.scrollTop=0;
+  const x=sh.querySelector('.wp-x');if(x)x.focus({preventScroll:true});
+}
+wp.addEventListener('click',e=>{
+  if(e.target.closest('.wp-x')||e.target.classList.contains('wp-bg')){closeWP();return}
+  const b=e.target.closest('[data-say]');if(b){window.__uwSaid.push(b.dataset.say);say(b.dataset.say,.85)}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&wp.classList.contains('on')){e.preventDefault();e.stopImmediatePropagation();closeWP()}},true);
+document.addEventListener('click',e=>{const b=e.target.closest('[data-lang]');if(b){setLang(b.dataset.lang==='zh')}});
 // ---- saved best scores
 const store={get(l,b){try{return +localStorage.getItem(`uw.best.${l}.${b}`)||0}catch(e){return 0}},set(l,b,v){try{if(v>this.get(l,b))localStorage.setItem(`uw.best.${l}.${b}`,v)}catch(e){}}};
 // ---- speech
@@ -131,14 +220,13 @@ if(TTS){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
 function say(t,rate){if(!TTS)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';if(voice)u.voice=voice;u.rate=rate||.85;speechSynthesis.speak(u)}catch(e){}}
 window.__uwSaid=[];const _say=say;
 function speakBtn(txt,cls,label){return `<button type="button" class="uw-spk ${cls||''}" data-say="${esc(txt)}" aria-label="${label||'Listen'}" title="Listen">🔊</button>`}
-app.addEventListener('click',e=>{const pb=e.target.closest('[data-print]');if(pb){printSheet(/^#(A1|A2|B1|B2)-/.exec(location.hash)[1],+pb.dataset.print);return}const b=e.target.closest('[data-say]');if(b){window.__uwSaid.push(b.dataset.say);say(b.dataset.say,b.classList.contains('sm')?.9:.8)}});
+app.addEventListener('click',e=>{const wd=e.target.closest('.uw-w');if(wd){openWP(wd);return}const pb=e.target.closest('[data-print]');if(pb){printSheet(/^#(A1|A2|B1|B2)-/.exec(location.hash)[1],+pb.dataset.print);return}const b=e.target.closest('[data-say]');if(b){window.__uwSaid.push(b.dataset.say);say(b.dataset.say,b.classList.contains('sm')?.9:.8)}});
 // ---- helpers
 function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function shuffle(arr,rnd){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function seedOf(s){let h=7;for(const c of s)h=(h*31+c.charCodeAt(0))|0;return h}
 const blankOf=w=>w[0]+' '+Array(w.length-1).fill('_').join(' ');
 const gapText=(ex,w)=>esc(ex).replace(new RegExp('\\b'+w+'\\b','i'),'<u>'+blankOf(w)+'</u>');
-const hiText=(ex,w)=>esc(ex).replace(new RegExp('\\b('+w+')\\b','i'),'<em>$1</em>');
 function setCls(l){app.className='uw-wrap L'+l}
 // ---- views
 function home(){
@@ -149,7 +237,7 @@ function home(){
 function listView(l){
   setCls(l);document.title=l+' words · Useful Words';
   app.innerHTML=`<div class="uw-bar"><a class="uw-btn alt" href="#">← All levels</a><div class="tt"><span class="uw-pill">${l}</span>All 50 words</div></div>`+
-  [1,2,3,4,5].map(b=>`<section class="uw-batch"><h3>Words ${range(b)}<span class="sp"></span><a class="uw-btn sm" href="#${l}-w-${(b-1)*10+1}">Learn</a><a class="uw-btn sm alt" href="#${l}-t-${b}">Test</a><button type="button" class="uw-btn sm alt" data-print="${b}">🖨 Print test</button></h3><div class="uw-chips">`+W[l].slice((b-1)*10,b*10).map((x,i)=>`<a class="uw-chip" style="text-decoration:none" href="#${l}-w-${(b-1)*10+i+1}"><b>${(b-1)*10+i+1}. ${esc(x.w)}</b><span>${esc(x.say)}</span></a>`).join('')+`</div></section>`).join('');
+  [1,2,3,4,5].map(b=>`<section class="uw-batch"><h3>Words ${range(b)}<span class="sp"></span><a class="uw-btn sm" href="#${l}-w-${(b-1)*10+1}">Learn</a><a class="uw-btn sm alt" href="#${l}-t-${b}">Test</a><button type="button" class="uw-btn sm alt" data-print="${b}">🖨 Print test</button></h3><div class="uw-chips">`+W[l].slice((b-1)*10,b*10).map((x,i)=>`<a class="uw-chip" style="text-decoration:none" href="#${l}-w-${(b-1)*10+i+1}"><b>${(b-1)*10+i+1}. ${esc(x.w)}</b><span>${esc(x.say)}</span>${BI?`<span class="zh">${esc(x.zw)}</span>`:''}</a>`).join('')+`</div></section>`).join('');
   window.scrollTo(0,0);
 }
 function card(l,n){
@@ -159,15 +247,16 @@ function card(l,n){
   const dots=Array.from({length:10},(_,i)=>{const k=(b-1)*10+i+1;return `<i class="${k===n?'on':k<n?'done':''}"></i>`}).join('');
   app.innerHTML=`<div class="uw-bar"><a class="uw-btn alt" href="#${l}-list">☰ Word list</a><div class="tt"><span class="uw-pill">${l}</span>Word ${n} of 50 · Words ${range(b)}</div><a class="uw-btn alt" href="#${l}-t-${b}">Test ${range(b)}</a></div>
   <article class="uw-card${imgs.length?(wide?' hasimg wide':' hasimg'):''}" id="card"><div class="uw-text">
-   <div class="uw-wordrow"><div class="uw-word">${esc(x.w)}</div>${speakBtn(x.w,'','Say the word')}<span class="uw-pos">${esc(x.pos)}</span></div>
+   <div class="uw-wordrow"><div class="uw-word">${esc(x.w)}</div>${speakBtn(x.w,'','Say the word')}<span class="uw-pos">${esc(x.pos)}</span>${BI?`<span class="zh uw-zw">${esc(x.zw)}</span>`:''}</div>
    <div class="uw-say">${esc(x.say)}<small>${esc(x.ipa)}</small></div>
-   <div class="uw-sec"><h3>Meaning</h3><p>${esc(x.def)}</p></div>
-   <div class="uw-sec"><h3>Example</h3><div class="uw-ex"><p>${hiText(x.ex,x.w)}</p>${speakBtn(x.ex,'sm','Say the sentence')}</div></div>
-   <div class="uw-sec uw-why"><h3>Why it is a good word to know</h3><p>${esc(x.why)}</p></div>
+   <div class="uw-sec"><h3>Meaning</h3><p>${clk(x.def)}</p>${BI?`<p class="zh">${esc(x.zd)}</p>`:''}</div>
+   <div class="uw-sec"><h3>Example</h3><div class="uw-ex"><div class="uw-exwrap"><p>${clk(x.ex,x.w)}</p>${BI?`<p class="zh uw-zl">${zhHi(x.ze)}</p>`:''}</div>${speakBtn(x.ex,'sm','Say the sentence')}</div></div>
+   <div class="uw-sec uw-why"><h3>Why it is a good word to know</h3><p>${clk(x.why)}</p>${BI?`<p class="zh">${esc(x.zy)}</p>`:''}</div>
   </div>${imgs.length?`<div class="uw-pic">${imgs.map(s=>`<img src="img/${esc(s)}" alt="Picture that shows the meaning of ${esc(x.w)}" onerror="this.closest('.uw-pic').style.display='none';document.getElementById('card').classList.remove('hasimg','wide')">`).join('')}</div>`:''}</article>
   <div class="uw-dots" aria-hidden="true">${dots}</div>
+  <p class="uw-hint">Tip: tap any word in the card to see what it means.${BI?' <span class="zh">点一点卡片里的任何单词，就能看到它的意思。</span>':''}</p>
   <div class="uw-nav"><a class="uw-btn big" id="prev" ${n>1?`href="#${l}-w-${n-1}"`:'style="visibility:hidden"'}>← Previous</a><div class="mid">${n} / 50</div>${last?`<a class="uw-btn big" id="next" href="#${l}-t-${b}">Take the test →</a>`:`<a class="uw-btn big" id="next" href="#${l}-w-${n+1}">Next →</a>`}</div>`;
-  window.scrollTo(0,0);
+  window.scrollTo(0,0);syncLang();
 }
 // ---- test
 let T=null;
@@ -189,22 +278,25 @@ function renderQ(){
   const {l,b,qs,k}=T,q=qs[k],x=q.it.x;
   const dots=qs.map((_,i)=>`<i class="${i===k?'on':T.res[i]===true?'ok':T.res[i]===false?'no':''}"></i>`).join('');
   const kindTxt={def:'Which word means this?',gap:'Choose the word that fits the gap (it starts with the letter shown)',hear:'Listen, then pick the word'}[q.kind];
-  const prompt=q.kind==='def'?esc(x.def):q.kind==='gap'?gapText(x.ex,x.w):`${speakBtn(x.w,'','Listen to the word')} <span style="font-size:.7em;color:#5b6486">Tap the speaker to hear the word</span>`;
+  const prompt=q.kind==='def'?esc(x.def)+(BI?`<div class="zh pz">${esc(x.zd)}</div>`:''):q.kind==='gap'?gapText(x.ex,x.w)+(BI?`<div class="zh pz">${zhGap(x.ze)}</div>`:''):`${speakBtn(x.w,'','Listen to the word')} <span style="font-size:.7em;color:#5b6486">Tap the speaker to hear the word</span>`;
   app.innerHTML=`<div class="uw-bar"><a class="uw-btn alt" href="#${l}-list">← Quit test</a><div class="tt"><span class="uw-pill">${l}</span>Test · Words ${range(b)}</div><div class="mid" style="font-weight:800;color:#5b6486">Question ${k+1} of 10</div></div>
   <div class="uw-dots" aria-hidden="true">${dots}</div>
-  <section class="uw-q"><div class="kind">${kindTxt}</div><div class="prompt">${prompt}</div>
+  <section class="uw-q"><div class="kind">${kindTxt}${BI?` <span class="zh" style="text-transform:none;letter-spacing:0">· ${({def:'哪个词的意思是这个？',gap:'选出适合空格的词（首字母已给出）',hear:'听一听，选出这个词'})[q.kind]}</span>`:''}</div><div class="prompt">${prompt}</div>
   <div class="uw-opts">${q.opts.map((o,i)=>`<button type="button" class="uw-opt" data-i="${i}">${esc(o.x.w)}</button>`).join('')}</div>
   <div class="uw-fb" id="fb" role="status" aria-live="polite"></div><div class="uw-row" id="nxt"></div></section>`;
   if(q.kind==='hear')setTimeout(()=>say(x.w,.8),250);
   app.querySelectorAll('.uw-opt').forEach(btn=>btn.onclick=()=>answer(+btn.dataset.i));
+  T.view='q';syncLang();
+  if(T.res[k]!==undefined)applyAnswer(T.pick[k]);
 }
 function answer(i){
-  const q=T.qs[T.k];if(T.res[T.k]!==undefined)return;
-  const ok=q.opts[i]===q.it;T.res[T.k]=ok;
-  const btns=app.querySelectorAll('.uw-opt');
-  btns.forEach((bt,j)=>{bt.disabled=true;if(q.opts[j]===q.it)bt.classList.add('ok');else if(j===i)bt.classList.add('no')});
-  const x=q.it.x;
-  $('#fb').innerHTML=ok?'✅ Correct!':`❌ The answer is <b>${esc(x.w)}</b>: ${esc(x.def)}`;
+  if(T.res[T.k]!==undefined)return;
+  const q=T.qs[T.k];T.res[T.k]=q.opts[i]===q.it;(T.pick=T.pick||[])[T.k]=i;applyAnswer(i);
+}
+function applyAnswer(i){
+  const q=T.qs[T.k],ok=q.opts[i]===q.it,x=q.it.x;
+  app.querySelectorAll('.uw-opt').forEach((bt,j)=>{bt.disabled=true;if(q.opts[j]===q.it)bt.classList.add('ok');else if(j===i)bt.classList.add('no')});
+  $('#fb').innerHTML=ok?`✅ Correct!${BI?` <b>${esc(x.w)}</b> <span class="zh">${esc(x.zw)}</span>`:''}`:`❌ The answer is <b>${esc(x.w)}</b>: ${esc(x.def)}${BI?`<span class="zh">${esc(x.zw)}：${esc(x.zd)}</span>`:''}`;
   const last=T.k===9;
   $('#nxt').innerHTML=`<button type="button" class="uw-btn big" id="go">${last?'See my score':'Next question →'}</button>`;
   $('#go').onclick=nextQ;$('#go').focus({preventScroll:true});
@@ -217,9 +309,9 @@ function showRes(){
   const msg=score===10?'Perfect! 🌟':score>=8?'Great job! 👏':score>=6?'Good work! Keep practising.':'Keep going. Read the words again and retry.';
   app.innerHTML=`<div class="uw-bar"><a class="uw-btn alt" href="#${l}-list">☰ Word list</a><div class="tt"><span class="uw-pill">${l}</span>Test results · Words ${range(b)}</div></div>
   <section class="uw-res"><div class="uw-score">${score} / 10</div><p style="font-weight:800;font-size:clamp(18px,2.6vw,26px);margin:8px 0">${msg}</p>
-  ${wrong.length?`<h3 style="margin:14px 0 4px;color:#e0453a">Words to practise (${wrong.length})</h3><div class="uw-wrong">${wrong.map(x=>`<div><b>${esc(x.x.w)}</b> ${speakBtn(x.x.w,'sm','Listen')} · ${esc(x.x.say)} · ${esc(x.x.def)} <a href="#${l}-w-${x.n}">See card →</a></div>`).join('')}</div>`:`<p style="font-weight:800">You knew every word!</p>`}
+  ${wrong.length?`<h3 style="margin:14px 0 4px;color:#e0453a">Words to practise (${wrong.length})</h3><div class="uw-wrong">${wrong.map(x=>`<div><b>${esc(x.x.w)}</b> ${speakBtn(x.x.w,'sm','Listen')} · ${esc(x.x.say)} · ${esc(x.x.def)}${BI?` <span class="zh">${esc(x.x.zw)}：${esc(x.x.zd)}</span>`:''} <a href="#${l}-w-${x.n}">See card →</a></div>`).join('')}</div>`:`<p style="font-weight:800">You knew every word!</p>`}
   <div class="uw-row"><button type="button" class="uw-btn big" id="retry">↻ Retry</button>${nextB?`<a class="uw-btn big" href="#${l}-w-${b*10+1}">Next batch (words ${range(nextB)}) →</a>`:`<a class="uw-btn big" href="#${l}-list">Back to the list</a>`}<button type="button" class="uw-btn alt" id="prt">🖨 Print worksheet</button></div></section>`;
-  $('#retry').onclick=()=>testView(l,b);$('#prt').onclick=()=>printSheet(l,b);window.scrollTo(0,0);
+  $('#retry').onclick=()=>testView(l,b);$('#prt').onclick=()=>printSheet(l,b);T.view='res';syncLang();window.scrollTo(0,0);
 }
 // ---- print worksheet (page 1 test, page 2 answer key)
 function printSheet(l,b){
@@ -229,13 +321,14 @@ function printSheet(l,b){
   const defRows=order.map((wi,pos)=>`<tr><td class="k">${letters[pos]}</td><td>${esc(items[wi].def)}</td></tr>`).join('');
   const wordRows=items.map((x,i)=>`<tr><td class="k">${i+1}. ${esc(x.w)}</td><td>______</td></tr>`).join('');
   const bank=shuffle(items.map(x=>x.w),mulberry(seedOf('bank'+l+b))).join(' · ');
-  const sents=items.map((x,i)=>`<li>${esc(x.ex).replace(new RegExp('\\b'+x.w+'\\b','i'),'<span class="blank">'+x.w[0]+'</span>')}</li>`).join('');
-  const key1=items.map((x,i)=>`<tr><td class="k">${i+1}. ${esc(x.w)}</td><td class="ans">${letters[order.indexOf(i)]}</td><td>${esc(x.def)}</td></tr>`).join('');
-  const key2=items.map((x,i)=>`<li><span class="ans">${esc(x.w)}</span> <span style="color:#444">(${esc(x.ex)})</span></li>`).join('');
+  const sents=items.map((x,i)=>`<li>${esc(x.ex).replace(new RegExp('\\b'+x.w+'\\b','i'),'<span class="blank">'+x.w[0]+'</span>')}${BI?`<span class="zh">${zhGapPrint(x.ze)}</span>`:''}</li>`).join('');
+  const key1=items.map((x,i)=>`<tr><td class="k">${i+1}. ${esc(x.w)}</td><td class="ans">${letters[order.indexOf(i)]}</td><td>${esc(x.def)}${BI?`<span class="zh"> ${esc(x.zw)}：${esc(x.zd)}</span>`:''}</td></tr>`).join('');
+  const key2=items.map((x,i)=>`<li><span class="ans">${esc(x.w)}</span> <span style="color:#444">(${esc(x.ex)})</span>${BI?`<span class="zh"> ${esc(x.zw)}</span>`:''}</li>`).join('');
+  $('#printarea').className=BI?'bi':'';
   $('#printarea').innerHTML=`<section><h1>Useful Words · Level ${l} · Test ${range(b)}</h1>
   <div class="meta"><span>Name: ______________________</span><span>Date: ____________</span><span>Score: ____ / 20</span></div>
   <h2>Part A. Match each word to its meaning. Write the letter on the line.</h2>
-  <table class="match">${items.map((x,i)=>`<tr><td class="k">${i+1}. ${esc(x.w)}</td><td class="ln">_____</td><td class="sp"></td><td class="dl"><b>${letters[i]}</b></td><td>${esc(items[order[i]].def)}</td></tr>`).join('')}</table>
+  <table class="match">${items.map((x,i)=>`<tr><td class="k">${i+1}. ${esc(x.w)}</td><td class="ln">_____</td><td class="sp"></td><td class="dl"><b>${letters[i]}</b></td><td>${esc(items[order[i]].def)}${BI?`<span class="zh">${esc(items[order[i]].zd)}</span>`:''}</td></tr>`).join('')}</table>
   <h2>Part B. Write the correct word in each gap.</h2>
   <div class="bank">${esc(bank)}</div><ol>${sents}</ol></section>
   <section class="pg2"><h1>Answer key · Level ${l} · Test ${range(b)}</h1><div class="meta"><span>Teacher copy</span><span>Part A: 1 mark each · Part B: 1 mark each</span></div>
@@ -252,10 +345,17 @@ function route(){
   else if((m=/^(A1|A2|B1|B2)-t-([1-5])$/.exec(h)))testView(m[1],+m[2]);
   else if((m=/^(A1|A2|B1|B2)-list$/.exec(h)))listView(m[1]);
   else{home();}
+  syncLang();
 }
-window.addEventListener('hashchange',route);
+function rerender(){
+  const y=window.scrollY;
+  if(/-t-/.test(location.hash)&&T){if(T.view==='res')showRes();else renderQ()}
+  else route();
+  window.scrollTo(0,y);
+}
+window.addEventListener('hashchange',()=>{closeWP();route()});
 document.addEventListener('keydown',e=>{
-  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  if(e.ctrlKey||e.metaKey||e.altKey||wp.classList.contains('on'))return;
   const m=/^(A1|A2|B1|B2)-w-(\d+)$/.exec(location.hash.replace(/^#/,''));
   if(m){const n=+m[2];
     if(e.key==='ArrowRight'&&n<50){e.preventDefault();location.hash=`${m[1]}-w-${n+1}`}
@@ -266,6 +366,7 @@ document.addEventListener('keydown',e=>{
     const bt=app.querySelectorAll('.uw-opt')[+e.key-1];if(bt)bt.click()
   }
 });
+if(BI)urlLang();
 route();
 })();
 </script>
