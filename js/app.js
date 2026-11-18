@@ -1,6 +1,6 @@
 (function(){
 const D=window.LW, Q=s=>document.querySelector(s);
-const SECTIONS=[['packs','Flashcard Packs'],['weather','Everyday Weather'],['chores','Household Chores'],['games','Games'],['alphabet','Alphabet Games'],['stories','Stories & Reading'],['videos','Video lessons'],['lessons','Lessons']];
+const SECTIONS=[['packs','Flashcard Packs'],['weather','Everyday Weather'],['chores','Household Chores'],['games','Games'],['fractions','Fractions'],['alphabet','Alphabet Games'],['stories','Stories & Reading'],['videos','Video lessons'],['lessons','Lessons']];
 // Video lessons: watch-and-choose series and frame-video stories (progress type videoSeries / video)
 const VIDEO={'games/everyday-english/index.html':'11 video lessons · watch, tap, see','stories/comic-stories/index.html':'10 video lessons · teacher notes'};
 D.items.forEach(x=>{if(x.href in VIDEO){x.section='videos';x.sub=VIDEO[x.href]}else if(x.group==='Conversations')x.section='videos'});
@@ -23,6 +23,7 @@ function entries(sec){
 const NAV=[
   ['Everyday Series',[['Flashcard packs',()=>entries('packs')],['Everyday Weather',()=>entries('weather')],['Household Chores',()=>entries('chores')]]],
   ['Games',()=>entries('games')],
+  ['Fractions',()=>entries('fractions')],
   ['Alphabet Games',()=>entries('alphabet')],
   ['Stories & Reading','stories'],
   ['Video lessons',()=>entries('videos')],

@@ -96,3 +96,7 @@ header.top .burger{margin-left:0;padding:3px 9px;font-size:20px;flex:none}
 .lvpill button:focus-visible{outline:3px solid var(--teal);outline-offset:1px}
 .lvnote{flex-basis:100%;margin:2px 4px 0;font-size:14px;color:var(--ink)}.lvnote b{color:var(--teal)}
 .lvb{position:absolute;top:8px;right:8px;z-index:3;min-width:26px;height:26px;padding:0 9px;display:inline-flex;align-items:center;justify-content:center;border-radius:13px;background:rgba(255,255,255,.94);box-shadow:0 1px 5px rgba(0,0,0,.18);font:800 13px/1 Nunito,system-ui,sans-serif;color:var(--pur);pointer-events:none}
+
+/* keep the top menu on as few rows as before now that it has a "Fractions" entry */
+@media (min-width:761px) and (max-width:1700px){#menu .ddb{padding:8px 9px;font-size:14.5px}#menu{gap:1px}}
+.dd.open{z-index:20}

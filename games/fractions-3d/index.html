@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fractions 3D · Little Wonders</title>
+<link rel="icon" href="../../img/logo.png">
+<link rel="stylesheet" href="../../css/app.css">
+<script type="importmap">{"imports":{"three":"./lib/three.module.min.js","three/addons/":"./lib/jsm/"}}</script>
+<style>
+html,body{height:100%}
+body{display:flex;flex-direction:column;min-height:0;overflow:hidden;height:100dvh}
+.zh{font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC','Noto Sans CJK SC','Hiragino Sans GB','Source Han Sans SC','WenQuanYi Micro Hei',sans-serif;font-weight:700}
+.uw-lang{display:inline-flex;align-items:center;background:#fff;border-radius:999px;padding:3px;box-shadow:0 2px 8px rgba(108,78,160,.3);border:2px solid var(--pur);flex:none}
+.uw-lang button{border:0;background:none;font:inherit;font-weight:900;font-size:14px;color:var(--pur);border-radius:999px;padding:5px 12px;cursor:pointer;min-height:32px;white-space:nowrap}
+.uw-lang button.on{background:var(--pur);color:#fff}
+.uw-lang button:focus-visible{outline:3px solid #f0a500;outline-offset:1px}
+.uwmenu{margin-left:auto;display:flex;align-items:center;gap:8px;flex:0 0 auto}
+@media(max-width:560px){header.top .bk,header.top .brand small{display:none}.uwmenu{gap:6px}}
+.fx{flex:1;min-height:0;display:flex;flex-direction:column;gap:6px;padding:6px 10px 8px;max-width:1500px;width:100%;margin:0 auto}
+.fx .zh{display:none}body.bi .fx .zh{display:block;font-size:.74em;line-height:1.15;font-weight:700;opacity:.92}
+.fx-tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 4px;scrollbar-width:none;flex:none}
+.fx-tabs::-webkit-scrollbar{display:none}
+.fx-tab{flex:1 0 auto;border:0;border-radius:16px;background:#fff;color:var(--pur);font:inherit;font-weight:900;font-size:clamp(15px,2.1vw,19px);padding:8px 14px;min-height:46px;cursor:pointer;box-shadow:0 2px 8px rgba(108,78,160,.22);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;white-space:nowrap}
+.fx-tab.on{background:var(--pur);color:#fff}
+.fx-tab:focus-visible,.fx-b:focus-visible,.fx-tile:focus-visible,.fx-cam button:focus-visible{outline:4px solid #f0a500;outline-offset:2px}
+.fx-stage{position:relative;flex:1;min-height:240px;border-radius:22px;overflow:hidden;background:#f1eaf7;box-shadow:0 6px 22px rgba(108,78,160,.2)}
+.fx-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;outline:0;cursor:grab}
+.fx-stage canvas.drag{cursor:grabbing}
+.fx-info{position:absolute;top:10px;right:10px;max-width:min(400px,46%);background:rgba(255,255,255,.94);border:3px solid var(--pur);border-radius:18px;padding:10px 14px;box-shadow:0 6px 18px rgba(60,40,110,.22);color:#1f2540;pointer-events:none}
+.fx-info .t{font-weight:900;font-size:clamp(17px,2.2vw,23px);line-height:1.2;color:#1f2540}
+.fx-info .s{font-weight:800;font-size:clamp(15px,1.9vw,19px);line-height:1.25;color:#4a5272;margin-top:3px}
+.fx-info .sel{margin-top:6px;background:#fff3c4;border-radius:12px;padding:4px 10px;font-weight:900;font-size:clamp(19px,2.6vw,26px);color:#7a4a00}
+.fx-info .sel small{display:block;font-size:.62em;font-weight:800;color:#8a6a20}
+.fx-info .zh{color:#4a5a7a}
+.fx-cam{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;gap:6px}
+.fx-cam button{width:48px;height:48px;border:0;border-radius:50%;background:#fff;color:var(--pur);font:inherit;font-weight:900;font-size:24px;cursor:pointer;box-shadow:0 2px 10px rgba(60,40,110,.3);display:flex;align-items:center;justify-content:center;line-height:1}
+.fx-cam button.rs{border-radius:24px;width:auto;padding:0 14px;font-size:15px;height:44px}
+.fx-hint.show{display:block}
+.fx-hint{position:absolute;left:10px;bottom:10px;max-width:calc(100% - 90px);background:rgba(255,255,255,.88);border-radius:14px;padding:5px 11px;font-weight:800;font-size:13px;color:#5b6486;pointer-events:none}
+body.bi .fx-hint .zh{margin-top:2px}
+.fx-toast{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:#6c4ea0;color:#fff;border-radius:999px;padding:8px 18px;font-weight:900;font-size:17px;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;max-width:92%}
+.fx-toast.on{opacity:1}
+.fx-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#fff;border-radius:18px;padding:6px 10px;box-shadow:0 2px 10px rgba(108,78,160,.18);flex:none;min-height:60px}
+.fx-bar .lbl{font-weight:900;color:var(--pur);font-size:clamp(15px,2vw,19px);line-height:1.1}
+.fx-grp{display:none;align-items:center;gap:8px;flex-wrap:wrap}
+.fx-grp.on{display:flex}
+.fx-b{border:0;border-radius:999px;background:var(--pur);color:#fff;font:inherit;font-weight:900;font-size:clamp(16px,2.2vw,21px);padding:8px 18px;min-height:48px;cursor:pointer;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;white-space:nowrap;box-shadow:0 2px 6px rgba(60,40,110,.25)}
+.fx-b:active{transform:scale(.95)}
+.fx-b.alt{background:#fff;color:var(--pur);box-shadow:0 0 0 3px var(--pur) inset}
+.fx-b.pk{background:#d8588d}.fx-b.gr{background:#2c9a83}.fx-b.am{background:#d9771f}
+.fx-b.num{min-width:48px;padding:8px 0;font-size:22px}
+.fx-b[aria-pressed=true]{background:#2c9a83;color:#fff;box-shadow:none}
+.fx-sp{flex:1}
+.fx-tray{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 4px;flex:none;scrollbar-width:thin;touch-action:pan-x}
+.fx-tile{flex:0 0 auto;width:88px;border:0;border-radius:16px;background:#fff;color:#1f2540;font:inherit;font-weight:900;font-size:13px;padding:4px 4px 5px;cursor:grab;box-shadow:0 2px 8px rgba(108,78,160,.2);display:flex;flex-direction:column;align-items:center;gap:1px;touch-action:pan-x;user-select:none;-webkit-user-select:none;line-height:1.1}
+.fx-tile img{width:62px;height:62px;border-radius:12px;display:block;pointer-events:none;-webkit-user-drag:none}
+.fx-tile .zh{font-size:12px!important}
+.fx-ghost{position:fixed;z-index:50;width:64px;height:64px;border-radius:14px;opacity:.85;pointer-events:none;transform:translate(-50%,-60%);box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.fx-nogl{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:20px;font-weight:800;font-size:20px;color:#6c4ea0}
+@media (max-width:700px){
+ .fx{padding:4px 6px 6px;gap:5px}
+ .fx-info{left:8px;right:8px;max-width:none;top:8px;padding:6px 10px;border-width:2px}
+ .fx-info .t{font-size:16px}.fx-info .s{font-size:14px}.fx-info .sel{font-size:18px;padding:2px 8px;margin-top:4px}
+ .fx-tab{padding:6px 11px;min-height:42px;font-size:15px}
+ .fx-bar{padding:5px 8px;gap:6px;min-height:54px}
+ .fx-b{padding:6px 13px;min-height:44px;font-size:16px}.fx-b.num{min-width:38px;font-size:19px;padding:6px 0}.fx-bar .lbl.cutl{display:none}.fx-grp{gap:5px}
+ .fx-stage #reset{position:absolute;left:8px;bottom:8px;min-height:40px;padding:4px 14px;font-size:14px;background:#fff}
+ .fx-tile{width:76px}.fx-tile img{width:52px;height:52px}
+ .fx-cam{bottom:8px;right:8px;flex-direction:row-reverse}.fx-cam button{width:42px;height:42px;font-size:21px}.fx-cam button.rs{height:42px;font-size:14px}
+ .fx-hint{display:none;left:8px;right:8px;bottom:60px;max-width:none;font-size:14px;text-align:center;border:2px solid var(--pur);z-index:5}
+ .fx-hint.show{display:block}
+}
+@media (max-height:520px) and (orientation:landscape){.fx-tile{width:68px}.fx-tile img{width:40px;height:40px}.fx-tile span{display:none}.fx-info{max-width:36%}}
+@media (prefers-reduced-motion:reduce){.fx-toast{transition:none}}
+</style></head>
+<body>
+<header class="top"><a class="brand" href="../../index.html"><img src="../../img/logo.png" alt="Little Wonders"><span>Little Wonders<small>Fractions 3D</small></span></a>
+<nav class="uwmenu"><span class="uw-lang" id="hdrLang" role="group" aria-label="Language"><button type="button" data-lang="en">EN</button><button type="button" data-lang="zh" class="zh" style="display:block!important">EN+中文</button></span><a class="ddb" style="text-decoration:none" href="../../index.html#fractions" aria-label="Back to the app">←<span class="bk"> Back to the app</span></a></nav></header>
+<main class="fx">
+ <div class="fx-tabs" id="tabs" role="tablist">
+  <button class="fx-tab on" data-mode="fractions" role="tab">Fractions<span class="zh">分数</span></button>
+  <button class="fx-tab" data-mode="shapes" role="tab">3D Shapes<span class="zh">立体图形</span></button>
+  <button class="fx-tab" data-mode="stack" role="tab">Stack<span class="zh">堆叠</span></button>
+  <button class="fx-tab" data-mode="rotate" role="tab">Rotate<span class="zh">旋转</span></button>
+  <button class="fx-tab" data-mode="roll" role="tab">Roll &amp; Bounce<span class="zh">滚动和弹跳</span></button>
+ </div>
+ <div class="fx-stage" id="stage">
+  <div class="fx-info" id="info" aria-live="polite"></div>
+  <div class="fx-cam"><button id="help" aria-label="Help" title="How to move">?</button><button id="zin" aria-label="Zoom in" title="Zoom in">＋</button><button id="zout" aria-label="Zoom out" title="Zoom out">－</button><button id="rview" class="rs" aria-label="Reset view" title="Reset view">⟲ <span style="margin-left:5px">Reset view</span></button></div>
+  <div class="fx-hint" id="hint"><b>✋ Drag an object</b> = move it · <b>Drag the table</b> = turn the view · <b>Right-drag / two fingers</b> = move &amp; zoom<span class="zh">拖动物体＝移动；拖动桌子＝转动视角；右键拖动或双指＝平移和缩放</span></div>
+  <div class="fx-toast" id="toast"></div>
+  <div class="fx-nogl" id="nogl">Sorry, this page needs WebGL (3D) and your browser could not start it.</div>
+ </div>
+ <div class="fx-bar" id="bar">
+  <div class="fx-grp on" data-for="fractions">
+   <span class="lbl cutl">Cut into:<span class="zh">平均分成：</span></span>
+   <button class="fx-b num" data-cut="2">2</button><button class="fx-b num" data-cut="3">3</button><button class="fx-b num" data-cut="4">4</button><button class="fx-b num" data-cut="5">5</button><button class="fx-b num" data-cut="6">6</button><button class="fx-b num" data-cut="8">8</button><button class="fx-b num" data-cut="10">10</button>
+   <button class="fx-b gr" id="join">Join<span class="zh">合并</span></button>
+  </div>
+  <div class="fx-grp" data-for="shapes">
+   <button class="fx-b pk" id="whatis">What is it?<span class="zh">这是什么？</span></button>
+   <button class="fx-b alt" id="tog2d" aria-pressed="false">Show 2D shape<span class="zh">显示平面图形</span></button>
+  </div>
+  <div class="fx-grp" data-for="stack">
+   <span class="lbl">Drag a block on top of another one.<span class="zh">把积木拖到另一块上面。</span></span>
+   <button class="fx-b alt" id="spread">Take apart<span class="zh">拆开</span></button>
+  </div>
+  <div class="fx-grp" data-for="rotate">
+   <button class="fx-b pk" id="cw">↻ Clockwise<span class="zh">顺时针</span></button>
+   <button class="fx-b am" id="ccw">↺ Counterclockwise<span class="zh">逆时针</span></button>
+   <button class="fx-b alt" id="tstop">■ Stop<span class="zh">停止</span></button>
+  </div>
+  <div class="fx-grp" data-for="roll">
+   <button class="fx-b pk" id="roll">Roll<span class="zh">滚动</span></button>
+   <button class="fx-b am" id="bounce">Bounce<span class="zh">弹跳</span></button>
+   <button class="fx-b alt" id="bstop">■ Stop<span class="zh">停止</span></button>
+  </div>
+  <span class="fx-sp"></span>
+  <button class="fx-b alt" id="reset">Reset table<span class="zh">清空桌子</span></button>
+ </div>
+ <div class="fx-tray" id="tray" aria-label="Objects to drag onto the table"></div>
+</main>
+<script type="module" src="js/main.js"></script>
+</body></html>
