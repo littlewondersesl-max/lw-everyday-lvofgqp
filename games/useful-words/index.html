@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Useful Words · Little Wonders</title>
+<link rel="icon" href="../../img/logo.png">
+<link rel="stylesheet" href="../../css/app.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+main{flex:1;width:100%}
+.screen{display:block}
+.uw-wrap{max-width:1180px;margin:0 auto;padding:16px}
+.uw-wrap h1{color:var(--pur);margin:0 0 6px;font-size:clamp(26px,5vw,38px)}
+.uw-wrap .intro{margin:0 0 18px;font-size:clamp(16px,2.4vw,19px)}
+.LA1{--c:#2c9a83;--bgc:#e9f7f3}.LA2{--c:#6c4ea0;--bgc:#f1ebfa}.LB1{--c:#d8588d;--bgc:#fdeaf2}.LB2{--c:#d9771f;--bgc:#fdf0e2}
+.uw-cats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.uw-cat{background:#fff;border-radius:24px;padding:16px;box-shadow:0 6px 18px rgba(108,78,160,.12);border-top:10px solid var(--c)}
+.uw-cat h2{margin:0;color:var(--c);font-size:38px;line-height:1}
+.uw-cat .sub{margin:2px 0 10px;font-size:14px;color:#5b6486;font-weight:700;min-height:2.6em}
+.uw-b{display:flex;align-items:center;gap:8px;margin:0 0 8px;background:var(--bgc);border-radius:14px;padding:6px 8px}
+.uw-b span{flex:1;font-weight:800;font-size:15px}.uw-b small{display:block;font-weight:700;color:#5b6486;font-size:12px}
+.uw-btn{border:0;border-radius:999px;background:var(--c,var(--pur));color:#fff;font:inherit;font-weight:900;font-size:16px;padding:10px 18px;cursor:pointer;white-space:nowrap;min-height:44px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.uw-btn.sm{padding:6px 12px;font-size:14px;min-height:36px}
+.uw-btn.alt{background:#fff;color:var(--c,var(--pur));box-shadow:0 2px 8px rgba(108,78,160,.25)}
+.uw-btn.big{font-size:20px;padding:14px 28px;min-height:54px}
+.uw-btn:disabled{opacity:.35;cursor:default}
+.uw-btn:focus-visible,.uw-opt:focus-visible,.uw-chip:focus-visible{outline:4px solid #f0a500;outline-offset:2px}
+.uw-all{margin-top:4px;width:100%}
+/* bar */
+.uw-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.uw-bar .tt{flex:1;min-width:150px;font-weight:900;font-size:clamp(17px,2.6vw,24px);color:var(--pur)}
+.uw-pill{display:inline-block;background:var(--c);color:#fff;border-radius:999px;padding:2px 14px;margin-right:8px;font-size:.8em}
+/* card */
+.uw-card{background:#fff;border-radius:28px;box-shadow:0 8px 26px rgba(108,78,160,.16);border-top:12px solid var(--c);padding:clamp(16px,3vw,32px);display:grid;grid-template-columns:1fr;gap:18px}
+.uw-card.hasimg{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}
+.uw-pic{display:flex;align-items:center;justify-content:center;background:var(--bgc);border-radius:20px;overflow:hidden}
+.uw-pic img{width:100%;height:auto;display:block}
+.uw-card.wide{grid-template-columns:1fr}.uw-card.wide .uw-pic{background:none;border-radius:16px}
+.uw-wordrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.uw-word{font-weight:900;color:#1f2540;font-size:clamp(40px,8vw,84px);line-height:1}
+.uw-pos{font-weight:800;color:#fff;background:var(--c);border-radius:999px;padding:2px 12px;font-size:14px}
+.uw-spk{width:56px;height:56px;border-radius:50%;border:0;background:var(--c);color:#fff;font-size:26px;cursor:pointer;flex:none}
+.uw-spk.sm{width:40px;height:40px;font-size:18px}
+.uw-spk:focus-visible{outline:4px solid #f0a500;outline-offset:2px}
+.uw-say{font-weight:900;color:var(--c);font-size:clamp(24px,4.4vw,40px);letter-spacing:.02em;margin-top:6px}
+.uw-say small{font-weight:800;color:#5b6486;font-size:.55em;letter-spacing:0;margin-left:8px}
+.uw-sec{margin-top:14px}
+.uw-sec h3{margin:0 0 2px;font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--c);font-weight:900}
+.uw-sec p{margin:0;font-size:clamp(19px,2.8vw,28px);line-height:1.4;font-weight:700;color:#1f2540}
+.uw-ex{display:flex;gap:10px;align-items:flex-start}.uw-ex p{flex:1}
+.uw-ex em{font-style:normal;color:var(--c);font-weight:900;border-bottom:3px solid var(--c)}
+.uw-why{background:var(--bgc);border-radius:16px;padding:10px 14px}
+.uw-why p{font-size:clamp(17px,2.4vw,23px)}
+.uw-nav{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:14px;flex-wrap:wrap}
+.uw-nav .mid{flex:1;text-align:center;font-weight:800;color:#5b6486}
+.uw-dots{display:flex;gap:6px;justify-content:center;margin:8px 0}
+.uw-dots i{width:14px;height:14px;border-radius:50%;background:#ddd;display:block}
+.uw-dots i.on{background:var(--c)}.uw-dots i.done{background:#bde3d9}.uw-dots i.ok{background:#2e9e5b}.uw-dots i.no{background:#e0453a}
+/* list */
+.uw-batch{background:#fff;border-radius:20px;padding:12px 14px;margin-bottom:12px;box-shadow:0 4px 14px rgba(108,78,160,.1);border-left:10px solid var(--c)}
+.uw-batch h3{margin:0 0 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:20px;color:var(--c)}
+.uw-batch h3 .sp{flex:1}
+.uw-chips{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.uw-chip{border:0;border-radius:14px;background:var(--bgc);padding:8px 10px;font:inherit;text-align:left;cursor:pointer;color:#1f2540;min-height:54px}
+.uw-chip b{display:block;font-size:18px}.uw-chip span{font-size:12px;color:#5b6486;font-weight:700}
+.uw-chip:hover{outline:3px solid var(--c)}
+/* test */
+.uw-q{background:#fff;border-radius:28px;box-shadow:0 8px 26px rgba(108,78,160,.16);border-top:12px solid var(--c);padding:clamp(16px,3vw,32px)}
+.uw-q .kind{font-weight:900;color:var(--c);text-transform:uppercase;font-size:14px;letter-spacing:.06em}
+.uw-q .prompt{font-weight:800;font-size:clamp(22px,3.6vw,36px);line-height:1.35;margin:8px 0 16px;color:#1f2540}
+.uw-q .prompt u{display:inline-block;min-width:2.4em;text-decoration:none;color:var(--c);letter-spacing:.12em;white-space:nowrap}
+.uw-opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.uw-opt{border:3px solid var(--bgc);border-radius:18px;background:var(--bgc);font:inherit;font-weight:900;font-size:clamp(20px,3vw,30px);padding:14px 12px;cursor:pointer;color:#1f2540;min-height:68px}
+.uw-opt:hover:not(:disabled){border-color:var(--c)}
+.uw-opt.ok{background:#2e9e5b;border-color:#2e9e5b;color:#fff}.uw-opt.no{background:#e0453a;border-color:#e0453a;color:#fff}
+.uw-fb{min-height:34px;margin-top:12px;font-weight:800;font-size:clamp(17px,2.4vw,22px)}
+.uw-res{background:#fff;border-radius:28px;box-shadow:0 8px 26px rgba(108,78,160,.16);border-top:12px solid var(--c);padding:clamp(16px,3vw,32px);text-align:center}
+.uw-score{font-weight:900;font-size:clamp(40px,8vw,76px);color:var(--c);line-height:1}
+.uw-wrong{text-align:left;margin:16px auto;max-width:760px;display:flex;flex-direction:column;gap:8px}
+.uw-wrong div{background:#fde3e0;border-radius:14px;padding:8px 12px;font-weight:700;font-size:clamp(16px,2.2vw,20px)}
+.uw-wrong b{font-size:1.1em;color:#1f2540}
+.uw-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.foot{margin-top:auto}
+/* print */
+#printarea{display:none}
+@page{size:A4;margin:14mm}
+@media print{
+ body{background:#fff!important;display:block}
+ .screen,header.top,.foot{display:none!important}
+ #printarea{display:block;color:#000;font-family:'Nunito',Arial,sans-serif;font-size:11.5pt}
+ #printarea h1{font-size:20pt;margin:0 0 4pt;color:#000}
+ #printarea .meta{display:flex;justify-content:space-between;border-bottom:2px solid #000;padding-bottom:6pt;margin-bottom:10pt;font-weight:700}
+ #printarea h2{font-size:13pt;margin:12pt 0 6pt}
+ #printarea table{width:100%;border-collapse:collapse}
+ #printarea td{padding:3pt 5pt;vertical-align:top;border-bottom:1px solid #bbb;line-height:1.25}
+ #printarea .match .k{width:7.5em;white-space:nowrap}#printarea .match .ln{width:3.5em}#printarea .match .sp{width:10pt;border-bottom:0}#printarea .match .dl{width:1.4em;font-size:13pt}#printarea .match td:last-child{font-size:11pt}
+ #printarea .k{font-weight:900;width:6em}
+ #printarea ol{margin:0;padding-left:20pt}#printarea li{margin:0 0 6pt;line-height:1.4}
+ #printarea .bank{border:2px solid #000;border-radius:6pt;padding:6pt 8pt;font-weight:800;margin-bottom:8pt}
+ #printarea .pg2{page-break-before:always}
+ #printarea .blank{display:inline-block;min-width:80pt;border-bottom:1.5px solid #000}
+ #printarea .ans{font-weight:900}
+}
+@media (max-width:980px){.uw-cats{grid-template-columns:1fr 1fr}.uw-card.hasimg{grid-template-columns:1fr}}
+@media (max-width:640px){
+ .uw-cats{grid-template-columns:1fr}.uw-chips{grid-template-columns:1fr 1fr}.uw-opts{grid-template-columns:1fr}
+ .uw-btn{padding:9px 14px;font-size:15px}.uw-wrap{padding:10px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head>
+<body>
+<header class="top"><a class="brand" href="../../index.html"><img src="../../img/logo.png" alt="Little Wonders"><span>Little Wonders<small>Useful Words</small></span></a>
+<nav class="menu" style="margin-left:auto"><a class="ddb" style="text-decoration:none" href="../../index.html#lessons">← Back to the app</a></nav></header>
+<main class="screen"><div class="uw-wrap" id="app"></div></main>
+<div id="printarea" aria-hidden="true"></div>
+<footer class="foot">Little Wonders · Useful Words · ← → keys = previous / next word</footer>
+<script src="words.js"></script><script src="images.js"></script>
+<script>
+(function(){
+const W=window.UW_WORDS,IMG=window.UW_IMG||{},LV=['A1','A2','B1','B2'];
+const SUB={A1:'First words for everyday life',A2:'Words for stories, plans and feelings',B1:'Linking words and ideas for longer talk',B2:'Sharper words for essays and discussion'};
+const $=s=>document.querySelector(s),app=$('#app');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const range=b=>`${(b-1)*10+1}–${b*10}`;
+// ---- saved best scores
+const store={get(l,b){try{return +localStorage.getItem(`uw.best.${l}.${b}`)||0}catch(e){return 0}},set(l,b,v){try{if(v>this.get(l,b))localStorage.setItem(`uw.best.${l}.${b}`,v)}catch(e){}}};
+// ---- speech
+const TTS='speechSynthesis' in window;
+let voice=null;
+function pickVoice(){if(!TTS)return;const vs=speechSynthesis.getVoices();voice=vs.find(v=>/en[-_]GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null}
+if(TTS){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+function say(t,rate){if(!TTS)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';if(voice)u.voice=voice;u.rate=rate||.85;speechSynthesis.speak(u)}catch(e){}}
+window.__uwSaid=[];const _say=say;
+function speakBtn(txt,cls,label){return `<button type="button" class="uw-spk ${cls||''}" data-say="${esc(txt)}" aria-label="${label||'Listen'}" title="Listen">🔊</button>`}
+app.addEventListener('click',e=>{const pb=e.target.closest('[data-print]');if(pb){printSheet(/^#(A1|A2|B1|B2)-/.exec(location.hash)[1],+pb.dataset.print);return}const b=e.target.closest('[data-say]');if(b){window.__uwSaid.push(b.dataset.say);say(b.dataset.say,b.classList.contains('sm')?.9:.8)}});
+// ---- helpers
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function shuffle(arr,rnd){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function seedOf(s){let h=7;for(const c of s)h=(h*31+c.charCodeAt(0))|0;return h}
+const blankOf=w=>w[0]+' '+Array(w.length-1).fill('_').join(' ');
+const gapText=(ex,w)=>esc(ex).replace(new RegExp('\\b'+w+'\\b','i'),'<u>'+blankOf(w)+'</u>');
+const hiText=(ex,w)=>esc(ex).replace(new RegExp('\\b('+w+')\\b','i'),'<em>$1</em>');
+function setCls(l){app.className='uw-wrap L'+l}
+// ---- views
+function home(){
+  app.className='uw-wrap';document.title='Useful Words · Little Wonders';
+  app.innerHTML=`<h1>Useful Words</h1><p class="intro">200 very useful English words: 50 for each level. Learn ten at a time, then take the test.</p><div class="uw-cats">`+
+  LV.map(l=>`<section class="uw-cat L${l}"><h2>${l}</h2><p class="sub">${SUB[l]}</p>`+[1,2,3,4,5].map(b=>{const best=store.get(l,b);return `<div class="uw-b"><span>Words ${range(b)}<small>${best?'Best test: '+best+' / 10':'Test not taken yet'}</small></span><a class="uw-btn sm" href="#${l}-w-${(b-1)*10+1}">Learn</a><a class="uw-btn sm alt" href="#${l}-t-${b}">Test</a></div>`}).join('')+`<a class="uw-btn alt uw-all" href="#${l}-list">All 50 words</a></section>`).join('')+`</div>`;
+}
+function listView(l){
+  setCls(l);document.title=l+' words · Useful Words';
+  app.innerHTML=`<div class="uw-bar"><a class="uw-btn alt" href="#">← All levels</a><div class="tt"><span class="uw-pill">${l}</span>All 50 words</div></div>`+
+  [1,2,3,4,5].map(b=>`<section class="uw-batch"><h3>Words ${range(b)}<span class="sp"></span><a class="uw-btn sm" href="#${l}-w-${(b-1)*10+1}">Learn</a><a class="uw-btn sm alt" href="#${l}-t-${b}">Test</a><button type="button" class="uw-btn sm alt" data-print="${b}">🖨 Print test</button></h3><div class="uw-chips">`+W[l].slice((b-1)*10,b*10).map((x,i)=>`<a class="uw-chip" style="text-decoration:none" href="#${l}-w-${(b-1)*10+i+1}"><b>${(b-1)*10+i+1}. ${esc(x.w)}</b><span>${esc(x.say)}</span></a>`).join('')+`</div></section>`).join('');
+  window.scrollTo(0,0);
+}
+function card(l,n){
+  setCls(l);const x=W[l][n-1],b=Math.ceil(n/10),last=n%10===0;
+  document.title=`${x.w} · ${l} · Useful Words`;
+  const im=IMG[l+':'+x.w],wide=im&&im.wide,imgs=im?[].concat(im.f||im):[];
+  const dots=Array.from({length:10},(_,i)=>{const k=(b-1)*10+i+1;return `<i class="${k===n?'on':k<n?'done':''}"></i>`}).join('');
+  app.innerHTML=`<div class="uw-bar"><a class="uw-btn alt" href="#${l}-list">☰ Word list</a><div class="tt"><span class="uw-pill">${l}</span>Word ${n} of 50 · Words ${range(b)}</div><a class="uw-btn alt" href="#${l}-t-${b}">Test ${range(b)}</a></div>
+  <article class="uw-card${imgs.length?(wide?' hasimg wide':' hasimg'):''}" id="card"><div class="uw-text">
+   <div class="uw-wordrow"><div class="uw-word">${esc(x.w)}</div>${speakBtn(x.w,'','Say the word')}<span class="uw-pos">${esc(x.pos)}</span></div>
+   <div class="uw-say">${esc(x.say)}<small>${esc(x.ipa)}</small></div>
+   <div class="uw-sec"><h3>Meaning</h3><p>${esc(x.def)}</p></div>
+   <div class="uw-sec"><h3>Example</h3><div class="uw-ex"><p>${hiText(x.ex,x.w)}</p>${speakBtn(x.ex,'sm','Say the sentence')}</div></div>
+   <div class="uw-sec uw-why"><h3>Why it is a good word to know</h3><p>${esc(x.why)}</p></div>
+  </div>${imgs.length?`<div class="uw-pic">${imgs.map(s=>`<img src="img/${esc(s)}" alt="Picture that shows the meaning of ${esc(x.w)}" onerror="this.closest('.uw-pic').style.display='none';document.getElementById('card').classList.remove('hasimg','wide')">`).join('')}</div>`:''}</article>
+  <div class="uw-dots" aria-hidden="true">${dots}</div>
+  <div class="uw-nav"><a class="uw-btn big" id="prev" ${n>1?`href="#${l}-w-${n-1}"`:'style="visibility:hidden"'}>← Previous</a><div class="mid">${n} / 50</div>${last?`<a class="uw-btn big" id="next" href="#${l}-t-${b}">Take the test →</a>`:`<a class="uw-btn big" id="next" href="#${l}-w-${n+1}">Next →</a>`}</div>`;
+  window.scrollTo(0,0);
+}
+// ---- test
+let T=null;
+function makeTest(l,b){
+  const items=W[l].slice((b-1)*10,b*10).map((x,i)=>({x,i,n:(b-1)*10+i+1}));
+  const rnd=mulberry(seedOf(l+b)+(Date.now()%1000));
+  const kinds=['def','gap','hear'];
+  return {l,b,items,qs:items.map((it,i)=>{
+    let kind=kinds[i%3];if(kind==='hear'&&!TTS)kind='def';
+    const pool=shuffle(items.filter(o=>o!==it),rnd),ok=pool.filter(o=>o.x.w[0].toLowerCase()!==it.x.w[0].toLowerCase());
+    const others=ok.slice(0,3).concat(pool.filter(o=>!ok.includes(o))).slice(0,3);
+    return {it,kind,opts:shuffle([it].concat(others),rnd)}}),k:0,res:[],done:false};
+}
+function testView(l,b){
+  setCls(l);document.title=`Test ${range(b)} · ${l} · Useful Words`;
+  T=makeTest(l,b);renderQ();window.scrollTo(0,0);
+}
+function renderQ(){
+  const {l,b,qs,k}=T,q=qs[k],x=q.it.x;
+  const dots=qs.map((_,i)=>`<i class="${i===k?'on':T.res[i]===true?'ok':T.res[i]===false?'no':''}"></i>`).join('');
+  const kindTxt={def:'Which word means this?',gap:'Choose the word that fits the gap (it starts with the letter shown)',hear:'Listen, then pick the word'}[q.kind];
+  const prompt=q.kind==='def'?esc(x.def):q.kind==='gap'?gapText(x.ex,x.w):`${speakBtn(x.w,'','Listen to the word')} <span style="font-size:.7em;color:#5b6486">Tap the speaker to hear the word</span>`;
+  app.innerHTML=`<div class="uw-bar"><a class="uw-btn alt" href="#${l}-list">← Quit test</a><div class="tt"><span class="uw-pill">${l}</span>Test · Words ${range(b)}</div><div class="mid" style="font-weight:800;color:#5b6486">Question ${k+1} of 10</div></div>
+  <div class="uw-dots" aria-hidden="true">${dots}</div>
+  <section class="uw-q"><div class="kind">${kindTxt}</div><div class="prompt">${prompt}</div>
+  <div class="uw-opts">${q.opts.map((o,i)=>`<button type="button" class="uw-opt" data-i="${i}">${esc(o.x.w)}</button>`).join('')}</div>
+  <div class="uw-fb" id="fb" role="status" aria-live="polite"></div><div class="uw-row" id="nxt"></div></section>`;
+  if(q.kind==='hear')setTimeout(()=>say(x.w,.8),250);
+  app.querySelectorAll('.uw-opt').forEach(btn=>btn.onclick=()=>answer(+btn.dataset.i));
+}
+function answer(i){
+  const q=T.qs[T.k];if(T.res[T.k]!==undefined)return;
+  const ok=q.opts[i]===q.it;T.res[T.k]=ok;
+  const btns=app.querySelectorAll('.uw-opt');
+  btns.forEach((bt,j)=>{bt.disabled=true;if(q.opts[j]===q.it)bt.classList.add('ok');else if(j===i)bt.classList.add('no')});
+  const x=q.it.x;
+  $('#fb').innerHTML=ok?'✅ Correct!':`❌ The answer is <b>${esc(x.w)}</b>: ${esc(x.def)}`;
+  const last=T.k===9;
+  $('#nxt').innerHTML=`<button type="button" class="uw-btn big" id="go">${last?'See my score':'Next question →'}</button>`;
+  $('#go').onclick=nextQ;$('#go').focus({preventScroll:true});
+}
+function nextQ(){if(T.k>=9){showRes();return}T.k++;renderQ()}
+function showRes(){
+  const {l,b,qs,res}=T,score=res.filter(Boolean).length;store.set(l,b,score);
+  const wrong=qs.filter((q,i)=>!res[i]).map(q=>q.it);
+  const nextB=b<5?b+1:0;
+  const msg=score===10?'Perfect! 🌟':score>=8?'Great job! 👏':score>=6?'Good work! Keep practising.':'Keep going. Read the words again and retry.';
+  app.innerHTML=`<div class="uw-bar"><a class="uw-btn alt" href="#${l}-list">☰ Word list</a><div class="tt"><span class="uw-pill">${l}</span>Test results · Words ${range(b)}</div></div>
+  <section class="uw-res"><div class="uw-score">${score} / 10</div><p style="font-weight:800;font-size:clamp(18px,2.6vw,26px);margin:8px 0">${msg}</p>
+  ${wrong.length?`<h3 style="margin:14px 0 4px;color:#e0453a">Words to practise (${wrong.length})</h3><div class="uw-wrong">${wrong.map(x=>`<div><b>${esc(x.x.w)}</b> ${speakBtn(x.x.w,'sm','Listen')} · ${esc(x.x.say)} · ${esc(x.x.def)} <a href="#${l}-w-${x.n}">See card →</a></div>`).join('')}</div>`:`<p style="font-weight:800">You knew every word!</p>`}
+  <div class="uw-row"><button type="button" class="uw-btn big" id="retry">↻ Retry</button>${nextB?`<a class="uw-btn big" href="#${l}-w-${b*10+1}">Next batch (words ${range(nextB)}) →</a>`:`<a class="uw-btn big" href="#${l}-list">Back to the list</a>`}<button type="button" class="uw-btn alt" id="prt">🖨 Print worksheet</button></div></section>`;
+  $('#retry').onclick=()=>testView(l,b);$('#prt').onclick=()=>printSheet(l,b);window.scrollTo(0,0);
+}
+// ---- print worksheet (page 1 test, page 2 answer key)
+function printSheet(l,b){
+  const items=W[l].slice((b-1)*10,b*10),rnd=mulberry(seedOf('print'+l+b));
+  const order=shuffle(items.map((_,i)=>i),rnd);      // definitions in shuffled order
+  const letters='ABCDEFGHIJ';
+  const defRows=order.map((wi,pos)=>`<tr><td class="k">${letters[pos]}</td><td>${esc(items[wi].def)}</td></tr>`).join('');
+  const wordRows=items.map((x,i)=>`<tr><td class="k">${i+1}. ${esc(x.w)}</td><td>______</td></tr>`).join('');
+  const bank=shuffle(items.map(x=>x.w),mulberry(seedOf('bank'+l+b))).join(' · ');
+  const sents=items.map((x,i)=>`<li>${esc(x.ex).replace(new RegExp('\\b'+x.w+'\\b','i'),'<span class="blank">'+x.w[0]+'</span>')}</li>`).join('');
+  const key1=items.map((x,i)=>`<tr><td class="k">${i+1}. ${esc(x.w)}</td><td class="ans">${letters[order.indexOf(i)]}</td><td>${esc(x.def)}</td></tr>`).join('');
+  const key2=items.map((x,i)=>`<li><span class="ans">${esc(x.w)}</span> <span style="color:#444">(${esc(x.ex)})</span></li>`).join('');
+  $('#printarea').innerHTML=`<section><h1>Useful Words · Level ${l} · Test ${range(b)}</h1>
+  <div class="meta"><span>Name: ______________________</span><span>Date: ____________</span><span>Score: ____ / 20</span></div>
+  <h2>Part A. Match each word to its meaning. Write the letter on the line.</h2>
+  <table class="match">${items.map((x,i)=>`<tr><td class="k">${i+1}. ${esc(x.w)}</td><td class="ln">_____</td><td class="sp"></td><td class="dl"><b>${letters[i]}</b></td><td>${esc(items[order[i]].def)}</td></tr>`).join('')}</table>
+  <h2>Part B. Write the correct word in each gap.</h2>
+  <div class="bank">${esc(bank)}</div><ol>${sents}</ol></section>
+  <section class="pg2"><h1>Answer key · Level ${l} · Test ${range(b)}</h1><div class="meta"><span>Teacher copy</span><span>Part A: 1 mark each · Part B: 1 mark each</span></div>
+  <h2>Part A</h2><table>${key1}</table><h2>Part B</h2><ol>${key2}</ol></section>`;
+  setTimeout(()=>window.print(),60);
+}
+window.__uw={printSheet,T:()=>T};
+// ---- routing
+function route(){
+  const h=location.hash.replace(/^#/,'');
+  if(TTS)try{speechSynthesis.cancel()}catch(e){}
+  let m;
+  if((m=/^(A1|A2|B1|B2)-w-(\d+)$/.exec(h))&&+m[2]>=1&&+m[2]<=50)card(m[1],+m[2]);
+  else if((m=/^(A1|A2|B1|B2)-t-([1-5])$/.exec(h)))testView(m[1],+m[2]);
+  else if((m=/^(A1|A2|B1|B2)-list$/.exec(h)))listView(m[1]);
+  else{home();}
+}
+window.addEventListener('hashchange',route);
+document.addEventListener('keydown',e=>{
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  const m=/^(A1|A2|B1|B2)-w-(\d+)$/.exec(location.hash.replace(/^#/,''));
+  if(m){const n=+m[2];
+    if(e.key==='ArrowRight'&&n<50){e.preventDefault();location.hash=`${m[1]}-w-${n+1}`}
+    else if(e.key==='ArrowRight'&&n===50){location.hash=`${m[1]}-t-5`}
+    else if(e.key==='ArrowLeft'&&n>1){e.preventDefault();location.hash=`${m[1]}-w-${n-1}`}
+    else if(e.key==='s'||e.key==='S'){const x=W[m[1]][n-1];say(x.w,.8);window.__uwSaid.push(x.w)}
+  }else if(T&&/-t-/.test(location.hash)&&/^[1-4]$/.test(e.key)&&app.querySelector('.uw-opt:not(:disabled)')){
+    const bt=app.querySelectorAll('.uw-opt')[+e.key-1];if(bt)bt.click()
+  }
+});
+route();
+})();
+</script>
+</body></html>
