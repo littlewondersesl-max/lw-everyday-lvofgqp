@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Word-by-Word Reader · Little Wonders</title>
+<link rel="icon" href="../../img/logo.png">
+<link rel="stylesheet" href="../../css/app.css">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+main{flex:1;width:100%}
+.wr-list{max-width:1100px;margin:18px auto;padding:0 16px}
+.wr-list h1{color:var(--pur);margin:0 0 6px;font-size:clamp(26px,5vw,38px)}
+.wr-list .intro{margin:0 0 18px;font-size:clamp(16px,2.4vw,19px)}
+.wr-cats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.wr-cat{background:#fff;border-radius:24px;padding:16px 16px 18px;box-shadow:0 6px 18px rgba(108,78,160,.12);border-top:10px solid var(--c)}
+.wr-cat h2{margin:0;display:flex;align-items:baseline;gap:10px;color:var(--pur);font-size:34px}
+.wr-cat h2 small{font-size:15px;font-weight:800;color:var(--ink)}
+.wr-cat .sp{margin:2px 0 12px;font-size:14px;color:#6b7390}
+.wr-cat ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.wr-t{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;border-radius:16px;background:var(--bgc);padding:10px 12px;font:inherit;font-weight:800;font-size:18px;color:var(--ink);cursor:pointer;min-height:52px;transition:transform .12s,box-shadow .12s}
+.wr-t:hover,.wr-t:focus-visible{transform:translateX(3px);box-shadow:0 3px 10px rgba(108,78,160,.25);outline:3px solid var(--pur);outline-offset:1px}
+.wr-t b{flex:none;width:34px;height:34px;border-radius:50%;background:var(--c);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px}
+.wr-t i{margin-left:auto;font-style:normal;font-size:12px;color:#6b7390;font-weight:700;white-space:nowrap}
+.L1{--c:#2c9a83;--bgc:#e9f7f3}.L2{--c:#6c4ea0;--bgc:#f1ebfa}.L3{--c:#d8588d;--bgc:#fdeaf2}
+/* reader */
+.wr-play{display:none;max-width:1400px;margin:0 auto;padding:12px;min-height:calc(100vh - 130px);flex-direction:column;gap:12px}
+body.reading .wr-list{display:none}body.reading .wr-play{display:flex}
+.wr-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.wr-bar .tt{font-weight:900;font-size:clamp(18px,3vw,26px);color:var(--pur);flex:1;min-width:140px}
+.wr-bar .tt span{display:inline-block;background:var(--c);color:#fff;border-radius:999px;padding:2px 12px;margin-right:8px;font-size:.7em;vertical-align:middle}
+.wr-btn{border:0;border-radius:999px;background:var(--pur);color:#fff;font:inherit;font-weight:900;font-size:18px;padding:12px 22px;cursor:pointer;white-space:nowrap;min-height:48px}
+.wr-btn.alt{background:#fff;color:var(--pur);box-shadow:0 2px 8px rgba(108,78,160,.25)}
+.wr-btn.go{background:var(--teal);min-width:150px;font-size:22px}
+.wr-btn:focus-visible{outline:4px solid #f0a500;outline-offset:2px}
+.wr-stage{position:relative;flex:1;min-height:280px;background:#fff;border-radius:28px;box-shadow:0 8px 26px rgba(108,78,160,.16);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:12px}
+.wr-prog{position:absolute;left:0;top:0;height:8px;background:var(--c);width:0;transition:width .1s linear}
+.wr-word{font-weight:900;color:#1f2540;line-height:1.1;text-align:center;white-space:nowrap;letter-spacing:.01em}
+.wr-cd{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;background:#fff;color:var(--c);font-weight:900}
+.wr-cd.on{display:flex}
+.wr-cd .n{font-size:min(46vh,60vw);line-height:1;animation:pop .9s ease-out}
+.wr-cd .g{font-size:clamp(16px,2.6vw,24px);color:var(--ink);font-weight:800;margin-top:6px}
+@keyframes pop{0%{transform:scale(.5);opacity:0}25%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:1}}
+.wr-end{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:flex-start;gap:14px;background:#fff;padding:18px 22px;overflow:auto}
+.wr-end.on{display:flex}
+.wr-end>:first-child{margin-top:auto}.wr-end>:last-child{margin-bottom:auto}
+.wr-end .wr-btn{flex:none;min-width:0}.wr-end .wr-btn.go{min-width:150px}
+.wr-end h3{margin:0;color:var(--c);font-size:clamp(22px,4vw,34px)}
+.wr-end p{margin:0;max-width:900px;font-size:clamp(19px,3.2vw,32px);line-height:1.5;color:#1f2540;font-weight:700;text-align:center}
+.wr-end .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+.wr-pause{position:absolute;bottom:10px;right:16px;font-weight:800;color:var(--ink);opacity:.0;transition:opacity .15s;font-size:clamp(14px,2vw,20px)}
+.wr-stage.paused .wr-pause{opacity:.9}
+.wr-ctl{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#fff;border-radius:22px;padding:12px 16px;box-shadow:0 4px 14px rgba(108,78,160,.12)}
+.wr-sl{flex:1;min-width:220px;display:flex;align-items:center;gap:10px;font-weight:800}
+.wr-sl input{flex:1;height:36px;accent-color:var(--c);min-width:100px}
+.wr-sl output{min-width:96px;text-align:center;background:var(--bgc);border-radius:12px;padding:6px 8px;font-weight:900;font-size:20px;color:var(--ink)}
+.wr-cnt{font-weight:800;color:#6b7390;min-width:84px;text-align:right}
+@media (max-width:640px){
+ .fsl{display:none}.wr-bar .tt{order:3;flex:1 1 100%}
+ .wr-cats{grid-template-columns:1fr}
+ .wr-btn{padding:10px 16px;font-size:16px}.wr-ctl .wr-btn.go{flex:1;min-width:0}
+ .wr-ctl{padding:10px}.wr-sl{order:3;flex:1 1 100%}.wr-cnt{margin-left:auto}
+ .wr-stage{min-height:420px}.wr-end p{font-size:18px}.wr-t{font-size:17px}.wr-t i{display:none}
+}
+@media (max-height:520px) and (orientation:landscape){.wr-play{min-height:0;padding:6px;gap:6px}.wr-stage{min-height:150px}.wr-bar .tt{font-size:16px}.wr-btn{padding:6px 14px;font-size:15px;min-height:38px}.wr-ctl{padding:6px 10px}.wr-cd .n{font-size:min(50vh,40vw)}.wr-end p{font-size:18px}.wr-end{gap:6px}}
+@media (prefers-reduced-motion:reduce){.wr-cd .n{animation:none}.wr-t{transition:none}}
+.wr-stage:fullscreen{border-radius:0}
+</style></head>
+<body>
+<header class="top"><a class="brand" href="../../index.html"><img src="../../img/logo.png" alt="Little Wonders"><span>Little Wonders<small>Word-by-Word Reader</small></span></a>
+<nav class="menu" style="margin-left:auto"><a class="ddb" style="text-decoration:none" href="../../index.html#stories">← Back to the app</a></nav></header>
+<main>
+<section class="wr-list" id="list">
+ <h1>Word-by-Word Reader</h1>
+ <p class="intro">Pick a level and a story. After the countdown, the words appear one at a time. Use the slider to go slower or faster.</p>
+ <div class="wr-cats" id="cats"></div>
+</section>
+<section class="wr-play" id="play" aria-live="off">
+ <div class="wr-bar"><button class="wr-btn alt" id="back">← Back to list</button><div class="tt" id="ttl"></div><button class="wr-btn alt" id="fs" aria-label="Full screen">⛶<span class="fsl"> Full screen</span></button></div>
+ <div class="wr-stage" id="stage">
+  <div class="wr-prog" id="bar"></div>
+  <div class="wr-word" id="word" role="status" aria-live="off">&nbsp;</div>
+  <div class="wr-pause">⏸ Paused</div>
+  <div class="wr-cd" id="cd"><div class="n" id="cdn">5</div><div class="g">Get ready…</div></div>
+  <div class="wr-end" id="end"><h3>Well done!</h3><p id="full"></p><div class="row"><button class="wr-btn go" id="again">↻ Play again</button><button class="wr-btn alt" id="next">Next story →</button><button class="wr-btn alt" id="back2">Back to list</button></div></div>
+ </div>
+ <div class="wr-ctl">
+  <button class="wr-btn go" id="pp">⏸ Pause</button>
+  <button class="wr-btn alt" id="restart">↻ Restart</button>
+  <label class="wr-sl"><span>Speed</span><input type="range" id="spd" min="30" max="300" step="5" value="60" aria-label="Speed in words per minute"><output id="spdv" for="spd">60 wpm</output></label>
+  <div class="wr-cnt" id="cnt"></div>
+ </div>
+</section>
+</main>
+<footer class="foot">Little Wonders · Word-by-Word Reader · Space = pause / play</footer>
+<script src="texts.js"></script>
+<script>
+(function(){
+const T=window.WR_TEXTS,LV=['A1','A2','B1'],CLS={A1:'L1',A2:'L2',B1:'L3'};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const wc=t=>t.trim().split(/\s+/).length;
+$('cats').innerHTML=LV.map(l=>`<section class="wr-cat ${CLS[l]}"><h2>${T[l].label}<small>${esc(T[l].sub)}</small></h2><p class="sp">Starts at ${T[l].wpm} words per minute</p><ol>${T[l].items.map((it,i)=>`<li><button class="wr-t" data-l="${l}" data-i="${i}"><b>${i+1}</b><span>${esc(it[0])}</span><i>${wc(it[1])} words</i></button></li>`).join('')}</ol></section>`).join('');
+let lv='A1',idx=0,words=[],pos=0,timer=0,phase='list',paused=false,cdn=5;
+const word=$('word'),stage=$('stage'),spd=$('spd');
+function wpm(){return +spd.value}
+function setSpeedLabel(){$('spdv').textContent=wpm()+' wpm'}
+spd.addEventListener('input',setSpeedLabel);
+function delay(w){
+  let d=60000/wpm();
+  if(/[.!?…]["”')]*$/.test(w))d*=1.9;else if(/[,;:–—]["”')]*$/.test(w))d*=1.45;
+  const core=w.replace(/[^A-Za-z]/g,'').length; if(core>8)d*=1.15;
+  return d;
+}
+function fit(){
+  const W=stage.clientWidth-32,H=stage.clientHeight;
+  let size=Math.max(28,Math.min(H*0.42,W*0.21,190));
+  word.style.fontSize=size+'px';
+  const w=word.scrollWidth||word.getBoundingClientRect().width;
+  if(w>W)word.style.fontSize=Math.max(20,size*W/w*0.98)+'px';
+}
+function show(w){word.textContent=w;fit()}
+function clear(){clearTimeout(timer);timer=0}
+function ui(){
+  const pp=$('pp');
+  pp.textContent=paused?'▶ Play':'⏸ Pause';
+  stage.classList.toggle('paused',paused&&(phase==='count'||phase==='read'));
+  pp.disabled=(phase==='end'||phase==='list');
+  pp.style.opacity=pp.disabled?.45:1;
+}
+function setCat(){document.getElementById('play').className='wr-play '+CLS[lv]}
+function open(l,i,push){
+  lv=l;idx=i;const it=T[l].items[i];
+  words=it[1].trim().split(/\s+/);
+  document.body.classList.add('reading');setCat();
+  $('ttl').innerHTML=`<span>${l}</span>${i+1}. ${esc(it[0])}`;
+  spd.value=T[l].wpm;setSpeedLabel();
+  if(push!==false)history.pushState(null,'','#'+l+'-'+(i+1));
+  window.scrollTo(0,0);
+  start();
+}
+function start(){
+  clear();paused=false;pos=0;phase='count';cdn=5;
+  $('end').classList.remove('on');word.textContent='\u00a0';$('bar').style.width='0';
+  $('cnt').textContent='';
+  tickCount(true);ui();
+}
+function tickCount(first){
+  const cd=$('cd');cd.classList.add('on');
+  const n=$('cdn');n.textContent=cdn;
+  // restart the pop animation
+  n.style.animation='none';void n.offsetWidth;n.style.animation='';
+  timer=setTimeout(()=>{
+    if(paused)return;
+    cdn--;
+    if(cdn<1){cd.classList.remove('on');phase='read';tickWord()}else tickCount();
+  },1000);
+}
+function tickWord(){
+  if(paused||phase!=='read')return;
+  if(pos>=words.length){finish();return}
+  const w=words[pos];show(w);
+  $('bar').style.width=((pos+1)/words.length*100)+'%';
+  $('cnt').textContent=(pos+1)+' / '+words.length;
+  pos++;
+  timer=setTimeout(tickWord,delay(w));
+}
+function finish(){
+  clear();phase='end';paused=false;
+  $('full').textContent=T[lv].items[idx][1];
+  $('end').classList.add('on');
+  $('next').style.display=idx<T[lv].items.length-1?'':'none';
+  ui();$('again').focus({preventScroll:true});
+}
+function toggle(){
+  if(phase!=='count'&&phase!=='read')return;
+  paused=!paused;
+  if(paused)clear();
+  else if(phase==='count'){tickCount()}
+  else tickWord();
+  ui();
+}
+function toList(push){
+  clear();phase='list';paused=false;
+  document.body.classList.remove('reading');$('cd').classList.remove('on');$('end').classList.remove('on');
+  if(document.fullscreenElement)document.exitFullscreen&&document.exitFullscreen();
+  if(push!==false&&location.hash)history.pushState(null,'',location.pathname+location.search);
+  ui();
+}
+$('cats').addEventListener('click',e=>{const b=e.target.closest('.wr-t');if(b)open(b.dataset.l,+b.dataset.i)});
+$('pp').onclick=toggle;$('restart').onclick=start;$('again').onclick=start;
+$('back').onclick=$('back2').onclick=()=>toList();
+$('next').onclick=()=>open(lv,idx+1);
+$('fs').onclick=()=>{const el=$('play');if(document.fullscreenElement)document.exitFullscreen();else if(el.requestFullscreen)el.requestFullscreen().catch(()=>{})};
+document.addEventListener('fullscreenchange',()=>{$('play').style.background=document.fullscreenElement?'#fdf8fb':'';setTimeout(fit,50)});
+document.addEventListener('keydown',e=>{
+  if(!document.body.classList.contains('reading'))return;
+  if(e.code==='Space'||e.key===' '){
+    const t=e.target;
+    e.preventDefault();if(phase==='end')start();else toggle();
+  }else if(e.key==='Escape'&&!document.fullscreenElement){toList()}
+});
+// buttons would also fire on Space keyup/click: stop that for the play button so Space is only handled once
+document.querySelectorAll('.wr-play button').forEach(b=>b.addEventListener('keyup',e=>{if(e.code==='Space')e.preventDefault()}));
+spd.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();e.stopPropagation();toggle()}});
+window.addEventListener('resize',()=>{if(phase==='read'||phase==='end'||paused)fit()});
+function route(){
+  const m=/^#(A1|A2|B1)-(\d+)$/.exec(location.hash);
+  if(m&&T[m[1]].items[+m[2]-1])open(m[1],+m[2]-1,false);else if(document.body.classList.contains('reading'))toList(false);
+}
+window.addEventListener('popstate',route);route();ui();
+})();
+</script>
+</body></html>
