@@ -104,7 +104,7 @@ main{flex:1;width:100%}
 @media (prefers-reduced-motion:reduce){.wp-sheet{animation:none}}
 /* bilingual */
 .zh{font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC','Noto Sans CJK SC','Hiragino Sans GB','Source Han Sans SC','WenQuanYi Micro Hei',sans-serif;font-weight:600}
-.uw-lang{display:inline-flex;align-items:center;background:#fff;border-radius:999px;padding:3px;box-shadow:0 2px 8px rgba(108,78,160,.3);border:2px solid var(--pur);flex:none}
+.uw-lang{display:none!important}.uw-lang_old{display:inline-flex;align-items:center;background:#fff;border-radius:999px;padding:3px;box-shadow:0 2px 8px rgba(108,78,160,.3);border:2px solid var(--pur);flex:none}
 .uw-lang button{border:0;background:none;font:inherit;font-weight:900;font-size:14px;color:var(--pur);border-radius:999px;padding:5px 12px;cursor:pointer;min-height:32px;white-space:nowrap}
 .uw-lang button.on{background:var(--pur);color:#fff}
 .uwmenu{margin-left:auto;display:flex;align-items:center;gap:8px;flex:0 0 auto}
@@ -152,11 +152,11 @@ main{flex:1;width:100%}
 </style></head>
 <body>
 <header class="top"><a class="brand" href="../../index.html"><img src="../../img/logo.png" alt="Little Wonders"><span>Little Wonders<small>Useful Words</small></span></a>
-<nav class="uwmenu"><span class="uw-lang" id="hdrLang" role="group" aria-label="Language"><button type="button" data-lang="en">EN</button><button type="button" data-lang="zh" class="zh">EN+中文</button></span><a class="ddb" style="text-decoration:none" href="../../index.html#lessons" aria-label="Back to the app">←<span class="bk"> Back to the app</span></a></nav></header>
+<nav class="uwmenu"><a class="ddb" style="text-decoration:none" href="../../index.html#lessons" aria-label="Back to the app">←<span class="bk"> Back to the app</span></a></nav></header>
 <main class="screen"><div class="uw-wrap" id="app"></div></main>
 <div id="printarea" aria-hidden="true"></div>
 <footer class="foot">Little Wonders · Useful Words · ← → keys = previous / next word</footer>
-<script src="words.js"></script><script src="dict.js"></script><script src="images.js"></script>
+<script src="../../js/lang.js"></script><script src="../../js/i18n/useful-words.js"></script><script src="words.js"></script><script src="dict.js"></script><script src="images.js"></script>
 <script>
 (function(){
 const W=window.UW_WORDS,IMG=window.UW_IMG||{},LV=['A1','A2','B1','B2'];
@@ -165,13 +165,12 @@ const $=s=>document.querySelector(s),app=$('#app');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const range=b=>`${(b-1)*10+1}–${b*10}`;
 // ---- bilingual option (EN / EN+中文): remembered in localStorage and carried in the URL as ?lang=zh
-let BI=(()=>{let q=null;try{q=new URLSearchParams(location.search).get('lang')}catch(e){}
-  if(q==='zh'||q==='en'){try{localStorage.setItem('uw.lang',q)}catch(e){}return q==='zh'}
-  try{return localStorage.getItem('uw.lang')==='zh'}catch(e){return false}})();
+let BI=LWLang.zh; // shared app-wide setting (js/lang.js)
 function urlLang(){try{const u=new URL(location.href);if(BI)u.searchParams.set('lang','zh');else u.searchParams.delete('lang');history.replaceState(null,'',u.pathname+u.search+u.hash)}catch(e){}}
 function syncLang(){document.body.classList.toggle('bi',BI);document.querySelectorAll('.uw-lang button').forEach(b=>{const on=(b.dataset.lang==='zh')===BI;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)})}
 const langToggle=()=>`<span class="uw-lang" role="group" aria-label="Language"><button type="button" data-lang="en">EN</button><button type="button" data-lang="zh" class="zh">EN+中文</button></span>`;
-function setLang(on){BI=on;try{localStorage.setItem('uw.lang',on?'zh':'en')}catch(e){};urlLang();closeWP();rerender();syncLang()}
+function setLang(on){LWLang.set(on?'zh':'en')}
+LWLang.on(z=>{BI=z;closeWP();rerender();syncLang()});
 const zhHi=z=>esc(z).replace(/\{\{(.+?)\}\}/,'<em>$1</em>');
 const zhGap=z=>esc(z).replace(/\{\{(.+?)\}\}/,'<u>＿＿</u>');
 const zhGapPrint=z=>esc(z).replace(/\{\{(.+?)\}\}/,'＿＿＿＿');
@@ -209,7 +208,6 @@ wp.addEventListener('click',e=>{
   const b=e.target.closest('[data-say]');if(b){window.__uwSaid.push(b.dataset.say);say(b.dataset.say,.85)}
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&wp.classList.contains('on')){e.preventDefault();e.stopImmediatePropagation();closeWP()}},true);
-document.addEventListener('click',e=>{const b=e.target.closest('[data-lang]');if(b){setLang(b.dataset.lang==='zh')}});
 // ---- saved best scores
 const store={get(l,b){try{return +localStorage.getItem(`uw.best.${l}.${b}`)||0}catch(e){return 0}},set(l,b,v){try{if(v>this.get(l,b))localStorage.setItem(`uw.best.${l}.${b}`,v)}catch(e){}}};
 // ---- speech
@@ -366,8 +364,7 @@ document.addEventListener('keydown',e=>{
     const bt=app.querySelectorAll('.uw-opt')[+e.key-1];if(bt)bt.click()
   }
 });
-if(BI)urlLang();
-route();
+syncLang();route();
 })();
 </script>
 </body></html>

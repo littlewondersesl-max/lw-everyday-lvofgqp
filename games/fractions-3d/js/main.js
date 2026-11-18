@@ -12,13 +12,9 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const gcd=(a,b)=>b?gcd(b,a%b):a;
 
 /* ---------------- language (same EN / EN+中文 option as the rest of the app) ---------------- */
-let BI=(()=>{let q=null;try{q=new URLSearchParams(location.search).get('lang')}catch(e){}
-  if(q==='zh'||q==='en'){try{localStorage.setItem('uw.lang',q)}catch(e){}return q==='zh'}
-  try{return localStorage.getItem('uw.lang')==='zh'}catch(e){return false}})();
-function syncLang(){document.body.classList.toggle('bi',BI);document.querySelectorAll('.uw-lang button').forEach(b=>{const on=(b.dataset.lang==='zh')===BI;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)})}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-lang]');if(!b)return;BI=b.dataset.lang==='zh';try{localStorage.setItem('uw.lang',BI?'zh':'en')}catch(_){}
-  try{const u=new URL(location.href);BI?u.searchParams.set('lang','zh'):u.searchParams.delete('lang');history.replaceState(null,'',u.pathname+u.search+u.hash)}catch(_){}
-  syncLang();refreshLabels();updateInfo()});
+let BI=LWLang.zh; // shared app-wide setting (js/lang.js)
+function syncLang(){document.body.classList.toggle('bi',BI)}
+LWLang.on(z=>{BI=z;syncLang();refreshLabels();updateInfo()});
 syncLang();
 
 /* ---------------- renderer / scene ---------------- */

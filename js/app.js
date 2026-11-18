@@ -123,7 +123,7 @@ function hub(){
     const fin=PG?MM.filter(x=>{const r=PG.get(gid(x));return r&&r.u&&r.u[lv]}).length:0;
     Q('#home').innerHTML=`<section class="sec"><p class="crumb"><a href="index.html">Home</a> › Everyday Games</p><h2>Everyday Games</h2>
     <div class="lvbar"><span class="lvlab" id="lvlab">Level</span><div class="lvpill" role="radiogroup" aria-labelledby="lvlab">${['A1','A2','B1'].map(l=>`<button type="button" role="radio" aria-checked="${l===lv}" class="${l===lv?'on':''}" data-l="${l}">${LVN[l]}</button>`).join('')}</div>
-    <p class="lvnote">${esc(LVI[lv])} The same 15 games and pictures at every level. A game you finish at a higher level counts for the lower levels too.${PG?` <b>${fin} of ${MM.length}</b> finished at ${LVN[lv]}.`:''}</p></div>
+    <p class="lvnote"><span>${esc(LVI[lv])}</span> <span>The same 15 games and pictures at every level. A game you finish at a higher level counts for the lower levels too.</span>${PG?` <b>${fin} of ${MM.length}</b> finished at ${LVN[lv]}.`:''}</p></div>
     <div class="grid">${MM.map(x=>`<div class="card" data-pid="${gid(x)}"><a class="cl" href="${x.href}?lv=${lv}"><div class="thumb"><img loading="lazy" src="img/thumbs/game-${x.href.split('/')[1]}.jpg" alt=""><span class="lvb" title="Level ${LVN[lv]}">${LVN[lv]}</span></div><div class="ct"><h3>${esc(x.title)}</h3><p>${esc(x.sub||'')}</p></div></a></div>`).join('')}</div></section>`;
     Q('#home').querySelectorAll('.lvpill button').forEach(b=>b.onclick=()=>{if(b.dataset.l!==lv){lv=b.dataset.l;history.replaceState(null,'','?lvl='+({A1:'a1',A2:'a2',B1:'b1'})[lv]);render();const n=Q('#home .lvpill button.on');n&&n.focus()}});
     if(PG)PG.decorate(Q('#home'));

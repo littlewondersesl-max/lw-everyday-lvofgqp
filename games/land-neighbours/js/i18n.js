@@ -72,15 +72,22 @@ const STORAGE_KEY = "ln-lang";
 const known = new Set(LANGS.map((l) => l.id));
 
 function readStored() {
+  let own = { main: "en", sub: null };
   try {
     const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || "");
     const main = known.has(raw.main) ? raw.main : "en";
     let sub = known.has(raw.sub) ? raw.sub : null;
     if (sub === main) sub = null;
-    return { main, sub };
-  } catch {
-    return { main: "en", sub: null };
+    own = { main, sub };
+  } catch {}
+  // the app-wide EN / EN+中文 setting (js/lang.js) decides whether Chinese is shown
+  const lw = window.LWLang;
+  if (lw) {
+    if (lw.zh) { if (own.main !== "zh" && own.sub !== "zh") own = { main: own.main, sub: "zh" }; }
+    else if (own.sub === "zh") own = { main: own.main, sub: null };
+    else if (own.main === "zh") own = { main: "en", sub: null };
   }
+  return own;
 }
 
 let state = readStored();
@@ -109,8 +116,11 @@ export function setLang(main, sub) {
   if (nextSub === nextMain) nextSub = null;
   state = { main: nextMain, sub: nextSub };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  const lw = window.LWLang;
+  if (lw) { const zh = state.main === "zh" || state.sub === "zh"; if (zh !== lw.zh) lw.set(zh ? "zh" : "en"); }
   changed();
 }
+if (window.LWLang) window.LWLang.on(() => { const n = readStored(); if (n.main !== state.main || n.sub !== state.sub) { state = n; try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {} changed(); } });
 
 export function pick(row, vars) {
   const dict = typeof row === "string" ? UI[row] : row;

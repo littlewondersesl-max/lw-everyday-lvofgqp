@@ -93,7 +93,7 @@ body.reading .wr-list{display:none}body.reading .wr-play{display:flex}
 @media (max-height:520px) and (orientation:landscape){.wr-stage{padding-bottom:116px}.wr-strip{height:56px}.wr-play{min-height:0;padding:6px;gap:6px}.wr-stage{min-height:150px}.wr-bar .tt{font-size:16px}.wr-btn{padding:6px 14px;font-size:15px;min-height:38px}.wr-ctl{padding:6px 10px}.wr-cd .n{font-size:min(50vh,40vw)}.wr-end p{font-size:18px}.wr-end{gap:6px}}
 @media (prefers-reduced-motion:reduce){.wr-cd .n{animation:none}.wr-t{transition:none}}
 .wr-stage:fullscreen{border-radius:0}
-</style></head>
+.wr-zhfull{margin-top:12px;text-align:left}.wr-zhfull .lwzh{font-size:clamp(16px,2.2vw,22px);line-height:1.75;font-weight:700;color:#3b4a73;background:#eef6ff;border-radius:14px;padding:10px 14px}.wr-end .wr-res{max-height:none}</style></head>
 <body>
 <header class="top"><a class="brand" href="../../index.html"><img src="../../img/logo.png" alt="Little Wonders"><span>Little Wonders<small>Word-by-Word Reader</small></span></a>
 <nav class="menu" style="margin-left:auto"><a class="ddb" style="text-decoration:none" href="../../index.html#stories">← Back to the app</a></nav></header>
@@ -107,9 +107,9 @@ body.reading .wr-list{display:none}body.reading .wr-play{display:flex}
  <div class="wr-bar"><button class="wr-btn alt" id="back">← Back to list</button><div class="tt" id="ttl"></div><button class="wr-btn alt" id="fs" aria-label="Full screen">⛶<span class="fsl"> Full screen</span></button></div>
  <div class="wr-stage" id="stage">
   <div class="wr-prog" id="bar"></div>
-  <div class="wr-word" id="word" role="status" aria-live="off">&nbsp;</div>
+  <div class="wr-word" id="word" data-lw-skip role="status" aria-live="off">&nbsp;</div>
   <div class="wr-pause">⏸ Paused</div>
-  <div class="wr-mk" id="mk"><div class="wr-mkb"><button type="button" class="g" data-m="g" title="Q: word good" aria-label="Word good (Q)">✓ <kbd>Q</kbd></button><button type="button" class="y" data-m="y" title="W: needs work" aria-label="Word needs work (W)">~ <kbd>W</kbd></button><button type="button" class="r" data-m="r" title="E: not said" aria-label="Word not said (E)">✕ <kbd>E</kbd></button></div><div class="wr-strip" id="strip"><div class="wr-track" id="track"></div></div></div>
+  <div class="wr-mk" id="mk"><div class="wr-mkb"><button type="button" class="g" data-m="g" title="Q: word good" aria-label="Word good (Q)">✓ <kbd>Q</kbd></button><button type="button" class="y" data-m="y" title="W: needs work" aria-label="Word needs work (W)">~ <kbd>W</kbd></button><button type="button" class="r" data-m="r" title="E: not said" aria-label="Word not said (E)">✕ <kbd>E</kbd></button></div><div class="wr-strip" id="strip" data-lw-skip><div class="wr-track" id="track"></div></div></div>
   <div class="wr-cd" id="cd"><div class="n" id="cdn">5</div><div class="g">Get ready…</div></div>
   <div class="wr-end" id="end"><h3 id="endh">Well done!</h3><div class="wr-res" id="res"></div><div class="row"><button class="wr-btn go" id="again">↻ Play again</button><button class="wr-btn alt" id="next">Next story →</button><button class="wr-btn alt" id="back2">Back to list</button></div></div>
  </div>
@@ -117,12 +117,12 @@ body.reading .wr-list{display:none}body.reading .wr-play{display:flex}
   <button class="wr-btn go" id="pp">⏸ Pause</button>
   <button class="wr-btn alt" id="restart">↻ Restart</button>
   <label class="wr-sl"><span>Speed</span><input type="range" id="spd" min="30" max="300" step="5" value="60" aria-label="Speed in words per minute"><output id="spdv" for="spd">60 wpm</output></label>
-  <div class="wr-cnt" id="cnt"></div>
+  <div class="wr-cnt" id="cnt" data-lw-skip></div>
  </div>
 </section>
 </main>
 <footer class="foot">Little Wonders · Word-by-Word Reader · Space = pause / play</footer>
-<script src="texts.js"></script>
+<script src="../../js/lang.js"></script><script src="texts.js"></script><script src="texts-zh.js"></script><script src="../../js/i18n/word-reader.js"></script>
 <script>
 (function(){
 const T=window.WR_TEXTS,LV=['A1','A2','B1'],CLS={A1:'L1',A2:'L2',B1:'L3'};
@@ -241,11 +241,14 @@ function updateRes(){
   const n=words.length,cnt={g:0,y:0,r:0,'':0};marks.forEach(m=>cnt[m||'']++);
   const lst=m=>{const u=[];words.forEach((w,i)=>{if(marks[i]===m){const c=w.replace(/^[^A-Za-z0-9']+|[^A-Za-z0-9']+$/g,'');if(c&&!u.includes(c))u.push(c)}});return u};
   const pct=Math.round(cnt.g/n*100),yl=lst('y'),rl=lst('r');
-  $('rsScore').innerHTML=`<b>${cnt.g}</b> of ${n} words said correctly (${pct}%)`;
+  $('rsScore').innerHTML=`<b>${cnt.g}</b> of ${n} words said correctly (${pct}%)`;$('rsScore').setAttribute('data-zh',`${cnt.g} / ${n} 个词读对了（${pct}%）`);
   $('rsLists').innerHTML=`<div class="ly"><h4>Needs work (${cnt.y})</h4>${yl.length?esc(yl.join(', ')):'<em>None</em>'}</div><div class="lr"><h4>Not said (${cnt.r})</h4>${rl.length?esc(rl.join(', ')):'<em>None</em>'}</div>`;
+  $('rsLegend').setAttribute('data-zh',`绿色 = 读得好 · 黄色 = 需要练习 · 红色 = 没读出来 · 没有颜色 = 没标记${cnt['']?'（'+cnt['']+' 个词）':''}。点一下任何一个词，可以改变它的颜色（绿 → 黄 → 红 → 无），总数会跟着更新。`);
   $('rsLegend').innerHTML=`Green = good · Yellow = needs work · Red = not said · No colour = not marked${cnt['']?' ('+cnt['']+' words)':''}<br>Tap any word to fix its colour (green → yellow → red → none). The totals update.`;
 }
 $('res').addEventListener('click',e=>{const t=e.target.closest('#rsPara span[data-i]');if(!t||phase!=='end')return;const i=+t.dataset.i;marks[i]=NEXTM[marks[i]||''];t.className=marks[i];updateRes()});
+// full Chinese translation of the story (only drawn while EN+中文 is on; js/lang.js adds / removes the line)
+function zhFull(){const z=window.WR_ZH&&WR_ZH[lv]&&WR_ZH[lv][idx];return z?`<div class="wr-zhfull" data-zh="${esc(z[1])}"></div>`:''}
 function finish(){
   clear();clearTimeout(tailT);phase='end';paused=false;
   stage.classList.remove('mk-on');stage.classList.add('res');
@@ -254,10 +257,10 @@ function finish(){
   let h;
   if(!used){
     $('endh').textContent='Well done!';
-    h=`<p>${esc(T[lv].items[idx][1])}</p>`;
+    h=`<p>${esc(T[lv].items[idx][1])}</p>${zhFull()}`;
   }else{
     $('endh').textContent='Results';
-    h=`<div class="wr-score" id="rsScore"></div><div class="wr-lists" id="rsLists"></div><p id="rsPara">${para}</p><div class="wr-legend" id="rsLegend"></div>`;
+    h=`<div class="wr-score" id="rsScore"></div><div class="wr-lists" id="rsLists"></div><p id="rsPara">${para}</p><div class="wr-legend" id="rsLegend"></div>${zhFull()}`;
   }
   $('res').innerHTML=h;
   if(used)updateRes();

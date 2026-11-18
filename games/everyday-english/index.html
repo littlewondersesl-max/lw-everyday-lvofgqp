@@ -34,8 +34,10 @@ main.game .choices button img{aspect-ratio:auto;height:min(24vh,28vw);object-fit
 main.game .choices button span{padding:3px;font-size:clamp(13px,2.2vh,17px)}
 main.game .msg{justify-content:center;margin-top:6px;font-size:clamp(14px,2.4vh,20px);min-height:2em}
 main.game .btn{padding:6px 16px;font-size:clamp(14px,2.2vh,18px)}
+@media(max-width:520px){html.lw-has .top{padding-top:44px}}
+@media(min-width:521px){html.lw-has .top{padding-top:0}}
 </style></head><body><main id="app"></main>
-<script src="../../js/progress.js"></script><script src="games.js"></script>
+<script src="../../js/lang.js"></script><script src="../../js/i18n/everyday-english.js"></script><script src="../../js/progress.js"></script><script src="games.js"></script>
 <script>
 const G=window.EE_GAMES,app=document.getElementById('app');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));

@@ -16,9 +16,9 @@ nav{max-width:1100px;margin:10px auto;padding:0 16px;display:flex;gap:10px;align
 nav button{font:700 17px Nunito;padding:10px 18px;border-radius:999px;border:2px solid #e8b77a;background:transparent;color:#f3e9da;cursor:pointer}
 nav button:disabled{opacity:.35}#count{margin-left:auto;font-weight:700;color:#cdbca5}
 #script{max-width:1100px;margin:6px auto 30px;padding:0 16px 0 40px;color:#cdbca5}#script li{margin:4px 0;cursor:pointer}#script li.cur{color:#fff;font-weight:800}
-</style></head><body><header><h1>A2 - What are you going to do today?</h1><span style="display:flex;align-items:center;gap:12px"><a href="../">All lessons</a><span data-tc-slot style="--tcs-size:40px;--tcs-radius:999px;--tcs-bg:transparent;--tcs-bg-hover:rgba(232,183,122,.2);--tcs-color:#e8b77a;--tcs-border:2px solid #e8b77a;--tcs-shadow:none;--tcs-icon:20px"></span></span></header>
+</style></head><body><header class="lw-hdr lw-hdr-s"><h1>A2 - What are you going to do today?</h1><span style="display:flex;align-items:center;gap:12px"><a href="../">All lessons</a><span data-tc-slot style="--tcs-size:40px;--tcs-radius:999px;--tcs-bg:transparent;--tcs-bg-hover:rgba(232,183,122,.2);--tcs-color:#e8b77a;--tcs-border:2px solid #e8b77a;--tcs-shadow:none;--tcs-icon:20px"></span></span></header>
 <div id="stage"><video id="v" playsinline preload="metadata" poster="media/a2_poster.jpg" src="media/a2_dialogue.mp4"></video>
-<div id="bub"><span id="txt"></span></div>
+<div id="bub" data-lw-skip><span id="txt"></span></div>
 <button id="next" aria-label="Next line"><svg viewBox="0 0 24 24"><path d="M8 4l9 8-9 8" fill="none" stroke="#221e28" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 <div id="start">Tap to start</div></div>
 <nav><button id="back">Back</button><button id="replay">Replay</button><button id="nx">Next</button><span id="count"></span></nav>
@@ -47,5 +47,5 @@ document.getElementById('back').onclick=back;document.getElementById('replay').o
 document.querySelectorAll('#script li').forEach(e=>e.onclick=()=>go(+e.dataset.i));
 document.addEventListener('keydown',e=>{if(e.code=='Space'||e.key=='ArrowRight'){e.preventDefault();next()}else if(e.key=='ArrowLeft'){e.preventDefault();back()}});
 requestAnimationFrame(tick);
-</script><script src="../../../js/progress.js" data-id="lessons/conversations/a2" data-type="video"></script><script>(function(){const v=document.getElementById('v'),id='lessons/conversations/a2';let d=false;const f=()=>{if(!d){d=true;LWProgress.watched(id)}};v.addEventListener('ended',f);const sn={};v.addEventListener('timeupdate',()=>{if(typeof C!=='undefined'){const t=v.currentTime,j=cutAt(t);if(t>=C[j].off&&!sn[j]){sn[j]=1;try{LWProgress.unit(id,'l'+(j+1))}catch(e){}}if(t>=C[C.length-1].off)f()}})})()</script>
+</script><script src="../../../js/lang.js"></script><script src="../../../js/i18n/conversations.js"></script><script src="../../../js/progress.js" data-id="lessons/conversations/a2" data-type="video"></script><script>(function(){const v=document.getElementById('v'),id='lessons/conversations/a2';let d=false;const f=()=>{if(!d){d=true;LWProgress.watched(id)}};v.addEventListener('ended',f);const sn={};v.addEventListener('timeupdate',()=>{if(typeof C!=='undefined'){const t=v.currentTime,j=cutAt(t);if(t>=C[j].off&&!sn[j]){sn[j]=1;try{LWProgress.unit(id,'l'+(j+1))}catch(e){}}if(t>=C[C.length-1].off)f()}})})()</script>
 <script src="../../../js/teachers-corner.js"></script></body></html>

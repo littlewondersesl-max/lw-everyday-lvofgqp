@@ -1035,3 +1035,19 @@ button:focus-visible {
   .lib-top { flex-wrap: wrap; }
   .book-shelf { overflow-x: auto; }
 }
+
+/* shared EN / EN+中文 toggle (js/lang.js) sits fixed top-right: keep header controls clear of it */
+html.lw-has .lib-top, html.lw-has .book-top { padding-right: 178px; }
+html.lw-has .book-top { padding-top: 0; }
+@media (max-width: 700px) {
+  html.lw-has .lib-top, html.lw-has .book-top { padding-right: 0; padding-top: 44px; }
+  html.lw-has .lib-top { padding-top: 50px; }
+}
+@media (max-width: 700px) {
+  html.lw-has .book-top { gap: 8px; width: 100%; box-sizing: border-box; }
+  html.lw-has .book-heading { flex: 1 1 0; min-width: 0; }
+  html.lw-has .book-heading h2 { font-size: 18px; }
+  html.lw-has .book-top-right { gap: 6px; flex-shrink: 0; }
+  html.lw-has .book-top .chip-btn, html.lw-has .wordcard-btn { padding-left: 10px; padding-right: 10px; }
+}
+html.lw-has .book-room { grid-template-columns: minmax(0, 1fr); }

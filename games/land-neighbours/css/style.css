@@ -806,3 +806,7 @@ button { font: inherit; cursor: pointer; }
   .weld-core, #card-svg .comet, .ghost { animation: none; }
   .ghost { opacity: 0.92; }
 }
+
+/* the app-wide EN / EN+中文 switch (js/lang.js) replaces this page's own language button; the Teachers' Corner button moves just below it */
+#lang-toggle, #lang-panel { display: none !important; }
+#lang { top: 54px; }

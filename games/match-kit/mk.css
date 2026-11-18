@@ -118,3 +118,6 @@ body{font-family:"Baloo 2","Nunito","Arial Rounded MT Bold","Trebuchet MS",syste
 .bin.ovl .chip{width:calc(var(--cs)*1.45);height:calc(var(--cs)*1.45)}.bin.ovl .chip.txt{width:auto;height:auto;padding:4px 10px}
 .pc .im .tx{font-size:clamp(11px,2.2vh,18px);padding:2px 2px;overflow-wrap:normal;word-break:normal}
 .bin .im .tx{font-size:clamp(12px,2.5vh,21px);padding:2px 3px;overflow-wrap:normal}
+@media (max-width:1230px){html.lw-has body{padding-top:52px}}
+@media(max-width:520px){.qcard .pair.parts{max-width:100%;gap:6px}.qcard .pair.parts>div:not(.arr):not(.qm){flex:1 1 0;min-width:0}.qcard .pair.parts .im{width:100%;height:auto;max-height:var(--qh);aspect-ratio:1.2}.qcard .pair.parts .im .tx{font-size:clamp(13px,4.4vw,20px);overflow-wrap:anywhere}.qcard .pair.parts .lb{font-size:13px}.qcard .pair.parts .arr{font-size:22px}.qcard .pair.parts .qm{font-size:40px}}
+@media (min-width:1231px){html.lw-has #tcs{position:relative;top:14px}}
