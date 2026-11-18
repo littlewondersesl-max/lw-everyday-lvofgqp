@@ -53,19 +53,22 @@ body.reading .wr-list{display:none}body.reading .wr-play{display:flex}
 .wr-sl input{flex:1;height:36px;accent-color:var(--c);min-width:100px}
 .wr-sl output{min-width:96px;text-align:center;background:var(--bgc);border-radius:12px;padding:6px 8px;font-weight:900;font-size:20px;color:var(--ink)}
 .wr-cnt{font-weight:800;color:#6b7390;min-width:84px;text-align:right}
-.wr-stage{padding-bottom:104px}
-.wr-mk{position:absolute;left:12px;bottom:10px;display:none;flex-direction:column;gap:6px;width:min(360px,calc(100% - 150px));min-width:210px}
+.wr-stage{padding-bottom:152px}
+.wr-mk{position:absolute;left:12px;bottom:10px;display:none;flex-direction:column;gap:6px;width:min(400px,calc(100% - 150px));min-width:210px}
 .wr-stage.mk-on .wr-mk{display:flex}
 .wr-mkb{display:flex;gap:6px}
 .wr-mkb button{border:0;border-radius:12px;height:34px;min-width:58px;padding:0 10px;font:inherit;font-weight:900;font-size:14px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;gap:5px;opacity:.92;touch-action:manipulation}
 .wr-mkb button:active{transform:scale(.93)}
 .wr-mkb button kbd{font:inherit;font-size:11px;background:rgba(255,255,255,.35);border-radius:5px;padding:0 5px}
 .wr-mkb .g{background:#2e9e5b}.wr-mkb .y{background:#f0b400;color:#3a2c00}.wr-mkb .y kbd{background:rgba(0,0,0,.12)}.wr-mkb .r{background:#e0453a}
-.wr-strip{position:relative;height:30px;overflow:hidden;background:#f3f1f8;border-radius:10px;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
-.wr-track{position:absolute;left:0;top:0;height:100%;display:flex;align-items:center;gap:4px;padding:0 6px;white-space:nowrap;transition:transform .25s ease-out}
-.wr-track span{font-size:15px;font-weight:800;padding:2px 7px;border-radius:7px;color:#4a5272;background:transparent}
+.wr-strip{position:relative;height:86px;overflow:hidden;background:#f3f1f8;border-radius:10px}
+.wr-track{text-align:left;position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:5px 7px 6px;line-height:1.75;font-size:15px;font-weight:800;color:#4a5272;scrollbar-width:thin;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.wr-track:empty::before{content:"Words appear here as they are read. Tap a word to change its colour.";font-size:12.5px;font-weight:700;color:#8a90aa;line-height:1.4;display:block}
+.wr-track span{padding:2px 5px;border-radius:7px;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.wr-track span:hover{background:#e3def0}
 .wr-track span.g{background:#2e9e5b;color:#fff}.wr-track span.y{background:#f0b400;color:#3a2c00}.wr-track span.r{background:#e0453a;color:#fff}
 .wr-track span.cur{box-shadow:inset 0 -3px 0 #1f2540}.wr-track span.nx{outline:2px dashed var(--c);outline-offset:0}
+.wr-res p span[data-i]{cursor:pointer}.wr-res p span[data-i]:hover{outline:2px solid rgba(31,37,64,.35)}
 .wr-res{width:100%;max-width:900px;display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center}
 .wr-score{font-weight:900;color:#1f2540;font-size:clamp(20px,3.4vw,30px)}.wr-score b{color:#2e9e5b;font-size:1.5em}
 .wr-lists{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
@@ -87,7 +90,7 @@ body.reading .wr-list{display:none}body.reading .wr-play{display:flex}
  .wr-ctl{padding:10px}.wr-sl{order:3;flex:1 1 100%}.wr-cnt{margin-left:auto}
  .wr-stage{min-height:420px}.wr-end p{font-size:18px}.wr-t{font-size:17px}.wr-t i{display:none}
 }
-@media (max-height:520px) and (orientation:landscape){.wr-play{min-height:0;padding:6px;gap:6px}.wr-stage{min-height:150px}.wr-bar .tt{font-size:16px}.wr-btn{padding:6px 14px;font-size:15px;min-height:38px}.wr-ctl{padding:6px 10px}.wr-cd .n{font-size:min(50vh,40vw)}.wr-end p{font-size:18px}.wr-end{gap:6px}}
+@media (max-height:520px) and (orientation:landscape){.wr-stage{padding-bottom:116px}.wr-strip{height:56px}.wr-play{min-height:0;padding:6px;gap:6px}.wr-stage{min-height:150px}.wr-bar .tt{font-size:16px}.wr-btn{padding:6px 14px;font-size:15px;min-height:38px}.wr-ctl{padding:6px 10px}.wr-cd .n{font-size:min(50vh,40vw)}.wr-end p{font-size:18px}.wr-end{gap:6px}}
 @media (prefers-reduced-motion:reduce){.wr-cd .n{animation:none}.wr-t{transition:none}}
 .wr-stage:fullscreen{border-radius:0}
 </style></head>
@@ -128,29 +131,45 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const wc=t=>t.trim().split(/\s+/).length;
 $('cats').innerHTML=LV.map(l=>`<section class="wr-cat ${CLS[l]}"><h2>${T[l].label}<small>${esc(T[l].sub)}</small></h2><p class="sp">Starts at ${T[l].wpm} words per minute</p><ol>${T[l].items.map((it,i)=>`<li><button class="wr-t" data-l="${l}" data-i="${i}"><b>${i+1}</b><span>${esc(it[0])}</span><i>${wc(it[1])} words</i></button></li>`).join('')}</ol></section>`).join('');
 let lv='A1',idx=0,words=[],pos=0,timer=0,phase='list',paused=false,cdn=5;
-let marks=[],mk=0,sents=[],strSent=-1,sentOf=[],tailT=0,used=false;
+let marks=[],mk=0,sents=[],strSent='',sentOf=[],tailT=0,used=false;
 const track=$('track'),strip=$('strip');
 function buildSents(){sents=[];sentOf=[];let st=0;words.forEach((w,i)=>{sentOf[i]=sents.length;if(/[.!?…]["”')]*$/.test(w)||i===words.length-1){sents.push([st,i]);st=i+1}})}
+const NEXTM={'':'g',g:'y',y:'r',r:''};
+let holdScroll=0,builtN=0;
+function skipMarked(){while(mk<words.length&&marks[mk])mk++}
 function renderStrip(){
-  // The strip shows the sentence being marked (sentence by sentence). It slides in step with the main display word.
-  const mi=Math.min(mk,words.length-1),si=sentOf[mi];
-  if(si!==strSent){strSent=si;const [a,b]=sents[si];track.innerHTML='';for(let i=a;i<=b;i++){const e=document.createElement('span');e.textContent=words[i];e.dataset.i=i;track.appendChild(e)}}
-  const [a,b]=sents[si],disp=pos-1;
-  [...track.children].forEach(e=>{const i=+e.dataset.i;e.className=(marks[i]||'')+(i===disp?' cur':'')+(i===mk&&mk<words.length?' nx':'')});
-  const focus=(disp>=a&&disp<=b)?disp:Math.min(Math.max(mk,a),b),el=track.children[focus-a];
-  if(!el)return;
-  const cw=strip.clientWidth,tw=track.scrollWidth;
-  let x=cw/2-(el.offsetLeft+el.offsetWidth/2);
-  x=tw<=cw?0:Math.max(cw-tw,Math.min(0,x));
-  track.style.transform='translateX('+x+'px)';
+  // The corner block builds up as the paragraph is read: finished sentences stay and scroll up inside the block.
+  const n=words.length,shown=Math.min(n,Math.max(pos,mk));
+  if(strSent!==lv+':'+idx||builtN>shown){track.innerHTML='';builtN=0;strSent=lv+':'+idx}
+  while(builtN<shown){const e=document.createElement('span');e.textContent=words[builtN];e.dataset.i=builtN;track.appendChild(e);track.appendChild(document.createTextNode(' '));builtN++}
+  const disp=pos-1;
+  for(let k=0;k<builtN;k++){const e=track.children[k];if(!e)break;e.className=(marks[k]||'')+(k===disp?' cur':'')+(k===mk&&mk<n?' nx':'')}
+  const focus=Math.min(Math.max(disp>=0?disp:mk,0),builtN-1),el=track.children[focus];
+  if(!el||Date.now()<holdScroll)return;
+  const want=el.offsetTop+el.offsetHeight-track.clientHeight+6;
+  const top=Math.max(0,want);
+  if(Math.abs(track.scrollTop-top)>2)track.scrollTo({top,behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});
 }
 function mark(m){
   if(phase!=='read'&&phase!=='tail')return;
   if(mk>=words.length)return;
-  marks[mk]=m;mk++;used=true;
+  marks[mk]=m;mk++;skipMarked();used=true;
   renderStrip();
   if(phase==='tail'&&mk>=words.length){clearTimeout(tailT);tailT=setTimeout(finish,700)}
 }
+// Teacher corrections: click/tap a word in the corner block (or on the results page) to cycle its mark.
+// green -> yellow -> red -> unmarked -> green. Does not pause the reading and does not move the Q/W/E pointer back.
+function cycleWord(i){
+  if(!(i>=0&&i<words.length))return;
+  marks[i]=NEXTM[marks[i]||''];used=true;
+  if(phase==='read'||phase==='tail'||phase==='count'){
+    const was=mk;skipMarked();renderStrip();
+    if(phase==='tail'&&mk>=words.length&&was<words.length){clearTimeout(tailT);tailT=setTimeout(finish,700)}
+  }
+}
+track.addEventListener('mousedown',e=>e.preventDefault());
+track.addEventListener('click',e=>{const t=e.target.closest('span[data-i]');if(!t)return;e.stopPropagation();cycleWord(+t.dataset.i)});
+['wheel','touchstart','pointerdown'].forEach(ev=>track.addEventListener(ev,()=>{holdScroll=Date.now()+3500},{passive:true}));
 const MK={q:'g',w:'y',e:'r'};
 document.querySelectorAll('.wr-mkb button').forEach(b=>{b.addEventListener('mousedown',e=>e.preventDefault());b.addEventListener('click',()=>mark(b.dataset.m))});
 const word=$('word'),stage=$('stage'),spd=$('spd');
@@ -164,7 +183,7 @@ function delay(w){
   return d;
 }
 function fit(){
-  const W=stage.clientWidth-32,H=stage.clientHeight-(stage.classList.contains('mk-on')?104:0);
+  const W=stage.clientWidth-32,H=stage.clientHeight-(stage.classList.contains('mk-on')?$('mk').offsetHeight+22:0);
   let size=Math.max(28,Math.min(H*0.42,W*0.21,190));
   word.style.fontSize=size+'px';
   const w=word.scrollWidth||word.getBoundingClientRect().width;
@@ -191,7 +210,7 @@ function open(l,i,push){
   start();
 }
 function start(){
-  clear();clearTimeout(tailT);paused=false;pos=0;phase='count';cdn=5;marks=new Array(words.length).fill('');mk=0;used=false;strSent=-1;buildSents();stage.classList.remove('res','mk-on');
+  clear();clearTimeout(tailT);paused=false;pos=0;phase='count';cdn=5;marks=new Array(words.length).fill('');mk=0;used=false;strSent='';builtN=0;holdScroll=0;track.innerHTML='';buildSents();stage.classList.remove('res','mk-on');
   $('end').classList.remove('on');word.textContent='\u00a0';$('bar').style.width='0';
   $('cnt').textContent='';
   tickCount(true);ui();
@@ -218,25 +237,30 @@ function tickWord(){
   pos++;renderStrip();
   timer=setTimeout(tickWord,delay(w));
 }
+function updateRes(){
+  const n=words.length,cnt={g:0,y:0,r:0,'':0};marks.forEach(m=>cnt[m||'']++);
+  const lst=m=>{const u=[];words.forEach((w,i)=>{if(marks[i]===m){const c=w.replace(/^[^A-Za-z0-9']+|[^A-Za-z0-9']+$/g,'');if(c&&!u.includes(c))u.push(c)}});return u};
+  const pct=Math.round(cnt.g/n*100),yl=lst('y'),rl=lst('r');
+  $('rsScore').innerHTML=`<b>${cnt.g}</b> of ${n} words said correctly (${pct}%)`;
+  $('rsLists').innerHTML=`<div class="ly"><h4>Needs work (${cnt.y})</h4>${yl.length?esc(yl.join(', ')):'<em>None</em>'}</div><div class="lr"><h4>Not said (${cnt.r})</h4>${rl.length?esc(rl.join(', ')):'<em>None</em>'}</div>`;
+  $('rsLegend').innerHTML=`Green = good · Yellow = needs work · Red = not said · No colour = not marked${cnt['']?' ('+cnt['']+' words)':''}<br>Tap any word to fix its colour (green → yellow → red → none). The totals update.`;
+}
+$('res').addEventListener('click',e=>{const t=e.target.closest('#rsPara span[data-i]');if(!t||phase!=='end')return;const i=+t.dataset.i;marks[i]=NEXTM[marks[i]||''];t.className=marks[i];updateRes()});
 function finish(){
   clear();clearTimeout(tailT);phase='end';paused=false;
   stage.classList.remove('mk-on');stage.classList.add('res');
-  const n=words.length,cnt={g:0,y:0,r:0,'':0};marks.forEach(m=>cnt[m||'']++);
-  const lst=m=>{const u=[];words.forEach((w,i)=>{if(marks[i]===m){const c=w.replace(/^[^A-Za-z0-9']+|[^A-Za-z0-9']+$/g,'');if(c&&!u.includes(c))u.push(c)}});return u};
-  const para=words.map((w,i)=>`<span class="${marks[i]}">${esc(w)}</span>`).join(' ');
+  const n=words.length;
+  const para=words.map((w,i)=>`<span data-i="${i}" class="${marks[i]}">${esc(w)}</span>`).join(' ');
   let h;
   if(!used){
     $('endh').textContent='Well done!';
     h=`<p>${esc(T[lv].items[idx][1])}</p>`;
   }else{
     $('endh').textContent='Results';
-    const pct=Math.round(cnt.g/n*100),yl=lst('y'),rl=lst('r');
-    h=`<div class="wr-score"><b>${cnt.g}</b> of ${n} words said correctly (${pct}%)</div>
-    <div class="wr-lists"><div class="ly"><h4>Needs work (${cnt.y})</h4>${yl.length?esc(yl.join(', ')):'<em>None</em>'}</div><div class="lr"><h4>Not said (${cnt.r})</h4>${rl.length?esc(rl.join(', ')):'<em>None</em>'}</div></div>
-    <p>${para}</p>
-    <div class="wr-legend">Green = good · Yellow = needs work · Red = not said · No colour = not marked${cnt['']?' ('+cnt['']+' words)':''}</div>`;
+    h=`<div class="wr-score" id="rsScore"></div><div class="wr-lists" id="rsLists"></div><p id="rsPara">${para}</p><div class="wr-legend" id="rsLegend"></div>`;
   }
   $('res').innerHTML=h;
+  if(used)updateRes();
   $('next').style.display=idx<T[lv].items.length-1?'':'none';
   $('end').classList.add('on');
   ui();$('again').focus({preventScroll:true});
