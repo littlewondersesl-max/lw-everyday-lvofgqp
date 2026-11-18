@@ -53,7 +53,34 @@ body.reading .wr-list{display:none}body.reading .wr-play{display:flex}
 .wr-sl input{flex:1;height:36px;accent-color:var(--c);min-width:100px}
 .wr-sl output{min-width:96px;text-align:center;background:var(--bgc);border-radius:12px;padding:6px 8px;font-weight:900;font-size:20px;color:var(--ink)}
 .wr-cnt{font-weight:800;color:#6b7390;min-width:84px;text-align:right}
+.wr-stage{padding-bottom:104px}
+.wr-mk{position:absolute;left:12px;bottom:10px;display:none;flex-direction:column;gap:6px;width:min(360px,calc(100% - 150px));min-width:210px}
+.wr-stage.mk-on .wr-mk{display:flex}
+.wr-mkb{display:flex;gap:6px}
+.wr-mkb button{border:0;border-radius:12px;height:34px;min-width:58px;padding:0 10px;font:inherit;font-weight:900;font-size:14px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;gap:5px;opacity:.92;touch-action:manipulation}
+.wr-mkb button:active{transform:scale(.93)}
+.wr-mkb button kbd{font:inherit;font-size:11px;background:rgba(255,255,255,.35);border-radius:5px;padding:0 5px}
+.wr-mkb .g{background:#2e9e5b}.wr-mkb .y{background:#f0b400;color:#3a2c00}.wr-mkb .y kbd{background:rgba(0,0,0,.12)}.wr-mkb .r{background:#e0453a}
+.wr-strip{position:relative;height:30px;overflow:hidden;background:#f3f1f8;border-radius:10px;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
+.wr-track{position:absolute;left:0;top:0;height:100%;display:flex;align-items:center;gap:4px;padding:0 6px;white-space:nowrap;transition:transform .25s ease-out}
+.wr-track span{font-size:15px;font-weight:800;padding:2px 7px;border-radius:7px;color:#4a5272;background:transparent}
+.wr-track span.g{background:#2e9e5b;color:#fff}.wr-track span.y{background:#f0b400;color:#3a2c00}.wr-track span.r{background:#e0453a;color:#fff}
+.wr-track span.cur{box-shadow:inset 0 -3px 0 #1f2540}.wr-track span.nx{outline:2px dashed var(--c);outline-offset:0}
+.wr-res{width:100%;max-width:900px;display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center}
+.wr-score{font-weight:900;color:#1f2540;font-size:clamp(20px,3.4vw,30px)}.wr-score b{color:#2e9e5b;font-size:1.5em}
+.wr-lists{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.wr-lists>div{border-radius:16px;padding:10px 12px;text-align:left;font-weight:800;font-size:clamp(15px,2.2vw,19px);color:#1f2540}
+.wr-lists h4{margin:0 0 4px;font-size:.9em}
+.wr-lists .ly{background:#fff6d6}.wr-lists .lr{background:#fde3e0}
+.wr-lists em{font-style:normal;font-weight:700;color:#6b7390}
+.wr-end .wr-res p{font-size:clamp(18px,2.8vw,28px);line-height:1.9}
+.wr-res p span{border-radius:7px;padding:1px 5px;margin:0 1px}
+.wr-res p span.g{background:#2e9e5b;color:#fff}.wr-res p span.y{background:#f0b400;color:#3a2c00}.wr-res p span.r{background:#e0453a;color:#fff}
+.wr-legend{font-size:13px;color:#6b7390;font-weight:700}
+.wr-stage.res{align-items:flex-start;padding-bottom:12px}.wr-stage.res .wr-word,.wr-stage.res .wr-pause{display:none}
+.wr-stage.res .wr-end{position:relative;inset:auto;width:100%;min-height:100%}
 @media (max-width:640px){
+ .wr-lists{grid-template-columns:1fr}.wr-mk{width:calc(100% - 24px)}
  .fsl{display:none}.wr-bar .tt{order:3;flex:1 1 100%}
  .wr-cats{grid-template-columns:1fr}
  .wr-btn{padding:10px 16px;font-size:16px}.wr-ctl .wr-btn.go{flex:1;min-width:0}
@@ -79,8 +106,9 @@ body.reading .wr-list{display:none}body.reading .wr-play{display:flex}
   <div class="wr-prog" id="bar"></div>
   <div class="wr-word" id="word" role="status" aria-live="off">&nbsp;</div>
   <div class="wr-pause">⏸ Paused</div>
+  <div class="wr-mk" id="mk"><div class="wr-mkb"><button type="button" class="g" data-m="g" title="Q: word good" aria-label="Word good (Q)">✓ <kbd>Q</kbd></button><button type="button" class="y" data-m="y" title="W: needs work" aria-label="Word needs work (W)">~ <kbd>W</kbd></button><button type="button" class="r" data-m="r" title="E: not said" aria-label="Word not said (E)">✕ <kbd>E</kbd></button></div><div class="wr-strip" id="strip"><div class="wr-track" id="track"></div></div></div>
   <div class="wr-cd" id="cd"><div class="n" id="cdn">5</div><div class="g">Get ready…</div></div>
-  <div class="wr-end" id="end"><h3>Well done!</h3><p id="full"></p><div class="row"><button class="wr-btn go" id="again">↻ Play again</button><button class="wr-btn alt" id="next">Next story →</button><button class="wr-btn alt" id="back2">Back to list</button></div></div>
+  <div class="wr-end" id="end"><h3 id="endh">Well done!</h3><div class="wr-res" id="res"></div><div class="row"><button class="wr-btn go" id="again">↻ Play again</button><button class="wr-btn alt" id="next">Next story →</button><button class="wr-btn alt" id="back2">Back to list</button></div></div>
  </div>
  <div class="wr-ctl">
   <button class="wr-btn go" id="pp">⏸ Pause</button>
@@ -100,6 +128,31 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const wc=t=>t.trim().split(/\s+/).length;
 $('cats').innerHTML=LV.map(l=>`<section class="wr-cat ${CLS[l]}"><h2>${T[l].label}<small>${esc(T[l].sub)}</small></h2><p class="sp">Starts at ${T[l].wpm} words per minute</p><ol>${T[l].items.map((it,i)=>`<li><button class="wr-t" data-l="${l}" data-i="${i}"><b>${i+1}</b><span>${esc(it[0])}</span><i>${wc(it[1])} words</i></button></li>`).join('')}</ol></section>`).join('');
 let lv='A1',idx=0,words=[],pos=0,timer=0,phase='list',paused=false,cdn=5;
+let marks=[],mk=0,sents=[],strSent=-1,sentOf=[],tailT=0,used=false;
+const track=$('track'),strip=$('strip');
+function buildSents(){sents=[];sentOf=[];let st=0;words.forEach((w,i)=>{sentOf[i]=sents.length;if(/[.!?…]["”')]*$/.test(w)||i===words.length-1){sents.push([st,i]);st=i+1}})}
+function renderStrip(){
+  // The strip shows the sentence being marked (sentence by sentence). It slides in step with the main display word.
+  const mi=Math.min(mk,words.length-1),si=sentOf[mi];
+  if(si!==strSent){strSent=si;const [a,b]=sents[si];track.innerHTML='';for(let i=a;i<=b;i++){const e=document.createElement('span');e.textContent=words[i];e.dataset.i=i;track.appendChild(e)}}
+  const [a,b]=sents[si],disp=pos-1;
+  [...track.children].forEach(e=>{const i=+e.dataset.i;e.className=(marks[i]||'')+(i===disp?' cur':'')+(i===mk&&mk<words.length?' nx':'')});
+  const focus=(disp>=a&&disp<=b)?disp:Math.min(Math.max(mk,a),b),el=track.children[focus-a];
+  if(!el)return;
+  const cw=strip.clientWidth,tw=track.scrollWidth;
+  let x=cw/2-(el.offsetLeft+el.offsetWidth/2);
+  x=tw<=cw?0:Math.max(cw-tw,Math.min(0,x));
+  track.style.transform='translateX('+x+'px)';
+}
+function mark(m){
+  if(phase!=='read'&&phase!=='tail')return;
+  if(mk>=words.length)return;
+  marks[mk]=m;mk++;used=true;
+  renderStrip();
+  if(phase==='tail'&&mk>=words.length){clearTimeout(tailT);tailT=setTimeout(finish,700)}
+}
+const MK={q:'g',w:'y',e:'r'};
+document.querySelectorAll('.wr-mkb button').forEach(b=>{b.addEventListener('mousedown',e=>e.preventDefault());b.addEventListener('click',()=>mark(b.dataset.m))});
 const word=$('word'),stage=$('stage'),spd=$('spd');
 function wpm(){return +spd.value}
 function setSpeedLabel(){$('spdv').textContent=wpm()+' wpm'}
@@ -111,7 +164,7 @@ function delay(w){
   return d;
 }
 function fit(){
-  const W=stage.clientWidth-32,H=stage.clientHeight;
+  const W=stage.clientWidth-32,H=stage.clientHeight-(stage.classList.contains('mk-on')?104:0);
   let size=Math.max(28,Math.min(H*0.42,W*0.21,190));
   word.style.fontSize=size+'px';
   const w=word.scrollWidth||word.getBoundingClientRect().width;
@@ -138,7 +191,7 @@ function open(l,i,push){
   start();
 }
 function start(){
-  clear();paused=false;pos=0;phase='count';cdn=5;
+  clear();clearTimeout(tailT);paused=false;pos=0;phase='count';cdn=5;marks=new Array(words.length).fill('');mk=0;used=false;strSent=-1;buildSents();stage.classList.remove('res','mk-on');
   $('end').classList.remove('on');word.textContent='\u00a0';$('bar').style.width='0';
   $('cnt').textContent='';
   tickCount(true);ui();
@@ -151,23 +204,41 @@ function tickCount(first){
   timer=setTimeout(()=>{
     if(paused)return;
     cdn--;
-    if(cdn<1){cd.classList.remove('on');phase='read';tickWord()}else tickCount();
+    if(cdn<1){cd.classList.remove('on');phase='read';stage.classList.add('mk-on');renderStrip();tickWord()}else tickCount();
   },1000);
 }
 function tickWord(){
   if(paused||phase!=='read')return;
-  if(pos>=words.length){finish();return}
+  if(pos>=words.length){
+    if(used&&mk<words.length){phase='tail';clearTimeout(tailT);tailT=setTimeout(finish,6000);return}
+    finish();return}
   const w=words[pos];show(w);
   $('bar').style.width=((pos+1)/words.length*100)+'%';
   $('cnt').textContent=(pos+1)+' / '+words.length;
-  pos++;
+  pos++;renderStrip();
   timer=setTimeout(tickWord,delay(w));
 }
 function finish(){
-  clear();phase='end';paused=false;
-  $('full').textContent=T[lv].items[idx][1];
-  $('end').classList.add('on');
+  clear();clearTimeout(tailT);phase='end';paused=false;
+  stage.classList.remove('mk-on');stage.classList.add('res');
+  const n=words.length,cnt={g:0,y:0,r:0,'':0};marks.forEach(m=>cnt[m||'']++);
+  const lst=m=>{const u=[];words.forEach((w,i)=>{if(marks[i]===m){const c=w.replace(/^[^A-Za-z0-9']+|[^A-Za-z0-9']+$/g,'');if(c&&!u.includes(c))u.push(c)}});return u};
+  const para=words.map((w,i)=>`<span class="${marks[i]}">${esc(w)}</span>`).join(' ');
+  let h;
+  if(!used){
+    $('endh').textContent='Well done!';
+    h=`<p>${esc(T[lv].items[idx][1])}</p>`;
+  }else{
+    $('endh').textContent='Results';
+    const pct=Math.round(cnt.g/n*100),yl=lst('y'),rl=lst('r');
+    h=`<div class="wr-score"><b>${cnt.g}</b> of ${n} words said correctly (${pct}%)</div>
+    <div class="wr-lists"><div class="ly"><h4>Needs work (${cnt.y})</h4>${yl.length?esc(yl.join(', ')):'<em>None</em>'}</div><div class="lr"><h4>Not said (${cnt.r})</h4>${rl.length?esc(rl.join(', ')):'<em>None</em>'}</div></div>
+    <p>${para}</p>
+    <div class="wr-legend">Green = good · Yellow = needs work · Red = not said · No colour = not marked${cnt['']?' ('+cnt['']+' words)':''}</div>`;
+  }
+  $('res').innerHTML=h;
   $('next').style.display=idx<T[lv].items.length-1?'':'none';
+  $('end').classList.add('on');
   ui();$('again').focus({preventScroll:true});
 }
 function toggle(){
@@ -179,7 +250,7 @@ function toggle(){
   ui();
 }
 function toList(push){
-  clear();phase='list';paused=false;
+  clear();clearTimeout(tailT);phase='list';paused=false;stage.classList.remove('mk-on','res');
   document.body.classList.remove('reading');$('cd').classList.remove('on');$('end').classList.remove('on');
   if(document.fullscreenElement)document.exitFullscreen&&document.exitFullscreen();
   if(push!==false&&location.hash)history.pushState(null,'',location.pathname+location.search);
@@ -196,12 +267,14 @@ document.addEventListener('keydown',e=>{
   if(e.code==='Space'||e.key===' '){
     const t=e.target;
     e.preventDefault();if(phase==='end')start();else toggle();
+  }else if(!e.ctrlKey&&!e.metaKey&&!e.altKey&&MK[e.key.toLowerCase()]&&!e.repeat){
+    e.preventDefault();mark(MK[e.key.toLowerCase()]);
   }else if(e.key==='Escape'&&!document.fullscreenElement){toList()}
 });
 // buttons would also fire on Space keyup/click: stop that for the play button so Space is only handled once
 document.querySelectorAll('.wr-play button').forEach(b=>b.addEventListener('keyup',e=>{if(e.code==='Space')e.preventDefault()}));
 spd.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();e.stopPropagation();toggle()}});
-window.addEventListener('resize',()=>{if(phase==='read'||phase==='end'||paused)fit()});
+window.addEventListener('resize',()=>{if(phase==='read'||phase==='tail'||phase==='end'||paused)fit();if(phase==='read'||phase==='tail')renderStrip()});
 function route(){
   const m=/^#(A1|A2|B1)-(\d+)$/.exec(location.hash);
   if(m&&T[m[1]].items[+m[2]-1])open(m[1],+m[2]-1,false);else if(document.body.classList.contains('reading'))toList(false);
