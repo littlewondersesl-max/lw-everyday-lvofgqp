@@ -18,6 +18,7 @@
 | 8 | Chemistry Word Lab 2, teaser 1 | "I am a chemical change that gives off light and heat. A candle flame is one..." (answer reaction / combustion) | "I am what happens when substances change into new substances. Inside a firefly, I make light." (answer reaction) | The old clue also fitted "combustion" and "burning". |
 | 9 | Chemistry Word Lab 3 (rust), teaser 3 | answer "oxidation (or oxide / oxidize)" | "I am slow... We call me a chemical ... " (answer reaction) | "Oxidation" is not in the cool fact and "oxide" was the wrong part of speech for the clue. |
 | 10 | Chemistry Word Lab 4 | The page was only a stub (title line and word list). | Full page built from the book page: cool fact, teasers (mosquito, solvent, crystal), activity, speak | Content checked and correct. No facts changed. |
+| 12 | Biology: The heart and blood, glossary | "germs = tiny living things that can make you ill" | "germs = tiny things that can make you ill" | Same reason as #1: viruses are not usually counted as living. |
 | 11 | Chemistry Word Lab 1 to 3 | Word hunts | True or false / Fill in the blanks / Put in order (Lab 4: Match the words) | Pip asked for the hunt to be rare. |
 
 ## Checked and left unchanged
