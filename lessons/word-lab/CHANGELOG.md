@@ -79,3 +79,25 @@ Every statement, blank, order and match was checked against the cool fact or pla
 | 48 | History: The printing press | Put in order |
 | 49 | History: The Industrial Revolution | True or false |
 | 50 | History: The first steps on the Moon | Put in order |
+
+# Second full check (19 Nov 2026, afternoon)
+Every cool fact, teaser and activity on the 50 sheets and the 4 Chemistry Word Lab pages was read again; doubtful facts were re-checked on the web (mercury, Stone Age date, Everest, Nile, chrysalis, viruses, Apollo 11, 118 elements, Mendeleev 1869, 71% water, Olympics 776 BCE, Trajan 117 CE, 476 CE, Viking dates, Silk Road, Gutenberg 1440s, Antarctic desert, five oceans, onion/firefly chemistry). Vocabulary was graded against Oxford 3000/5000 and Cambridge A2/B1 lists; see `CEFR-AUDIT.md`.
+
+## Fixes (before -> after, reason)
+| # | Where | Before | After | Reason |
+|---|---|---|---|---|
+| 13 | Chemistry: Chemical reactions, teaser 1 | "I am a change that makes new substances. Burning wood is an example of me." | "Burning wood is an example of me. In me, substances turn into new substances. We call me a chemical ..." | More than one answer fitted (change, reaction); now one answer. |
+| 14 | Biology: Human skeleton, fact and teaser 1 | "spine ... made of small bones called vertebrae"; "I am your backbone" | "spine ... made of many small bones"; "Another name for me is the backbone" | Fact and teaser gave the same word as the answer; vertebrae was above level. |
+| 15 | History: First steps on the Moon, teaser 3 | "My name is Yuri." | "My first name is Yuri. Write my family name." | Ambiguous between Yuri and Gagarin. |
+| 16 | Geography: Continents and oceans, hunt/clue | "An ocean with the same name as a country in Asia." | "An ocean. Its name comes from the country of India." | Old clue could also fit other names; one answer now. |
+| 17 | Chemistry: Carbon, fill-in 6 | "Carbon is also in ____." (coal) | "Carbon is also in ____, a black rock that people burn." | Needed a clue so coal is the only answer. |
+| 18 | Chemistry: Acids and bases, odd one out row 2 | baking soda / soap / pH 10 / lemon juice | vinegar / lemon juice / baking soda / orange juice (odd one: baking soda) | "pH 10" was not a substance and the row depended on a number not in the fact. |
+| 19 | Chemistry: Metals, fact | "Mercury is the exception, because it is a liquid" | "Mercury is a well-known exception, because it is a liquid" | Not the only liquid metal (e.g. gallium melts at 30 C). |
+| 20 | Chemistry: Acids and bases, fact | "Never taste unknown chemicals in a laboratory." | "Never taste chemicals in a laboratory." | Simpler and safer (never taste any). |
+| 21 | History: The printing press, fact and order item 1 | "Before the 1400s, people copied books by hand" | "Before the 1400s, people in Europe copied books by hand" | Woodblock and movable-type printing already existed in China and Korea. |
+| 22 | Chemistry Word Lab 2 (firefly), fact | "Humans copy this idea in glow sticks" | "Humans use a similar idea in glow sticks" (Chinese updated) | Glow sticks use chemiluminescence, which is similar but not the same as bioluminescence. |
+| 23 | Science: Magnets, fact, activity and teaser why | "iron, nickel and cobalt"; "aluminium and copper" | "some metals, such as iron"; "gold and silver" | Simpler words; gold and silver are plainly non-magnetic. |
+| 24 | Science: Electricity and circuits, glossary and odd-one-out | aluminium / candle | gold / fire; glossary copper, rubber, dangerous | Simpler words, one clear odd one out. |
+| 25 | History: Medieval castles, odd-one-out rows 2-3, glossary | lord / pirate; arrow / sword / shield / rifle | king / robot; stone / wood / iron / plastic; glossary adds lord | Old rows had two plausible odd ones; now one. |
+| 26 | Water cycle, Germs, Five senses, Heart and blood, Photosynthesis, Volcanoes | words like "tiny", "tube", "savoury", "thin, like wires" | "very small", "long part", "strong taste", "like very thin lines"; new glossary entries (microscope, carbon dioxide, cells, organ, melted, sight) | Words above level for the sheet's label; simplified or glossed. |
+| 27 | Chemistry Word Lab pages 1-4, preview images and book pages 02-05 | The Speak section was cut off at the bottom of the preview PNGs and the book page images | The page now fits: all four sections show | Layout bug in my earlier render; the printable HTML pages were not affected. |
