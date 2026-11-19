@@ -1,6 +1,6 @@
 # Word Lab: is "A2 / B1" fact or opinion? CEFR audit + age-band proposal (19 Nov 2026)
 
-**Short answer.** CEFR is a published standard, and sheets can be *graded against* reference word lists. That grading is evidence, not an absolute fact: the lists are built from learner corpora and expert judgement, and a worksheet label also depends on the task and the concepts, which no word list measures. Result for the 50 sheets: **the vocabulary of every sheet is readable at A2 once its taught topic words are counted, and 22 of 50 labels are confirmed as they stand; 28 sheets labelled B1 have A2-level vocabulary and are only B1 by concept and task load.** No label on the live site was changed.
+**Short answer.** CEFR is a published standard, and sheets can be *graded against* reference word lists. That grading is evidence, not an absolute fact: the lists are built from learner corpora and expert judgement, and a worksheet label also depends on the task and the concepts, which no word list measures. Result for the 50 sheets: **the vocabulary of every sheet is readable at A2 once its taught topic words are counted, and 22 of 50 labels are confirmed as they stand; 28 sheets labelled B1 have A2-level vocabulary and are only B1 by concept and task load.** (Update, same day: Pip chose to relabel the 28 B1-with-A2-vocabulary sheets as age band + vocab A2; see CHANGELOG.md. The other 22 keep their CEFR labels.)
 
 ## Word lists used (small text lists only, nothing else kept)
 | List | What it gives | Source |

@@ -101,3 +101,38 @@ Every cool fact, teaser and activity on the 50 sheets and the 4 Chemistry Word L
 | 25 | History: Medieval castles, odd-one-out rows 2-3, glossary | lord / pirate; arrow / sword / shield / rifle | king / robot; stone / wood / iron / plastic; glossary adds lord | Old rows had two plausible odd ones; now one. |
 | 26 | Water cycle, Germs, Five senses, Heart and blood, Photosynthesis, Volcanoes | words like "tiny", "tube", "savoury", "thin, like wires" | "very small", "long part", "strong taste", "like very thin lines"; new glossary entries (microscope, carbon dioxide, cells, organ, melted, sight) | Words above level for the sheet's label; simplified or glossed. |
 | 27 | Chemistry Word Lab pages 1-4, preview images and book pages 02-05 | The Speak section was cut off at the bottom of the preview PNGs and the book page images | The page now fits: all four sections show | Layout bug in my earlier render; the printable HTML pages were not affected. |
+
+
+# Level labels: age band as the main label (19 Nov 2026, Pip's choice)
+The 28 sheets that were labelled B1 but whose vocabulary is A2 now show **Ages X-Y · vocab A2** (hub chip, detail page, sheet PDF + PNG, answer key, Chinese strings). The 15 A2 sheets and the 7 sheets that really need B1 keep their CEFR labels. Bands come from CEFR-AUDIT.md.
+
+| Sheet | Was | Now |
+|---|---|---|
+| Chemistry: Atoms and elements | B1 | Ages 11–13 · vocab A2 |
+| Chemistry: Mixtures and solutions | B1 | Ages 10–12 · vocab A2 |
+| Chemistry: Why iron rusts | B1 | Ages 9–11 · vocab A2 |
+| Chemistry: Carbon | B1 | Ages 11–13 · vocab A2 |
+| Science: Light and shadows | B1 | Ages 9–11 · vocab A2 |
+| Science: Sound and vibrations | B1 | Ages 8–10 · vocab A2 |
+| Science: Electricity and circuits | B1 | Ages 10–12 · vocab A2 |
+| Science: Energy | B1 | Ages 11–13 · vocab A2 |
+| Science: Simple machines | B1 | Ages 8–10 · vocab A2 |
+| Science: How scientists work | B1 | Ages 9–11 · vocab A2 |
+| Biology: Cells | B1 | Ages 10–12 · vocab A2 |
+| Biology: The heart and blood | B1 | Ages 9–11 · vocab A2 |
+| Biology: Photosynthesis | B1 | Ages 11–13 · vocab A2 |
+| Biology: The digestive system | B1 | Ages 9–11 · vocab A2 |
+| Biology: Food chains | B1 | Ages 9–11 · vocab A2 |
+| Biology: Animal adaptations | B1 | Ages 11–13 · vocab A2 |
+| Geography: Earthquakes | B1 | Ages 9–11 · vocab A2 |
+| Geography: Rivers | B1 | Ages 9–11 · vocab A2 |
+| Geography: Weather and climate | B1 | Ages 10–12 · vocab A2 |
+| Geography: Mountains | B1 | Ages 9–11 · vocab A2 |
+| Geography: Rainforests | B1 | Ages 9–11 · vocab A2 |
+| History: Ancient Greece | B1 | Ages 10–12 · vocab A2 |
+| History: The Roman Empire | B1 | Ages 9–11 · vocab A2 |
+| History: The Vikings | B1 | Ages 9–11 · vocab A2 |
+| History: Medieval castles | B1 | Ages 11–13 · vocab A2 |
+| History: The Silk Road | B1 | Ages 11–13 · vocab A2 |
+| History: The printing press | B1 | Ages 12–14 · vocab A2 |
+| History: The Industrial Revolution | B1 | Ages 12–14 · vocab A2 |
