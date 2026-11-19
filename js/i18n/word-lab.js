@@ -8,12 +8,14 @@ var T={
 'Ancient Egypt':['古埃及','法老、金字塔和尼罗河'],'Ancient Greece':['古希腊','民主和第一届奥运会'],'The Roman Empire':['罗马帝国','道路、士兵和斗兽场'],'The Stone Age':['石器时代','猎人、火和洞穴壁画'],'The Vikings':['维京人','来自北方的航海家'],'Medieval castles':['中世纪城堡','护城河、塔楼和吊桥'],'The Silk Road':['丝绸之路','贸易和思想交流之路'],'The printing press':['印刷机','让人人都有书读'],'The Industrial Revolution':['工业革命','机器改变世界'],'The first steps on the Moon':['登上月球的第一步','1969 年阿波罗 11 号任务']};
 var SUB={Chemistry:'化学',Science:'科学',Biology:'生物',Geography:'地理',History:'历史'};
 var M={'Word Lab':'词汇实验室','Open the sheet (PDF)':'打开练习页（PDF）','Answer key (PDF)':'答案（PDF）',
-'Matter, reactions and the periodic table. Ten one-page sheets with brain teasers, a cool fact, a word hunt and speaking questions.':'物质、反应和元素周期表。十张单页练习，有脑筋急转弯、一个有趣的小知识、找单词和口语问题。',
-'Forces, light, sound, energy and how scientists work. Ten one-page sheets with brain teasers, a cool fact, a word hunt and speaking questions.':'力、光、声音、能量，还有科学家怎样工作。十张单页练习，有脑筋急转弯、一个有趣的小知识、找单词和口语问题。',
-'Living things, the human body and how life works. Ten one-page sheets with brain teasers, a cool fact, a word hunt and speaking questions.':'生物、人体，还有生命是怎样运转的。十张单页练习，有脑筋急转弯、一个有趣的小知识、找单词和口语问题。',
-'Our planet: land, water, weather and maps. Ten one-page sheets with brain teasers, a cool fact, a word hunt and speaking questions.':'我们的星球：陆地、水、天气和地图。十张单页练习，有脑筋急转弯、一个有趣的小知识、找单词和口语问题。',
-'People and events from the Stone Age to the Moon. Ten one-page sheets with brain teasers, a cool fact, a word hunt and speaking questions.':'从石器时代到登月的人物和大事。十张单页练习，有脑筋急转弯、一个有趣的小知识、找单词和口语问题。',
+'Matter, reactions and the periodic table. Ten one-page sheets with a cool fact, brain teasers, a fun activity and speaking questions.':'物质、反应和元素周期表。十张单页练习，有一个有趣的小知识、脑筋急转弯、一个好玩的小练习和口语问题。',
+'Forces, light, sound, energy and how scientists work. Ten one-page sheets with a cool fact, brain teasers, a fun activity and speaking questions.':'力、光、声音、能量，还有科学家怎样工作。十张单页练习，有一个有趣的小知识、脑筋急转弯、一个好玩的小练习和口语问题。',
+'Living things, the human body and how life works. Ten one-page sheets with a cool fact, brain teasers, a fun activity and speaking questions.':'生物、人体，还有生命是怎样运转的。十张单页练习，有一个有趣的小知识、脑筋急转弯、一个好玩的小练习和口语问题。',
+'Our planet: land, water, weather and maps. Ten one-page sheets with a cool fact, brain teasers, a fun activity and speaking questions.':'我们的星球：陆地、水、天气和地图。十张单页练习，有一个有趣的小知识、脑筋急转弯、一个好玩的小练习和口语问题。',
+'People and events from the Stone Age to the Moon. Ten one-page sheets with a cool fact, brain teasers, a fun activity and speaking questions.':'从石器时代到登月的人物和大事。十张单页练习，有一个有趣的小知识、脑筋急转弯、一个好玩的小练习和口语问题。',
 'One page, A4 landscape. Print it or work from the screen.':'一页，A4 横版。可以打印，也可以在屏幕上做。'};
+var L={'Cool fact':'有趣的小知识','Brain teasers':'脑筋急转弯','Word hunt':'找单词','Circle the right word':'圈出正确的词','True or false':'判断对错','Fill in the blanks':'填空','Match the words':'词义配对','Odd one out':'找出不同类的词','Unscramble the words':'重新排列字母','Put in order':'排顺序','Speak':'说一说'};
+for(var q in L){M[q]=L[q];M['1 Cool fact']='1 有趣的小知识';M['2 Brain teasers']='2 脑筋急转弯';M['4 Speak']='4 说一说';M['3 '+q]='3 '+L[q]}
 for(var k in T){M[k]=T[k][0]}
 // descriptions: stored under their own English text
 LWLang.add(M);
