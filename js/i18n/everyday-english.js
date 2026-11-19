@@ -153,5 +153,21 @@ LWLang.add({
 "Pick one any time — you don't have to wait!": "随时都可以选，不用等视频放完！",
 "Try another one.": "再选一个试试。",
 "Watch the scene again": "再看一遍这个场景",
-"Oh no!": "哎呀！"
+"Oh no!": "哎呀！",
+
+"What should Max put on his feet?": "Max 该穿什么？",
+"Watch Max. Then tap what he should put on his feet.": "看一看 Max，然后点出他该穿的鞋。",
+"The path is dry and sunny. What should Max put on his feet?": "小路又干又晴。Max 该穿什么？",
+"Yes! The path is dry, Max puts on his shoes.": "对了！小路是干的，所以 Max 穿上鞋子。",
+"Oh no! A slipper comes off!": "哎呀！拖鞋掉了！",
+"Oh no! Boots are too hot!": "哎呀！雨鞋太热了！",
+"Max is in the house. What should he put on his feet?": "Max 在屋里。他该穿什么？",
+"Yes! Max is in the house, he puts on his slippers.": "对了！Max 在屋里，所以他穿上拖鞋。",
+"Oh no! Shoes in the house!": "哎呀！在屋里穿鞋子！",
+"Oh no! Boots in the house!": "哎呀！在屋里穿雨鞋！",
+"There are puddles on the path. What should Max put on his feet?": "小路上有水坑。Max 该穿什么？",
+"Yes! There are puddles, Max puts on his boots.": "对了！有水坑，所以 Max 穿上雨鞋。",
+"Oh no! His shoes are all wet!": "哎呀！他的鞋子全湿了！",
+"Oh no! Slippers on the wet path!": "哎呀！在湿路上穿拖鞋！",
+
 });
