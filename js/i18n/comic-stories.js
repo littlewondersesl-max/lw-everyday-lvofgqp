@@ -92,7 +92,7 @@ LWLang.add({
 "Who helps Mo?": "谁来帮莫？",
 "Push a big box alone, then together. Say “It is too heavy!” then “Together!”": "先一个人推一个大箱子，再大家一起推。先说“太重了！”再说“一起来！”",
 "Mo sees a big cheese.": "莫看到了一大块奶酪。",
-"Mo climbs up the chair.": "莫爬上椅子。",
+"Mo climbs up the table.": "莫爬上桌子。",
 "He pushes. It is too heavy!": "他用力推。太重了！",
 "Mo calls his friends.": "莫叫来了他的朋友们。",
 "They push together.": "他们一起推。",
