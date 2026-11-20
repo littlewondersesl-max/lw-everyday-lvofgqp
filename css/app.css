@@ -100,3 +100,9 @@ header.top .burger{margin-left:0;padding:3px 9px;font-size:20px;flex:none}
 /* keep the top menu on as few rows as before now that it has a "Fractions" entry */
 @media (min-width:761px) and (max-width:1700px){#menu .ddb{padding:8px 9px;font-size:14.5px}#menu{gap:1px}}
 .dd.open{z-index:20}
+
+/* intro / book video pages: page-sized slot, the 16:9 video frame sits centred inside it with a margin of page around it */
+.vitem.video{display:flex;align-items:center;justify-content:center;background:#fff}
+.vitem.video .vframe{position:relative;width:86%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#000;box-shadow:0 6px 20px rgba(108,78,160,.22)}
+.vitem.video .vframe .videoph{border-radius:inherit}
+@media (max-width:760px){.vitem.video .vframe{width:88%;border-radius:10px}}

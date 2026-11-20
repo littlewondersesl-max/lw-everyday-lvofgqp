@@ -68,8 +68,8 @@ function viewer(){
     let h;
     if(s.type==='page') h=`<img class="slide" loading="${k<2?'eager':'lazy'}" src="${s.src}" alt="Page ${s.n}">`;
     else if(s.type==='game') h=`<div class="gamebox"><div class="gbar">Game: <b>${esc(s.title)}</b> <a href="${s.src}" target="_blank">open full screen ↗</a></div><iframe data-src="${s.src}" title="${esc(s.title)}" allow="fullscreen; autoplay"></iframe></div>`;
-    else if(s.src) h=`<video class="bookvid" src="${s.src}"${s.poster?` poster="${s.poster}"`:''} controls playsinline preload="none" title="${esc(s.title)}"></video>`;
-    else h=`<div class="videoph"><div class="play">▶</div><h3>${esc(s.title)}</h3><p>Video slot — coming soon.</p></div>`;
+    else if(s.src) h=`<div class="vframe"><video class="bookvid" src="${s.src}"${s.poster?` poster="${s.poster}"`:''} controls playsinline preload="none" title="${esc(s.title)}"></video></div>`;
+    else h=`<div class="vframe"><div class="videoph"><div class="play">▶</div><h3>${esc(s.title)}</h3><p>Video slot — coming soon.</p></div></div>`;
     return `<section class="vitem ${s.type}" id="p${k+1}" data-k="${k}">${h}</section>`}).join('');
   const items=[...st.children];
   function go(k,smooth){if(k<0||k>=items.length)return;items[k].scrollIntoView({behavior:smooth===false?'auto':'smooth',block:'start'})}
