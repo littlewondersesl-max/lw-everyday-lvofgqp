@@ -149,4 +149,6 @@ body{font-family:"Baloo 2","Nunito","Arial Rounded MT Bold","Trebuchet MS",syste
  .btn,#ask button{min-height:38px;font-size:min(6vh,19px);padding:4px 16px}
 }
 /* sort bins show people/scenes: keep the head in frame when the box is wide and short */
-.bin .im:not(.cut):not(.flat) img{object-position:50% 18%}
+/* keep hair/heads in frame on every cover-fit card (people sit near the top of their pictures) */
+.im:not(.cut):not(.flat) img{object-position:50% 10%}
+.bin .im:not(.cut):not(.flat) img{object-position:50% 0}
