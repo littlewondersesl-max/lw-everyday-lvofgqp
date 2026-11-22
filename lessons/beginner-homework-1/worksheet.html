@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Beginner English Homework 1</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #fff;
+    color: #2a3544;
+    font-family: Nunito, "Comic Neue", Andika, sans-serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 10mm 12mm 0;
+    page-break-after: always;
+    break-after: page;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+  }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  .page-body { flex: 1 1 auto; min-height: 0; }
+
+  header.sheet-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 5mm;
+    padding-bottom: 4mm;
+    border-bottom: 2.5px solid #3f8f8a;
+  }
+  .title-block h1 {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 600;
+    font-size: 25pt;
+    line-height: 1.1;
+    color: #1f6f6b;
+  }
+  .title-block .sub {
+    font-size: 10.5pt;
+    color: #5d6d7a;
+    margin-top: 1.4mm;
+    font-weight: 600;
+  }
+  .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 3mm;
+    min-width: 78mm;
+    padding-top: 1.2mm;
+  }
+  .meta-line {
+    display: flex;
+    align-items: flex-end;
+    gap: 2.5mm;
+    font-size: 12.5pt;
+    font-weight: 700;
+  }
+  .meta-line .lbl { flex: 0 0 auto; }
+  .meta-line .line {
+    flex: 1;
+    border-bottom: 1.6px solid #2a3544;
+    height: 7mm;
+  }
+
+  .sec { margin-bottom: 4.4mm; }
+  .sec-h {
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+    margin-bottom: 2.2mm;
+  }
+  .num {
+    flex: 0 0 8mm;
+    width: 8mm;
+    height: 8mm;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 600;
+    font-size: 13pt;
+    line-height: 1;
+  }
+  .sec-h h2 {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 14.5pt;
+    color: #243140;
+    line-height: 1.15;
+  }
+  .hint {
+    margin: -0.4mm 0 2.2mm 11mm;
+    font-size: 10.5pt;
+    color: #4a5a68;
+    font-weight: 600;
+  }
+  .c-teal { background: #2e8a85; }
+  .c-coral { background: #e06b4a; }
+  .c-sky { background: #2a86c7; }
+  .c-leaf { background: #3c8d4f; }
+
+  /* Trace / write a word or sentence */
+  .trace-row {
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+    margin: 0 0 2.2mm 11mm;
+    min-height: 14mm;
+  }
+  .trace-row .lbl-sm {
+    flex: 0 0 16mm;
+    font-size: 9.5pt;
+    font-weight: 800;
+    color: #6a7c86;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .trace-row .practice {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+  }
+  .write-line {
+    flex: 1;
+    height: 11mm;
+    position: relative;
+    border-bottom: 1.5px solid #7a8b99;
+  }
+  .write-line::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    border-top: 1.3px solid #c5d0d8;
+  }
+  .write-line::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 50%;
+    border-top: 1.2px dashed #c5d0d8;
+  }
+  .write-line.short { flex: 0 0 28mm; }
+  .write-line.num { flex: 0 0 16mm; }
+  .blank-line {
+    display: inline-block;
+    width: 18mm;
+    height: 7mm;
+    border-bottom: 1.7px solid #2a3544;
+    vertical-align: baseline;
+    flex: 0 0 18mm;
+  }
+  .blank-line.wide { width: 28mm; flex: 0 0 28mm; }
+
+  /* Bike */
+  .bike-panel {
+    margin-left: 0;
+    border: 1.5px solid #cfe8e5;
+    background: #f7fbfa;
+    border-radius: 4.5mm;
+    padding: 2mm 2mm 2.4mm;
+  }
+  .bike-svg { width: 100%; height: auto; display: block; }
+  .word-bank {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2.2mm;
+    margin-top: 2mm;
+  }
+  .word-bank .tag-lbl {
+    font-size: 9.5pt;
+    font-weight: 800;
+    color: #6a7c86;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-right: 1mm;
+  }
+  .chip {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 12.5pt;
+    padding: 1mm 3.4mm;
+    border: 1.5px solid #b7d8d5;
+    background: #fff;
+    border-radius: 3mm;
+    color: #1f6f6b;
+  }
+
+  /* Light / dark */
+  .pairs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 3mm;
+    margin-bottom: 3mm;
+  }
+  .pair {
+    border: 1.5px solid #ead9c8;
+    background: #fffaf5;
+    border-radius: 4mm;
+    padding: 2.2mm 2mm 2.4mm;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    gap: 1.5mm;
+  }
+  .swatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 48%;
+  }
+  .swatch .circle {
+    width: 18mm;
+    height: 18mm;
+    border: 2px solid #2a3544;
+    border-radius: 50%;
+    background: #fff;
+    margin-bottom: 1.4mm;
+  }
+  .swatch .name {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 9.5pt;
+    text-align: center;
+    line-height: 1.15;
+    color: #243140;
+  }
+  .swatch .name small {
+    display: block;
+    font-family: Nunito, sans-serif;
+    font-weight: 700;
+    font-size: 8pt;
+    color: #7a4a62;
+    margin-top: 0.3mm;
+  }
+  .box-row-label {
+    margin: 0 0 1.8mm 11mm;
+    font-size: 10.5pt;
+    color: #4a5a68;
+    font-weight: 600;
+  }
+  .colour-boxes {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 2.2mm;
+  }
+  .cbox {
+    border: 1.5px solid #ead9c8;
+    background: #fff;
+    border-radius: 3mm;
+    height: 24mm;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.4mm 1mm 1.2mm;
+  }
+  .cbox .paint {
+    flex: 1;
+    width: 100%;
+    border: 1.6px solid #2a3544;
+    border-radius: 2mm;
+    background: #fff;
+  }
+  .cbox .name {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 8.4pt;
+    text-align: center;
+    line-height: 1.15;
+    margin-top: 1.1mm;
+    color: #243140;
+  }
+
+  /* Age / cakes */
+  .you-box {
+    margin: 0 0 3mm 0;
+    border: 1.5px dashed #b7d4e8;
+    background: #f4fafd;
+    border-radius: 4mm;
+    padding: 2.4mm 4mm 2.8mm;
+  }
+  .you-box .q {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 13.5pt;
+    margin-bottom: 3mm;
+  }
+  .you-box .a {
+    display: flex;
+    align-items: flex-end;
+    gap: 2mm;
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 13.5pt;
+  }
+  .you-box .a .blank-line { flex: 0 0 28mm; width: 28mm; }
+  .cakes {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 3mm;
+  }
+  .cake-card {
+    border: 1.5px solid #ead9c8;
+    background: #fffaf5;
+    border-radius: 4mm;
+    padding: 2mm 2.2mm 2.6mm;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .cake-card svg { display: block; }
+  .cake-sent {
+    width: 100%;
+    margin-top: 1.6mm;
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 10.5pt;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 1.2mm;
+    white-space: nowrap;
+  }
+  .cake-sent .blank-line { flex: 0 0 14mm; width: 14mm; height: 6.5mm; }
+
+  /* China / Chinese (kept) */
+  .teach-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3mm;
+    margin-bottom: 3mm;
+  }
+  .teach-card {
+    border-radius: 4mm;
+    border: 1.5px solid #cfe3d3;
+    background: #f5fbf6;
+    padding: 2.4mm 3.2mm 2.6mm;
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+    min-height: 22mm;
+  }
+  .teach-icon { flex: 0 0 16mm; text-align: center; }
+  .teach-copy { flex: 1; }
+  .teach-copy .big {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 600;
+    font-size: 16.5pt;
+    color: #246635;
+    line-height: 1.1;
+  }
+  .teach-copy .eq {
+    font-size: 10.5pt;
+    font-weight: 700;
+    color: #3e5a48;
+    margin-top: 0.8mm;
+    line-height: 1.25;
+  }
+  .models {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3mm;
+    margin-bottom: 3mm;
+  }
+  .model {
+    border: 1.5px dashed #b7d4be;
+    background: #fff;
+    border-radius: 3.5mm;
+    padding: 1.8mm 3.2mm;
+    font-size: 12.5pt;
+    font-weight: 800;
+    text-align: center;
+  }
+  .model em {
+    font-style: normal;
+    color: #246635;
+    text-decoration: underline;
+    text-underline-offset: 1.5px;
+  }
+  .model-label {
+    display: block;
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: #6a7c70;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.6mm;
+  }
+  .fill-list { display: flex; flex-direction: column; gap: 2mm; margin-bottom: 1mm; }
+  .fill {
+    display: grid;
+    grid-template-columns: 6mm 1fr;
+    gap: 2mm;
+    align-items: end;
+    font-size: 13.5pt;
+    font-weight: 700;
+    min-height: 9.5mm;
+  }
+  .fill .n { color: #3c8d4f; font-family: Fredoka, Nunito, sans-serif; }
+  .blank {
+    display: inline-block;
+    width: 42mm;
+    border-bottom: 1.7px solid #2a3544;
+    height: 6.5mm;
+    vertical-align: baseline;
+  }
+
+  footer.sheet-foot {
+    position: static;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: #7b8894;
+    padding: 2.5mm 0 7mm;
+    margin-top: auto;
+    flex: 0 0 auto;
+    width: 100%;
+    background: #fff;
+  }
+
+  .key-banner {
+    background: #2a3544;
+    color: #fff;
+    border-radius: 4mm;
+    padding: 3.5mm 5mm;
+    margin-bottom: 5.5mm;
+  }
+  .key-banner h1 {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 22pt;
+    line-height: 1.15;
+  }
+  .key-banner p {
+    margin-top: 1.4mm;
+    font-size: 11pt;
+    font-weight: 650;
+    opacity: 0.9;
+  }
+  .key-sec {
+    border: 1.4px solid #dce3ea;
+    border-radius: 4mm;
+    padding: 3.2mm 4mm 3.4mm;
+    margin-bottom: 3.4mm;
+    background: #fafbfc;
+  }
+  .key-sec h2 {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 13.5pt;
+    margin-bottom: 1.6mm;
+    color: #1f6f6b;
+  }
+  .key-sec p, .key-sec li {
+    font-size: 11pt;
+    font-weight: 650;
+    line-height: 1.45;
+    color: #2a3544;
+  }
+  .key-sec ol { padding-left: 6mm; }
+  .key-sec li { margin: 0.6mm 0; }
+  .muted { color: #5d6d7a; font-weight: 650; }
+  .ans { color: #1d6b3a; font-weight: 800; }
+</style>
+</head>
+<body>
+
+<!-- ===================== PAGE 1 ===================== -->
+<section class="page">
+  <div class="page-body">
+  <header class="sheet-head">
+    <div class="title-block">
+      <h1>My English Homework</h1>
+      <div class="sub">Bicycle, colours and me &nbsp;·&nbsp; Very easy</div>
+    </div>
+    <div class="meta">
+      <div class="meta-line"><span class="lbl">Name:</span><span class="line"></span></div>
+      <div class="meta-line"><span class="lbl">Date:</span><span class="line"></span></div>
+    </div>
+  </header>
+
+  <section class="sec">
+    <div class="sec-h">
+      <div class="num c-teal">1</div>
+      <h2>Bicycle</h2>
+    </div>
+    <p class="hint">Trace the word. Then write it on the line.</p>
+    <div class="trace-row">
+      <div class="lbl-sm">Trace</div>
+      <div class="practice">
+        <svg width="210" height="52" viewBox="0 0 210 52" aria-hidden="true">
+          <text x="3" y="40" font-family="Andika, Nunito, sans-serif" font-weight="700" font-size="38" letter-spacing="2.2" fill="none" stroke="#2a3544" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0.01 5.4">bicycle</text>
+        </svg>
+        <div class="write-line"></div>
+      </div>
+    </div>
+    <p class="hint">Write the parts. Use the words in the box. Then colour the bike.</p>
+    <div class="bike-panel">
+      <svg class="bike-svg" viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg" aria-label="A bicycle to label and colour">
+        <!-- Leader lines and write-on blanks -->
+        <!-- seat (top left) -->
+        <line x1="20" y1="58" x2="130" y2="58" stroke="#2a3544" stroke-width="1.6"/>
+        <line x1="130" y1="58" x2="210" y2="82" stroke="#2a3544" stroke-width="1.25" stroke-dasharray="3 3"/>
+        <circle cx="210" cy="82" r="2.2" fill="#2a3544"/>
+        <!-- bell (top right) -->
+        <line x1="430" y1="36" x2="545" y2="36" stroke="#2a3544" stroke-width="1.6"/>
+        <line x1="430" y1="36" x2="382" y2="48" stroke="#2a3544" stroke-width="1.25" stroke-dasharray="3 3"/>
+        <circle cx="382" cy="48" r="2.2" fill="#2a3544"/>
+        <!-- handlebar (mid right) -->
+        <line x1="445" y1="100" x2="545" y2="100" stroke="#2a3544" stroke-width="1.6"/>
+        <line x1="445" y1="100" x2="400" y2="62" stroke="#2a3544" stroke-width="1.25" stroke-dasharray="3 3"/>
+        <circle cx="400" cy="62" r="2.2" fill="#2a3544"/>
+        <!-- wheel (left of rear wheel) -->
+        <line x1="20" y1="200" x2="92" y2="200" stroke="#2a3544" stroke-width="1.6"/>
+        <line x1="92" y1="200" x2="114" y2="185" stroke="#2a3544" stroke-width="1.25" stroke-dasharray="3 3"/>
+        <circle cx="114" cy="185" r="2.2" fill="#2a3544"/>
+
+        <!-- Ground shadows -->
+        <ellipse cx="160" cy="237" rx="52" ry="6" fill="#e4ecea"/>
+        <ellipse cx="390" cy="237" rx="52" ry="6" fill="#e4ecea"/>
+
+        <!-- Rear wheel -->
+        <g fill="none" stroke="#2a3544" stroke-linecap="round">
+          <circle cx="160" cy="185" r="50" stroke-width="4.2" fill="#fff"/>
+          <circle cx="160" cy="185" r="42" stroke-width="1.6"/>
+          <circle cx="160" cy="185" r="7" fill="#fff" stroke-width="2"/>
+          <line x1="160" y1="143" x2="160" y2="227" stroke-width="1.15"/>
+          <line x1="118" y1="185" x2="202" y2="185" stroke-width="1.15"/>
+          <line x1="130.3" y1="155.3" x2="189.7" y2="214.7" stroke-width="1.15"/>
+          <line x1="189.7" y1="155.3" x2="130.3" y2="214.7" stroke-width="1.15"/>
+        </g>
+
+        <!-- Front wheel -->
+        <g fill="none" stroke="#2a3544" stroke-linecap="round">
+          <circle cx="390" cy="185" r="50" stroke-width="4.2" fill="#fff"/>
+          <circle cx="390" cy="185" r="42" stroke-width="1.6"/>
+          <circle cx="390" cy="185" r="7" fill="#fff" stroke-width="2"/>
+          <line x1="390" y1="143" x2="390" y2="227" stroke-width="1.15"/>
+          <line x1="348" y1="185" x2="432" y2="185" stroke-width="1.15"/>
+          <line x1="360.3" y1="155.3" x2="419.7" y2="214.7" stroke-width="1.15"/>
+          <line x1="419.7" y1="155.3" x2="360.3" y2="214.7" stroke-width="1.15"/>
+        </g>
+
+        <!-- Frame -->
+        <g fill="none" stroke="#2a3544" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="160" y1="185" x2="255" y2="185"/>
+          <line x1="160" y1="185" x2="232" y2="88"/>
+          <line x1="255" y1="185" x2="232" y2="88"/>
+          <line x1="255" y1="185" x2="348" y2="100"/>
+          <line x1="232" y1="88" x2="348" y2="100"/>
+          <line x1="348" y1="100" x2="390" y2="185"/>
+          <line x1="348" y1="100" x2="348" y2="60"/>
+        </g>
+
+        <!-- Seat -->
+        <path d="M200 80c-2-8 4-14 18-15 16-1 28 2 36 6 4 2 4 6 0 7-12 4-28 6-40 5-10-1-14-2-14-3z" fill="#fff" stroke="#2a3544" stroke-width="2.2" stroke-linejoin="round"/>
+
+        <!-- Handlebar -->
+        <line x1="325" y1="58" x2="400" y2="58" stroke="#2a3544" stroke-width="5" stroke-linecap="round"/>
+        <line x1="325" y1="58" x2="325" y2="70" stroke="#2a3544" stroke-width="4" stroke-linecap="round"/>
+        <rect x="318" y="50" width="10" height="16" rx="3.5" fill="#fff" stroke="#2a3544" stroke-width="1.8"/>
+        <rect x="393" y="50" width="10" height="16" rx="3.5" fill="#fff" stroke="#2a3544" stroke-width="1.8"/>
+
+        <!-- Bell -->
+        <circle cx="382" cy="48" r="8" fill="#fff" stroke="#2a3544" stroke-width="1.8"/>
+        <path d="M377 44.5h10" stroke="#2a3544" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="382" cy="48" r="2" fill="#2a3544"/>
+        <line x1="382" y1="40" x2="382" y2="36.5" stroke="#2a3544" stroke-width="1.6" stroke-linecap="round"/>
+
+        <!-- Pedals / chain ring -->
+        <circle cx="255" cy="185" r="10" fill="#fff" stroke="#2a3544" stroke-width="2.1"/>
+        <circle cx="255" cy="185" r="4" fill="#2a3544"/>
+        <line x1="247" y1="173" x2="263" y2="197" stroke="#2a3544" stroke-width="3.2" stroke-linecap="round"/>
+        <rect x="239" y="166" width="16" height="7" rx="2" fill="#fff" stroke="#2a3544" stroke-width="1.6"/>
+        <rect x="255" y="196" width="16" height="7" rx="2" fill="#fff" stroke="#2a3544" stroke-width="1.6"/>
+
+        <!-- Simple chain hint -->
+        <path d="M245 192c-20 8-50 8-80 2" fill="none" stroke="#2a3544" stroke-width="1.35" stroke-dasharray="3 2.2" stroke-linecap="round"/>
+      </svg>
+      <div class="word-bank">
+        <span class="tag-lbl">Words</span>
+        <span class="chip">wheel</span>
+        <span class="chip">seat</span>
+        <span class="chip">bell</span>
+        <span class="chip">handlebar</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h">
+      <div class="num c-coral">2</div>
+      <h2>Light and dark colours</h2>
+    </div>
+    <p class="hint">Colour each pair. Then circle the dark one.</p>
+    <div class="pairs">
+      <div class="pair">
+        <div class="swatch">
+          <div class="circle"></div>
+          <div class="name">light blue</div>
+        </div>
+        <div class="swatch">
+          <div class="circle"></div>
+          <div class="name">dark blue</div>
+        </div>
+      </div>
+      <div class="pair">
+        <div class="swatch">
+          <div class="circle"></div>
+          <div class="name">light green</div>
+        </div>
+        <div class="swatch">
+          <div class="circle"></div>
+          <div class="name">dark green</div>
+        </div>
+      </div>
+      <div class="pair">
+        <div class="swatch">
+          <div class="circle"></div>
+          <div class="name">light red<small>(pink)</small></div>
+        </div>
+        <div class="swatch">
+          <div class="circle"></div>
+          <div class="name">dark red</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <footer class="sheet-foot">
+    <span>Beginner English &nbsp;·&nbsp; Homework 1</span>
+    <span>Page 1 of 2</span>
+  </footer>
+</section>
+
+<!-- ===================== PAGE 2 ===================== -->
+<section class="page">
+  <div class="page-body">
+  <section class="sec">
+    <div class="sec-h">
+      <div class="num c-sky">3</div>
+      <h2>How old are you?</h2>
+    </div>
+    <p class="hint">Trace the question and the answer. Then write about you.</p>
+    <div class="trace-row">
+      <div class="lbl-sm">Trace</div>
+      <div class="practice">
+        <svg width="340" height="50" viewBox="0 0 340 50" aria-hidden="true">
+          <text x="2" y="38" font-family="Andika, Nunito, sans-serif" font-weight="700" font-size="30" letter-spacing="0.8" fill="none" stroke="#2a3544" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0.01 5.2">How old are you?</text>
+        </svg>
+        <div class="write-line"></div>
+      </div>
+    </div>
+    <div class="trace-row">
+      <div class="lbl-sm">Trace</div>
+      <div class="practice">
+        <svg width="72" height="50" viewBox="0 0 72 50" aria-hidden="true">
+          <text x="2" y="38" font-family="Andika, Nunito, sans-serif" font-weight="700" font-size="30" letter-spacing="0.8" fill="none" stroke="#2a3544" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0.01 5.2">I am</text>
+        </svg>
+        <span class="blank-line"></span>
+        <svg width="172" height="50" viewBox="0 0 172 50" aria-hidden="true">
+          <text x="2" y="38" font-family="Andika, Nunito, sans-serif" font-weight="700" font-size="30" letter-spacing="0.8" fill="none" stroke="#2a3544" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0.01 5.2">years old.</text>
+        </svg>
+        <div class="write-line"></div>
+      </div>
+    </div>
+
+    <div class="you-box">
+      <div class="q">How old are you?</div>
+      <div class="a">I am <span class="blank-line wide"></span> years old.</div>
+    </div>
+
+    <p class="hint" style="margin-left:0;">Count the candles. Write the sentence.</p>
+    <div class="cakes">
+      <div class="cake-card">
+                <svg width="140" height="118" viewBox="0 0 140 118" aria-label="A cake with 5 candles">
+          <ellipse cx="70" cy="108" rx="52" ry="6" fill="#e8ddd0"/>
+          <path d="M22 62c0-8 21-14 48-14s48 6 48 14v32c0 8-21 14-48 14s-48-6-48-14z" fill="#f4c6d4" stroke="#2a3544" stroke-width="1.6"/>
+          <path d="M22 62c0 8 21 14 48 14s48-6 48-14" fill="none" stroke="#2a3544" stroke-width="1.2"/>
+          <path d="M30 60c4 7 8 6 12 0 4 7 8 7 12 0 4 7 8 6 12 0 4 7 8 7 12 0 4 7 8 6 12 0" fill="none" stroke="#e07a9a" stroke-width="1.5" stroke-linecap="round"/>
+          <g>
+            <path d="M42 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="39" y="32" width="6" height="26" rx="1.5" fill="#f4a5c0" stroke="#2a3544" stroke-width="1"/>
+            <path d="M56 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="53" y="32" width="6" height="26" rx="1.5" fill="#7ec8f0" stroke="#2a3544" stroke-width="1"/>
+            <path d="M70 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="67" y="32" width="6" height="26" rx="1.5" fill="#b7d66a" stroke="#2a3544" stroke-width="1"/>
+            <path d="M84 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="81" y="32" width="6" height="26" rx="1.5" fill="#f4a5c0" stroke="#2a3544" stroke-width="1"/>
+            <path d="M98 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="95" y="32" width="6" height="26" rx="1.5" fill="#7ec8f0" stroke="#2a3544" stroke-width="1"/>
+          </g>
+        </svg>
+        <div class="cake-sent">I am <span class="blank-line"></span> years old.</div>
+      </div>
+      <div class="cake-card">
+                <svg width="140" height="118" viewBox="0 0 140 118" aria-label="A cake with 6 candles">
+          <ellipse cx="70" cy="108" rx="52" ry="6" fill="#e8ddd0"/>
+          <path d="M22 62c0-8 21-14 48-14s48 6 48 14v32c0 8-21 14-48 14s-48-6-48-14z" fill="#e8c89a" stroke="#2a3544" stroke-width="1.6"/>
+          <path d="M22 62c0 8 21 14 48 14s48-6 48-14" fill="none" stroke="#2a3544" stroke-width="1.2"/>
+          <path d="M30 60c4 7 8 6 12 0 4 7 8 7 12 0 4 7 8 6 12 0 4 7 8 7 12 0 4 7 8 6 12 0" fill="none" stroke="#c48a3a" stroke-width="1.5" stroke-linecap="round"/>
+          <g>
+            <path d="M38.75 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="35.75" y="32" width="6" height="26" rx="1.5" fill="#7ec8f0" stroke="#2a3544" stroke-width="1"/>
+            <path d="M51.25 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="48.25" y="32" width="6" height="26" rx="1.5" fill="#f2c94c" stroke="#2a3544" stroke-width="1"/>
+            <path d="M63.75 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="60.75" y="32" width="6" height="26" rx="1.5" fill="#b7d66a" stroke="#2a3544" stroke-width="1"/>
+            <path d="M76.25 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="73.25" y="32" width="6" height="26" rx="1.5" fill="#7ec8f0" stroke="#2a3544" stroke-width="1"/>
+            <path d="M88.75 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="85.75" y="32" width="6" height="26" rx="1.5" fill="#f2c94c" stroke="#2a3544" stroke-width="1"/>
+            <path d="M101.25 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="98.25" y="32" width="6" height="26" rx="1.5" fill="#b7d66a" stroke="#2a3544" stroke-width="1"/>
+          </g>
+        </svg>
+        <div class="cake-sent">I am <span class="blank-line"></span> years old.</div>
+      </div>
+      <div class="cake-card">
+                <svg width="140" height="118" viewBox="0 0 140 118" aria-label="A cake with 7 candles">
+          <ellipse cx="70" cy="108" rx="52" ry="6" fill="#e8ddd0"/>
+          <path d="M20 62c0-8 22-14 50-14s50 6 50 14v32c0 8-22 14-50 14s-50-6-50-14z" fill="#cfe6a8" stroke="#2a3544" stroke-width="1.6"/>
+          <path d="M20 62c0 8 22 14 50 14s50-6 50-14" fill="none" stroke="#2a3544" stroke-width="1.2"/>
+          <path d="M28 60c4 7 8 6 12 0 4 7 8 7 12 0 4 7 8 6 12 0 4 7 8 7 12 0 4 7 8 6 12 0 4 7 8 7 12 0" fill="none" stroke="#7aa33a" stroke-width="1.5" stroke-linecap="round"/>
+          <g>
+            <path d="M37 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="34" y="32" width="6" height="26" rx="1.5" fill="#b7d66a" stroke="#2a3544" stroke-width="1"/>
+            <path d="M48 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="45" y="32" width="6" height="26" rx="1.5" fill="#f4a5c0" stroke="#2a3544" stroke-width="1"/>
+            <path d="M59 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="56" y="32" width="6" height="26" rx="1.5" fill="#7ec8f0" stroke="#2a3544" stroke-width="1"/>
+            <path d="M70 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="67" y="32" width="6" height="26" rx="1.5" fill="#b7d66a" stroke="#2a3544" stroke-width="1"/>
+            <path d="M81 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="78" y="32" width="6" height="26" rx="1.5" fill="#f4a5c0" stroke="#2a3544" stroke-width="1"/>
+            <path d="M92 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="89" y="32" width="6" height="26" rx="1.5" fill="#7ec8f0" stroke="#2a3544" stroke-width="1"/>
+            <path d="M103 20c3 5 4 8 0 13-4-5-3-8 0-13z" fill="#f7d045" stroke="#2a3544" stroke-width="0.9"/>
+            <rect x="100" y="32" width="6" height="26" rx="1.5" fill="#b7d66a" stroke="#2a3544" stroke-width="1"/>
+          </g>
+        </svg>
+        <div class="cake-sent">I am <span class="blank-line"></span> years old.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h">
+      <div class="num c-leaf">4</div>
+      <h2>China or Chinese?</h2>
+    </div>
+    <p class="hint">China is a place. Chinese is the people or the language.</p>
+    <div class="teach-box">
+      <div class="teach-card">
+        <div class="teach-icon">
+          <svg width="54" height="44" viewBox="0 0 54 44" aria-label="a country, a place">
+            <ellipse cx="27" cy="38" rx="16" ry="3.2" fill="#d8ead0"/>
+            <path d="M6 28c2-8 8-16 14-17 3-.4 5 2 7 1.2 3-1.2 5-6 9-6 6 0 11 7 13 14 1.4 5 .8 9-2 11-6 4-16 5-26 3-7-1.4-13-3-15-6.2z" fill="#8fbf7a" stroke="#2a3544" stroke-width="1.4" stroke-linejoin="round"/>
+            <path d="M18 24c3-6 7-10 11-9 2 .4 3 3 5 2.6 3-.6 5-4 8-3" fill="none" stroke="#5a8f4a" stroke-width="1.3" stroke-linecap="round"/>
+            <circle cx="38" cy="14" r="3.1" fill="#e85a4a" stroke="#2a3544" stroke-width="1.1"/>
+            <path d="M38 17.2V30" stroke="#2a3544" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="teach-copy">
+          <div class="big">China</div>
+          <div class="eq">= the country&nbsp;&nbsp;·&nbsp;&nbsp;a place</div>
+        </div>
+      </div>
+      <div class="teach-card">
+        <div class="teach-icon">
+          <svg width="58" height="44" viewBox="0 0 58 44" aria-label="people and language">
+            <circle cx="16" cy="13" r="7" fill="#f0c070" stroke="#2a3544" stroke-width="1.3"/>
+            <path d="M5.5 34c.6-8 5.2-12.2 10.5-12.2S26 26 26.5 34z" fill="#6eb0e0" stroke="#2a3544" stroke-width="1.3" stroke-linejoin="round"/>
+            <path d="M34 10h16.5c1.6 0 2.5 1.4 2.5 2.6v9.2c0 1.2-.9 2.6-2.5 2.6H43l-4 6.2V24.4H34c-1.5 0-2.5-1.4-2.5-2.6v-9.2c0-1.2 1-2.6 2.5-2.6z" fill="#fff" stroke="#2a3544" stroke-width="1.3" stroke-linejoin="round"/>
+            <circle cx="39.2" cy="16.8" r="1.15" fill="#2a3544"/>
+            <circle cx="44.2" cy="16.8" r="1.15" fill="#2a3544"/>
+            <circle cx="49.2" cy="16.8" r="1.15" fill="#2a3544"/>
+          </svg>
+        </div>
+        <div class="teach-copy">
+          <div class="big">Chinese</div>
+          <div class="eq">= the people&nbsp;&nbsp;·&nbsp;&nbsp;the language</div>
+        </div>
+      </div>
+    </div>
+    <div class="models">
+      <div class="model">
+        <span class="model-label">Read</span>
+        I am from <em>China</em>.
+      </div>
+      <div class="model">
+        <span class="model-label">Read</span>
+        I am <em>Chinese</em>.
+      </div>
+    </div>
+    <p class="hint" style="margin-left:0; margin-bottom:2mm;">Write <strong>China</strong> or <strong>Chinese</strong>.</p>
+    <div class="fill-list">
+      <div class="fill"><span class="n">1.</span><span>I am from <span class="blank"></span>.</span></div>
+      <div class="fill"><span class="n">2.</span><span>I am <span class="blank"></span>.</span></div>
+      <div class="fill"><span class="n">3.</span><span>I speak <span class="blank"></span>.</span></div>
+    </div>
+  </section>
+  </div>
+
+  <footer class="sheet-foot">
+    <span>Beginner English &nbsp;·&nbsp; Homework 1</span>
+    <span>Page 2 of 2</span>
+  </footer>
+</section>
+
+<!-- ===================== ANSWER KEY ===================== -->
+<section class="page">
+  <div class="page-body">
+  <div class="key-banner">
+    <h1>Teacher Answer Key</h1>
+    <p>Beginner English Homework 1 &nbsp;·&nbsp; Not for students</p>
+  </div>
+
+  <div class="key-sec">
+    <h2>1. Bicycle</h2>
+    <p class="muted">Students trace and write the word <span class="ans">bicycle</span>. Then they colour the bike.</p>
+    <p style="margin-top:1.2mm;">Labels, around the bike:</p>
+    <p>top left (on the saddle) → <span class="ans">seat</span></p>
+    <p>top right (small circle on the bar) → <span class="ans">bell</span></p>
+    <p>middle right (the bar the rider holds) → <span class="ans">handlebar</span></p>
+    <p>left (the back tyre) → <span class="ans">wheel</span></p>
+  </div>
+
+  <div class="key-sec">
+    <h2>2. Light and dark colours</h2>
+    <p>In each pair, circle the dark colour:</p>
+    <p>circle <span class="ans">dark blue</span> &nbsp;·&nbsp; circle <span class="ans">dark green</span> &nbsp;·&nbsp; circle <span class="ans">dark red</span></p>
+    <p style="margin-top:1.2mm;"><span class="ans">light red</span> is pink.</p>
+    <p class="muted">Accept any clearly lighter/darker pair of the same colour family.</p>
+  </div>
+
+  <div class="key-sec">
+    <h2>3. How old are you?</h2>
+    <p class="muted">Trace and free-writing practice. The “Write about you” line is the child’s own age.</p>
+    <p style="margin-top:1.2mm;">Cakes, left to right:</p>
+    <p>5 candles → <span class="ans">I am 5 years old.</span></p>
+    <p>6 candles → <span class="ans">I am 6 years old.</span></p>
+    <p>7 candles → <span class="ans">I am 7 years old.</span></p>
+  </div>
+
+  <div class="key-sec">
+    <h2>4. China or Chinese?</h2>
+    <p class="muted" style="margin-bottom:1.4mm;">China = the country / a place. &nbsp; Chinese = the people or the language.</p>
+    <ol>
+      <li>I am from <span class="ans">China</span>.</li>
+      <li>I am <span class="ans">Chinese</span>.</li>
+      <li>I speak <span class="ans">Chinese</span>.</li>
+    </ol>
+  </div>
+  </div>
+
+  <footer class="sheet-foot">
+    <span>Beginner English &nbsp;·&nbsp; Homework 1</span>
+    <span>Teacher Answer Key</span>
+  </footer>
+</section>
+
+</body>
+</html>

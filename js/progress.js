@@ -34,7 +34,13 @@ const REG={
   'lessons/conversations/b1':{type:'video',series:'lessons/conversations',ring:8,unit:'lines'},
   'stories/jack-texts':{type:'worksheet'},
   'chem':{type:'worksheet'},
-  'lessons/chem-word-lab':{type:'worksheet',alias:'chem'}
+  'lessons/chem-word-lab':{type:'worksheet',alias:'chem'},
+  'lessons/beginner-homework-1':{type:'worksheet'},
+  'lessons/comparatives-worksheet':{type:'worksheet'},
+  'lessons/verbs-ed-worksheet':{type:'worksheet'},
+  'lessons/comparatives-exceptions':{type:'worksheet'},
+  'lessons/word-maths-grade7':{type:'worksheet'},
+  'lessons/word-maths-grade9':{type:'worksheet'},
 };
 EVG.forEach(x=>{REG['games/mm-'+x]={type:'game',ring:3,unit:'levels'}});
 function register(id,type,opts){REG[id]=Object.assign({},REG[id]||{},opts||{},{type});return REG[id]}

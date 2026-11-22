@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Good, Better, Best</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #fff;
+    color: #2a3544;
+    font-family: Nunito, "Comic Neue", Andika, sans-serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 10mm 12mm 0;
+    page-break-after: always;
+    break-after: page;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+  }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  .page-body { flex: 1 1 auto; min-height: 0; }
+
+  header.sheet-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 4.5mm;
+    padding-bottom: 3.8mm;
+    border-bottom: 2.5px solid #3f8f8a;
+  }
+  .title-block h1 {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 600;
+    font-size: 23pt;
+    line-height: 1.1;
+    color: #1f6f6b;
+  }
+  .title-block .sub {
+    font-size: 10.5pt;
+    color: #5d6d7a;
+    margin-top: 1.2mm;
+    font-weight: 600;
+  }
+  .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2.8mm;
+    min-width: 76mm;
+    padding-top: 1mm;
+  }
+  .meta-line {
+    display: flex;
+    align-items: flex-end;
+    gap: 2.5mm;
+    font-size: 12pt;
+    font-weight: 700;
+  }
+  .meta-line .lbl { flex: 0 0 auto; }
+  .meta-line .line {
+    flex: 1;
+    border-bottom: 1.6px solid #2a3544;
+    height: 6.5mm;
+  }
+
+  .intro {
+    margin: 0 0 3.2mm;
+    font-size: 11pt;
+    font-weight: 700;
+    color: #3e4c59;
+  }
+
+  .tips {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.2mm 4mm;
+    border: 1.5px solid #cfe3d3;
+    background: #f5fbf6;
+    border-radius: 4mm;
+    padding: 2.6mm 4mm 2.8mm;
+    margin-bottom: 3.6mm;
+  }
+  .tips h2 {
+    grid-column: 1 / -1;
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 12pt;
+    color: #246635;
+    margin-bottom: 0.4mm;
+  }
+  .tip {
+    font-size: 9.6pt;
+    font-weight: 700;
+    color: #2a3544;
+    line-height: 1.35;
+  }
+  .tip strong { color: #1d6b3a; font-weight: 800; }
+  .nowrap { white-space: nowrap; }
+
+  table.grid {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+  }
+  table.grid th, table.grid td {
+    border: 1.3px solid #c5d0d8;
+    text-align: center;
+    vertical-align: middle;
+  }
+  table.grid th {
+    background: #1f6f6b;
+    color: #fff;
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 11pt;
+    padding: 2.1mm 2mm;
+    line-height: 1.2;
+  }
+  table.grid th .sm {
+    display: block;
+    font-family: Nunito, sans-serif;
+    font-weight: 700;
+    font-size: 8pt;
+    opacity: 0.9;
+    margin-top: 0.3mm;
+  }
+  table.grid th:first-child { border-top-left-radius: 3mm; }
+  table.grid th:last-child { border-top-right-radius: 3mm; }
+  table.grid col.c1, table.grid col.c2, table.grid col.c3 { width: 33.33%; }
+
+  table.grid td {
+    height: 10mm;
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 12.5pt;
+    color: #2a3544;
+    padding: 0 1.8mm;
+    background: #fff;
+    white-space: nowrap;
+  }
+  table.grid tr.section td {
+    height: 7.2mm;
+    background: #e8f4f2;
+    color: #1f6f6b;
+    font-size: 9.5pt;
+    font-weight: 600;
+    text-align: left;
+    padding: 0 3.5mm;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+  }
+  table.grid tr.section + tr td { border-top-color: #c5d0d8; }
+  table.grid tr:nth-child(even) td { background: #f7fbfa; }
+  table.grid tr.ex td {
+    background: #e7f5ec;
+    height: 11mm;
+  }
+  table.grid td.ex-word {
+    position: relative;
+  }
+  .ex-pill {
+    position: absolute;
+    left: 2mm;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: Nunito, sans-serif;
+    font-size: 7pt;
+    font-weight: 800;
+    color: #246635;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    background: #fff;
+    border: 1.2px solid #b7d4be;
+    border-radius: 2mm;
+    padding: 0.3mm 1.4mm 0.4mm;
+    line-height: 1.2;
+  }
+  table.grid td.blank {
+    background: #fffdf6;
+    padding: 1.4mm 4mm 1.8mm;
+  }
+  table.grid tr:nth-child(even) td.blank { background: #fffdf6; }
+  .write {
+    display: block;
+    height: 7.2mm;
+    border-bottom: 1.7px solid #2a3544;
+  }
+
+  footer.sheet-foot {
+    position: static;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: #7b8894;
+    padding: 2.4mm 0 7mm;
+    margin-top: auto;
+    flex: 0 0 auto;
+    width: 100%;
+    background: #fff;
+  }
+
+  .key-banner {
+    background: #2a3544;
+    color: #fff;
+    border-radius: 4mm;
+    padding: 3.2mm 5mm;
+    margin-bottom: 4.5mm;
+  }
+  .key-banner h1 {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 20pt;
+    line-height: 1.15;
+  }
+  .key-banner p {
+    margin-top: 1.2mm;
+    font-size: 10.5pt;
+    font-weight: 650;
+    opacity: 0.9;
+  }
+  table.grid.key td { height: 9.6mm; font-size: 12pt; }
+  table.grid.key td .ans {
+    color: #1d6b3a;
+    font-weight: 600;
+  }
+  .key-note {
+    margin-top: 3.5mm;
+    font-size: 10pt;
+    font-weight: 700;
+    color: #5d6d7a;
+    line-height: 1.45;
+  }
+  .key-note .ans { color: #1d6b3a; font-weight: 800; }
+</style>
+</head>
+<body>
+
+<section class="page">
+  <div class="page-body">
+  <header class="sheet-head">
+    <div class="title-block">
+      <h1>Good, Better, Best</h1>
+      <div class="sub">Exceptions</div>
+    </div>
+    <div class="meta">
+      <div class="meta-line"><span class="lbl">Name:</span><span class="line"></span></div>
+      <div class="meta-line"><span class="lbl">Date:</span><span class="line"></span></div>
+    </div>
+  </header>
+
+  <p class="intro">Look at the example. Then fill in the missing word in each row.</p>
+
+  <div class="tips">
+    <h2>Tips</h2>
+    <div class="tip">Some words change completely.<br>good → <strong>better</strong> → <strong>best</strong><br>bad → <strong>worse</strong> → <strong>worst</strong></div>
+    <div class="tip">Long words (2 or more syllables, not ending in <strong>-y</strong>) use <strong>more</strong> and <strong>most</strong>, not <span class="nowrap">-er</span> or <span class="nowrap">-est</span>.<br>beautiful → <strong>more beautiful</strong> → <strong>most beautiful</strong></div>
+  </div>
+
+  <table class="grid">
+    <colgroup><col class="c1"><col class="c2"><col class="c3"></colgroup>
+    <thead>
+      <tr>
+        <th>Adjective</th>
+        <th>Comparative</th>
+        <th>Superlative</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="ex">
+        <td class="ex-word"><span class="ex-pill">Example</span>good</td>
+        <td>better</td>
+        <td>best</td>
+      </tr>
+      <tr class="section"><td colspan="3">Irregular adjectives</td></tr>
+      <tr><td>bad</td><td>worse</td><td class="blank"><span class="write"></span></td></tr>
+      <tr><td>far</td><td class="blank"><span class="write"></span></td><td>farthest</td></tr>
+      <tr><td class="blank"><span class="write"></span></td><td>less</td><td>least</td></tr>
+      <tr><td>many</td><td>more</td><td class="blank"><span class="write"></span></td></tr>
+      <tr><td>much</td><td class="blank"><span class="write"></span></td><td>most</td></tr>
+      <tr><td>well</td><td>better</td><td class="blank"><span class="write"></span></td></tr>
+      <tr><td>good</td><td class="blank"><span class="write"></span></td><td>best</td></tr>
+      <tr class="section"><td colspan="3">Long adjectives &nbsp;—&nbsp; use more / most</td></tr>
+      <tr><td>beautiful</td><td>more beautiful</td><td class="blank"><span class="write"></span></td></tr>
+      <tr><td class="blank"><span class="write"></span></td><td>more expensive</td><td>most expensive</td></tr>
+      <tr><td>interesting</td><td class="blank"><span class="write"></span></td><td>most interesting</td></tr>
+      <tr><td class="blank"><span class="write"></span></td><td>more difficult</td><td>most difficult</td></tr>
+      <tr><td>important</td><td>more important</td><td class="blank"><span class="write"></span></td></tr>
+      <tr><td>delicious</td><td class="blank"><span class="write"></span></td><td>most delicious</td></tr>
+      <tr><td class="blank"><span class="write"></span></td><td>more dangerous</td><td>most dangerous</td></tr>
+      <tr><td class="blank"><span class="write"></span></td><td>more comfortable</td><td>most comfortable</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <footer class="sheet-foot">
+    <span>Beginner English &nbsp;·&nbsp; Comparatives</span>
+    <span>Worksheet</span>
+  </footer>
+</section>
+
+<section class="page">
+  <div class="page-body">
+  <div class="key-banner">
+    <h1>Teacher Answer Key</h1>
+    <p>Good, Better, Best &nbsp;·&nbsp; Not for students</p>
+  </div>
+
+  <table class="grid key">
+    <colgroup><col class="c1"><col class="c2"><col class="c3"></colgroup>
+    <thead>
+      <tr>
+        <th>Adjective</th>
+        <th>Comparative</th>
+        <th>Superlative</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="ex">
+        <td class="ex-word"><span class="ex-pill">Example</span>good</td>
+        <td>better</td>
+        <td>best</td>
+      </tr>
+      <tr class="section"><td colspan="3">Irregular adjectives</td></tr>
+      <tr><td>bad</td><td>worse</td><td><span class="ans">worst</span></td></tr>
+      <tr><td>far</td><td><span class="ans">farther</span></td><td>farthest</td></tr>
+      <tr><td><span class="ans">little</span></td><td>less</td><td>least</td></tr>
+      <tr><td>many</td><td>more</td><td><span class="ans">most</span></td></tr>
+      <tr><td>much</td><td><span class="ans">more</span></td><td>most</td></tr>
+      <tr><td>well</td><td>better</td><td><span class="ans">best</span></td></tr>
+      <tr><td>good</td><td><span class="ans">better</span></td><td>best</td></tr>
+      <tr class="section"><td colspan="3">Long adjectives &nbsp;—&nbsp; use more / most</td></tr>
+      <tr><td>beautiful</td><td>more beautiful</td><td><span class="ans">most beautiful</span></td></tr>
+      <tr><td><span class="ans">expensive</span></td><td>more expensive</td><td>most expensive</td></tr>
+      <tr><td>interesting</td><td><span class="ans">more interesting</span></td><td>most interesting</td></tr>
+      <tr><td><span class="ans">difficult</span></td><td>more difficult</td><td>most difficult</td></tr>
+      <tr><td>important</td><td>more important</td><td><span class="ans">most important</span></td></tr>
+      <tr><td>delicious</td><td><span class="ans">more delicious</span></td><td>most delicious</td></tr>
+      <tr><td><span class="ans">dangerous</span></td><td>more dangerous</td><td>most dangerous</td></tr>
+      <tr><td><span class="ans">comfortable</span></td><td>more comfortable</td><td>most comfortable</td></tr>
+    </tbody>
+  </table>
+
+  <p class="key-note">
+    Answers in green are the missing words.
+    For <span class="ans">far</span>, accept <span class="ans">farther</span> (or further).
+    For <span class="ans">little</span>, the forms are <span class="ans">less</span> and <span class="ans">least</span> (amount).
+    Long adjectives take <span class="ans">more</span> and <span class="ans">most</span>.
+  </p>
+  </div>
+
+  <footer class="sheet-foot">
+    <span>Beginner English &nbsp;·&nbsp; Comparatives</span>
+    <span>Teacher Answer Key</span>
+  </footer>
+</section>
+
+</body>
+</html>

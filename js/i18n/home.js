@@ -39,7 +39,7 @@ LWLang.add({
 'Everyday Chores 1':'日常家务 1','Everyday Chores 2':'日常家务 2','Everyday A to Z Foods 1':'日常 A 到 Z 食物 1','Everyday A to Z Foods 2':'日常 A 到 Z 食物 2','Everyday A to Z Foods 3':'日常 A 到 Z 食物 3',
 '15 matching games · pick a level: A1, A2 or 12+':'15 个配对游戏 · 选一个级别：A1、A2 或 12+',
 'Easy English (short)':'简单英语（短）','Easy English (prose)':'简单英语（短文）','Original 1890':'1890 年原版',
-'Conversations':'对话','Word Lab':'词汇实验室','12 and up':'12 岁以上','Worksheet 1 (HTML)':'练习单 1','Worksheet 2 (HTML)':'练习单 2','Worksheet 3 (HTML)':'练习单 3','Worksheet 4 (HTML)':'练习单 4','PDF':'PDF 文件',
+'Worksheets':'练习单','Beginner English Homework 1':'初级英语作业 1','Bicycle, colours and me · Very easy':'自行车、颜色和我 · 非常简单','Big, Bigger, Biggest':'大、更大、最大','Comparatives and superlatives · Add -er and -est':'比较级和最高级 · 加 -er 和 -est','Create, Creating, Created':'创造、正在创造、创造了','Verbs in the past and now · Add -ing and -ed':'动词的现在和过去 · 加 -ing 和 -ed','Good, Better, Best':'好、更好、最好','Exceptions · irregular comparatives and long adjectives':'不规则变化 · 不规则比较级和较长的形容词','Word Maths, Grade 7':'七年级文字数学','Verbal maths · Write every answer in words':'用英语写的数学题 · 答案必须写成单词','Word Maths, Grade 9':'九年级文字数学','Verbal maths for grade nine · Write every answer in words':'九年级文字数学 · 答案必须写成单词','Conversations':'对话','Word Lab':'词汇实验室','12 and up':'12 岁以上','Worksheet 1 (HTML)':'练习单 1','Worksheet 2 (HTML)':'练习单 2','Worksheet 3 (HTML)':'练习单 3','Worksheet 4 (HTML)':'练习单 4','PDF':'PDF 文件',
 'Choose a level':'选择级别'
 });
 (function(){

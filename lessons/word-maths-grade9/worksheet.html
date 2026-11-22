@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Word Maths</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #fff;
+    color: #2a3544;
+    font-family: Nunito, "Comic Neue", Andika, sans-serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 9.5mm 12mm 0;
+    page-break-after: always;
+    break-after: page;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+  }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  .page-body { flex: 1 1 auto; min-height: 0; }
+
+  header.sheet-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 3.6mm;
+    padding-bottom: 3.2mm;
+    border-bottom: 2.5px solid #3f8f8a;
+  }
+  .title-block h1 {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 600;
+    font-size: 22pt;
+    line-height: 1.1;
+    color: #1f6f6b;
+  }
+  .title-block .sub {
+    font-size: 10pt;
+    color: #5d6d7a;
+    margin-top: 1.1mm;
+    font-weight: 600;
+  }
+  .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2.6mm;
+    min-width: 76mm;
+    padding-top: 1mm;
+  }
+  .meta-line {
+    display: flex;
+    align-items: flex-end;
+    gap: 2.5mm;
+    font-size: 12pt;
+    font-weight: 700;
+  }
+  .meta-line .lbl { flex: 0 0 auto; }
+  .meta-line .line {
+    flex: 1;
+    border-bottom: 1.6px solid #2a3544;
+    height: 6.5mm;
+  }
+
+  .tips {
+    border: 1.5px solid #cfe3d3;
+    background: #f5fbf6;
+    border-radius: 4mm;
+    padding: 2.2mm 4mm 2.4mm;
+    margin-bottom: 3mm;
+  }
+  .tips h2 {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 11.5pt;
+    color: #246635;
+    margin-bottom: 0.7mm;
+  }
+  .tips p {
+    font-size: 9.8pt;
+    font-weight: 700;
+    color: #2a3544;
+    line-height: 1.38;
+  }
+
+  .sec-h {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 12.5pt;
+    color: #1f6f6b;
+    margin: 0 0 2.2mm;
+  }
+
+  .q { margin-bottom: 2.7mm; }
+  .q-lab {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 10.5pt;
+    color: #1f6f6b;
+    margin-bottom: 0.5mm;
+  }
+  .q p {
+    font-size: 10.3pt;
+    font-weight: 700;
+    line-height: 1.36;
+    color: #2a3544;
+  }
+  .ans {
+    display: flex;
+    align-items: flex-end;
+    gap: 2.5mm;
+    margin-top: 1.3mm;
+  }
+  .ans .lbl {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 10pt;
+    color: #3e4c59;
+    flex: 0 0 auto;
+  }
+  .ans .line {
+    flex: 1;
+    border-bottom: 1.6px solid #2a3544;
+    height: 6.4mm;
+  }
+
+  .eq {
+    margin-bottom: 2.5mm;
+  }
+  .eq p {
+    font-size: 10.3pt;
+    font-weight: 700;
+    line-height: 1.36;
+    color: #2a3544;
+    margin-bottom: 0.4mm;
+  }
+  .eq .q-lab { margin-bottom: 0.6mm; }
+
+  footer.sheet-foot {
+    position: static;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: #7b8894;
+    padding: 2.2mm 0 6.5mm;
+    margin-top: auto;
+    flex: 0 0 auto;
+    width: 100%;
+    background: #fff;
+  }
+
+  .key-banner {
+    background: #2a3544;
+    color: #fff;
+    border-radius: 4mm;
+    padding: 3mm 5mm;
+    margin-bottom: 3.6mm;
+  }
+  .key-banner h1 {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 20pt;
+    line-height: 1.15;
+  }
+  .key-banner p {
+    margin-top: 1.1mm;
+    font-size: 10.5pt;
+    font-weight: 650;
+    opacity: 0.9;
+  }
+  .key-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 7mm;
+  }
+  .key-q {
+    margin-bottom: 2mm;
+    font-size: 9.4pt;
+    font-weight: 700;
+    line-height: 1.32;
+    color: #2a3544;
+  }
+  .key-q .n {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    color: #1f6f6b;
+  }
+  .key-q .answ { color: #1d6b3a; font-weight: 800; }
+  .key-q .why { color: #5d6d7a; font-weight: 650; }
+  .key-note {
+    margin-top: 1.8mm;
+    font-size: 9.2pt;
+    font-weight: 700;
+    color: #5d6d7a;
+    line-height: 1.4;
+  }
+  .key-note .answ { color: #1d6b3a; font-weight: 800; }
+</style>
+</head>
+<body>
+
+<!-- ===================== STUDENT PAGE ONE ===================== -->
+<section class="page">
+  <div class="page-body">
+  <header class="sheet-head">
+    <div class="title-block">
+      <h1>Word Maths</h1>
+      <div class="sub">Verbal maths for grade nine &nbsp;·&nbsp; Write every answer in words</div>
+    </div>
+    <div class="meta">
+      <div class="meta-line"><span class="lbl">Name:</span><span class="line"></span></div>
+      <div class="meta-line"><span class="lbl">Date:</span><span class="line"></span></div>
+    </div>
+  </header>
+
+  <div class="tips">
+    <h2>Remember</h2>
+    <p>All numbers in these problems are written as words. Write your answers as words too. Do not use digits or number symbols. Include the unit where it is needed, such as rand or metres.</p>
+  </div>
+
+  <h2 class="sec-h">Word problems</h2>
+
+  <div class="q">
+    <div class="q-lab">One</div>
+    <p>The ratio of red paint to blue paint in a mix is three to two. There are forty-five litres of the mix in total. How many litres of red paint are there?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Two</div>
+    <p>A recipe for eight people uses three hundred grams of flour. Using the same recipe, how many grams of flour are needed for twelve people?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Three</div>
+    <p>The price of a bicycle was two thousand four hundred rand. The price then increased by fifteen percent. What is the new price?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Four</div>
+    <p>A jacket is priced at eight hundred rand. In a sale, the price is reduced by twenty percent. The reduced price is then reduced by a further ten percent. What is the final price?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Five</div>
+    <p>Amir invests five thousand rand at a simple interest rate of six percent per year. He leaves the money for two years. How much interest does he earn in total?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Six</div>
+    <p>A coach travels three hundred and sixty kilometres at an average speed of forty-eight kilometres per hour. How many hours does the journey take?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+  </div>
+
+  <footer class="sheet-foot">
+    <span>Grade nine English &nbsp;·&nbsp; Word Maths</span>
+    <span>Page 1 of 3</span>
+  </footer>
+</section>
+
+<!-- ===================== STUDENT PAGE TWO ===================== -->
+<section class="page">
+  <div class="page-body">
+  <header class="sheet-head">
+    <div class="title-block">
+      <h1>Word Maths</h1>
+      <div class="sub">Word problems, continued</div>
+    </div>
+  </header>
+
+  <div class="q">
+    <div class="q-lab">Seven</div>
+    <p>Mia’s four test scores are sixty-eight, seventy-five, eighty-one, and eighty-four. What is her mean score?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Eight</div>
+    <p>A number is multiplied by three, then seven is added. The result equals forty. Find the number.</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Nine</div>
+    <p>A rectangle is fifteen metres long and eight metres wide.</p>
+    <div class="ans"><span class="lbl">Perimeter</span><span class="line"></span></div>
+    <div class="ans"><span class="lbl">Area</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Ten</div>
+    <p>A triangle has a base of ten centimetres and a perpendicular height of six centimetres. What is its area?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Eleven</div>
+    <p>A square tile has sides of twelve centimetres. What is the area of the tile?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Twelve</div>
+    <p>A square garden has an area of one hundred and ninety-six square metres. What is the length of one side?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Thirteen</div>
+    <p>On Monday the temperature at dawn is three degrees Celsius. Overnight the temperature falls by eight degrees. What is the temperature on Tuesday morning?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+  </div>
+
+  <footer class="sheet-foot">
+    <span>Grade nine English &nbsp;·&nbsp; Word Maths</span>
+    <span>Page 2 of 3</span>
+  </footer>
+</section>
+
+<!-- ===================== STUDENT PAGE THREE ===================== -->
+<section class="page">
+  <div class="page-body">
+  <header class="sheet-head">
+    <div class="title-block">
+      <h1>Word Maths</h1>
+      <div class="sub">Word problems, continued</div>
+    </div>
+  </header>
+
+  <div class="q">
+    <div class="q-lab">Fourteen</div>
+    <p>A shop sells notebooks for twelve rand each and pens for five rand each. Leo buys three notebooks and four pens, and he pays with a one-hundred-rand note. How much change does he receive?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Fifteen</div>
+    <p>The sum of three consecutive whole numbers is forty-eight. What are the three numbers?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <h2 class="sec-h" style="margin-top:3mm;">Write the equation in words, then find the number</h2>
+  <p style="font-size:10pt; font-weight:700; color:#3e4c59; margin-bottom:2.6mm;">For each problem, write the equation in words. Then write the number.</p>
+
+  <div class="eq">
+    <div class="q-lab">A</div>
+    <p>A number is multiplied by four, then five is subtracted. The result equals twenty-seven.</p>
+    <div class="ans"><span class="lbl">Equation</span><span class="line"></span></div>
+    <div class="ans"><span class="lbl">The number</span><span class="line"></span></div>
+  </div>
+
+  <div class="eq">
+    <div class="q-lab">B</div>
+    <p>A number is multiplied by five, then nine is added. The result equals forty-four.</p>
+    <div class="ans"><span class="lbl">Equation</span><span class="line"></span></div>
+    <div class="ans"><span class="lbl">The number</span><span class="line"></span></div>
+  </div>
+
+  <div class="eq">
+    <div class="q-lab">C</div>
+    <p>A number is multiplied by two, then eleven is added. The result equals thirty-five.</p>
+    <div class="ans"><span class="lbl">Equation</span><span class="line"></span></div>
+    <div class="ans"><span class="lbl">The number</span><span class="line"></span></div>
+  </div>
+
+  <div class="eq">
+    <div class="q-lab">D</div>
+    <p>A number is divided by three, then six is added. The result equals thirteen.</p>
+    <div class="ans"><span class="lbl">Equation</span><span class="line"></span></div>
+    <div class="ans"><span class="lbl">The number</span><span class="line"></span></div>
+  </div>
+  </div>
+
+  <footer class="sheet-foot">
+    <span>Grade nine English &nbsp;·&nbsp; Word Maths</span>
+    <span>Page 3 of 3</span>
+  </footer>
+</section>
+
+<!-- ===================== ANSWER KEY ===================== -->
+<section class="page">
+  <div class="page-body">
+  <div class="key-banner">
+    <h1>Teacher Answer Key</h1>
+    <p>Word Maths, grade nine &nbsp;·&nbsp; Not for students &nbsp;·&nbsp; All answers in words</p>
+  </div>
+
+  <div class="key-grid">
+    <div>
+      <div class="key-q"><span class="n">One.</span> <span class="answ">twenty-seven litres</span><br><span class="why">five equal parts; forty-five divided by five is nine; red is three parts, so nine times three</span></div>
+      <div class="key-q"><span class="n">Two.</span> <span class="answ">four hundred and fifty grams</span><br><span class="why">twelve is one and a half times eight; three hundred times one and a half</span></div>
+      <div class="key-q"><span class="n">Three.</span> <span class="answ">two thousand seven hundred and sixty rand</span><br><span class="why">fifteen percent of two thousand four hundred is three hundred and sixty; add this to the original price</span></div>
+      <div class="key-q"><span class="n">Four.</span> <span class="answ">five hundred and seventy-six rand</span><br><span class="why">twenty percent of eight hundred is one hundred and sixty, leaving six hundred and forty; ten percent of six hundred and forty is sixty-four; six hundred and forty minus sixty-four. (This is not the same as thirty percent off the original price.)</span></div>
+      <div class="key-q"><span class="n">Five.</span> <span class="answ">six hundred rand</span><br><span class="why">simple interest: five thousand times six times two, then divide by one hundred</span></div>
+      <div class="key-q"><span class="n">Six.</span> <span class="answ">seven and a half hours</span><br><span class="why">three hundred and sixty divided by forty-eight</span></div>
+      <div class="key-q"><span class="n">Seven.</span> <span class="answ">seventy-seven</span><br><span class="why">sixty-eight plus seventy-five plus eighty-one plus eighty-four is three hundred and eight; divide by four</span></div>
+      <div class="key-q"><span class="n">Eight.</span> <span class="answ">eleven</span><br><span class="why">a number times three, plus seven, equals forty; forty minus seven is thirty-three; thirty-three divided by three</span></div>
+    </div>
+    <div>
+      <div class="key-q"><span class="n">Nine.</span> Perimeter: <span class="answ">forty-six metres</span><br><span class="why">two times fifteen plus eight<br></span>Area: <span class="answ">one hundred and twenty square metres</span><br><span class="why">fifteen times eight</span></div>
+      <div class="key-q"><span class="n">Ten.</span> <span class="answ">thirty square centimetres</span><br><span class="why">one half times ten times six</span></div>
+      <div class="key-q"><span class="n">Eleven.</span> <span class="answ">one hundred and forty-four square centimetres</span><br><span class="why">twelve squared, or twelve times twelve</span></div>
+      <div class="key-q"><span class="n">Twelve.</span> <span class="answ">fourteen metres</span><br><span class="why">the square root of one hundred and ninety-six is fourteen, because fourteen times fourteen is one hundred and ninety-six</span></div>
+      <div class="key-q"><span class="n">Thirteen.</span> <span class="answ">minus five degrees Celsius</span><br><span class="why">three minus eight. Also accept five degrees below zero.</span></div>
+      <div class="key-q"><span class="n">Fourteen.</span> <span class="answ">forty-four rand</span><br><span class="why">three times twelve is thirty-six; four times five is twenty; the total is fifty-six; one hundred minus fifty-six</span></div>
+      <div class="key-q"><span class="n">Fifteen.</span> <span class="answ">fifteen, sixteen and seventeen</span><br><span class="why">three consecutive numbers sum to forty-eight, so three times the middle number is forty-eight; the middle number is sixteen</span></div>
+    </div>
+  </div>
+
+  <h2 class="sec-h" style="margin-top:1.6mm;">Write the equation in words, then find the number</h2>
+  <div class="key-q"><span class="n">A.</span> Equation: <span class="answ">a number multiplied by four, minus five, equals twenty-seven</span><br>The number: <span class="answ">eight</span> <span class="why">(twenty-seven plus five is thirty-two; thirty-two divided by four)</span></div>
+  <div class="key-q"><span class="n">B.</span> Equation: <span class="answ">a number multiplied by five, plus nine, equals forty-four</span><br>The number: <span class="answ">seven</span> <span class="why">(forty-four minus nine is thirty-five; thirty-five divided by five)</span></div>
+  <div class="key-q"><span class="n">C.</span> Equation: <span class="answ">a number multiplied by two, plus eleven, equals thirty-five</span><br>The number: <span class="answ">twelve</span> <span class="why">(thirty-five minus eleven is twenty-four; twenty-four divided by two)</span></div>
+  <div class="key-q"><span class="n">D.</span> Equation: <span class="answ">a number divided by three, plus six, equals thirteen</span><br>The number: <span class="answ">twenty-one</span> <span class="why">(thirteen minus six is seven; seven times three)</span></div>
+  </div>
+
+  <footer class="sheet-foot">
+    <span>Grade nine English &nbsp;·&nbsp; Word Maths</span>
+    <span>Teacher Answer Key</span>
+  </footer>
+</section>
+
+</body>
+</html>

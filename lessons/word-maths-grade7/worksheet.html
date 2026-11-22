@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Word Maths</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #fff;
+    color: #2a3544;
+    font-family: Nunito, "Comic Neue", Andika, sans-serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 10mm 12mm 0;
+    page-break-after: always;
+    break-after: page;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+  }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  .page-body { flex: 1 1 auto; min-height: 0; }
+
+  header.sheet-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 4mm;
+    padding-bottom: 3.6mm;
+    border-bottom: 2.5px solid #3f8f8a;
+  }
+  .title-block h1 {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 600;
+    font-size: 23pt;
+    line-height: 1.1;
+    color: #1f6f6b;
+  }
+  .title-block .sub {
+    font-size: 10.5pt;
+    color: #5d6d7a;
+    margin-top: 1.2mm;
+    font-weight: 600;
+  }
+  .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2.8mm;
+    min-width: 76mm;
+    padding-top: 1mm;
+  }
+  .meta-line {
+    display: flex;
+    align-items: flex-end;
+    gap: 2.5mm;
+    font-size: 12pt;
+    font-weight: 700;
+  }
+  .meta-line .lbl { flex: 0 0 auto; }
+  .meta-line .line {
+    flex: 1;
+    border-bottom: 1.6px solid #2a3544;
+    height: 6.5mm;
+  }
+
+  .tips {
+    border: 1.5px solid #cfe3d3;
+    background: #f5fbf6;
+    border-radius: 4mm;
+    padding: 2.4mm 4mm 2.6mm;
+    margin-bottom: 3.4mm;
+  }
+  .tips h2 {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 12pt;
+    color: #246635;
+    margin-bottom: 0.8mm;
+  }
+  .tips p {
+    font-size: 10pt;
+    font-weight: 700;
+    color: #2a3544;
+    line-height: 1.4;
+  }
+
+  .sec-h {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 13pt;
+    color: #1f6f6b;
+    margin: 0 0 2.4mm;
+  }
+
+  .q {
+    margin-bottom: 3.2mm;
+  }
+  .q-lab {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 11pt;
+    color: #1f6f6b;
+    margin-bottom: 0.6mm;
+  }
+  .q p {
+    font-size: 10.8pt;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #2a3544;
+  }
+  .ans {
+    display: flex;
+    align-items: flex-end;
+    gap: 2.5mm;
+    margin-top: 1.6mm;
+  }
+  .ans .lbl {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 10.5pt;
+    color: #3e4c59;
+    flex: 0 0 auto;
+  }
+  .ans .line {
+    flex: 1;
+    border-bottom: 1.6px solid #2a3544;
+    height: 7mm;
+  }
+
+  .sums {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.4mm 6mm;
+  }
+  .sum {
+    display: flex;
+    align-items: flex-end;
+    gap: 2mm;
+    font-size: 11pt;
+    font-weight: 700;
+    min-height: 9.5mm;
+  }
+  .sum .line {
+    flex: 1;
+    border-bottom: 1.6px solid #2a3544;
+    height: 7mm;
+  }
+
+  footer.sheet-foot {
+    position: static;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: #7b8894;
+    padding: 2.4mm 0 7mm;
+    margin-top: auto;
+    flex: 0 0 auto;
+    width: 100%;
+    background: #fff;
+  }
+
+  .key-banner {
+    background: #2a3544;
+    color: #fff;
+    border-radius: 4mm;
+    padding: 3.2mm 5mm;
+    margin-bottom: 4.2mm;
+  }
+  .key-banner h1 {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    font-size: 20pt;
+    line-height: 1.15;
+  }
+  .key-banner p {
+    margin-top: 1.2mm;
+    font-size: 10.5pt;
+    font-weight: 650;
+    opacity: 0.9;
+  }
+  .key-q {
+    margin-bottom: 2.3mm;
+    font-size: 10pt;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #2a3544;
+  }
+  .key-q .n {
+    font-family: Fredoka, Nunito, sans-serif;
+    font-weight: 550;
+    color: #1f6f6b;
+  }
+  .key-q .answ { color: #1d6b3a; font-weight: 800; }
+  .key-q .why {
+    color: #5d6d7a;
+    font-weight: 650;
+  }
+  .key-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 8mm;
+  }
+  .key-note {
+    margin-top: 2.5mm;
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: #5d6d7a;
+    line-height: 1.4;
+  }
+  .key-note .answ { color: #1d6b3a; font-weight: 800; }
+</style>
+</head>
+<body>
+
+<!-- ===================== STUDENT PAGE ONE ===================== -->
+<section class="page">
+  <div class="page-body">
+  <header class="sheet-head">
+    <div class="title-block">
+      <h1>Word Maths</h1>
+      <div class="sub">Verbal maths &nbsp;·&nbsp; Write every answer in words</div>
+    </div>
+    <div class="meta">
+      <div class="meta-line"><span class="lbl">Name:</span><span class="line"></span></div>
+      <div class="meta-line"><span class="lbl">Date:</span><span class="line"></span></div>
+    </div>
+  </header>
+
+  <div class="tips">
+    <h2>Remember</h2>
+    <p>All numbers in these problems are written as words. Write your answers as words too. Do not use digits or number symbols.</p>
+  </div>
+
+  <h2 class="sec-h">Word problems</h2>
+
+  <div class="q">
+    <div class="q-lab">One</div>
+    <p>Mia has thirty-six books. She buys fifteen more at the bookshop. How many books does she have now?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Two</div>
+    <p>A box holds eighty apples. The class eats thirty-five of them. How many apples are left?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Three</div>
+    <p>There are twelve packets of pencils. Each packet has eight pencils. How many pencils are there in total?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Four</div>
+    <p>Ben shares forty-eight sweets equally among six friends. How many sweets does each friend get?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Five</div>
+    <p>Sara has twenty-four stickers. She gives one third of them to her brother. How many stickers does she have left?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Six</div>
+    <p>A tank holds sixty litres of water. One quarter of the water is used. How many litres are left?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Seven</div>
+    <p>Lila bakes twenty muffins. She gives one half of them to her neighbours. How many muffins does she give away?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+  </div>
+
+  <footer class="sheet-foot">
+    <span>Grade seven English &nbsp;·&nbsp; Word Maths</span>
+    <span>Page 1 of 2</span>
+  </footer>
+</section>
+
+<!-- ===================== STUDENT PAGE TWO ===================== -->
+<section class="page">
+  <div class="page-body">
+  <header class="sheet-head">
+    <div class="title-block">
+      <h1>Word Maths</h1>
+      <div class="sub">Word problems, continued</div>
+    </div>
+  </header>
+
+  <div class="q">
+    <div class="q-lab">Eight</div>
+    <p>A jacket costs two hundred rand. It is reduced by twenty percent. How much does the jacket cost now?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Nine</div>
+    <p>A film starts at half past four and ends at quarter past six. How many minutes long is the film?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Ten</div>
+    <p>The bus leaves at quarter to nine. Anna arrives at twenty past eight. How many minutes does she wait?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Eleven</div>
+    <p>Noah has fourteen marbles. Emma has twice as many marbles as Noah. How many marbles do they have altogether?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Twelve</div>
+    <p>Yuki has nine stamps. Ken has three times more stamps than Yuki. How many stamps does Ken have?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <div class="q">
+    <div class="q-lab">Thirteen</div>
+    <p>A shop sells erasers for five rand each. Leo buys four erasers and pays with a fifty-rand note. How much change does he get?</p>
+    <div class="ans"><span class="lbl">Answer</span><span class="line"></span></div>
+  </div>
+
+  <h2 class="sec-h" style="margin-top:2.5mm;">Write the sum in words</h2>
+  <p style="font-size:10.2pt; font-weight:700; color:#3e4c59; margin-bottom:3mm;">Complete each sum. Write the missing number in words.</p>
+
+  <div class="sums">
+    <div class="sum">seven plus eight equals <span class="line"></span></div>
+    <div class="sum">twenty minus nine equals <span class="line"></span></div>
+    <div class="sum">six times four equals <span class="line"></span></div>
+    <div class="sum">thirty divided by five equals <span class="line"></span></div>
+    <div class="sum">one half of twelve equals <span class="line"></span></div>
+    <div class="sum">one quarter of forty equals <span class="line"></span></div>
+  </div>
+  </div>
+
+  <footer class="sheet-foot">
+    <span>Grade seven English &nbsp;·&nbsp; Word Maths</span>
+    <span>Page 2 of 2</span>
+  </footer>
+</section>
+
+<!-- ===================== ANSWER KEY ===================== -->
+<section class="page">
+  <div class="page-body">
+  <div class="key-banner">
+    <h1>Teacher Answer Key</h1>
+    <p>Word Maths &nbsp;·&nbsp; Not for students &nbsp;·&nbsp; All answers in words</p>
+  </div>
+
+  <div class="key-grid">
+    <div>
+      <div class="key-q"><span class="n">One.</span> <span class="answ">fifty-one</span><br><span class="why">thirty-six plus fifteen</span></div>
+      <div class="key-q"><span class="n">Two.</span> <span class="answ">forty-five</span><br><span class="why">eighty minus thirty-five</span></div>
+      <div class="key-q"><span class="n">Three.</span> <span class="answ">ninety-six</span><br><span class="why">twelve times eight</span></div>
+      <div class="key-q"><span class="n">Four.</span> <span class="answ">eight</span><br><span class="why">forty-eight divided by six</span></div>
+      <div class="key-q"><span class="n">Five.</span> <span class="answ">sixteen</span><br><span class="why">one third of twenty-four is eight; twenty-four minus eight</span></div>
+      <div class="key-q"><span class="n">Six.</span> <span class="answ">forty-five litres</span><br><span class="why">one quarter of sixty is fifteen; sixty minus fifteen</span></div>
+      <div class="key-q"><span class="n">Seven.</span> <span class="answ">ten</span><br><span class="why">one half of twenty</span></div>
+    </div>
+    <div>
+      <div class="key-q"><span class="n">Eight.</span> <span class="answ">one hundred and sixty rand</span><br><span class="why">twenty percent of two hundred is forty; two hundred minus forty</span></div>
+      <div class="key-q"><span class="n">Nine.</span> <span class="answ">one hundred and five minutes</span><br><span class="why">from half past four to quarter past six is one hour and forty-five minutes</span></div>
+      <div class="key-q"><span class="n">Ten.</span> <span class="answ">twenty-five minutes</span><br><span class="why">from twenty past eight to quarter to nine</span></div>
+      <div class="key-q"><span class="n">Eleven.</span> <span class="answ">forty-two</span><br><span class="why">Emma has twenty-eight; fourteen plus twenty-eight</span></div>
+      <div class="key-q"><span class="n">Twelve.</span> <span class="answ">twenty-seven</span><br><span class="why">used here as three times as many: nine times three</span></div>
+      <div class="key-q"><span class="n">Thirteen.</span> <span class="answ">thirty rand</span><br><span class="why">four times five rand is twenty rand; fifty minus twenty</span></div>
+    </div>
+  </div>
+
+  <h2 class="sec-h" style="margin-top:2mm;">Write the sum in words</h2>
+  <div class="key-q">seven plus eight equals <span class="answ">fifteen</span></div>
+  <div class="key-q">twenty minus nine equals <span class="answ">eleven</span></div>
+  <div class="key-q">six times four equals <span class="answ">twenty-four</span></div>
+  <div class="key-q">thirty divided by five equals <span class="answ">six</span></div>
+  <div class="key-q">one half of twelve equals <span class="answ">six</span></div>
+  <div class="key-q">one quarter of forty equals <span class="answ">ten</span></div>
+
+  <p class="key-note">
+    For question twelve, <span class="answ">three times more</span> is marked as <span class="answ">three times as many</span> (nine times three).
+  </p>
+  </div>
+
+  <footer class="sheet-foot">
+    <span>Grade seven English &nbsp;·&nbsp; Word Maths</span>
+    <span>Teacher Answer Key</span>
+  </footer>
+</section>
+
+</body>
+</html>

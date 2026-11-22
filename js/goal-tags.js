@@ -271,6 +271,13 @@ const ITEMS={
   'lessons/word-lab/history/history-the-printing-press':{label:'History Word Lab: The printing press',lvl:'B1',bars:{vocab:.4,spelling:.2,sentences:.2,speaking:.2}},
   'lessons/word-lab/history/history-the-industrial-revolution':{label:'History Word Lab: The Industrial Revolution',lvl:'B1',bars:{vocab:.4,spelling:.2,sentences:.2,speaking:.2}},
   'lessons/word-lab/history/history-the-first-steps-on-the-moon':{label:'History Word Lab: The first steps on the Moon',lvl:'A2',bars:{vocab:.4,spelling:.2,sentences:.2,speaking:.2}},
+  // ---- Jarvis beginner homework and worksheets
+  'lessons/beginner-homework-1':{label:'Beginner English Homework 1',lvl:'A1',bars:{vocab:.4,sentences:.3,grammar:.3}},
+  'lessons/comparatives-worksheet':{label:'Big, Bigger, Biggest',lvl:'A2',bars:{grammar:.6,vocab:.2,spelling:.2}},
+  'lessons/verbs-ed-worksheet':{label:'Create, Creating, Created',lvl:'A2',bars:{grammar:.6,vocab:.2,spelling:.2}},
+  'lessons/comparatives-exceptions':{label:'Good, Better, Best',lvl:'A2',bars:{grammar:.6,vocab:.2,spelling:.2}},
+  'lessons/word-maths-grade7':{label:'Word Maths, Grade 7',lvl:'B1',bars:{sentences:.5,vocab:.3,grammar:.2}},
+  'lessons/word-maths-grade9':{label:'Word Maths, Grade 9',lvl:'B1',bars:{sentences:.5,vocab:.3,grammar:.2}},
   // ---- books outside the Everyday series (Everyday books come from goal-books.js)
 };
 // defaults for content that has no entry yet (it still scores, and is listed as "untagged" in the console)
