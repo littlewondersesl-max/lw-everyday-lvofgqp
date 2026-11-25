@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Error Hunt · Little Wonders</title>
+<link rel="icon" href="../../img/logo.png">
+<link rel="stylesheet" href="../../css/app.css">
+<style>
+html,body{height:100%}
+body{display:flex;flex-direction:column;min-height:100vh}
+body.reading{height:100vh;height:100dvh;overflow:hidden}
+main{flex:1;width:100%;min-height:0;display:flex;flex-direction:column}
+.L1{--c:#2c9a83;--bgc:#e9f7f3}.L2{--c:#6c4ea0;--bgc:#f1ebfa}.L3{--c:#d8588d;--bgc:#fdeaf2}
+/* picker */
+.eh-list{max-width:1100px;width:100%;margin:18px auto;padding:0 16px}
+.eh-list h1{color:var(--pur);margin:0 0 6px;font-size:clamp(26px,5vw,38px)}
+.eh-list .intro{margin:0 0 18px;font-size:clamp(16px,2.4vw,19px)}
+.eh-cats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start}
+.eh-cat{background:#fff;border-radius:24px;padding:16px 16px 18px;box-shadow:0 6px 18px rgba(108,78,160,.12);border-top:10px solid var(--c)}
+.eh-cat h2{margin:0;display:flex;align-items:baseline;gap:10px;color:var(--pur);font-size:34px}
+.eh-cat h2 small{font-size:15px;font-weight:800;color:var(--ink)}
+.eh-cat .sp{margin:2px 0 12px;font-size:14px;color:#6b7390}
+.eh-cat ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.eh-t{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;border-radius:16px;background:var(--bgc);padding:10px 12px;font:inherit;font-weight:800;font-size:18px;color:var(--ink);cursor:pointer;min-height:52px;transition:transform .12s,box-shadow .12s}
+.eh-t:hover,.eh-t:focus-visible{transform:translateX(3px);box-shadow:0 3px 10px rgba(108,78,160,.25);outline:3px solid var(--pur);outline-offset:1px}
+.eh-t b{flex:none;width:34px;height:34px;border-radius:50%;background:var(--c);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px}
+.eh-t i{margin-left:auto;font-style:normal;font-size:16px;color:var(--c);font-weight:900}
+/* reading view */
+.eh-play{display:none;flex:1;min-height:0;position:relative;overflow:hidden}
+body.reading .foot{display:none}body.reading .eh-list{display:none}body.reading .eh-play{display:flex}
+.eh-main{flex:none;width:min(1040px,calc(100vw - 404px));margin:0 auto;height:100%;padding:10px 0 10px;display:flex;flex-direction:column;gap:10px;transition:transform .3s ease;will-change:transform}
+.eh-bar{flex:none;display:flex;align-items:center;gap:10px}
+.eh-bar .tt{flex:1;min-width:0;font-weight:900;font-size:clamp(18px,2.4vw,26px);color:var(--pur);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eh-bar .tt span{display:inline-block;background:var(--c);color:#fff;border-radius:999px;padding:2px 12px;margin-right:8px;font-size:.62em;vertical-align:middle}
+.eh-btn{border:0;border-radius:999px;background:var(--pur);color:#fff;font:inherit;font-weight:900;font-size:16px;padding:9px 18px;cursor:pointer;white-space:nowrap;min-height:42px}
+.eh-btn.alt{background:#fff;color:var(--pur);box-shadow:0 2px 8px rgba(108,78,160,.25)}
+.eh-btn:focus-visible,.ai:focus-visible{outline:4px solid #f0a500;outline-offset:2px}
+.eh-bar #prev,.eh-bar #next{font-size:24px;padding:4px 16px;line-height:1}
+.eh-btn[disabled]{opacity:.45;cursor:default}
+.eh-card{flex:1;min-height:0;background:#fff;border-radius:26px;box-shadow:0 8px 26px rgba(108,78,160,.16);border-top:8px solid var(--c);padding:clamp(14px,2.6vh,30px) clamp(18px,3vw,44px);overflow:hidden;position:relative}
+.eh-txt{color:#1f2540;font-weight:600;text-align:left;hyphens:none}
+.eh-txt p{margin:0 0 .75em}.eh-txt p:last-child{margin-bottom:0}
+.eh-txt .w,.eh-txt .m{cursor:pointer;border-radius:.25em;-webkit-tap-highlight-color:transparent;box-decoration-break:clone;-webkit-box-decoration-break:clone;transition:background .15s}
+.eh-txt .w:hover,.eh-txt .m:hover{background:rgba(108,78,160,.13)}
+.eh-txt .m.hl{background:#ffe27a;box-shadow:0 .14em 0 #f0a500;position:relative;color:#1f2540}
+.eh-txt .m.hl::after{content:attr(data-n);position:absolute;left:-.22em;top:-.62em;min-width:1.15em;height:1.15em;padding:0 .15em;border-radius:999px;background:#6c4ea0;color:#fff;font-size:.5em;line-height:1.15em;text-align:center;font-weight:900;pointer-events:none}
+.eh-txt .m.hl:hover{background:#ffd54a}
+.eh-txt .m.act{background:#ffc83d;outline:3px solid #6c4ea0;outline-offset:1px}
+.eh-foot{flex:none;display:flex;align-items:center;gap:12px;min-height:34px;position:relative}
+.eh-ans{flex:1;min-width:0;font-size:13px;line-height:1.5;color:#5b6483;font-weight:700;display:flex;flex-wrap:wrap;gap:0 14px;max-height:3.2em;overflow:hidden}
+.eh-ans .ai{border:0;background:none;font:inherit;color:inherit;padding:0;cursor:pointer;border-radius:6px}
+.eh-ans .ai b{color:var(--pur);font-weight:900}
+.eh-ans .ai:hover{background:#ffe27a}
+.eh-ans .ai.on{color:#1f2540;background:#ffe27a}
+.eh-ans .alldone{color:#2e9e5b;font-weight:900}
+.eh-reveal{font-size:14px;min-height:34px;padding:6px 16px}
+.eh-toast{position:absolute;left:50%;bottom:calc(100% + 6px);transform:translate(-50%,8px);background:#45506b;color:#fff;border-radius:999px;padding:6px 16px;font-weight:800;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;white-space:nowrap}
+.eh-toast.on{opacity:.94;transform:translate(-50%,0)}
+/* slide panel */
+.eh-panel{position:fixed;right:0;bottom:0;top:var(--hh,62px);width:min(360px,92vw);background:#fff;box-shadow:-10px 0 30px rgba(31,37,64,.22);border-radius:26px 0 0 0;padding:20px 22px 22px;transform:translateX(108%);transition:transform .3s ease;z-index:15;display:flex;flex-direction:column;gap:14px;overflow:auto;visibility:hidden}
+.eh-panel.on{transform:none;visibility:visible}
+.eh-panel .ph{display:flex;align-items:center;gap:10px}
+.eh-panel .chip{display:inline-block;border-radius:999px;padding:4px 14px;font-weight:900;font-size:14px;color:#fff;background:var(--tc,#6c4ea0)}
+.eh-panel .no{font-weight:800;color:#6b7390;font-size:14px}
+.eh-panel .x{margin-left:auto;border:0;background:var(--lav);color:var(--pur);width:38px;height:38px;border-radius:50%;font-size:22px;font-weight:900;cursor:pointer;line-height:1}
+.eh-panel .lbl{font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:#6b7390;margin-bottom:4px}
+.eh-panel .was,.eh-panel .now{font-size:clamp(24px,3vw,32px);font-weight:900;border-radius:14px;padding:8px 14px;display:inline-block;max-width:100%;overflow-wrap:anywhere}
+.eh-panel .was{background:#fde3e0;color:#c0392b;text-decoration:line-through;text-decoration-thickness:3px}
+.eh-panel .now{background:#dff4e7;color:#1f7a45}
+.eh-panel .why{font-size:18px;line-height:1.55;font-weight:700;color:#1f2540;background:#f6f3fb;border-radius:16px;padding:12px 14px}
+.eh-panel.on .box{animation:ehin .35s ease .12s both}
+@keyframes ehin{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+@media (max-width:899px){.eh-main{width:calc(100vw - 16px)}.eh-cats{grid-template-columns:1fr}.eh-bar .tt{order:5;flex:1 1 100%}.eh-bar{flex-wrap:wrap}.eh-panel{border-radius:26px 26px 0 0;top:auto;height:min(52vh,420px);width:100%;transform:translateY(108%)}.eh-panel.on{transform:none}}
+@media (max-height:520px){.eh-bar .eh-btn{min-height:34px;padding:5px 12px;font-size:14px}.eh-main{padding:6px 0;gap:6px}}
+@media (prefers-reduced-motion:reduce){.eh-main,.eh-panel,.eh-toast{transition:none}.eh-panel.on .box{animation:none}}
+</style></head>
+<body>
+<header class="top" id="top"><a class="brand" href="../../index.html"><img src="../../img/logo.png" alt="Little Wonders"><span>Little Wonders<small>Error Hunt</small></span></a>
+<nav class="menu" style="margin-left:auto"><a class="ddb" style="text-decoration:none" href="../../index.html#stories">← Back to the app</a></nav></header>
+<main>
+<section class="eh-list" id="list">
+ <h1>Error Hunt</h1>
+ <p class="intro">Pick a level and a story. Read it carefully, then hunt for the mistakes.</p>
+ <div class="eh-cats" id="cats"></div>
+</section>
+<section class="eh-play" id="play">
+ <div class="eh-main" id="mainbox">
+  <div class="eh-bar"><button class="eh-btn alt" id="back">← All stories</button><div class="tt" id="ttl" data-lw-skip></div><button class="eh-btn alt" id="prev" aria-label="Previous story">‹</button><button class="eh-btn alt" id="next" aria-label="Next story">›</button></div>
+  <article class="eh-card" id="card"><div class="eh-txt" id="txt" data-lw-skip></div></article>
+  <div class="eh-foot">
+   <div class="eh-toast" id="toast" role="status" aria-live="polite" data-lw-skip></div>
+   <div class="eh-ans" id="ans" data-lw-skip></div>
+   <button class="eh-btn eh-reveal" id="reveal">Reveal</button>
+  </div>
+ </div>
+ <aside class="eh-panel" id="panel" role="dialog" aria-label="Explanation" aria-hidden="true" data-lw-skip>
+  <div class="ph"><span class="chip" id="pchip"></span><span class="no" id="pno"></span><button class="x" id="pclose" aria-label="Close">×</button></div>
+  <div class="box"><div class="lbl">What you read</div><div class="was" id="pwas"></div></div>
+  <div class="box"><div class="lbl">Correct</div><div class="now" id="pnow"></div></div>
+  <div class="box"><div class="lbl">Why</div><div class="why" id="pwhy"></div></div>
+ </aside>
+</section>
+</main>
+<footer class="foot">Little Wonders · Error Hunt</footer>
+<script src="../../js/lang.js"></script><script src="stories.js"></script><script src="../../js/i18n/error-hunt.js"></script>
+<script>
+(function(){
+const ST=window.EH_STORIES||[],PID='games/error-hunt';
+const LV=[['A1','Starter','Short stories · big type','L1'],['A2','Basic','Medium stories','L2'],['B1','Intermediate','Longer stories · smaller type','L3']];
+const FS={A1:.052,A2:.038,B1:.029},LH={A1:1.7,A2:1.65,B1:1.6},MINFS=14;
+const TYPES={spelling:['Spelling','#2c9a83'],grammar:['Grammar','#6c4ea0'],word:['Wrong word','#d8588d'],punct:['Capitals & punctuation','#e08a00']};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const PG=()=>window.LWProgress;
+function done(){try{const r=PG()&&PG().get(PID);return (r&&r.u)||{}}catch(e){return {}}}
+function buildList(){
+  const d=done();
+  $('cats').innerHTML=LV.map(([k,name,sub,cls])=>{const items=ST.filter(s=>s.level===k);
+    const n=items.filter(s=>d[s.id]).length;
+    return `<section class="eh-cat ${cls}"><h2>${name}<small>${k}</small></h2><p class="sp">${sub}${items.length?` · ${n} of ${items.length} done`:''}</p><ol>${items.map((s,i)=>`<li><button class="eh-t" data-id="${s.id}"><b>${i+1}</b><span>${esc(s.title)}</span>${d[s.id]?'<i aria-label="done">✓</i>':''}</button></li>`).join('')}</ol></section>`}).join('');
+}
+let cur=null,found=new Set(),hl=new Set(),act=-1,revealed=false,toastT=0;
+const txt=$('txt'),card=$('card'),panel=$('panel'),ans=$('ans');
+function parse(s){
+  // text with {wrong} spans -> html; every word is its own click target, a mistake span is one target
+  let k=0;
+  return s.text.split(/\n\n/).map(p=>'<p>'+p.split(/(\{[^{}]+\})/).map(seg=>{
+    const m=/^\{([^{}]+)\}$/.exec(seg);
+    if(m)return `<span class="m" data-i="${k++}">${esc(m[1])}</span>`;
+    return seg.split(/(\s+)/).map(t=>/[\p{L}\p{N}]/u.test(t)?`<span class="w">${esc(t)}</span>`:esc(t)).join('');
+  }).join('')+'</p>').join('');
+}
+function fit(){
+  if(!cur)return;
+  const lvl=cur.level,H=innerHeight,W=innerWidth;
+  let fs=Math.round(FS[lvl]*Math.min(H,W*.62)*2)/2;fs=Math.max(fs,MINFS+2);
+  txt.style.lineHeight=LH[lvl];txt.style.marginTop='0';card.style.overflow='hidden';
+  const cs=getComputedStyle(card),avail=card.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);
+  for(;fs>=MINFS;fs-=.5){txt.style.fontSize=fs+'px';if(txt.offsetHeight<=avail*.94)break}
+  if(fs<MINFS){txt.style.fontSize=MINFS+'px';if(txt.offsetHeight>avail)card.style.overflow='auto'}
+  // vertically centre a short story in the card so it never looks top-heavy
+  const free=avail-txt.offsetHeight;txt.style.marginTop=free>8?Math.min(free/2,48)+'px':'0';
+}
+function open(id,push){
+  const s=ST.find(x=>x.id===id);if(!s)return;cur=s;found=new Set();hl=new Set();act=-1;revealed=false;
+  const lv=LV.find(l=>l[0]===s.level);
+  document.body.classList.add('reading');
+  $('play').className='eh-play '+lv[3];
+  $('ttl').innerHTML=`<span>${lv[1]} · ${s.level}</span>${esc(s.title)}`;
+  txt.innerHTML=parse(s);
+  const same=ST.filter(x=>x.level===s.level),i=same.indexOf(s);
+  $('prev').disabled=i<=0;$('next').disabled=i>=same.length-1;
+  $('reveal').disabled=false;$('reveal').textContent='Reveal';
+  closePanel();renderAns();
+  if(push!==false)history.pushState(null,'','#'+id);
+  scrollTo(0,0);fit();requestAnimationFrame(()=>requestAnimationFrame(fit));
+  document.title=s.title+' · Error Hunt · Little Wonders';
+}
+function toList(push){
+  document.body.classList.remove('reading');cur=null;closePanel();buildList();document.title='Error Hunt · Little Wonders';
+  if(push!==false)history.pushState(null,'',location.pathname+location.search);
+}
+function renderAns(){
+  const idx=[...hl].sort((a,b)=>a-b);
+  ans.innerHTML=idx.map(i=>`<button type="button" class="ai${i===act?' on':''}" data-i="${i}"><b>${i+1}.</b> ${esc(cur.mistakes[i].correct)}</button>`).join('')+(cur&&found.size===cur.mistakes.length?'<span class="alldone">✓ All checked</span>':'');
+}
+function mark(i){
+  const e=txt.querySelector(`.m[data-i="${i}"]`);if(!e)return;
+  e.classList.add('hl');e.setAttribute('data-n',i+1);hl.add(i);
+}
+function showPanel(i){
+  const m=cur.mistakes[i],t=TYPES[m.type]||TYPES.grammar;
+  txt.querySelectorAll('.m.act').forEach(e=>e.classList.remove('act'));
+  const e=txt.querySelector(`.m[data-i="${i}"]`);if(e)e.classList.add('act');
+  act=i;
+  $('pchip').textContent=t[0];panel.style.setProperty('--tc',t[1]);
+  $('pno').textContent='Mistake '+(i+1);
+  $('pwas').textContent=m.wrong;$('pnow').textContent=m.correct;$('pwhy').textContent=m.why;
+  panel.classList.remove('on');void panel.offsetWidth;
+  panel.classList.add('on');panel.setAttribute('aria-hidden','false');shift(true);
+  if(!found.has(i)){found.add(i);
+    try{const P=PG();if(P){P.correct(PID,cur.id+':'+i);if(found.size===cur.mistakes.length)P.unit(PID,cur.id,ST.length)}}catch(_){}}
+  renderAns();
+}
+function closePanel(){
+  panel.classList.remove('on');panel.setAttribute('aria-hidden','true');shift(false);
+  txt.querySelectorAll('.m.act').forEach(e=>e.classList.remove('act'));act=-1;if(cur)renderAns();
+}
+function shift(on){
+  const mb=$('mainbox');
+  if(!on||innerWidth<900){mb.style.transform='none';return}
+  // layout position (offsetLeft ignores the running transform, so a second click mid-slide still measures right)
+  const L=mb.offsetLeft,R=L+mb.offsetWidth,pw=Math.min(360,innerWidth*.92),lim=innerWidth-pw-14;
+  const dx=Math.max(0,Math.min(R-lim,L-10));
+  mb.style.transform=dx?`translateX(${-dx}px)`:'none';
+}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),1300)}
+txt.addEventListener('click',e=>{
+  const m=e.target.closest('.m');
+  if(m){const i=+m.dataset.i;mark(i);showPanel(i);return}
+  if(e.target.closest('.w'))toast('No mistake here');
+});
+ans.addEventListener('click',e=>{const b=e.target.closest('.ai');if(b)showPanel(+b.dataset.i)});
+$('reveal').onclick=()=>{if(!cur)return;revealed=true;cur.mistakes.forEach((_,i)=>mark(i));$('reveal').textContent='Revealed';$('reveal').disabled=true;renderAns()};
+$('pclose').onclick=closePanel;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&cur&&panel.classList.contains('on'))closePanel()});
+$('back').onclick=()=>toList();
+function step(d){const same=ST.filter(x=>x.level===cur.level),i=same.indexOf(cur)+d;if(same[i])open(same[i].id)}
+$('prev').onclick=()=>step(-1);$('next').onclick=()=>step(1);
+$('cats').addEventListener('click',e=>{const b=e.target.closest('.eh-t');if(b)open(b.dataset.id)});
+function sizeHdr(){document.documentElement.style.setProperty('--hh',$('top').offsetHeight+'px')}
+let rz=0;addEventListener('resize',()=>{sizeHdr();clearTimeout(rz);rz=setTimeout(()=>{fit();if(panel.classList.contains('on'))shift(true)},60)});
+function route(){const id=location.hash.slice(1);if(ST.some(s=>s.id===id))open(id,false);else if(document.body.classList.contains('reading'))toList(false)}
+addEventListener('popstate',route);
+sizeHdr();buildList();route();
+if(window.ResizeObserver){let lh=0,lw=0,raf=0;new ResizeObserver(()=>{const h=card.clientHeight,w=card.clientWidth;if(Math.abs(h-lh)<1&&Math.abs(w-lw)<1)return;lh=h;lw=w;cancelAnimationFrame(raf);raf=requestAnimationFrame(fit)}).observe(card)}
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{sizeHdr();fit()});addEventListener('load',()=>{sizeHdr();fit();if(!cur)buildList()});
+})();
+</script>
+<script src="../../js/progress.js" data-id="games/error-hunt" data-type="game"></script>
+<script src="../../js/teachers-corner.js"></script>
+</body></html>

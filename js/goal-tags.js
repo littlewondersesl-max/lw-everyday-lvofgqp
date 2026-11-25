@@ -209,6 +209,7 @@ const ITEMS={
   'games/land-neighbours':{label:'Land Neighbours',lvl:'A2',bars:{vocab:.5,sentences:.3,speaking:.2}},
   'games/four-corners':{label:'Four Corners',lvl:'A1',bars:{speaking:.6,listening:.4}},
   'games/paper-flight':{label:'Paper Flight',lvl:'A1',bars:{speaking:.4,listening:.3,vocab:.3}},
+  'games/error-hunt':{label:'Error Hunt',lvl:'A2',bars:{grammar:.4,spelling:.35,vocab:.25},okLabel:'mistakes found'},
   'stories/story-library':{label:'The Story Library',lvl:'B1',bars:{vocab:.3,sentences:.25,grammar:.2,listening:.25},g:['past_simple']},
   // ---- video series (each video listed under v)
   'games/everyday-english':{label:'Everyday English with Max',lvl:'A1',bars:{listening:.45,sentences:.2,grammar:.15,speaking:.2},vLabel:'videos',vTotal:11,okLabel:'situations answered right',okTotal:33,g:['link_cause','present_continuous']},
