@@ -1,23 +1,26 @@
 /* Bouncing Words · Little Wonders
-   three.js (rendering) + cannon-es (physics), both bundled in vendor/bw-libs.js. Fixed 120 Hz physics steps driven by a simulation clock,
-   so the 60-second energy decay is exact whatever the frame rate (and can be fast-forwarded by the test hook window.__bw). */
+   three.js (rendering) + cannon-es (physics), both bundled in vendor/bw-libs.js.
+   Fixed-timestep physics (120 Hz) with render interpolation (lerp/slerp of the previous and current pose).
+   Energy comes only from elastic wall impacts (no mid-air nudges); power decays 100% → 0% over 60 s.
+   The 60-second clock is exact whatever the frame rate, and can be fast-forwarded by window.__bw. */
 (function(){
 'use strict';
 const $=id=>document.getElementById(id);
 const SENT=window.BW_SENTENCES||{A1:[],A2:[],B1:[]},PID='games/bouncing-words';
 const LEVELS=[
- {k:'A1',name:'Starter',sub:'Short and simple · 4–6 words',cls:'L1',size:2.6,demo:['I','like','my','ball.']},
- {k:'A2',name:'Basic',sub:'Longer · 8–11 words',cls:'L2',size:2.2,demo:['We','are','going','to','the','zoo.']},
- {k:'B1',name:'Intermediate',sub:'Varied grammar · 12–16 words',cls:'L3',size:1.85,demo:['If','I','had','wings,','I','would','fly.']}
+ {k:'A1',name:'Starter',sub:'Short and simple · 4–6 words',cls:'L1',size:2.0,demo:['I','like','my','ball.']},
+ {k:'A2',name:'Basic',sub:'Longer · 8–11 words',cls:'L2',size:1.7,demo:['We','are','going','to','the','zoo.']},
+ {k:'B1',name:'Intermediate',sub:'Varied grammar · 12–16 words',cls:'L3',size:1.42,demo:['If','I','had','wings,','I','would','fly.']}
 ];
 const PALETTE=['#e8504f','#f08a00','#2c9a83','#3f7fe0','#8a5cc8','#d8588d','#3aa655','#e0662f','#1fa1c7','#b9568f'];
-const H=10,D=7,TOTAL=60,STEP=1/120,MAXV=24,MAXW=9;   // box height, depth (world units), seconds from 100% to 0%, physics step
+const H=10,D=7,TOTAL=60,STEP=1/120,MAXV=28,MAXW=12,G=-18;   // box height, depth (world units), seconds from 100% to 0%, physics step
 const strengthAt=t=>t>=TOTAL?0:1-Math.pow(t/TOTAL,2);   // gentle at first (97% after 10 s), 0% at 60 s
 
 const el={list:$('list'),cats:$('cats'),play:$('play'),lv:$('lv'),stage:$('stage'),msg:$('msg'),status:$('status'),blocks:$('blocks'),pwf:$('pwf'),pwn:$('pwn')};
 const L=window.BWLibs;
 let T,C,R=null,scene,cam,renderer,world,font,matWord,matWall,cmWW,cmWF,boxGroup,wordGroup,keyLight;
 let W=24,curLevel=null,round=null,simT=0,acc=0,lastNow=0,running=false,glOK=true,texCache={};
+let midAir={samples:0,hits:0,maxU:0,sumU:0},ftMs=[];
 
 /* ---------- picker ---------- */
 function buildList(){
@@ -51,24 +54,24 @@ function initGL(){
   try{
     renderer=new T.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});
   }catch(e){fail('Your browser cannot show the 3D box (WebGL is off). Try Chrome or Edge.');return false}
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.75));
-  renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+  renderer.shadowMap.enabled=true;renderer.shadowMap.type=(T.PCFShadowMap!=null)?T.PCFShadowMap:1;
   renderer.setClearColor(0xefe9fb,1);
   el.stage.insertBefore(renderer.domElement,el.stage.firstChild);
   scene=new T.Scene();
   cam=new T.PerspectiveCamera(26,2,.5,600);
   scene.add(new T.HemisphereLight(0xffffff,0xd8cdf0,2.1));
   keyLight=new T.DirectionalLight(0xfff6e8,2.2);keyLight.castShadow=true;
-  keyLight.shadow.mapSize.set(1024,1024);keyLight.shadow.bias=-.0006;keyLight.shadow.normalBias=.03;keyLight.shadow.radius=3;
+  keyLight.shadow.mapSize.set(512,512);keyLight.shadow.bias=-.001;keyLight.shadow.normalBias=.04;keyLight.shadow.radius=1;
   scene.add(keyLight,keyLight.target);
   const fill=new T.PointLight(0xffffff,90,60,1.6);fill.position.set(0,H*.7,D/2+6);scene.add(fill);
   boxGroup=new T.Group();wordGroup=new T.Group();scene.add(boxGroup,wordGroup);
   font=new T.Font(window.BW_FONT);
-  world=new C.World({gravity:new C.Vec3(0,-24,0)});
-  world.allowSleep=true;world.solver.iterations=12;
+  world=new C.World({gravity:new C.Vec3(0,G,0)});
+  world.allowSleep=true;world.solver.iterations=8;
   matWord=new C.Material('word');matWall=new C.Material('wall');
-  cmWW=new C.ContactMaterial(matWord,matWord,{friction:.18,restitution:.8});
-  cmWF=new C.ContactMaterial(matWord,matWall,{friction:.25,restitution:.9});
+  cmWW=new C.ContactMaterial(matWord,matWord,{friction:.08,restitution:.9});
+  cmWF=new C.ContactMaterial(matWord,matWall,{friction:.06,restitution:.98});
   world.addContactMaterial(cmWW);world.addContactMaterial(cmWF);
   R={};return true;
 }
@@ -135,8 +138,8 @@ function layout(){
 /* ---------- words ---------- */
 function makeWord(text,color,idx){
   // One solid extruded word (front, sides and a single back). From behind you see it mirrored, like a real object.
-  const dep=.28,bt=.035;
-  const g=new T.TextGeometry(text,{font,size:1,depth:dep,curveSegments:5,bevelEnabled:true,bevelThickness:bt,bevelSize:.03,bevelSegments:2});
+  const dep=.26,bt=.028;
+  const g=new T.TextGeometry(text,{font,size:1,depth:dep,curveSegments:3,bevelEnabled:true,bevelThickness:bt,bevelSize:.022,bevelSegments:1});
   g.computeBoundingBox();const bb=g.boundingBox;
   g.translate(-(bb.min.x+bb.max.x)/2,-(bb.min.y+bb.max.y)/2,-(bb.min.z+bb.max.z)/2);
   const mat=new T.MeshStandardMaterial({color,roughness:.36,metalness:.04});
@@ -146,21 +149,21 @@ function makeWord(text,color,idx){
 function clearRound(){
   endShowcase(true);
   if(!round)return;
-  round.words.forEach(o=>{world.removeBody(o.body);wordGroup.remove(o.grp);o.g.dispose();o.mat.dispose()});
+  round.words.forEach(o=>{if(o._onCollide)o.body.removeEventListener('collide',o._onCollide);world.removeBody(o.body);wordGroup.remove(o.grp);o.g.dispose();o.mat.dispose()});
   round=null;
 }
 function rnd(a,b){return a+Math.random()*(b-a)}
 function spawn(words,lv){
   // size: level default, shrunk if the sentence has a lot of long words
   const area=words.reduce((s,o)=>s+o.w1*o.h1,0),maxw=Math.max(...words.map(o=>o.w1));
-  let k=Math.min(lv.size,Math.sqrt(.34*W*H*2/area),W*.40/maxw);
+  let k=Math.min(lv.size,Math.sqrt(.20*W*H*2/area),W*.31/maxw);
   const placed=[];
   words.forEach((o,i)=>{
     o.k=k;o.g.scale(k,k,k);
     o.hw=o.w1*k/2+.05;o.hh=o.h1*k/2+.05;o.hz=o.z1*k+.02;
     o.grp.visible=false;
     o.shape=new C.Box(new C.Vec3(o.hw,o.hh,o.hz));
-    const body=new C.Body({mass:Math.max(.5,o.w1*o.h1*k*k*.4),material:matWord,shape:o.shape,allowSleep:true,sleepSpeedLimit:.25,sleepTimeLimit:.7});
+    const body=new C.Body({mass:Math.max(.5,o.w1*o.h1*k*k*.4),material:matWord,shape:o.shape,allowSleep:true,sleepSpeedLimit:.35,sleepTimeLimit:.8});
     // find a free spot in the upper part of the box (axis-aligned boxes, roughly upright)
     let pos=null;
     for(let t=0;t<260&&!pos;t++){
@@ -172,52 +175,105 @@ function spawn(words,lv){
     placed.push([pos[0],pos[1],pos[2],o.hw,o.hh,o.hz]);
     body.position.set(pos[0],pos[1],pos[2]);
     body.quaternion.setFromEuler(rnd(-.35,.35),rnd(-.5,.5),rnd(-.4,.4));
-    body.velocity.set(rnd(-7,7),rnd(-6,2),rnd(-3,3));
-    body.angularVelocity.set(rnd(-4,4),rnd(-4,4),rnd(-4,4));
-    body.linearDamping=.01;body.angularDamping=.05;
-    world.addBody(body);o.body=body;o.born=rnd(0,.3);o.kick=rnd(.2,.8);
+    // One lively toss at the start; after that, only wall impacts add energy.
+    body.velocity.set(rnd(-10,10),rnd(-2,8),rnd(-5,5));
+    body.angularVelocity.set(rnd(-5,5),rnd(-5,5),rnd(-5,5));
+    body.linearDamping=0;body.angularDamping=.012;
+    o.hit=false;o.hitWall=false;o.hitN=null;o.preV=body.velocity.clone();
+    o.prevP=body.position.clone();o.prevQ=body.quaternion.clone();
+    o._onCollide=e=>onWordCollide(o,e);
+    body.addEventListener('collide',o._onCollide);
+    world.addBody(body);o.body=body;o.born=rnd(0,.3);o.k=k;
     wordGroup.add(o.grp);
   });
+}
+function onWordCollide(o,e){
+  if(o.body.type===C.Body.KINEMATIC)return;
+  const c=e.contact,n=c.ni,other=e.body;
+  // ni points from bi to bj; we want the normal pointing away from the other body (bounce direction)
+  const flip=(c.bi===o.body);
+  const nx=flip?-n.x:n.x,ny=flip?-n.y:n.y,nz=flip?-n.z:n.z;
+  if(!o.hit){o.hitN=[nx,ny,nz];o.hitWall=other.mass===0}
+  else if(other.mass===0){o.hitN=[nx,ny,nz];o.hitWall=true}
+  o.hit=true;
 }
 function stepOnce(h){
   simT+=h;
   const s=strengthAt(simT),calm=1-s;
-  cmWW.restitution=.28+.58*s;cmWF.restitution=.32+.62*s;
+  // High restitution while there is power, so wall hits keep them bouncing; low at the end so they settle.
+  cmWW.restitution=.12+.80*s;cmWF.restitution=.16+.84*s;
   if(!round)return;
-  const ld=.01+.3*calm*calm*calm,ad=.05+.5*calm*calm*calm;
+  // Almost no air drag while lively, so mid-air paths are clean ballistic arcs. Damping rises only as power dies.
+  const ld=.002+.28*calm*calm*calm,ad=.01+.4*calm*calm*calm;
   for(const o of round.words){
-    if(o.body.type===C.Body.KINEMATIC)continue;   // showcased or a test pose; physics leaves it alone
-    const b=o.body;b.linearDamping=ld;b.angularDamping=ad;
-    if(s>.015){
-      o.kick-=h;
-      if(o.kick<=0){
-        o.kick=rnd(.3,.85);
-        const low=b.position.y<H*.5;
-        b.velocity.x+=rnd(-1,1)*s*11;b.velocity.z+=rnd(-1,1)*s*5.5;
-        b.velocity.y+= low&&b.velocity.y<7 ? s*rnd(9,19) : rnd(-1,1)*s*6;
-        b.angularVelocity.x+=rnd(-1,1)*s*7;b.angularVelocity.y+=rnd(-1,1)*s*7;b.angularVelocity.z+=rnd(-1,1)*s*7;
-        b.wakeUp();
-      }
-    }
-    const v=b.velocity,sp=v.length();if(sp>MAXV)v.scale(MAXV/sp,v);
-    const av=b.angularVelocity,aw=av.length();if(aw>MAXW)av.scale(MAXW/aw,av);
+    const b=o.body;
+    if(!o.prevP){o.prevP=b.position.clone();o.prevQ=b.quaternion.clone();o.preV=b.velocity.clone()}
+    else {o.prevP.copy(b.position);o.prevQ.copy(b.quaternion);o.preV.copy(b.velocity)}
+    o.hit=false;o.hitWall=false;o.clamped=false;
+    if(b.type===C.Body.KINEMATIC)continue;
+    b.linearDamping=ld;b.angularDamping=ad;
+    b.allowSleep=s<.12;
   }
   world.step(h);
-  // safety net: bouncing words stay inside the box (the showcased word may sit just in front of the glass)
-  const hx=W/2,hz=D/2;
+  // Catch lingering contacts too (the collide event only fires on first contact).
+  for(const c of world.contacts){
+    const ni=c.ni;
+    for(const o of round.words){
+      if(o.body===c.bi){o.hit=true;if(c.bj.mass===0){o.hitWall=true;o.hitN=[-ni.x,-ni.y,-ni.z]}else if(!o.hitN)o.hitN=[-ni.x,-ni.y,-ni.z]}
+      else if(o.body===c.bj){o.hit=true;if(c.bi.mass===0){o.hitWall=true;o.hitN=[ni.x,ni.y,ni.z]}else if(!o.hitN)o.hitN=[ni.x,ni.y,ni.z]}
+    }
+  }
   for(const o of round.words){
     if(o.body.type===C.Body.KINEMATIC)continue;
-    const p=o.body.position;
-    if(p.x<-hx||p.x>hx||p.y<0||p.y>H||p.z<-hz||p.z>hz){
-      p.x=Math.max(-hx+o.hw,Math.min(hx-o.hw,p.x));p.y=Math.max(o.hh,Math.min(H-o.hh,p.y));p.z=Math.max(-hz+o.hz,Math.min(hz-o.hz,p.z));
-      o.body.velocity.scale(.3,o.body.velocity);}}
+    const b=o.body,v=b.velocity;
+    // Impact-only energy: if this was a real wall hit (approaching with speed), top up the bounce to match the current power.
+    if(o.hit&&o.hitWall&&o.hitN){
+      const [nx,ny,nz]=o.hitN,pre=o.preV;
+      const preIn=-(pre.x*nx+pre.y*ny+pre.z*nz);
+      if(preIn>1.2){
+        const vn=v.x*nx+v.y*ny+v.z*nz,want=Math.max(preIn*(.2+.85*s),6.5*s);
+        if(want>vn){const d=want-vn;v.x+=d*nx;v.y+=d*ny;v.z+=d*nz}
+      }
+    }
+    const sp=v.length();if(sp>MAXV)v.scale(MAXV/sp,v);
+    const av=b.angularVelocity,aw=av.length();if(aw>MAXW)av.scale(MAXW/aw,av);
+    // Mid-air check (no contact): velocity should change only by gravity (and tiny damping).
+    if(!o.hit){
+      const p=o.preV,ux=v.x-p.x,uy=v.y-(p.y+G*h),uz=v.z-p.z,err=Math.hypot(ux,uy,uz);
+      midAir.samples++;midAir.sumU+=err;if(err>midAir.maxU)midAir.maxU=err;
+    }else midAir.hits++;
+  }
+  // Safety net: if a word tunnels out, bounce it back in (counts as a wall hit, not a mid-air push).
+  const hx=W/2,hz=D/2,rest=.16+.84*s;
+  for(const o of round.words){
+    if(o.body.type===C.Body.KINEMATIC)continue;
+    const p=o.body.position,v=o.body.velocity;let c=false;
+    if(p.x>hx-o.hw){p.x=hx-o.hw;if(v.x>0)v.x=-v.x*rest;c=true}
+    else if(p.x<-hx+o.hw){p.x=-hx+o.hw;if(v.x<0)v.x=-v.x*rest;c=true}
+    if(p.y>H-o.hh){p.y=H-o.hh;if(v.y>0)v.y=-v.y*rest;c=true}
+    else if(p.y<o.hh){p.y=o.hh;if(v.y<0)v.y=-v.y*rest;c=true}
+    if(p.z>hz-o.hz){p.z=hz-o.hz;if(v.z>0)v.z=-v.z*rest;c=true}
+    else if(p.z<-hz+o.hz){p.z=-hz+o.hz;if(v.z<0)v.z=-v.z*rest;c=true}
+    if(c){o.clamped=true;o.prevP.copy(p)}
+  }
 }
-function sync(dt){
+const _iq=()=>({x:0,y:0,z:0,w:1});
+let _sq=_iq();
+function sync(dt,alpha){
   if(!round)return;
+  if(alpha==null)alpha=1;
   for(const o of round.words){
     const b=o.body,g=o.grp;
-    g.position.set(b.position.x,b.position.y,b.position.z);g.quaternion.set(b.quaternion.x,b.quaternion.y,b.quaternion.z,b.quaternion.w);
-    const a=Math.min(1,Math.max(0,(simT-o.born)/.28));let sc=a<1?a*(2-a):1;
+    if(show&&show.o===o){
+      g.position.set(b.position.x,b.position.y,b.position.z);g.quaternion.set(b.quaternion.x,b.quaternion.y,b.quaternion.z,b.quaternion.w);
+    }else if(o.prevP&&alpha<1){
+      const a=alpha,p=o.prevP,q=b.quaternion;
+      g.position.set(p.x+(b.position.x-p.x)*a,p.y+(b.position.y-p.y)*a,p.z+(b.position.z-p.z)*a);
+      slerpQ(o.prevQ,q,a,_sq);g.quaternion.set(_sq.x,_sq.y,_sq.z,_sq.w);
+    }else{
+      g.position.set(b.position.x,b.position.y,b.position.z);g.quaternion.set(b.quaternion.x,b.quaternion.y,b.quaternion.z,b.quaternion.w);
+    }
+    const ap=Math.min(1,Math.max(0,(simT-o.born)/.28));let sc=ap<1?ap*(2-ap):1;
     if(o.pulse>0){o.pulse=Math.max(0,o.pulse-dt/1.6);const p=Math.sin((1-o.pulse)*Math.PI);o.mat.emissive.set(o.color);o.mat.emissiveIntensity=p*.85;sc*=1+.22*p}
     else if(o.mat.emissiveIntensity){o.mat.emissiveIntensity=0}
     if(show&&show.o===o){
@@ -236,9 +292,11 @@ const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
 function slerpQ(q1,q2,t,out){
   let dot=q1.x*q2.x+q1.y*q2.y+q1.z*q2.z+q1.w*q2.w,x2=q2.x,y2=q2.y,z2=q2.z,w2=q2.w;
   if(dot<0){x2=-x2;y2=-y2;z2=-z2;w2=-w2;dot=-dot}
-  if(dot>.9995){const x=q1.x+(x2-q1.x)*t,y=q1.y+(y2-q1.y)*t,z=q1.z+(z2-q1.z)*t,w=q1.w+(w2-q1.w)*t,n=Math.hypot(x,y,z,w)||1;out.set(x/n,y/n,z/n,w/n);return out}
-  const th=Math.acos(Math.min(1,dot)),st=Math.sin(th),s1=Math.sin((1-t)*th)/st,s2=Math.sin(t*th)/st;
-  out.set(q1.x*s1+x2*s2,q1.y*s1+y2*s2,q1.z*s1+z2*s2,q1.w*s1+w2*s2);return out;
+  let x,y,z,w;
+  if(dot>.9995){x=q1.x+(x2-q1.x)*t;y=q1.y+(y2-q1.y)*t;z=q1.z+(z2-q1.z)*t;w=q1.w+(w2-q1.w)*t;const n=Math.hypot(x,y,z,w)||1;x/=n;y/=n;z/=n;w/=n}
+  else{const th=Math.acos(Math.min(1,dot)),st=Math.sin(th),s1=Math.sin((1-t)*th)/st,s2=Math.sin(t*th)/st;x=q1.x*s1+x2*s2;y=q1.y*s1+y2*s2;z=q1.z*s1+z2*s2;w=q1.w*s1+w2*s2}
+  if(out.set)out.set(x,y,z,w);else{out.x=x;out.y=y;out.z=z;out.w=w}
+  return out;
 }
 function faceCamQ(){const q=new C.Quaternion();q.setFromEuler(0,Math.atan2(cam.position.x,cam.position.z),0);return q}
 function showcasePos(o){
@@ -254,11 +312,11 @@ function applyShowPose(p,q){const b=show.o.body;b.position.set(p.x,p.y,p.z);b.qu
 function beginShowcase(o){
   if(!o||(show&&show.o===o&&show.phase!=='out'))return;
   if(show)endShowcase(true);
-  const b=o.body;
+  const b=o.body,gp=o.grp;
+  const fromP=new C.Vec3(gp.position.x,gp.position.y,gp.position.z),fromQ=new C.Quaternion(gp.quaternion.x,gp.quaternion.y,gp.quaternion.z,gp.quaternion.w);
   show={o,phase:'in',t:0,tin:.45,hold:1,tout:.45,
-    fromP:b.position.clone(),fromQ:b.quaternion.clone(),
-    toP:showcasePos(o),toQ:faceCamQ(),
-    backP:b.position.clone(),backQ:b.quaternion.clone(),mass:b.mass};
+    fromP,fromQ,toP:showcasePos(o),toQ:faceCamQ(),
+    backP:fromP.clone(),backQ:fromQ.clone(),mass:b.mass};
   b.collisionResponse=false;b.type=C.Body.KINEMATIC;b.velocity.set(0,0,0);b.angularVelocity.set(0,0,0);o.grp.renderOrder=20;
 }
 function endShowcase(snap){
@@ -269,6 +327,7 @@ function endShowcase(snap){
   if(b.mass!==show.mass){b.mass=show.mass;b.updateMassProperties()}
   b.velocity.set(rnd(-8,8)*s,(s>.04?s*rnd(5,12):0),rnd(-4,4)*s);
   b.angularVelocity.set(rnd(-5,5)*s,rnd(-5,5)*s,rnd(-5,5)*s);
+  if(show.o.prevP){show.o.prevP.copy(b.position);show.o.prevQ.copy(b.quaternion)}
   b.wakeUp();show.o.grp.renderOrder=0;show=null;
 }
 function tickShowcase(dt){
@@ -347,7 +406,7 @@ function newSentence(){
 }
 function shake(){
   if(!round)return;endShowcase(true);simT=0;acc=0;
-  round.words.forEach(o=>{o.born=-1;o.kick=rnd(0,.3);o.body.velocity.y+=rnd(6,12);o.body.angularVelocity.set(rnd(-6,6),rnd(-6,6),rnd(-6,6));o.body.wakeUp()});
+  round.words.forEach(o=>{o.born=-1;o.body.velocity.set(rnd(-10,10),rnd(6,14),rnd(-5,5));o.body.angularVelocity.set(rnd(-6,6),rnd(-6,6),rnd(-6,6));o.body.wakeUp();if(o.prevP){o.prevP.copy(o.body.position);o.prevQ.copy(o.body.quaternion)}});
 }
 function buildBlocks(){
   const n=round.words.length;
@@ -387,10 +446,13 @@ function updatePower(){
 function startLoop(){if(running)return;running=true;lastNow=performance.now();requestAnimationFrame(frame)}
 function frame(now){
   if(!running)return;
-  const dt=Math.min(.05,Math.max(0,(now-lastNow)/1000));lastNow=now;
+  const raw=Math.max(0,(now-lastNow)/1000);lastNow=now;
+  ftMs.push(raw*1000);if(ftMs.length>240)ftMs.shift();
+  const dt=Math.min(.05,raw);
   if(glOK&&!document.hidden){
-    acc+=dt;let n=0;while(acc>=STEP&&n<6){stepOnce(STEP);acc-=STEP;n++}if(n>=6)acc=0;
-    tickShowcase(dt);sync(dt);updatePower();renderer.render(scene,cam);
+    acc+=dt;let n=0;while(acc>=STEP&&n<8){stepOnce(STEP);acc-=STEP;n++}if(n>=8)acc=acc%STEP;
+    const alpha=Math.min(1,acc/STEP);
+    tickShowcase(dt);sync(dt,alpha);updatePower();renderer.render(scene,cam);
   }
   requestAnimationFrame(frame);
 }
@@ -400,7 +462,11 @@ addEventListener('popstate',()=>{const k=location.hash.slice(1);if(LEVELS.some(l
 
 /* ---------- test hook (fast-forward the simulation, read positions) ---------- */
 window.__bw={
-  advance(sec){const n=Math.round(sec/STEP);for(let i=0;i<n;i++)stepOnce(STEP);sync(0);updatePower();if(renderer)renderer.render(scene,cam);return simT},
+  advance(sec){const n=Math.round(sec/STEP);for(let i=0;i<n;i++)stepOnce(STEP);if(round)round.words.forEach(o=>{if(o.prevP){o.prevP.copy(o.body.position);o.prevQ.copy(o.body.quaternion)}});sync(0,1);updatePower();if(renderer)renderer.render(scene,cam);return simT},
+  resetMidAir(){midAir={samples:0,hits:0,maxU:0,sumU:0};return midAir},
+  midAir(){const m=midAir;return {samples:m.samples,hits:m.hits,maxUnexpected:m.maxU,meanUnexpected:m.samples?m.sumU/m.samples:0}},
+  frameStats(){const a=ftMs.slice();if(!a.length)return {n:0};const s=[...a].sort((x,y)=>x-y),n=s.length,sum=s.reduce((p,c)=>p+c,0);return {n,avg:sum/n,min:s[0],med:s[n>>1],p95:s[Math.min(n-1,Math.floor(n*.95))],max:s[n-1]}},
+  resetFrameStats(){ftMs=[];return true},
   clickWord(i){if(round&&round.words[i])beginShowcase(round.words[i])},
   advanceShowcase(sec){tickShowcase(sec);sync(0);if(renderer)renderer.render(scene,cam);return show&&{phase:show.phase,t:show.t,text:show.o.text}},
   // Place a word in mid-box, back towards the camera, so a test can photograph the mirrored side.
@@ -422,7 +488,7 @@ window.__bw={
     return {level:round.level,text:round.text,simT,strength:strengthAt(simT),W,H,D,revealed:round.revealed,glOK,
       show:show&&{i:show.o.idx,phase:show.phase,t:show.t,text:show.o.text,pos:[show.o.body.position.x,show.o.body.position.y,show.o.body.position.z]},
       words:round.words.map(o=>{const p=o.body.position,v=o.body.velocity,fz=o.body.quaternion.vmult(new C.Vec3(0,0,1)).z;
-        return {w:o.text,pos:[p.x,p.y,p.z],speed:v.length(),inside:Math.abs(p.x)<=W/2&&p.y>=0&&p.y<=H&&Math.abs(p.z)<=D/2,sleeping:o.body.sleepState===2,hw:o.hw,hh:o.hh,hz:o.hz,vis:o.grp.visible,up:o.body.quaternion.vmult(new C.Vec3(0,1,0)).y,fz,back:fz<0}})}
+        return {w:o.text,pos:[p.x,p.y,p.z],speed:v.length(),inside:Math.abs(p.x)<=W/2&&p.y>=0&&p.y<=H&&Math.abs(p.z)<=D/2,sleeping:o.body.sleepState===2,hw:o.hw,hh:o.hh,hz:o.hz,k:o.k,vis:o.grp.visible,up:o.body.quaternion.vmult(new C.Vec3(0,1,0)).y,fz,back:fz<0,hit:!!o.hit}})}
   }
 };
 
