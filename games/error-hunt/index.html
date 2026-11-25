@@ -52,7 +52,12 @@ body.reading .foot{display:none}body.reading .eh-list{display:none}body.reading 
 .eh-ans .ai:hover{background:#ffe27a}
 .eh-ans .ai.on{color:#1f2540;background:#ffe27a}
 .eh-ans .alldone{color:#2e9e5b;font-weight:900}
-.eh-reveal{font-size:14px;min-height:34px;padding:6px 16px}
+.eh-txt .m.fx{background:#c8edc8;box-shadow:0 .14em 0 #2e9e5b;color:#14532d}
+.eh-txt .m.fx:hover{background:#b6e4b6}
+.eh-txt .m.fx.act{background:#9fd89f;outline-color:#2e9e5b}
+.eh-reveal,.eh-fix{font-size:14px;min-height:34px;padding:6px 16px}
+.eh-fix{background:#2c9a83}
+.eh-btns{flex:none;display:flex;gap:8px}
 .eh-toast{position:absolute;left:50%;bottom:calc(100% + 6px);transform:translate(-50%,8px);background:#45506b;color:#fff;border-radius:999px;padding:6px 16px;font-weight:800;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;white-space:nowrap}
 .eh-toast.on{opacity:.94;transform:translate(-50%,0)}
 /* slide panel */
@@ -89,7 +94,10 @@ body.reading .foot{display:none}body.reading .eh-list{display:none}body.reading 
   <div class="eh-foot">
    <div class="eh-toast" id="toast" role="status" aria-live="polite" data-lw-skip></div>
    <div class="eh-ans" id="ans" data-lw-skip></div>
-   <button class="eh-btn eh-reveal" id="reveal">Reveal</button>
+   <div class="eh-btns">
+    <button class="eh-btn eh-reveal" id="reveal">Reveal</button>
+    <button class="eh-btn eh-fix" id="fix">Fix</button>
+   </div>
   </div>
  </div>
  <aside class="eh-panel" id="panel" role="dialog" aria-label="Explanation" aria-hidden="true" data-lw-skip>
@@ -118,7 +126,7 @@ function buildList(){
     const n=items.filter(s=>d[s.id]).length;
     return `<section class="eh-cat ${cls}"><h2>${name}<small>${k}</small></h2><p class="sp">${sub}${items.length?` · ${n} of ${items.length} done`:''}</p><ol>${items.map((s,i)=>`<li><button class="eh-t" data-id="${s.id}"><b>${i+1}</b><span>${esc(s.title)}</span>${d[s.id]?'<i aria-label="done">✓</i>':''}</button></li>`).join('')}</ol></section>`}).join('');
 }
-let cur=null,found=new Set(),hl=new Set(),act=-1,revealed=false,toastT=0;
+let cur=null,found=new Set(),hl=new Set(),act=-1,revealed=false,fixed=false,toastT=0;
 const txt=$('txt'),card=$('card'),panel=$('panel'),ans=$('ans');
 function parse(s){
   // text with {wrong} spans -> html; every word is its own click target, a mistake span is one target
@@ -141,7 +149,7 @@ function fit(){
   const free=avail-txt.offsetHeight;txt.style.marginTop=free>8?Math.min(free/2,48)+'px':'0';
 }
 function open(id,push){
-  const s=ST.find(x=>x.id===id);if(!s)return;cur=s;found=new Set();hl=new Set();act=-1;revealed=false;
+  const s=ST.find(x=>x.id===id);if(!s)return;cur=s;found=new Set();hl=new Set();act=-1;revealed=false;fixed=false;
   const lv=LV.find(l=>l[0]===s.level);
   document.body.classList.add('reading');
   $('play').className='eh-play '+lv[3];
@@ -150,6 +158,7 @@ function open(id,push){
   const same=ST.filter(x=>x.level===s.level),i=same.indexOf(s);
   $('prev').disabled=i<=0;$('next').disabled=i>=same.length-1;
   $('reveal').disabled=false;$('reveal').textContent='Reveal';
+  $('fix').disabled=false;$('fix').textContent='Fix';
   closePanel();renderAns();
   if(push!==false)history.pushState(null,'','#'+id);
   scrollTo(0,0);fit();requestAnimationFrame(()=>requestAnimationFrame(fit));
@@ -200,7 +209,15 @@ txt.addEventListener('click',e=>{
   if(e.target.closest('.w'))toast('No mistake here');
 });
 ans.addEventListener('click',e=>{const b=e.target.closest('.ai');if(b)showPanel(+b.dataset.i)});
+function fixAll(){
+  if(!cur||fixed)return;fixed=true;
+  cur.mistakes.forEach((m,i)=>{mark(i);const e=txt.querySelector('.m[data-i="'+i+'"]');if(e){e.textContent=m.correct;e.classList.add('fx')}});
+  $('fix').textContent='Fixed';$('fix').disabled=true;
+  if(!revealed){revealed=true;$('reveal').textContent='Revealed';$('reveal').disabled=true}
+  renderAns();fit();
+}
 $('reveal').onclick=()=>{if(!cur)return;revealed=true;cur.mistakes.forEach((_,i)=>mark(i));$('reveal').textContent='Revealed';$('reveal').disabled=true;renderAns()};
+$('fix').onclick=fixAll;
 $('pclose').onclick=closePanel;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&cur&&panel.classList.contains('on'))closePanel()});
 $('back').onclick=()=>toList();
