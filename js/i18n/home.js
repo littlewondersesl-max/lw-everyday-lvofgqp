@@ -25,7 +25,7 @@ LWLang.add({
 'Four Corners':'四个角落','Classroom game':'课堂游戏','Land Neighbours (China)':'陆地邻国（中国）','Map puzzle · ages 8–14':'地图拼图 · 8–14 岁',
 'World Jigsaw':'世界拼图','Globe puzzle · ages 6–14':'地球仪拼图 · 6–14 岁','Paper Flight':'纸飞机','Solo · fold, aim, throw':'一个人玩 · 折一折，瞄一瞄，扔出去',
 'Save Sam':'救救 Sam','Word game':'单词游戏','Little Wonders comic stories':'小小奇迹漫画故事','10 six-frame stories · teacher notes':'10 个六格故事 · 教师笔记',
-'Word-by-Word Reader':'逐词阅读器','Speed reading · 30 stories · A1, A2, B1':'速读 · 30 个故事 · A1、A2、B1','Story Library':'故事图书馆','Jack and the Beanstalk & more':'《杰克与豌豆》等故事',
+'Bouncing Words':'跳跳单词','3D box · say the bouncing sentence · A1, A2, B1':'3D 盒子 · 说出蹦跳的句子 · A1、A2、B1','Word-by-Word Reader':'逐词阅读器','Speed reading · 30 stories · A1, A2, B1':'速读 · 30 个故事 · A1、A2、B1','Story Library':'故事图书馆','Jack and the Beanstalk & more':'《杰克与豌豆》等故事',
 'Jack and the Beanstalk — easy English texts':'《杰克与豌豆》——简单英语文本','Read / print':'阅读 / 打印',
 'Fractions 3D':'3D 分数','Cut an apple, cake or pizza into fractions · 3D shapes · stack, rotate, roll and bounce':'把苹果、蛋糕或披萨切成分数 · 立体图形 · 堆叠、旋转、滚动和弹跳',
 'Useful Words':'常用词','200 key words · A1, A2, B1, B2 · tests':'200 个重点词 · A1、A2、B1、B2 · 小测验',

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bouncing Words · Little Wonders</title>
+<link rel="icon" href="../../img/logo.png">
+<link rel="stylesheet" href="../../css/app.css">
+<style>
+html,body{height:100%}
+body{display:flex;flex-direction:column;min-height:100vh}
+body.playing{height:100vh;height:100dvh;overflow:hidden}
+main{flex:1;width:100%;min-height:0;display:flex;flex-direction:column}
+.L1{--c:#2c9a83;--bgc:#e9f7f3}.L2{--c:#6c4ea0;--bgc:#f1ebfa}.L3{--c:#d8588d;--bgc:#fdeaf2}
+/* level picker */
+.bw-list{max-width:1100px;width:100%;margin:18px auto;padding:0 16px}
+.bw-list h1{color:var(--pur);margin:0 0 6px;font-size:clamp(26px,5vw,38px)}
+.bw-list .intro{margin:0 0 18px;font-size:clamp(16px,2.4vw,19px)}
+.bw-cats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.bw-cat{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;border:0;font:inherit;color:var(--ink);cursor:pointer;background:#fff;border-radius:24px;padding:18px 20px 22px;box-shadow:0 6px 18px rgba(108,78,160,.12);border-top:10px solid var(--c);transition:transform .12s,box-shadow .12s}
+.bw-cat:hover,.bw-cat:focus-visible{transform:translateY(-4px);box-shadow:0 10px 24px rgba(108,78,160,.25);outline:3px solid var(--pur);outline-offset:1px}
+.bw-cat h2{margin:0;display:flex;align-items:baseline;gap:10px;color:var(--pur);font-size:34px}
+.bw-cat h2 small{font-size:15px;font-weight:800;color:var(--ink)}
+.bw-cat .sp{font-size:16px;font-weight:700;color:#6b7390}
+.bw-cat .demo{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px}
+.bw-cat .demo i{font-style:normal;font-weight:900;font-size:17px;color:#fff;background:var(--c);border-radius:10px;padding:2px 10px}
+.bw-cat .go{margin-top:auto;align-self:stretch;text-align:center;background:var(--c);color:#fff;font-weight:900;border-radius:999px;padding:9px 14px;font-size:17px;margin-top:10px}
+/* play view */
+.bw-play{display:none;flex:1;min-height:0;flex-direction:column;align-items:center;gap:8px;padding:8px 0 10px}
+body.playing .foot,body.playing .bw-list{display:none}body.playing .bw-play{display:flex}
+.bw-bar,.bw-foot{width:min(94vw,1800px);flex:none}
+.bw-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.bw-btn{border:0;border-radius:999px;background:var(--pur);color:#fff;font:inherit;font-weight:900;font-size:16px;padding:8px 18px;cursor:pointer;white-space:nowrap;min-height:40px}
+.bw-btn.alt{background:#fff;color:var(--pur);box-shadow:0 2px 8px rgba(108,78,160,.25)}
+.bw-btn.green{background:#2c9a83}
+.bw-btn:focus-visible,.bw-b:focus-visible{outline:4px solid #f0a500;outline-offset:2px}
+.bw-lv{display:flex;gap:4px;background:#fff;border-radius:999px;padding:3px;box-shadow:0 2px 8px rgba(108,78,160,.2)}
+.bw-lv button{border:0;border-radius:999px;background:transparent;color:var(--ink);font:inherit;font-weight:900;font-size:15px;padding:6px 14px;cursor:pointer;min-height:34px}
+.bw-lv button small{font-weight:800;opacity:.7;margin-left:4px}
+.bw-lv button.on{background:var(--c);color:#fff}
+.bw-pw{margin-left:auto;display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px;color:#5b6483}
+.bw-pwb{width:clamp(80px,14vw,170px);height:14px;border-radius:999px;background:#e4def2;overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.15)}
+.bw-pwb i{display:block;height:100%;width:100%;border-radius:999px;background:linear-gradient(90deg,#f0a500,#e8504f);transform-origin:left}
+.bw-pw b{min-width:3.2em;text-align:right;color:var(--pur)}
+.bw-stage{flex:1;min-height:0;width:min(94vw,1800px);position:relative;border-radius:22px;overflow:hidden;box-shadow:0 8px 26px rgba(108,78,160,.22);background:#efe9fb;touch-action:manipulation}
+.bw-stage canvas{display:block;width:100%;height:100%}
+.bw-msg{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:24px;font-weight:800;font-size:20px;color:var(--pur)}
+.bw-status{flex:none;width:min(94vw,1800px);text-align:center;font-weight:800;font-size:clamp(14px,1.8vw,18px);color:#5b6483;min-height:22px}
+.bw-status b{color:var(--pur)}
+.bw-status.done{color:#2e9e5b}
+.bw-foot{display:grid;grid-template-columns:repeat(var(--cols,8),minmax(0,1fr));gap:8px}
+.bw-b{position:relative;height:clamp(40px,6.6vh,58px);border:0;border-radius:12px;background:linear-gradient(#3a3f5c,#272b44);color:#fff;font:inherit;font-weight:900;font-size:20px;cursor:default;box-shadow:0 3px 0 #171a2c,inset 0 1px 0 rgba(255,255,255,.12);overflow:hidden;white-space:nowrap;padding:0 4px;display:flex;align-items:center;justify-content:center;transition:transform .12s}
+.bw-b .n{position:absolute;left:8px;top:4px;font-size:11px;font-weight:800;color:rgba(255,255,255,.38)}
+.bw-b.next{cursor:pointer;box-shadow:0 3px 0 #171a2c,0 0 0 3px #f0a500,0 0 16px rgba(240,165,0,.65);animation:bwpulse 1.1s ease-in-out infinite}
+.bw-b.next:hover{transform:translateY(-2px)}
+.bw-b.on{background:var(--wc,#6c4ea0);box-shadow:0 3px 0 rgba(0,0,0,.25);animation:bwpop .35s ease both}
+.bw-b.on .n{color:rgba(255,255,255,.7)}
+@keyframes bwpulse{50%{box-shadow:0 3px 0 #171a2c,0 0 0 5px #f0a500,0 0 22px rgba(240,165,0,.9)}}
+@keyframes bwpop{0%{transform:scale(.85)}60%{transform:scale(1.08)}100%{transform:none}}
+@media (max-width:899px){.bw-cats{grid-template-columns:1fr}.bw-pw{margin-left:0}}
+@media (max-height:600px){.bw-btn{min-height:34px;padding:5px 12px;font-size:14px}.bw-lv button{min-height:30px;padding:4px 10px;font-size:14px}.bw-play{gap:5px;padding:5px 0 6px}}
+@media (prefers-reduced-motion:reduce){.bw-b.next,.bw-b.on{animation:none}}
+</style></head>
+<body>
+<header class="top" id="top"><a class="brand" href="../../index.html"><img src="../../img/logo.png" alt="Little Wonders"><span>Little Wonders<small>Bouncing Words</small></span></a>
+<nav class="menu" style="margin-left:auto"><a class="ddb" style="text-decoration:none" href="../../index.html#stories">← Back to the app</a></nav></header>
+<main>
+<section class="bw-list" id="list">
+ <h1>Bouncing Words</h1>
+ <p class="intro">Pick a level. A secret sentence is thrown into the box, and every word bounces. Say the words in order and tap the dark blocks to check.</p>
+ <div class="bw-cats" id="cats"></div>
+</section>
+<section class="bw-play" id="play">
+ <div class="bw-bar">
+  <button class="bw-btn alt" id="back">← Levels</button>
+  <div class="bw-lv" id="lv" role="group" aria-label="Level"></div>
+  <button class="bw-btn" id="newb">New sentence</button>
+  <button class="bw-btn green" id="shake" title="Give the words a big bounce again">Shake</button>
+  <div class="bw-pw"><span>Bounce power</span><div class="bw-pwb"><i id="pwf"></i></div><b id="pwn">100%</b></div>
+ </div>
+ <div class="bw-stage" id="stage"><div class="bw-msg" id="msg" data-lw-skip></div></div>
+ <div class="bw-status" id="status" role="status" aria-live="polite" data-lw-skip></div>
+ <div class="bw-foot" id="blocks" data-lw-skip></div>
+</section>
+</main>
+<footer class="foot">Little Wonders · Bouncing Words</footer>
+<script src="../../js/lang.js"></script><script src="sentences.js"></script><script src="../../js/i18n/bouncing-words.js"></script>
+<script src="vendor/bw-libs.js"></script><script src="vendor/fredoka-font.js"></script>
+<script src="../../js/progress.js" data-id="games/bouncing-words" data-type="game"></script>
+<script src="game.js"></script>
+</body></html>
