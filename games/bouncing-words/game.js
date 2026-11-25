@@ -134,17 +134,17 @@ function layout(){
 
 /* ---------- words ---------- */
 function makeWord(text,color,idx){
-  const dep=.17,bt=.035;
+  // One solid extruded word (front, sides and a single back). From behind you see it mirrored, like a real object.
+  const dep=.28,bt=.035;
   const g=new T.TextGeometry(text,{font,size:1,depth:dep,curveSegments:5,bevelEnabled:true,bevelThickness:bt,bevelSize:.03,bevelSegments:2});
   g.computeBoundingBox();const bb=g.boundingBox;
-  g.translate(-(bb.min.x+bb.max.x)/2,-(bb.min.y+bb.max.y)/2,bt);   // centred; the front half sits at z 0..dep+2bt
+  g.translate(-(bb.min.x+bb.max.x)/2,-(bb.min.y+bb.max.y)/2,-(bb.min.z+bb.max.z)/2);
   const mat=new T.MeshStandardMaterial({color,roughness:.36,metalness:.04});
-  const grp=new T.Group(),a=new T.Mesh(g,mat),b=new T.Mesh(g,mat);
-  b.rotation.y=Math.PI;               // the back half is turned round, so the word reads correctly from behind too
-  a.castShadow=b.castShadow=true;grp.add(a,b);
-  return {text,color,idx,g,mat,grp,w1:bb.max.x-bb.min.x,h1:bb.max.y-bb.min.y,z1:dep+2*bt,revealed:false,pulse:0};
+  const mesh=new T.Mesh(g,mat);mesh.castShadow=true;
+  return {text,color,idx,g,mat,grp:mesh,w1:bb.max.x-bb.min.x,h1:bb.max.y-bb.min.y,z1:bb.max.z-bb.min.z,revealed:false,pulse:0};
 }
 function clearRound(){
+  endShowcase(true);
   if(!round)return;
   round.words.forEach(o=>{world.removeBody(o.body);wordGroup.remove(o.grp);o.g.dispose();o.mat.dispose()});
   round=null;
@@ -179,28 +179,14 @@ function spawn(words,lv){
     wordGroup.add(o.grp);
   });
 }
-// Where the words come to rest: standing in a few lanes (front to back). Planned from where the words are when the energy runs low, so they hardly have to cross each other.
-function planLanes(words){
-  const byZ=words.map((_,i)=>i).sort((a,b)=>words[b].body.position.z-words[a].body.position.z);
-  const cap=W-2.4,gap=.7,lanes=[[]];let used=0;
-  byZ.forEach(i=>{const w=words[i].hw*2;if(used+w>cap&&lanes[lanes.length-1].length){lanes.push([]);used=0}lanes[lanes.length-1].push(i);used+=w+gap});
-  const n=lanes.length,hzm=Math.max(...words.map(o=>o.hz)),zf=D/2-hzm-.5,zb=-D/2+hzm+.6;
-  lanes.forEach((ln,j)=>{
-    ln.sort((a,b)=>words[a].body.position.x-words[b].body.position.x);
-    const tot=ln.reduce((s,i)=>s+words[i].hw*2,0)+gap*(ln.length-1);let x=-tot/2;
-    const z=n===1?zf-.8:zf-j*(zf-zb)/(n-1);
-    ln.forEach(i=>{const o=words[i];o.tx=x+o.hw;o.tz=z;x+=o.hw*2+gap});
-  });
-  round.planned=true;
-}
 function stepOnce(h){
   simT+=h;
   const s=strengthAt(simT),calm=1-s;
   cmWW.restitution=.28+.58*s;cmWF.restitution=.32+.62*s;
   if(!round)return;
-  const rw=Math.max(0,Math.min(1,(.62-s)/.4)),lw=Math.max(0,Math.min(1,(.42-s)/.3));      // 0 while lively; 1 once nearly out of energy: words stand up and face the glass
   const ld=.01+.3*calm*calm*calm,ad=.05+.5*calm*calm*calm;
   for(const o of round.words){
+    if(o.body.type===C.Body.KINEMATIC)continue;   // showcased or a test pose; physics leaves it alone
     const b=o.body;b.linearDamping=ld;b.angularDamping=ad;
     if(s>.015){
       o.kick-=h;
@@ -213,32 +199,15 @@ function stepOnce(h){
         b.wakeUp();
       }
     }
-    if(rw>0){
-      // gentle self-righting: turn so the word is upright and its face points at (or away from) the glass
-      const q=b.quaternion,f=q.vmult(new C.Vec3(0,0,1)),tz=f.z>=0?0:Math.PI;
-      const qt=new C.Quaternion();qt.setFromAxisAngle(new C.Vec3(0,1,0),tz);
-      const qi=new C.Quaternion(q.x,q.y,q.z,q.w);qi.conjugate(qi);
-      const qe=qt.mult(qi);if(qe.w<0){qe.x=-qe.x;qe.y=-qe.y;qe.z=-qe.z;qe.w=-qe.w}
-      const ang=2*Math.acos(Math.min(1,qe.w)),sn=Math.sqrt(Math.max(1e-9,1-qe.w*qe.w));
-      if(ang>.015){
-        const gain=Math.min(5,ang*4)/sn,wx=qe.x*gain,wy=qe.y*gain,wz=qe.z*gain,a=Math.min(1,rw*h*10);
-        const av=b.angularVelocity;av.x+=(wx-av.x)*a;av.y+=(wy-av.y)*a;av.z+=(wz-av.z)*a;if(ang>.06)b.wakeUp();
-      }
-    }
-    if(lw>0&&!round.planned)planLanes(round.words);
-    if(lw>0&&o.tx!==undefined){
-      // soft spring towards this word's resting place (and damping), strongest once the energy is nearly gone
-      const v=b.velocity,a=lw*h;
-      v.x+=(22*(o.tx-b.position.x)-8*v.x)*a;v.z+=(22*(o.tz-b.position.z)-8*v.z)*a;
-      if(Math.abs(o.tx-b.position.x)>.25||Math.abs(o.tz-b.position.z)>.25)b.wakeUp();
-    }
     const v=b.velocity,sp=v.length();if(sp>MAXV)v.scale(MAXV/sp,v);
     const av=b.angularVelocity,aw=av.length();if(aw>MAXW)av.scale(MAXW/aw,av);
   }
   world.step(h);
-  // safety net: nothing may ever leave the box
+  // safety net: bouncing words stay inside the box (the showcased word may sit just in front of the glass)
   const hx=W/2,hz=D/2;
-  for(const o of round.words){const p=o.body.position;
+  for(const o of round.words){
+    if(o.body.type===C.Body.KINEMATIC)continue;
+    const p=o.body.position;
     if(p.x<-hx||p.x>hx||p.y<0||p.y>H||p.z<-hz||p.z>hz){
       p.x=Math.max(-hx+o.hw,Math.min(hx-o.hw,p.x));p.y=Math.max(o.hh,Math.min(H-o.hh,p.y));p.z=Math.max(-hz+o.hz,Math.min(hz-o.hz,p.z));
       o.body.velocity.scale(.3,o.body.velocity);}}
@@ -251,9 +220,101 @@ function sync(dt){
     const a=Math.min(1,Math.max(0,(simT-o.born)/.28));let sc=a<1?a*(2-a):1;
     if(o.pulse>0){o.pulse=Math.max(0,o.pulse-dt/1.6);const p=Math.sin((1-o.pulse)*Math.PI);o.mat.emissive.set(o.color);o.mat.emissiveIntensity=p*.85;sc*=1+.22*p}
     else if(o.mat.emissiveIntensity){o.mat.emissiveIntensity=0}
+    if(show&&show.o===o){
+      const k=show.phase==='in'?ease(Math.min(1,show.t/show.tin)):show.phase==='hold'?1:1-ease(Math.min(1,show.t/show.tout));
+      sc*=1+.4*k;
+      if(!o.pulse){o.mat.emissive.set(o.color);o.mat.emissiveIntensity=.22*k}
+    }
     g.scale.setScalar(sc);g.visible=sc>.01;
   }
 }
+
+
+/* ---------- click a word: glide it to the centre, hold ~1 s, then release ---------- */
+let show=null;
+const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+function slerpQ(q1,q2,t,out){
+  let dot=q1.x*q2.x+q1.y*q2.y+q1.z*q2.z+q1.w*q2.w,x2=q2.x,y2=q2.y,z2=q2.z,w2=q2.w;
+  if(dot<0){x2=-x2;y2=-y2;z2=-z2;w2=-w2;dot=-dot}
+  if(dot>.9995){const x=q1.x+(x2-q1.x)*t,y=q1.y+(y2-q1.y)*t,z=q1.z+(z2-q1.z)*t,w=q1.w+(w2-q1.w)*t,n=Math.hypot(x,y,z,w)||1;out.set(x/n,y/n,z/n,w/n);return out}
+  const th=Math.acos(Math.min(1,dot)),st=Math.sin(th),s1=Math.sin((1-t)*th)/st,s2=Math.sin(t*th)/st;
+  out.set(q1.x*s1+x2*s2,q1.y*s1+y2*s2,q1.z*s1+z2*s2,q1.w*s1+w2*s2);return out;
+}
+function faceCamQ(){const q=new C.Quaternion();q.setFromEuler(0,Math.atan2(cam.position.x,cam.position.z),0);return q}
+function showcasePos(o){
+  // Screen centre, well in front of the box, sized so the word is easy to read.
+  const fov=cam.fov*Math.PI/180, half=Math.max(o.hh,o.hw*.28);
+  const dist=Math.max(4, half/Math.tan(fov/2)/.24);
+  const dir=new T.Vector3();cam.getWorldDirection(dir);
+  const p=cam.position.clone().add(dir.multiplyScalar(dist));
+  if(p.z<D/2+o.hz+1.2)p.z=D/2+o.hz+1.2;
+  return new C.Vec3(p.x,p.y,p.z);
+}
+function applyShowPose(p,q){const b=show.o.body;b.position.set(p.x,p.y,p.z);b.quaternion.set(q.x,q.y,q.z,q.w)}
+function beginShowcase(o){
+  if(!o||(show&&show.o===o&&show.phase!=='out'))return;
+  if(show)endShowcase(true);
+  const b=o.body;
+  show={o,phase:'in',t:0,tin:.45,hold:1,tout:.45,
+    fromP:b.position.clone(),fromQ:b.quaternion.clone(),
+    toP:showcasePos(o),toQ:faceCamQ(),
+    backP:b.position.clone(),backQ:b.quaternion.clone(),mass:b.mass};
+  b.collisionResponse=false;b.type=C.Body.KINEMATIC;b.velocity.set(0,0,0);b.angularVelocity.set(0,0,0);o.grp.renderOrder=20;
+}
+function endShowcase(snap){
+  if(!show)return;
+  const b=show.o.body,s=strengthAt(simT);
+  if(snap){const p=show.backP;b.position.set(p.x,p.y,p.z);b.quaternion.copy(show.backQ)}
+  b.collisionResponse=true;b.type=C.Body.DYNAMIC;
+  if(b.mass!==show.mass){b.mass=show.mass;b.updateMassProperties()}
+  b.velocity.set(rnd(-8,8)*s,(s>.04?s*rnd(5,12):0),rnd(-4,4)*s);
+  b.angularVelocity.set(rnd(-5,5)*s,rnd(-5,5)*s,rnd(-5,5)*s);
+  b.wakeUp();show.o.grp.renderOrder=0;show=null;
+}
+function tickShowcase(dt){
+  if(!show)return;
+  const S=show;S.t+=dt;
+  if(S.phase==='in'){
+    const u=ease(Math.min(1,S.t/S.tin)),q=new C.Quaternion();
+    slerpQ(S.fromQ,S.toQ,u,q);
+    applyShowPose(new C.Vec3(S.fromP.x+(S.toP.x-S.fromP.x)*u,S.fromP.y+(S.toP.y-S.fromP.y)*u,S.fromP.z+(S.toP.z-S.fromP.z)*u),q);
+    if(S.t>=S.tin){S.phase='hold';S.t=0;applyShowPose(S.toP,S.toQ)}
+  }else if(S.phase==='hold'){
+    applyShowPose(S.toP,S.toQ);
+    if(S.t>=S.hold){S.phase='out';S.t=0}
+  }else{
+    const u=ease(Math.min(1,S.t/S.tout)),q=new C.Quaternion();
+    slerpQ(S.toQ,S.backQ,u,q);
+    applyShowPose(new C.Vec3(S.toP.x+(S.backP.x-S.toP.x)*u,S.toP.y+(S.backP.y-S.toP.y)*u,S.toP.z+(S.backP.z-S.toP.z)*u),q);
+    if(S.t>=S.tout)endShowcase(false);
+  }
+}
+function eventRay(ev){
+  const r=renderer.domElement.getBoundingClientRect();
+  const nx=((ev.clientX-r.left)/r.width)*2-1,ny=-((ev.clientY-r.top)/r.height)*2+1;
+  const a=new T.Vector3(nx,ny,-1).unproject(cam),b=new T.Vector3(nx,ny,1).unproject(cam);b.sub(a);
+  return {o:a,d:b};
+}
+function rayHit(o,origin,dir){
+  const q=o.body.quaternion,qi=new C.Quaternion(-q.x,-q.y,-q.z,q.w),p=o.body.position;
+  const lo=qi.vmult(new C.Vec3(origin.x-p.x,origin.y-p.y,origin.z-p.z));
+  const ld=qi.vmult(new C.Vec3(dir.x,dir.y,dir.z));
+  let tmin=0,tmax=1;
+  const L=[lo.x,lo.y,lo.z],D=[ld.x,ld.y,ld.z],B=[[-o.hw,o.hw],[-o.hh,o.hh],[-o.hz,o.hz]];
+  for(let i=0;i<3;i++){
+    if(Math.abs(D[i])<1e-9){if(L[i]<B[i][0]||L[i]>B[i][1])return null;continue}
+    let t1=(B[i][0]-L[i])/D[i],t2=(B[i][1]-L[i])/D[i];if(t1>t2){const k=t1;t1=t2;t2=k}
+    tmin=Math.max(tmin,t1);tmax=Math.min(tmax,t2);if(tmin>tmax)return null;
+  }
+  return tmin;
+}
+function pickWord(ev){
+  if(!round||!R)return null;const ray=eventRay(ev);let best=null,bt=1;
+  for(const o of round.words){const t=rayHit(o,ray.o,ray.d);if(t!=null&&t<bt){bt=t;best=o}}
+  return best;
+}
+el.stage.addEventListener('click',e=>{if(!R||!round)return;const o=pickWord(e);if(o)beginShowcase(o)});
+el.stage.addEventListener('pointermove',e=>{if(!R||!round)return;el.stage.style.cursor=pickWord(e)?'pointer':''});
 
 /* ---------- rounds ---------- */
 function startLevel(k,push){
@@ -268,7 +329,7 @@ function startLevel(k,push){
   requestAnimationFrame(()=>{layout();newSentence();startLoop()});
 }
 function toList(push){
-  document.body.classList.remove('playing');running=false;curLevel=null;clearRound();document.title='Bouncing Words · Little Wonders';
+  document.body.classList.remove('playing');running=false;curLevel=null;endShowcase(true);clearRound();document.title='Bouncing Words · Little Wonders';
   if(push!==false)history.pushState(null,'',location.pathname+location.search);
 }
 function newSentence(){
@@ -278,13 +339,14 @@ function newSentence(){
   const pal=PALETTE.slice();for(let i=pal.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pal[i],pal[j]]=[pal[j],pal[i]]}
   const words=pick.text.split(/\s+/).map((w,i)=>makeWord(w,pal[i%pal.length],i));
   simT=0;acc=0;
-  round={level:curLevel,idx:pick.i,text:pick.text,words,revealed:0,planned:false};
+  endShowcase(true);
+  round={level:curLevel,idx:pick.i,text:pick.text,words,revealed:0};
   spawn(words,lv);
   buildBlocks();updatePower();setStatus();
   sync(0);
 }
 function shake(){
-  if(!round)return;simT=0;acc=0;round.planned=false;round.words.forEach(o=>{o.tx=undefined});
+  if(!round)return;endShowcase(true);simT=0;acc=0;
   round.words.forEach(o=>{o.born=-1;o.kick=rnd(0,.3);o.body.velocity.y+=rnd(6,12);o.body.angularVelocity.set(rnd(-6,6),rnd(-6,6),rnd(-6,6));o.body.wakeUp()});
 }
 function buildBlocks(){
@@ -328,7 +390,7 @@ function frame(now){
   const dt=Math.min(.05,Math.max(0,(now-lastNow)/1000));lastNow=now;
   if(glOK&&!document.hidden){
     acc+=dt;let n=0;while(acc>=STEP&&n<6){stepOnce(STEP);acc-=STEP;n++}if(n>=6)acc=0;
-    sync(dt);updatePower();renderer.render(scene,cam);
+    tickShowcase(dt);sync(dt);updatePower();renderer.render(scene,cam);
   }
   requestAnimationFrame(frame);
 }
@@ -339,10 +401,28 @@ addEventListener('popstate',()=>{const k=location.hash.slice(1);if(LEVELS.some(l
 /* ---------- test hook (fast-forward the simulation, read positions) ---------- */
 window.__bw={
   advance(sec){const n=Math.round(sec/STEP);for(let i=0;i<n;i++)stepOnce(STEP);sync(0);updatePower();if(renderer)renderer.render(scene,cam);return simT},
+  clickWord(i){if(round&&round.words[i])beginShowcase(round.words[i])},
+  advanceShowcase(sec){tickShowcase(sec);sync(0);if(renderer)renderer.render(scene,cam);return show&&{phase:show.phase,t:show.t,text:show.o.text}},
+  // Place a word in mid-box, back towards the camera, so a test can photograph the mirrored side.
+  poseBack(i){
+    if(!round)return null;const o=round.words[i],b=o.body;
+    // Park the other words so this one is clearly seen from behind, then freeze it.
+    round.words.forEach((w,j)=>{if(j===i)return;w.body.position.set((j%2?1:-1)*(W/2-w.hw-0.4),w.hh+0.05,(j%3-1)*1.6);w.body.velocity.set(0,0,0);w.body.angularVelocity.set(0,0,0)});
+    b.position.set(0,H*.48,1.3);b.quaternion.setFromEuler(0,Math.PI,0);b.velocity.set(0,0,0);b.angularVelocity.set(0,0,0);
+    b.type=C.Body.KINEMATIC;
+    sync(0);if(renderer)renderer.render(scene,cam);
+    return o.text;
+  },
+  project(i){
+    if(!round||!renderer)return null;const p=round.words[i].body.position,v=new T.Vector3(p.x,p.y,p.z).project(cam),r=renderer.domElement.getBoundingClientRect();
+    return {x:r.left+(v.x+1)/2*r.width,y:r.top+(-v.y+1)/2*r.height,behind:v.z>1,on:Math.abs(v.x)<.95&&Math.abs(v.y)<.95,word:round.words[i].text};
+  },
   state(){
     if(!round)return null;
     return {level:round.level,text:round.text,simT,strength:strengthAt(simT),W,H,D,revealed:round.revealed,glOK,
-      words:round.words.map(o=>{const p=o.body.position,v=o.body.velocity;return {w:o.text,pos:[p.x,p.y,p.z],speed:v.length(),inside:Math.abs(p.x)<=W/2&&p.y>=0&&p.y<=H&&Math.abs(p.z)<=D/2,sleeping:o.body.sleepState===2,hw:o.hw,hh:o.hh,hz:o.hz,vis:o.grp.visible,up:o.body.quaternion.vmult(new C.Vec3(0,1,0)).y,fz:Math.abs(o.body.quaternion.vmult(new C.Vec3(0,0,1)).z)}})}
+      show:show&&{i:show.o.idx,phase:show.phase,t:show.t,text:show.o.text,pos:[show.o.body.position.x,show.o.body.position.y,show.o.body.position.z]},
+      words:round.words.map(o=>{const p=o.body.position,v=o.body.velocity,fz=o.body.quaternion.vmult(new C.Vec3(0,0,1)).z;
+        return {w:o.text,pos:[p.x,p.y,p.z],speed:v.length(),inside:Math.abs(p.x)<=W/2&&p.y>=0&&p.y<=H&&Math.abs(p.z)<=D/2,sleeping:o.body.sleepState===2,hw:o.hw,hh:o.hh,hz:o.hz,vis:o.grp.visible,up:o.body.quaternion.vmult(new C.Vec3(0,1,0)).y,fz,back:fz<0}})}
   }
 };
 
