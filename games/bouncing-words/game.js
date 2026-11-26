@@ -13,14 +13,14 @@ const LEVELS=[
  {k:'B1',name:'Intermediate',sub:'Varied grammar · 12–16 words',cls:'L3',size:1.42,demo:['If','I','had','wings,','I','would','fly.']}
 ];
 const PALETTE=['#e8504f','#f08a00','#2c9a83','#3f7fe0','#8a5cc8','#d8588d','#3aa655','#e0662f','#1fa1c7','#b9568f'];
-const H=10,D=7,TOTAL=60,STEP=1/120,MAXV=28,MAXW=12,G=-18;   // box height, depth (world units), seconds from 100% to 0%, physics step
+const H=10,D=14,TOTAL=60,STEP=1/120,MAXV=28,MAXW=12,G=-18;   // box height, depth (world units; D is deep enough for a front and back layer), seconds from 100% to 0%, physics step
 const strengthAt=t=>t>=TOTAL?0:1-Math.pow(t/TOTAL,2);   // gentle at first (97% after 10 s), 0% at 60 s
 
 const el={list:$('list'),cats:$('cats'),play:$('play'),lv:$('lv'),stage:$('stage'),msg:$('msg'),status:$('status'),blocks:$('blocks'),pwf:$('pwf'),pwn:$('pwn')};
 const L=window.BWLibs;
 let T,C,R=null,scene,cam,renderer,world,font,matWord,matWall,cmWW,cmWF,boxGroup,wordGroup,keyLight;
 let W=24,curLevel=null,round=null,simT=0,acc=0,lastNow=0,running=false,glOK=true,texCache={};
-let midAir={samples:0,hits:0,maxU:0,sumU:0},ftMs=[];
+let midAir={samples:0,hits:0,maxU:0,sumU:0},ftMs=[],colWW=0,colWF=0;
 
 /* ---------- picker ---------- */
 function buildList(){
@@ -114,12 +114,14 @@ function buildBox(){
   const s=keyLight.shadow.camera,ex=Math.max(W,D*2)*.62+3;s.left=-ex;s.right=ex;s.top=ex*.7;s.bottom=-ex*.7;s.near=1;s.far=60;s.updateProjectionMatrix();
 }
 function fitCamera(){
-  const fov=cam.fov*Math.PI/180,ay=H*.66,ty=H*.47,v=new T.Vector3();
-  const corners=[[-1,0],[1,0],[-1,H],[1,H]].map(([sx,y])=>[sx*(W/2+.18),y+(y?.18:-.18),D/2+.18]);
+  // Slightly more head-on than a top-down view, so letter faces (not tops) are what you see.
+  // All eight corners are fitted so the back layer stays on screen and readable.
+  const ay=H*.54,ty=H*.46,v=new T.Vector3(),corners=[];
+  for(const sx of [-1,1])for(const y of [0,H])for(const sz of [-1,1])corners.push([sx*(W/2+.22),y+(y?.22:-.22),sz*(D/2+.22)]);
   for(let d=6;d<560;d+=.2){
     cam.position.set(0,ay,D/2+d);cam.lookAt(0,ty,0);cam.updateMatrixWorld(true);
     let ok=true;
-    for(const c of corners){v.set(c[0],c[1],c[2]).project(cam);if(Math.abs(v.x)>.99||Math.abs(v.y)>.985){ok=false;break}}
+    for(const c of corners){v.set(c[0],c[1],c[2]).project(cam);if(Math.abs(v.x)>.98||Math.abs(v.y)>.975){ok=false;break}}
     if(ok)break;
   }
 }
@@ -157,36 +159,78 @@ function spawn(words,lv){
   // size: level default, shrunk if the sentence has a lot of long words
   const area=words.reduce((s,o)=>s+o.w1*o.h1,0),maxw=Math.max(...words.map(o=>o.w1));
   let k=Math.min(lv.size,Math.sqrt(.20*W*H*2/area),W*.31/maxw);
-  const placed=[];
-  words.forEach((o,i)=>{
-    o.k=k;o.g.scale(k,k,k);
-    o.hw=o.w1*k/2+.05;o.hh=o.h1*k/2+.05;o.hz=o.z1*k+.02;
-    o.grp.visible=false;
+  words.forEach(o=>{o.k=k;o.g.scale(k,k,k);o.hw=o.w1*k/2+.05;o.hh=o.h1*k/2+.05;o.hz=o.z1*k+.02;o.grp.visible=false});
+  // Two depth layers, staggered in x so a back word can be seen between the front ones.
+  const n=words.length,idx=words.map((_,i)=>i);
+  for(let i=n-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]]}
+  const mid=Math.ceil(n/2),front=idx.slice(0,mid),back=idx.slice(mid);
+  const zF=D/2-1.2,zB=-D/2+1.2,gap=.55,margin=1.15;
+  function pack(layer,z,xShift){
+    const m=layer.length,widths=layer.map(i=>words[i].hw*2);
+    const need=widths.reduce((a,b)=>a+b,0)+gap*Math.max(0,m-1);
+    let start=-need/2+xShift;
+    start=Math.max(-W/2+margin,Math.min(W/2-margin-need,start));
+    let x=start;
+    const spots=[];
+    layer.forEach(wi=>{
+      const o=words[wi];
+      let px=x+o.hw+rnd(-.12,.12);
+      px=Math.max(-W/2+o.hw+.3,Math.min(W/2-o.hw-.3,px));
+      spots.push({o,x:px,y:rnd(H*.4+o.hh,H-o.hh-.45),z:z+rnd(-.2,.2)});
+      o.homeZ=z;
+      x+=o.hw*2+gap;
+    });
+    return spots;
+  }
+  const spots=pack(front,zF,0).concat(pack(back,zB,W*.07));
+  spots.forEach(({o,x,y,z})=>{
     o.shape=new C.Box(new C.Vec3(o.hw,o.hh,o.hz));
     const body=new C.Body({mass:Math.max(.5,o.w1*o.h1*k*k*.4),material:matWord,shape:o.shape,allowSleep:true,sleepSpeedLimit:.35,sleepTimeLimit:.8});
-    // find a free spot in the upper part of the box (axis-aligned boxes, roughly upright)
-    let pos=null;
-    for(let t=0;t<260&&!pos;t++){
-      const x=rnd(-W/2+o.hw+.3,W/2-o.hw-.3),y=rnd(H*.38+o.hh,H-o.hh-.3),z=rnd(-D/2+o.hz+.4,D/2-o.hz-.4);
-      const pad=t<120?.15:0;
-      if(placed.every(p=>Math.abs(p[0]-x)>p[3]+o.hw+pad||Math.abs(p[1]-y)>p[4]+o.hh+pad||Math.abs(p[2]-z)>p[5]+o.hz+pad))pos=[x,y,z];
-    }
-    if(!pos)pos=[rnd(-W/3,W/3),rnd(H*.4,H-1),rnd(-D/3,D/3)];
-    placed.push([pos[0],pos[1],pos[2],o.hw,o.hh,o.hz]);
-    body.position.set(pos[0],pos[1],pos[2]);
-    body.quaternion.setFromEuler(rnd(-.35,.35),rnd(-.5,.5),rnd(-.4,.4));
-    // One lively toss at the start; after that, only wall impacts add energy.
-    body.velocity.set(rnd(-10,10),rnd(-2,8),rnd(-5,5));
-    body.angularVelocity.set(rnd(-5,5),rnd(-5,5),rnd(-5,5));
+    body.position.set(x,y,z);
+    // Start upright with a random yaw (front or mirrored back). Small tilt only.
+    body.quaternion.setFromEuler(rnd(-.12,.12),rnd(0,Math.PI*2),rnd(-.12,.12));
+    // Lively toss, but little depth speed so the two layers stay apart.
+    body.velocity.set(rnd(-8,8),rnd(-2,8),rnd(-1.2,1.2));
+    body.angularVelocity.set(rnd(-.8,.8),rnd(-6,6),rnd(-.8,.8));
     body.linearDamping=0;body.angularDamping=.012;
     o.hit=false;o.hitWall=false;o.hitN=null;o.preV=body.velocity.clone();
     o.prevP=body.position.clone();o.prevQ=body.quaternion.clone();
     o._onCollide=e=>onWordCollide(o,e);
     body.addEventListener('collide',o._onCollide);
-    world.addBody(body);o.body=body;o.born=rnd(0,.3);o.k=k;
+    world.addBody(body);o.body=body;o.born=rnd(0,.3);
     wordGroup.add(o.grp);
   });
 }
+function faceOf(o){
+  const p=o.body.position,q=o.body.quaternion,face=q.vmult(new C.Vec3(0,0,1)),up=q.vmult(new C.Vec3(0,1,0));
+  const cx=cam.position.x-p.x,cy=cam.position.y-p.y,cz=cam.position.z-p.z,cl=Math.hypot(cx,cy,cz)||1;
+  const dot=Math.abs(face.x*cx+face.y*cy+face.z*cz)/cl;
+  return {dot,upY:up.y,ok:dot>=Math.SQRT1_2,upright:up.y>=Math.SQRT1_2,face,up};
+}
+// Keep letter faces readable: mostly upright, spinning around the vertical (a mirrored back is fine),
+// with only a gentle tilt, and a righting torque toward the camera that gets stronger as energy drops.
+function steerSpin(o,s,h){
+  if(o.body.type===C.Body.KINEMATIC)return;
+  const b=o.body,q=b.quaternion,av=b.angularVelocity,calm=1-s;
+  const up=q.vmult(new C.Vec3(0,1,0)),face=q.vmult(new C.Vec3(0,0,1));
+  // 1) Right the word so +Y is up (never leaves it lying flat or upside-down for long).
+  const axisX=-up.z,axisZ=up.x,axisLen=Math.hypot(axisX,axisZ);
+  if(axisLen>1e-5){
+    const nx=axisX/axisLen,nz=axisZ/axisLen,tilt=Math.atan2(axisLen,up.y);
+    const kp=10+30*calm*calm,kd=2.4+7*calm,avTilt=av.x*nx+av.z*nz,corr=(kp*tilt-kd*avTilt)*h;
+    av.x+=corr*nx;av.z+=corr*nz;
+  }
+  // 2) Yaw so the nearer face (front or mirrored back) turns toward the camera.
+  const p=b.position,vx=cam.position.x-p.x,vz=cam.position.z-p.z,vl=Math.hypot(vx,vz)||1,dx=vx/vl,dz=vz/vl;
+  const fd=face.x*dx+face.z*dz,sign=fd>=0?1:-1;
+  const yawErr=Math.atan2(sign*(face.x*dz-face.z*dx),sign*(face.x*dx+face.z*dz));
+  const yawKp=1.4+18*calm*calm,yawKd=.45+6*calm;
+  av.y+=(-yawKp*yawErr-yawKd*av.y)*h;
+  // 3) Cap pitch/roll rate so a bounce can tilt the word a little, but it cannot tumble edge-on for long.
+  const tiltRate=Math.hypot(av.x,av.z),maxTilt=1.6+2.4*s;
+  if(tiltRate>maxTilt){const k=maxTilt/tiltRate;av.x*=k;av.z*=k}
+}
+
 function onWordCollide(o,e){
   if(o.body.type===C.Body.KINEMATIC)return;
   const c=e.contact,n=c.ni,other=e.body;
@@ -196,6 +240,8 @@ function onWordCollide(o,e){
   if(!o.hit){o.hitN=[nx,ny,nz];o.hitWall=other.mass===0}
   else if(other.mass===0){o.hitN=[nx,ny,nz];o.hitWall=true}
   o.hit=true;
+  // Count each first-contact once (this event fires on both words of a pair).
+  if(other.mass===0)colWF++;else if(o.body.id<other.id)colWW++
 }
 function stepOnce(h){
   simT+=h;
@@ -212,7 +258,7 @@ function stepOnce(h){
     o.hit=false;o.hitWall=false;o.clamped=false;
     if(b.type===C.Body.KINEMATIC)continue;
     b.linearDamping=ld;b.angularDamping=ad;
-    b.allowSleep=s<.12;
+    b.allowSleep=false;
   }
   world.step(h);
   // Catch lingering contacts too (the collide event only fires on first contact).
@@ -237,11 +283,16 @@ function stepOnce(h){
     }
     const sp=v.length();if(sp>MAXV)v.scale(MAXV/sp,v);
     const av=b.angularVelocity,aw=av.length();if(aw>MAXW)av.scale(MAXW/aw,av);
-    // Mid-air check (no contact): velocity should change only by gravity (and tiny damping).
+    steerSpin(o,s,h);
+    // Soft depth spring keeps a word near its front or back layer, so the two rows don't pile into each other.
+    if(o.homeZ!=null){const kz=2.0,cz=1.5;v.z+=((o.homeZ-b.position.z)*kz-v.z*cz)*h}
+    // Mid-air check (linear; the z-spring is excluded so this still flags any stray mid-air kicks).
     if(!o.hit){
-      const p=o.preV,ux=v.x-p.x,uy=v.y-(p.y+G*h),uz=v.z-p.z,err=Math.hypot(ux,uy,uz);
+      const p=o.preV,ux=v.x-p.x,uy=v.y-(p.y+G*h),err=Math.hypot(ux,uy);
       midAir.samples++;midAir.sumU+=err;if(err>midAir.maxU)midAir.maxU=err;
     }else midAir.hits++;
+    const f=faceOf(o);
+    b.allowSleep=s<.1&&f.ok&&f.upright&&sp<0.8&&b.angularVelocity.length()<0.8;
   }
   // Safety net: if a word tunnels out, bounce it back in (counts as a wall hit, not a mid-air push).
   const hx=W/2,hz=D/2,rest=.16+.84*s;
@@ -482,6 +533,32 @@ window.__bw={
   project(i){
     if(!round||!renderer)return null;const p=round.words[i].body.position,v=new T.Vector3(p.x,p.y,p.z).project(cam),r=renderer.domElement.getBoundingClientRect();
     return {x:r.left+(v.x+1)/2*r.width,y:r.top+(-v.y+1)/2*r.height,behind:v.z>1,on:Math.abs(v.x)<.95&&Math.abs(v.y)<.95,word:round.words[i].text};
+  },
+  resetCollisions(){colWW=0;colWF=0;return {wordWord:0,wordWall:0}},
+  collisions(){return {wordWord:colWW,wordWall:colWF,first:colWW+colWF,contactSteps:midAir.hits}},
+  faceOf(o){return faceOf(o)},
+  sampleFaces(){
+    const acc={n:0,ok:0,up:0,sumDot:0};
+    if(!round)return acc;
+    for(const o of round.words){
+      if(o.body.type===C.Body.KINEMATIC)continue;
+      const f=this.faceOf(o);acc.n++;if(f.ok)acc.ok++;if(f.upright)acc.up++;acc.sumDot+=f.dot;
+    }
+    return acc;
+  },
+  measure(sec){
+    const acc={n:0,ok:0,up:0,sumDot:0},every=4,steps=Math.round(sec/STEP);
+    const c0={ww:colWW,wf:colWF,st:midAir.hits};
+    for(let i=0;i<steps;i++){
+      stepOnce(STEP);
+      if(i%every===0){
+        const s=this.sampleFaces();acc.n+=s.n;acc.ok+=s.ok;acc.up+=s.up;acc.sumDot+=s.sumDot;
+      }
+    }
+    if(round)round.words.forEach(o=>{if(o.prevP){o.prevP.copy(o.body.position);o.prevQ.copy(o.body.quaternion)}});
+    sync(0,1);updatePower();if(renderer)renderer.render(scene,cam);
+    const settle=this.sampleFaces(),pct=a=>({samples:a.n,faceWithin45:a.n?a.ok/a.n:0,upright:a.n?a.up/a.n:0,meanDot:a.n?a.sumDot/a.n:0});
+    return {seconds:sec,D,W,during:pct(acc),settle:pct(settle),collisions:{wordWord:colWW-c0.ww,wordWall:colWF-c0.wf,first:(colWW+colWF)-(c0.ww+c0.wf),contactSteps:midAir.hits-c0.st},strength:strengthAt(simT)};
   },
   state(){
     if(!round)return null;
