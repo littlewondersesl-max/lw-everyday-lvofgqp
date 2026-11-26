@@ -2661,5 +2661,1305 @@
       "solid": true,
       "pack": "v3"
     }
+  ],
+  "armchair": [
+    {
+      "key": "a",
+      "file": "glb/armchair_a.glb",
+      "thumb": "thumbs-web/armchair_a.webp",
+      "label": "Lilac puff armchair",
+      "desc": "Chubby lilac armchair with a solid seat and puffy cushions.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 168988,
+      "size_m": {
+        "w": 0.86,
+        "d": 0.807,
+        "h": 0.797
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/armchair_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/armchair_b.glb",
+      "thumb": "thumbs-web/armchair_b.webp",
+      "label": "Teal club armchair",
+      "desc": "Friendly teal club armchair with a mint cushion.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 162792,
+      "size_m": {
+        "w": 0.8,
+        "d": 0.804,
+        "h": 0.854
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/armchair_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/armchair_c.glb",
+      "thumb": "thumbs-web/armchair_c.webp",
+      "label": "Coral wingback",
+      "desc": "Coral wingback armchair with soft armrests.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 183108,
+      "size_m": {
+        "w": 0.843,
+        "d": 0.858,
+        "h": 0.933
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/armchair_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "basket": [
+    {
+      "key": "a",
+      "file": "glb/basket_a.glb",
+      "thumb": "thumbs-web/basket_a.webp",
+      "label": "Teal basket, cream rim",
+      "desc": "Open teal basket with a cream rim and handle.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 67368,
+      "size_m": {
+        "w": 0.302,
+        "d": 0.302,
+        "h": 0.282
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/basket_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/basket_b.glb",
+      "thumb": "thumbs-web/basket_b.webp",
+      "label": "Coral basket, cream rim",
+      "desc": "Open coral basket with a cream rim and handle.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 67372,
+      "size_m": {
+        "w": 0.302,
+        "d": 0.302,
+        "h": 0.282
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/basket_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/basket_c.glb",
+      "thumb": "thumbs-web/basket_c.webp",
+      "label": "Lilac basket, cream rim",
+      "desc": "Open lilac basket with a cream rim and handle.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 67372,
+      "size_m": {
+        "w": 0.302,
+        "d": 0.302,
+        "h": 0.282
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/basket_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "batteries": [
+    {
+      "key": "a",
+      "file": "glb/batteries_a.glb",
+      "thumb": "thumbs-web/batteries_a.webp",
+      "label": "Four in a tray",
+      "desc": "Four chunky batteries in a cream tray.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 43980,
+      "size_m": {
+        "w": 0.14,
+        "d": 0.07,
+        "h": 0.056
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/batteries_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/batteries_b.glb",
+      "thumb": "thumbs-web/batteries_b.webp",
+      "label": "Two loose cells",
+      "desc": "Two loose batteries.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 22348,
+      "size_m": {
+        "w": 0.064,
+        "d": 0.024,
+        "h": 0.056
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/batteries_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/batteries_c.glb",
+      "thumb": "thumbs-web/batteries_c.webp",
+      "label": "Pack of two",
+      "desc": "A small pack of batteries.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 29348,
+      "size_m": {
+        "w": 0.08,
+        "d": 0.05,
+        "h": 0.062
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/batteries_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "books": [
+    {
+      "key": "a",
+      "file": "glb/books_a.glb",
+      "thumb": "thumbs-web/books_a.webp",
+      "label": "Upright row",
+      "desc": "Three colourful books standing in a row.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 7808,
+      "size_m": {
+        "w": 0.085,
+        "d": 0.11,
+        "h": 0.16
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/books_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/books_b.glb",
+      "thumb": "thumbs-web/books_b.webp",
+      "label": "Short stack",
+      "desc": "A short stack of books.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 8620,
+      "size_m": {
+        "w": 0.16,
+        "d": 0.125,
+        "h": 0.072
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/books_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/books_c.glb",
+      "thumb": "thumbs-web/books_c.webp",
+      "label": "Stack plus a leaner",
+      "desc": "A stack of books with one leaning.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 8624,
+      "size_m": {
+        "w": 0.167,
+        "d": 0.11,
+        "h": 0.161
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/books_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "bookshelf": [
+    {
+      "key": "a",
+      "file": "glb/bookshelf_a.glb",
+      "thumb": "thumbs-web/bookshelf_a.webp",
+      "label": "Tall teal case",
+      "desc": "Tall teal bookshelf.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 213164,
+      "size_m": {
+        "w": 0.78,
+        "d": 0.32,
+        "h": 1.414
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/bookshelf_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/bookshelf_b.glb",
+      "thumb": "thumbs-web/bookshelf_b.webp",
+      "label": "Wide low coral case",
+      "desc": "Wide low coral bookshelf.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 233048,
+      "size_m": {
+        "w": 1.2,
+        "d": 0.319,
+        "h": 0.86
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/bookshelf_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/bookshelf_c.glb",
+      "thumb": "thumbs-web/bookshelf_c.webp",
+      "label": "Cream case, lilac sides",
+      "desc": "Cream bookshelf with lilac sides.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 211556,
+      "size_m": {
+        "w": 0.73,
+        "d": 0.3,
+        "h": 1.279
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/bookshelf_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "ceiling_light": [
+    {
+      "key": "a",
+      "file": "glb/ceiling_light_a.glb",
+      "thumb": "thumbs-web/ceiling_light_a.webp",
+      "label": "Cream flush shade",
+      "desc": "Simple cream flush ceiling light.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 35636,
+      "size_m": {
+        "w": 0.332,
+        "d": 0.332,
+        "h": 0.22
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/ceiling_light_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/ceiling_light_b.glb",
+      "thumb": "thumbs-web/ceiling_light_b.webp",
+      "label": "Teal pendant",
+      "desc": "Simple teal pendant ceiling light.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 51020,
+      "size_m": {
+        "w": 0.277,
+        "d": 0.277,
+        "h": 0.4
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/ceiling_light_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/ceiling_light_c.glb",
+      "thumb": "thumbs-web/ceiling_light_c.webp",
+      "label": "Lilac flush shade",
+      "desc": "Simple lilac flush ceiling light.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 36432,
+      "size_m": {
+        "w": 0.292,
+        "d": 0.292,
+        "h": 0.2
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/ceiling_light_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "coffee_table": [
+    {
+      "key": "a",
+      "file": "glb/coffee_table_a.glb",
+      "thumb": "thumbs-web/coffee_table_a.webp",
+      "label": "Cream top, teal legs",
+      "desc": "Cream coffee table on teal legs.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 103964,
+      "size_m": {
+        "w": 1.05,
+        "d": 0.56,
+        "h": 0.4
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/coffee_table_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/coffee_table_b.glb",
+      "thumb": "thumbs-web/coffee_table_b.webp",
+      "label": "Oval coral pedestal",
+      "desc": "Oval coral coffee table on a pedestal.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 96452,
+      "size_m": {
+        "w": 1.0,
+        "d": 0.6,
+        "h": 0.38
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/coffee_table_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/coffee_table_c.glb",
+      "thumb": "thumbs-web/coffee_table_c.webp",
+      "label": "Honey top, lilac legs",
+      "desc": "Honey coffee table on lilac legs.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 124776,
+      "size_m": {
+        "w": 0.8,
+        "d": 0.8,
+        "h": 0.4
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/coffee_table_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "cushions": [
+    {
+      "key": "a",
+      "file": "glb/cushions_a.glb",
+      "thumb": "thumbs-web/cushions_a.webp",
+      "label": "Teal and mint pair",
+      "desc": "A pair of teal and mint cushions.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 53676,
+      "size_m": {
+        "w": 0.474,
+        "d": 0.235,
+        "h": 0.3
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/cushions_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/cushions_b.glb",
+      "thumb": "thumbs-web/cushions_b.webp",
+      "label": "Coral round and cream",
+      "desc": "Coral and cream cushions.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 58992,
+      "size_m": {
+        "w": 0.488,
+        "d": 0.395,
+        "h": 0.22
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/cushions_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/cushions_c.glb",
+      "thumb": "thumbs-web/cushions_c.webp",
+      "label": "Lilac and cream throws",
+      "desc": "Lilac and cream throw cushions.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 64180,
+      "size_m": {
+        "w": 0.433,
+        "d": 0.219,
+        "h": 0.32
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/cushions_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "floor_lamp": [
+    {
+      "key": "a",
+      "file": "glb/floor_lamp_a.glb",
+      "thumb": "thumbs-web/floor_lamp_a.webp",
+      "label": "Teal drum shade",
+      "desc": "Teal drum floor lamp. Click to turn it on.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 97036,
+      "size_m": {
+        "w": 0.446,
+        "d": 0.446,
+        "h": 1.478
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/floor_lamp_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/floor_lamp_b.glb",
+      "thumb": "thumbs-web/floor_lamp_b.webp",
+      "label": "Coral tripod lamp",
+      "desc": "Coral tripod floor lamp. Click to turn it on.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 84332,
+      "size_m": {
+        "w": 0.467,
+        "d": 0.468,
+        "h": 1.391
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/floor_lamp_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/floor_lamp_c.glb",
+      "thumb": "thumbs-web/floor_lamp_c.webp",
+      "label": "Lilac drum lamp",
+      "desc": "Lilac drum floor lamp. Click to turn it on.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 102196,
+      "size_m": {
+        "w": 0.461,
+        "d": 0.461,
+        "h": 1.488
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/floor_lamp_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "ornament": [
+    {
+      "key": "a",
+      "file": "glb/ornament_a.glb",
+      "thumb": "thumbs-web/ornament_a.webp",
+      "label": "Coral bowl",
+      "desc": "Small coral decorative bowl.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 43660,
+      "size_m": {
+        "w": 0.176,
+        "d": 0.176,
+        "h": 0.089
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/ornament_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/ornament_b.glb",
+      "thumb": "thumbs-web/ornament_b.webp",
+      "label": "Teal bird figurine",
+      "desc": "Chubby teal bird figurine.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 30232,
+      "size_m": {
+        "w": 0.145,
+        "d": 0.088,
+        "h": 0.14
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/ornament_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/ornament_c.glb",
+      "thumb": "thumbs-web/ornament_c.webp",
+      "label": "Sun medallion",
+      "desc": "Yellow sun medallion on a cream stand.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 31196,
+      "size_m": {
+        "w": 0.136,
+        "d": 0.136,
+        "h": 0.155
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/ornament_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "picture_frame": [
+    {
+      "key": "a",
+      "file": "glb/picture_frame_a.glb",
+      "thumb": "thumbs-web/picture_frame_a.webp",
+      "label": "Teal frame, hills",
+      "desc": "Teal picture frame with sunny hills.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 56796,
+      "size_m": {
+        "w": 0.42,
+        "d": 0.042,
+        "h": 0.52
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/picture_frame_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/picture_frame_b.glb",
+      "thumb": "thumbs-web/picture_frame_b.webp",
+      "label": "Coral oval, rainbow",
+      "desc": "Coral oval frame with a rainbow.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 88432,
+      "size_m": {
+        "w": 0.42,
+        "d": 0.044,
+        "h": 0.52
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/picture_frame_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/picture_frame_c.glb",
+      "thumb": "thumbs-web/picture_frame_c.webp",
+      "label": "Honey frame, little house",
+      "desc": "Honey frame with a little house.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 39760,
+      "size_m": {
+        "w": 0.38,
+        "d": 0.047,
+        "h": 0.46
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/picture_frame_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "plant": [
+    {
+      "key": "a",
+      "file": "glb/plant_a.glb",
+      "thumb": "thumbs-web/plant_a.webp",
+      "label": "Rubber plant",
+      "desc": "Potted rubber plant with healthy dark leaves.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 167980,
+      "size_m": {
+        "w": 0.417,
+        "d": 0.358,
+        "h": 0.738
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/plant_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/plant_b.glb",
+      "thumb": "thumbs-web/plant_b.webp",
+      "label": "Bushy plant",
+      "desc": "Bushy potted plant with healthy dark leaves.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 167584,
+      "size_m": {
+        "w": 0.38,
+        "d": 0.338,
+        "h": 0.451
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/plant_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/plant_c.glb",
+      "thumb": "thumbs-web/plant_c.webp",
+      "label": "Sword plant",
+      "desc": "Potted sword plant with healthy dark leaves.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 166756,
+      "size_m": {
+        "w": 0.255,
+        "d": 0.25,
+        "h": 0.692
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/plant_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "radiator": [
+    {
+      "key": "a",
+      "file": "glb/radiator_a.glb",
+      "thumb": "thumbs-web/radiator_a.webp",
+      "label": "Cream radiator",
+      "desc": "Cream floor radiator with chubby ribs.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 120800,
+      "size_m": {
+        "w": 0.8,
+        "d": 0.14,
+        "h": 0.52
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/radiator_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/radiator_b.glb",
+      "thumb": "thumbs-web/radiator_b.webp",
+      "label": "Teal radiator",
+      "desc": "Teal floor radiator with chubby ribs.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 120796,
+      "size_m": {
+        "w": 0.8,
+        "d": 0.14,
+        "h": 0.52
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/radiator_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/radiator_c.glb",
+      "thumb": "thumbs-web/radiator_c.webp",
+      "label": "White radiator",
+      "desc": "White floor radiator with chubby ribs.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 120796,
+      "size_m": {
+        "w": 0.8,
+        "d": 0.14,
+        "h": 0.52
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/radiator_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "radio": [
+    {
+      "key": "a",
+      "file": "glb/radio_a.glb",
+      "thumb": "thumbs-web/radio_a.webp",
+      "label": "Teal radio",
+      "desc": "Chubby teal radio with a handle.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 64088,
+      "size_m": {
+        "w": 0.28,
+        "d": 0.132,
+        "h": 0.197
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/radio_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/radio_b.glb",
+      "thumb": "thumbs-web/radio_b.webp",
+      "label": "Coral radio",
+      "desc": "Chubby coral radio with a handle.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 64088,
+      "size_m": {
+        "w": 0.28,
+        "d": 0.132,
+        "h": 0.197
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/radio_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/radio_c.glb",
+      "thumb": "thumbs-web/radio_c.webp",
+      "label": "Lilac radio",
+      "desc": "Chubby lilac radio with a handle.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 64088,
+      "size_m": {
+        "w": 0.28,
+        "d": 0.132,
+        "h": 0.197
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/radio_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "remote": [
+    {
+      "key": "a",
+      "file": "glb/remote_a.glb",
+      "thumb": "thumbs-web/remote_a.webp",
+      "label": "Teal remote",
+      "desc": "Chubby teal TV remote.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 35468,
+      "size_m": {
+        "w": 0.18,
+        "d": 0.05,
+        "h": 0.028
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/remote_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/remote_b.glb",
+      "thumb": "thumbs-web/remote_b.webp",
+      "label": "Coral remote",
+      "desc": "Chubby coral TV remote.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 35468,
+      "size_m": {
+        "w": 0.18,
+        "d": 0.05,
+        "h": 0.028
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/remote_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/remote_c.glb",
+      "thumb": "thumbs-web/remote_c.webp",
+      "label": "Lilac remote",
+      "desc": "Chubby lilac TV remote.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 35468,
+      "size_m": {
+        "w": 0.18,
+        "d": 0.05,
+        "h": 0.028
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/remote_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "side_table": [
+    {
+      "key": "a",
+      "file": "glb/side_table_a.glb",
+      "thumb": "thumbs-web/side_table_a.webp",
+      "label": "Round cream, teal base",
+      "desc": "Round cream side table on a teal base.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 82940,
+      "size_m": {
+        "w": 0.44,
+        "d": 0.44,
+        "h": 0.44
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/side_table_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/side_table_b.glb",
+      "thumb": "thumbs-web/side_table_b.webp",
+      "label": "Square coral table",
+      "desc": "Square coral side table.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 103176,
+      "size_m": {
+        "w": 0.44,
+        "d": 0.44,
+        "h": 0.44
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/side_table_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/side_table_c.glb",
+      "thumb": "thumbs-web/side_table_c.webp",
+      "label": "Lilac lozenge table",
+      "desc": "Lilac lozenge side table.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 109228,
+      "size_m": {
+        "w": 0.5,
+        "d": 0.36,
+        "h": 0.44
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/side_table_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "table_cover": [
+    {
+      "key": "a",
+      "file": "glb/table_cover_a.glb",
+      "thumb": "thumbs-web/table_cover_a.webp",
+      "label": "Teal runner, cream hems",
+      "desc": "Teal coffee-table runner with cream hems.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 19644,
+      "size_m": {
+        "w": 1.0,
+        "d": 0.3,
+        "h": 0.022
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/table_cover_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/table_cover_b.glb",
+      "thumb": "thumbs-web/table_cover_b.webp",
+      "label": "Coral runner, cream stripe",
+      "desc": "Coral coffee-table runner with a cream stripe.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 14948,
+      "size_m": {
+        "w": 0.96,
+        "d": 0.26,
+        "h": 0.02
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/table_cover_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/table_cover_c.glb",
+      "thumb": "thumbs-web/table_cover_c.webp",
+      "label": "Cream cloth, lilac border",
+      "desc": "Cream tablecloth with a lilac border.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 19700,
+      "size_m": {
+        "w": 1.08,
+        "d": 0.64,
+        "h": 0.02
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/table_cover_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "tv": [
+    {
+      "key": "a",
+      "file": "glb/tv_a.glb",
+      "thumb": "thumbs-web/tv_a.webp",
+      "label": "Teal set, dark screen",
+      "desc": "Teal television with a dark glossy screen.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 62352,
+      "size_m": {
+        "w": 1.08,
+        "d": 0.156,
+        "h": 0.72
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/tv_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/tv_b.glb",
+      "thumb": "thumbs-web/tv_b.webp",
+      "label": "Coral set, dark screen",
+      "desc": "Coral television with a dark glossy screen.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 63136,
+      "size_m": {
+        "w": 1.16,
+        "d": 0.18,
+        "h": 0.77
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/tv_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/tv_c.glb",
+      "thumb": "thumbs-web/tv_c.webp",
+      "label": "Cream and lilac set",
+      "desc": "Cream and lilac television with a dark glossy screen.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 97820,
+      "size_m": {
+        "w": 1.1,
+        "d": 0.24,
+        "h": 0.74
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/tv_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "tv_stand": [
+    {
+      "key": "a",
+      "file": "glb/tv_stand_a.glb",
+      "thumb": "thumbs-web/tv_stand_a.webp",
+      "label": "Teal cabinet",
+      "desc": "Teal TV stand cabinet.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 85004,
+      "size_m": {
+        "w": 1.22,
+        "d": 0.454,
+        "h": 0.44
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/tv_stand_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/tv_stand_b.glb",
+      "thumb": "thumbs-web/tv_stand_b.webp",
+      "label": "Open coral shelves",
+      "desc": "Open coral TV stand shelves.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 117524,
+      "size_m": {
+        "w": 1.16,
+        "d": 0.38,
+        "h": 0.46
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/tv_stand_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/tv_stand_c.glb",
+      "thumb": "thumbs-web/tv_stand_c.webp",
+      "label": "Cream stand, honey legs",
+      "desc": "Cream TV stand on honey legs.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 137744,
+      "size_m": {
+        "w": 1.18,
+        "d": 0.43,
+        "h": 0.452
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/tv_stand_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
+  ],
+  "vase": [
+    {
+      "key": "a",
+      "file": "glb/vase_a.glb",
+      "thumb": "thumbs-web/vase_a.webp",
+      "label": "Teal vase, three blooms",
+      "desc": "Teal vase with three round blooms.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 103172,
+      "size_m": {
+        "w": 0.158,
+        "d": 0.162,
+        "h": 0.44
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/vase_a.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "b",
+      "file": "glb/vase_b.glb",
+      "thumb": "thumbs-web/vase_b.webp",
+      "label": "Coral bottle vase",
+      "desc": "Tall coral bottle vase.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 57132,
+      "size_m": {
+        "w": 0.103,
+        "d": 0.103,
+        "h": 0.475
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/vase_b.png",
+      "solid": true,
+      "pack": "v3"
+    },
+    {
+      "key": "c",
+      "file": "glb/vase_c.glb",
+      "thumb": "thumbs-web/vase_c.webp",
+      "label": "Cream pot vase",
+      "desc": "Cream pot vase.",
+      "source": "Own design (Blender procedural, image-first, made for Four Corners v3)",
+      "licence": "CC0 1.0",
+      "bytes": 44504,
+      "size_m": {
+        "w": 0.147,
+        "d": 0.147,
+        "h": 0.29
+      },
+      "nodes": [
+        "body"
+      ],
+      "thumb_png": "thumbs/vase_c.png",
+      "solid": true,
+      "pack": "v3"
+    }
   ]
 }
