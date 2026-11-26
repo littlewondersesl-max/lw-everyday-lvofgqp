@@ -459,11 +459,25 @@ function shake(){
   if(!round)return;endShowcase(true);simT=0;acc=0;
   round.words.forEach(o=>{o.born=-1;o.body.velocity.set(rnd(-10,10),rnd(6,14),rnd(-5,5));o.body.angularVelocity.set(rnd(-6,6),rnd(-6,6),rnd(-6,6));o.body.wakeUp();if(o.prevP){o.prevP.copy(o.body.position);o.prevQ.copy(o.body.quaternion)}});
 }
+function inkFor(hex){
+  const raw=String(hex||'').replace('#','');
+  const h=raw.length===3?raw[0]+raw[0]+raw[1]+raw[1]+raw[2]+raw[2]:raw;
+  const n=parseInt(h,16);
+  if(!Number.isFinite(n))return '#fff';
+  const r=(n>>16)&255,g=(n>>8)&255,b=n&255,L=(.2126*r+.7152*g+.0722*b)/255;
+  return L<.195?'#fff':'#111111';
+}
+function paintBlock(b,o){b.style.setProperty('--wc',o.color);b.style.setProperty('--fg',inkFor(o.color))}
 function buildBlocks(){
   const n=round.words.length;
   const avail=el.blocks.clientWidth||innerWidth*.94,per=Math.max(1,Math.floor((avail+8)/92)),rows=Math.ceil(n/Math.min(n,per)),cols=Math.ceil(n/rows);
   el.blocks.style.setProperty('--cols',cols);
-  el.blocks.innerHTML=round.words.map((o,i)=>`<button type="button" class="bw-b" data-i="${i}" disabled aria-label="Word ${i+1}, hidden"><span class="n">${i+1}</span><span class="t"></span></button>`).join('');
+  el.blocks.innerHTML=round.words.map((o,i)=>`<button type="button" class="bw-b" data-i="${i}" disabled aria-label="Word ${i+1}, hidden" style="--wc:${o.color};--fg:${inkFor(o.color)}"><span class="n">${i+1}</span><span class="t"></span></button>`).join('');
+  round.words.forEach((o,i)=>{
+    if(!o.revealed)return;
+    const b=el.blocks.children[i];
+    b.classList.add('on');b.querySelector('.t').textContent=o.text;b.setAttribute('aria-label','Word '+(i+1)+': '+o.text);
+  });
   markNext();fitBlocks();
 }
 function markNext(){
@@ -480,7 +494,7 @@ function reveal(i){
   if(!round||i!==round.revealed)return;
   const o=round.words[i],b=el.blocks.children[i];
   o.revealed=true;o.pulse=1;round.revealed++;
-  b.classList.remove('next');b.classList.add('on');b.style.setProperty('--wc',o.color);b.querySelector('.t').textContent=o.text;b.setAttribute('aria-label','Word '+(i+1)+': '+o.text);
+  paintBlock(b,o);b.classList.remove('next');b.classList.add('on');b.querySelector('.t').textContent=o.text;b.setAttribute('aria-label','Word '+(i+1)+': '+o.text);
   markNext();fitBlocks();setStatus();
   if(round.revealed===round.words.length){try{const P=window.LWProgress;if(P)P.correct(PID,round.level+':'+round.idx)}catch(_){}}
 }
@@ -507,7 +521,7 @@ function frame(now){
   }
   requestAnimationFrame(frame);
 }
-new ResizeObserver(()=>{if(R&&curLevel){layout();if(round){buildBlocks();for(const o of round.words)if(o.revealed){const b=el.blocks.children[round.words.indexOf(o)];b.classList.remove('next');b.classList.add('on');b.style.setProperty('--wc',o.color);b.querySelector('.t').textContent=o.text}markNext();fitBlocks()}}}).observe(document.body);
+new ResizeObserver(()=>{if(R&&curLevel){layout();if(round)buildBlocks()}}).observe(document.body);
 new ResizeObserver(()=>{if(R&&curLevel)layout()}).observe(el.stage);
 addEventListener('popstate',()=>{const k=location.hash.slice(1);if(LEVELS.some(l=>l.k===k))startLevel(k,false);else toList(false)});
 
@@ -559,6 +573,13 @@ window.__bw={
     sync(0,1);updatePower();if(renderer)renderer.render(scene,cam);
     const settle=this.sampleFaces(),pct=a=>({samples:a.n,faceWithin45:a.n?a.ok/a.n:0,upright:a.n?a.up/a.n:0,meanDot:a.n?a.sumDot/a.n:0});
     return {seconds:sec,D,W,during:pct(acc),settle:pct(settle),collisions:{wordWord:colWW-c0.ww,wordWall:colWF-c0.wf,first:(colWW+colWF)-(c0.ww+c0.wf),contactSteps:midAir.hits-c0.st},strength:strengthAt(simT)};
+  },
+  blocks(){
+    if(!round)return [];
+    return [...el.blocks.children].map((b,i)=>{
+      const cs=getComputedStyle(b),bg=cs.backgroundColor,c=round.words[i].color;
+      return {i,text:b.querySelector('.t').textContent,next:b.classList.contains('next'),on:b.classList.contains('on'),disabled:b.disabled,color:c,fg:cs.getPropertyValue('--fg').trim()||b.style.getPropertyValue('--fg'),bg,border:cs.borderColor,filled:b.classList.contains('next')||b.classList.contains('on')};
+    });
   },
   state(){
     if(!round)return null;
