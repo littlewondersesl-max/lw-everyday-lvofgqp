@@ -1,6 +1,6 @@
 (function(){
 const D=window.LW, Q=s=>document.querySelector(s);
-const SECTIONS=[['packs','Flashcard Packs'],['weather','Everyday Weather'],['chores','Household Chores'],['games','Games'],['fractions','Fractions'],['alphabet','Alphabet Games'],['stories','Stories & Reading'],['videos','Video lessons'],['lessons','Lessons']];
+const SECTIONS=[['packs','Flashcard Packs'],['weather','Everyday Weather'],['chores','Household Chores'],['games','Games'],['fractions','Fractions'],['alphabet','Alphabet Games'],['stories','Stories & Reading'],['videos','Video lessons'],['quizzes','Video Quizzes'],['lessons','Lessons']];
 // Video lessons: watch-and-choose series and frame-video stories (progress type videoSeries / video)
 const VIDEO={'games/everyday-english/index.html':'11 video lessons · watch, tap, see','stories/comic-stories/index.html':'10 video lessons · teacher notes'};
 D.items.forEach(x=>{if(x.href in VIDEO){x.section='videos';x.sub=VIDEO[x.href]}else if(x.group==='Conversations')x.section='videos'});
@@ -27,6 +27,7 @@ const NAV=[
   ['Alphabet Games',()=>entries('alphabet')],
   ['Stories & Reading','stories'],
   ['Video lessons',()=>entries('videos')],
+  ['Video Quizzes',()=>{const l=entries('quizzes');const g=e=>e.group||'';return {main:l.filter(e=>!g(e)),groups:[...new Set(l.filter(g).map(g))].map(n=>[n,l.filter(e=>g(e)===n)])}}],
   ['Lessons',()=>{const l=entries('lessons');const g=e=>(e.book&&e.book.group)||e.group||'';return {main:l.filter(e=>!g(e)),groups:[...new Set(l.filter(g).map(g))].map(n=>[n,l.filter(e=>g(e)===n)])}}]
 ];
 function link(e,cls){cls=cls?` class="${cls}"`:'';return e.href?`<a${cls} href="${e.href}">${esc(e.title)}</a>`:e.links?e.links.map(l=>`<a${cls} href="${l[1]}">${esc(e.title.split('—')[0].trim())}: ${esc(l[0])}</a>`).join(''):`<span class="soon">${esc(e.title)} (soon)</span>`}
@@ -46,15 +47,26 @@ function menu(){
   document.addEventListener('click',()=>m.querySelectorAll('.dd').forEach(x=>x.classList.remove('open')));
   Q('#burger').onclick=()=>m.classList.toggle('show');
 }
+function card(e){
+  const img=e.img?`<div class="thumb${e.sq?' sq':''}"><img loading="lazy" src="${e.img}" alt=""></div>`:`<div class="thumb ph">Coming soon</div>`;
+  const dls=e.book&&e.book.downloads.length?`<div class="dls">${e.book.downloads.map(d=>`<a href="${d.href}" download>${esc(d.label)}</a>`).join('')}</div>`:'';
+  const links=e.links?`<div class="dls">${e.links.map(l=>`<a href="${l[1]}">${esc(l[0])}</a>`).join('')}</div>`:'';
+  const body=`${img}<div class="ct"><h3>${esc(e.title)}</h3><p>${esc(e.sub||'')}</p>${e.note?`<p class="note">${esc(e.note)}</p>`:''}</div>`;
+  return `<div class="card${e.href?'':' off'}"${e.pid?` data-pid="${e.pid}"`:''}>${e.href?`<a class="cl" href="${e.href}">${body}</a>`:body}${dls}${links}</div>`;
+}
+function section(id,name){
+  const all=entries(id);
+  if(id==='quizzes'&&all.some(e=>e.group)){
+    const order=[],seen=new Set();
+    all.forEach(e=>{const g=e.group||'';if(!seen.has(g)){seen.add(g);order.push(g)}});
+    return `<section class="sec" id="${id}"><h2>${name}</h2>`+order.map(g=>`${g?`<h3 class="ghead">${esc(g)}</h3>`:''}<div class="grid">${all.filter(e=>(e.group||'')===g).map(card).join('')}</div>`).join('')+`</section>`;
+  }
+  return `<section class="sec" id="${id}"><h2>${name}</h2><div class="grid">${all.map(card).join('')}</div></section>`;
+}
 function home(){
   menu();
   Q('#home').innerHTML=`<section class="hero"><img src="img/logo.png" alt=""><div><h1>The Everyday Series</h1><p>Picture sentence flashcards, games and stories for young English learners. Pick a book to open the lesson: pages in order, with games in between.</p></div></section>`+
-  SECTIONS.map(([id,name])=>`<section class="sec" id="${id}"><h2>${name}</h2><div class="grid">${entries(id).map(e=>{
-    const img=e.img?`<div class="thumb${e.sq?' sq':''}"><img loading="lazy" src="${e.img}" alt=""></div>`:`<div class="thumb ph">Coming soon</div>`;
-    const dls=e.book&&e.book.downloads.length?`<div class="dls">${e.book.downloads.map(d=>`<a href="${d.href}" download>${esc(d.label)}</a>`).join('')}</div>`:'';
-    const links=e.links?`<div class="dls">${e.links.map(l=>`<a href="${l[1]}">${esc(l[0])}</a>`).join('')}</div>`:'';
-    const body=`${img}<div class="ct"><h3>${esc(e.title)}</h3><p>${esc(e.sub||'')}</p>${e.note?`<p class="note">${esc(e.note)}</p>`:''}</div>`;
-    return `<div class="card${e.href?'':' off'}"${e.pid?` data-pid="${e.pid}"`:''}>${e.href?`<a class="cl" href="${e.href}">${body}</a>`:body}${dls}${links}</div>`}).join('')}</div></section>`).join('');
+  SECTIONS.map(([id,name])=>section(id,name)).join('');
   if(PG)PG.decorate(Q('#home'));
 }
 function viewer(){

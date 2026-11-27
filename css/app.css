@@ -7,7 +7,7 @@ a{color:var(--pur)}
 .menu{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}.burger{display:none;margin-left:auto;font-size:24px;border:0;background:var(--lav);border-radius:12px;padding:4px 12px}
 .dd{position:relative}.ddb{border:0;background:var(--bg);border-radius:999px;padding:8px 14px;font:inherit;font-weight:800;color:var(--pur);cursor:pointer}
 .ddb:hover,.dd.open .ddb{background:var(--lav)}
-.ddm{display:none;position:absolute;right:0;top:110%;min-width:260px;background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.15);padding:8px}
+.ddm{display:none;position:absolute;right:0;top:110%;min-width:300px;background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.15);padding:8px}
 .dd.open .ddm{display:block}.ddm a,.ddm .soon{display:block;padding:8px 12px;border-radius:10px;text-decoration:none;color:var(--ink);font-weight:700}
 .ddm a:hover{background:var(--mint)}.soon{color:#aaa!important}
 .ddm a.pin{background:var(--lav);color:var(--pur);font-weight:900;border-left:4px solid var(--pur);margin-bottom:4px}
@@ -17,7 +17,7 @@ a{color:var(--pur)}
 .grp{margin:8px 12px 2px;padding-top:8px;border-top:1px solid var(--lav);font-size:.8em;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:var(--pur)}
 .hero{display:flex;gap:24px;align-items:center;max-width:1100px;margin:28px auto 8px;padding:20px 26px;background:#fff;border-radius:28px;box-shadow:0 8px 24px rgba(108,78,160,.1)}
 .hero img{width:130px}.hero h1{margin:0;color:var(--pur);font-size:34px}.hero p{margin:6px 0 0;font-size:17px}
-.sec{max-width:1100px;margin:22px auto;padding:0 16px}.sec h2{color:var(--pur);margin:0 0 12px;font-size:26px}
+.sec{max-width:1100px;margin:22px auto;padding:0 16px;scroll-margin-top:76px}.sec h2{color:var(--pur);margin:0 0 12px;font-size:26px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
 .card{background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 6px 18px rgba(108,78,160,.1);display:flex;flex-direction:column;transition:transform .15s}
 .card:hover{transform:translateY(-3px)}.card.off{opacity:.75}.cl{text-decoration:none;color:inherit}
@@ -106,3 +106,7 @@ header.top .burger{margin-left:0;padding:3px 9px;font-size:20px;flex:none}
 .vitem.video .vframe{position:relative;width:86%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#000;box-shadow:0 6px 20px rgba(108,78,160,.22)}
 .vitem.video .vframe .videoph{border-radius:inherit}
 @media (max-width:760px){.vitem.video .vframe{width:88%;border-radius:10px}}
+
+/* Video Quizzes group headings on the home page */
+.sec .ghead{color:var(--pur);margin:18px 0 10px;font-size:18px;font-weight:900}
+.sec h2 + .ghead{margin-top:4px}

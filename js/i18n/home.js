@@ -40,7 +40,32 @@ LWLang.add({
 '15 matching games · pick a level: A1, A2 or 12+':'15 个配对游戏 · 选一个级别：A1、A2 或 12+',
 'Easy English (short)':'简单英语（短）','Easy English (prose)':'简单英语（短文）','Original 1890':'1890 年原版',
 'Worksheets':'练习单','Beginner English Homework 1':'初级英语作业 1','Bicycle, colours and me · Very easy':'自行车、颜色和我 · 非常简单','Big, Bigger, Biggest':'大、更大、最大','Comparatives and superlatives · Add -er and -est':'比较级和最高级 · 加 -er 和 -est','Create, Creating, Created':'创造、正在创造、创造了','Verbs in the past and now · Add -ing and -ed':'动词的现在和过去 · 加 -ing 和 -ed','Good, Better, Best':'好、更好、最好','Exceptions · irregular comparatives and long adjectives':'不规则变化 · 不规则比较级和较长的形容词','Word Maths, Grade 7':'七年级文字数学','Verbal maths · Write every answer in words':'用英语写的数学题 · 答案必须写成单词','Word Maths, Grade 9':'九年级文字数学','Verbal maths for grade nine · Write every answer in words':'九年级文字数学 · 答案必须写成单词','Conversations':'对话','Word Lab':'词汇实验室','12 and up':'12 岁以上','Worksheet 1 (HTML)':'练习单 1','Worksheet 2 (HTML)':'练习单 2','Worksheet 3 (HTML)':'练习单 3','Worksheet 4 (HTML)':'练习单 4','PDF':'PDF 文件',
-'Choose a level':'选择级别'
+'Choose a level':'选择级别',
+// video quizzes
+'Video Quizzes':'视频测验','Babies & toddlers':'婴幼儿','General knowledge by age':'按年龄的常识测验','Picture quiz':'看图测验',
+'Letter Sounds':'字母发音','Ages 1–3 · hear the sound, say the letter':'1–3 岁 · 听发音，说字母',
+'Find the Letter':'找字母','Ages 1–3 · find the letter you hear':'1–3 岁 · 找出你听到的字母',
+"What's This?":'这是什么？','Ages 1–3 · name the picture':'1–3 岁 · 说出图片的名字',
+'General Knowledge · ages 3–5':'常识测验 · 3–5 岁','General Knowledge · ages 6–8':'常识测验 · 6–8 岁',
+'General Knowledge · ages 9–12':'常识测验 · 9–12 岁','General Knowledge · ages 13+':'常识测验 · 13 岁以上',
+'Picture quiz · about 5 minutes':'看图测验 · 大约 5 分钟','Picture quiz · about 5½ minutes':'看图测验 · 大约 5 分半',
+'Picture Quiz for Kids':'儿童看图测验','Mixed topics · about 5 minutes':'混合主题 · 大约 5 分钟',
+'All quizzes':'全部测验','Image credits':'图片来源',
+'Watch-and-choose quizzes for different ages. A voice asks a question, then the video shows the answer. Pictures stay on the screen.':'适合不同年龄的看图选一选测验。声音提出问题，然后视频给出答案。图片会留在屏幕上。',
+'Ages 1–3 · about 3½ minutes. A voice says a letter sound. Look at the letter, then at a picture that starts with that sound.':'1–3 岁 · 大约 3 分半。声音说出字母的发音。先看字母，再看以这个音开头的图片。',
+'Ages 1–3 · about 3½ minutes. A voice says a letter. Find that letter on the screen.':'1–3 岁 · 大约 3 分半。声音说出一个字母。在屏幕上找出那个字母。',
+'Ages 1–3 · about 3½ minutes. Look at a picture. What is it? The voice says the word.':'1–3 岁 · 大约 3 分半。看一张图片。这是什么？声音会说出这个词。',
+'Ages 3–5 · about 5 minutes. A general knowledge quiz with pictures. Listen, look, and see the answer.':'3–5 岁 · 大约 5 分钟。带图片的常识测验。听一听，看一看，然后看到答案。',
+'Ages 6–8 · about 5 minutes. A general knowledge quiz with pictures. Listen, look, and see the answer.':'6–8 岁 · 大约 5 分钟。带图片的常识测验。听一听，看一看，然后看到答案。',
+'Ages 9–12 · about 5 minutes. A general knowledge quiz with pictures. Some questions are a little harder.':'9–12 岁 · 大约 5 分钟。带图片的常识测验。有些问题会稍难一点。',
+'Ages 13 and up · about 5½ minutes. A general knowledge quiz with pictures. The questions are the hardest in this set.':'13 岁以上 · 大约 5 分半。带图片的常识测验。这组里的问题最难。',
+'A mixed picture quiz for kids · about 5 minutes. Two pictures, a missing piece, or an odd one out. Listen, look, and see the answer.':'给孩子的混合看图测验 · 大约 5 分钟。两张图片、补全图片，或者找出不同的一项。听一听，看一看，然后看到答案。',
+'Narration: Microsoft Edge neural voice (en-US-JennyNeural).':'旁白：Microsoft Edge 神经网络语音（en-US-JennyNeural）。',
+'Sorry, your browser cannot play this video.':'抱歉，你的浏览器无法播放这个视频。',
+'Photographs from Wikimedia Commons, used under the licences shown.':'照片来自维基共享资源，按所示许可证使用。',
+'Photos (Wikimedia Commons, used under the licences shown):':'照片（来自维基共享资源，按所示许可证使用）：',
+'This video uses original letter graphics only (no third-party photographs).':'这个视频只用了我们自己画的字母图（没有第三方照片）。',
+'All photographs and illustrations used in this video are free-licence works from Wikimedia Commons (CC0, CC BY, or Public Domain only). CC BY works require attribution. Those credits are listed below. Countdown ticks and the reveal chime were generated with ffmpeg (original sound, no third-party licence). No background music is used.':'本视频中的照片和插图都来自维基共享资源的自由许可作品（仅限 CC0、CC BY 或公有领域）。CC BY 作品需要署名。这些来源列在下面。倒计时和揭晓提示音用 ffmpeg 生成（原创声音，没有第三方许可）。本视频没有背景音乐。'
 });
 (function(){
 var T=function(s){return LWLang.t(s)||s};
