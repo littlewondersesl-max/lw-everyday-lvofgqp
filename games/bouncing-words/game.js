@@ -1,7 +1,10 @@
 /* Bouncing Words · Little Wonders
    three.js (rendering) + cannon-es (physics), both bundled in vendor/bw-libs.js.
    Fixed-timestep physics (120 Hz) with render interpolation (lerp/slerp of the previous and current pose).
-   Energy comes only from elastic wall impacts (no mid-air nudges); power decays 100% → 0% over 60 s.
+   Words spin like windmills facing the camera (rotation around the view/Z axis, clockwise and anticlockwise).
+   Out-of-plane tilt is capped (~15°) and springs back, so the face never turns away or edge-on; a small
+   depth grace lets a path bend when words collide. After the first ground hit they bounce once, then
+   settle upright or on their side (0° / ±90° in the screen plane), still facing us.
    The 60-second clock is exact whatever the frame rate, and can be fast-forwarded by window.__bw. */
 (function(){
 'use strict';
@@ -187,48 +190,109 @@ function spawn(words,lv){
     o.shape=new C.Box(new C.Vec3(o.hw,o.hh,o.hz));
     const body=new C.Body({mass:Math.max(.5,o.w1*o.h1*k*k*.4),material:matWord,shape:o.shape,allowSleep:true,sleepSpeedLimit:.35,sleepTimeLimit:.8});
     body.position.set(x,y,z);
-    // Start upright with a random yaw (front or mirrored back). Small tilt only.
-    body.quaternion.setFromEuler(rnd(-.12,.12),rnd(0,Math.PI*2),rnd(-.12,.12));
-    // Lively toss, but little depth speed so the two layers stay apart.
-    body.velocity.set(rnd(-8,8),rnd(-2,8),rnd(-1.2,1.2));
-    body.angularVelocity.set(rnd(-.8,.8),rnd(-6,6),rnd(-.8,.8));
+    // Face the camera (no random yaw that would show the back). Spin in the screen plane like a windmill.
+    body.quaternion.setFromEuler(0,0,rnd(-Math.PI,Math.PI));
+    body.velocity.set(rnd(-8,8),rnd(-2,8),rnd(-1.0,1.0));
+    let wz=rnd(-8,8);if(Math.abs(wz)<1.6)wz=(wz<0?-1:1)*rnd(2.2,5.5);
+    body.angularVelocity.set(0,0,wz);
     body.linearDamping=0;body.angularDamping=.012;
     o.hit=false;o.hitWall=false;o.hitN=null;o.preV=body.velocity.clone();
     o.prevP=body.position.clone();o.prevQ=body.quaternion.clone();
+    o.floorBounces=0;o.settling=false;o.restAng=null;o.leftFloor=true;o.floorT=null;
     o._onCollide=e=>onWordCollide(o,e);
     body.addEventListener('collide',o._onCollide);
     world.addBody(body);o.body=body;o.born=rnd(0,.3);
     wordGroup.add(o.grp);
   });
 }
+const MAX_TILT=15*Math.PI/180;
+function wrapPi(a){return Math.atan2(Math.sin(a),Math.cos(a))}
+function zTwist(q){const n=Math.hypot(q.z,q.w)||1;return 2*Math.atan2(q.z/n,q.w/n)}
+function nearestRest(a){
+  a=wrapPi(a);
+  let best=0,bestD=Math.abs(wrapPi(a));
+  for(const t of [Math.PI/2,-Math.PI/2]){
+    const d=Math.abs(wrapPi(a-t));
+    if(d<bestD-1e-8){bestD=d;best=t}
+  }
+  return best;
+}
+function worldHalf(o){
+  const q=o.body.quaternion,X=q.vmult(new C.Vec3(1,0,0)),Y=q.vmult(new C.Vec3(0,1,0)),Z=q.vmult(new C.Vec3(0,0,1));
+  return {x:Math.abs(X.x)*o.hw+Math.abs(Y.x)*o.hh+Math.abs(Z.x)*o.hz,y:Math.abs(X.y)*o.hw+Math.abs(Y.y)*o.hh+Math.abs(Z.y)*o.hz,z:Math.abs(X.z)*o.hw+Math.abs(Y.z)*o.hh+Math.abs(Z.z)*o.hz};
+}
+function registerFloor(o,preIn){
+  const b=o.body,v=b.velocity,av=b.angularVelocity;
+  // Already on the floor after the second landing: just stay down, don't keep counting contacts.
+  if((o.floorBounces||0)>=2){
+    o.floorThis=true;o.settling=true;
+    if(v.y>0)v.y*=.08;else if(v.y<0)v.y=0;
+    return;
+  }
+  // Still in contact from the first bounce (haven't gone up and left the floor yet).
+  if((o.floorBounces||0)===1&&!o.leftFloor)return;
+  if(o.floorThis)return;
+  o.floorThis=true;o.leftFloor=false;o.settling=true;
+  if(o.restAng==null)o.restAng=nearestRest(zTwist(b.quaternion));
+  if(!(o.floorBounces>0)){
+    o.floorBounces=1;o.floorT=simT;
+    const bounce=Math.min(5.4,Math.max(2.8,Math.abs(preIn)*.38));
+    v.y=bounce;av.z*=.6;
+  }else{
+    o.floorBounces=2;
+    if(v.y>0)v.y*=.08;else v.y=0;
+    v.x*=.5;v.z*=.65;av.z*=.45;
+  }
+}
 function faceOf(o){
   const p=o.body.position,q=o.body.quaternion,face=q.vmult(new C.Vec3(0,0,1)),up=q.vmult(new C.Vec3(0,1,0));
   const cx=cam.position.x-p.x,cy=cam.position.y-p.y,cz=cam.position.z-p.z,cl=Math.hypot(cx,cy,cz)||1;
-  const dot=Math.abs(face.x*cx+face.y*cy+face.z*cz)/cl;
-  return {dot,upY:up.y,ok:dot>=Math.SQRT1_2,upright:up.y>=Math.SQRT1_2,face,up};
+  const dot=(face.x*cx+face.y*cy+face.z*cz)/cl;
+  const twist=zTwist(q),tilt=Math.acos(Math.min(1,Math.max(-1,dot))),tiltZ=Math.acos(Math.min(1,Math.max(-1,face.z)));
+  const r=nearestRest(twist),err=Math.abs(wrapPi(twist-r));
+  const atRest=err<8*Math.PI/180&&tiltZ<MAX_TILT+.05;
+  const kind=r===0?'upright':'side';
+  return {dot,upY:up.y,ok:dot>=.96,upright:kind==='upright'&&atRest,onSide:kind==='side'&&atRest,rest:atRest?kind:null,restAng:r,twist,tilt,tiltZ,err,face,up};
 }
-// Keep letter faces readable: mostly upright, spinning around the vertical (a mirrored back is fine),
-// with only a gentle tilt, and a righting torque toward the camera that gets stronger as energy drops.
-function steerSpin(o,s,h){
+// Windmill spin: only the twist around Z (the axis pointing at us) is free. A small out-of-plane
+// tilt is allowed so a collision can knock a word a little, but it is clamped and sprung back
+// toward the camera so the letters never turn edge-on, end-on, or show their back.
+function constrainSpin(o,s,h){
   if(o.body.type===C.Body.KINEMATIC)return;
-  const b=o.body,q=b.quaternion,av=b.angularVelocity,calm=1-s;
-  const up=q.vmult(new C.Vec3(0,1,0)),face=q.vmult(new C.Vec3(0,0,1));
-  // 1) Right the word so +Y is up (never leaves it lying flat or upside-down for long).
-  const axisX=-up.z,axisZ=up.x,axisLen=Math.hypot(axisX,axisZ);
-  if(axisLen>1e-5){
-    const nx=axisX/axisLen,nz=axisZ/axisLen,tilt=Math.atan2(axisLen,up.y);
-    const kp=10+30*calm*calm,kd=2.4+7*calm,avTilt=av.x*nx+av.z*nz,corr=(kp*tilt-kd*avTilt)*h;
-    av.x+=corr*nx;av.z+=corr*nz;
+  const b=o.body,q=b.quaternion,av=b.angularVelocity,p=b.position;
+  let tn=Math.hypot(q.z,q.w)||1,tw=q.w/tn,tz=q.z/tn;
+  let sx=q.x*tw-q.y*tz,sy=q.x*tz+q.y*tw,sz=-q.w*tz+q.z*tw,sw=q.w*tw+q.z*tz;
+  let sn=Math.hypot(sx,sy,sz,sw)||1;sx/=sn;sy/=sn;sz/=sn;sw/=sn;
+  if(sw<0){sx=-sx;sy=-sy;sz=-sz;sw=-sw}
+  // Desired facing: a clamped billboard swing toward the camera (world +Z plus a little).
+  const cx=cam.position.x-p.x,cy=cam.position.y-p.y,cz=cam.position.z-p.z,cl=Math.hypot(cx,cy,cz)||1;
+  const dx=cx/cl,dy=cy/cl,dz=cz/cl;
+  const desAng=Math.min(MAX_TILT,Math.acos(Math.min(1,Math.max(-1,dz))));
+  const al=Math.hypot(-dy,dx)||1,dh=desAng/2,dsw=Math.cos(dh),dsl=Math.sin(dh);
+  const dsx=dsl*(-dy)/al,dsy=dsl*dx/al,dsz=0;
+  const kBlend=Math.min(1,12*h);
+  sx+=(dsx-sx)*kBlend;sy+=(dsy-sy)*kBlend;sz+=(dsz-sz)*kBlend;sw+=(dsw-sw)*kBlend;
+  sn=Math.hypot(sx,sy,sz,sw)||1;sx/=sn;sy/=sn;sz/=sn;sw/=sn;
+  if(sw<0){sx=-sx;sy=-sy;sz=-sz;sw=-sw}
+  const swAng=2*Math.acos(Math.min(1,sw));
+  if(swAng>MAX_TILT){const half=MAX_TILT/2,vl=Math.hypot(sx,sy,sz)||1;sx=sx/vl*Math.sin(half);sy=sy/vl*Math.sin(half);sz=sz/vl*Math.sin(half);sw=Math.cos(half)}
+  const tiltRate=Math.hypot(av.x,av.y),maxRate=2.2;
+  if(tiltRate>maxRate){const k=maxRate/tiltRate;av.x*=k;av.y*=k}
+  av.x*=Math.max(0,1-10*h);av.y*=Math.max(0,1-10*h);
+  let angle=2*Math.atan2(tz,tw);
+  if(o.settling){
+    if(o.restAng==null)o.restAng=nearestRest(angle);
+    const err=wrapPi(angle-o.restAng),landed=(o.floorBounces||0)>=2;
+    const kp=landed?28:14,kd=landed?10:7;
+    av.z+=(-kp*err-kd*av.z)*h;
+    if(landed||Math.abs(err)<.22){
+      angle-=err*Math.min(1,(landed?18:10)*h);
+      if(Math.abs(wrapPi(angle-o.restAng))<.03&&Math.abs(av.z)<.5){angle=o.restAng;av.z=0}
+    }
   }
-  // 2) Yaw so the nearer face (front or mirrored back) turns toward the camera.
-  const p=b.position,vx=cam.position.x-p.x,vz=cam.position.z-p.z,vl=Math.hypot(vx,vz)||1,dx=vx/vl,dz=vz/vl;
-  const fd=face.x*dx+face.z*dz,sign=fd>=0?1:-1;
-  const yawErr=Math.atan2(sign*(face.x*dz-face.z*dx),sign*(face.x*dx+face.z*dz));
-  const yawKp=1.4+18*calm*calm,yawKd=.45+6*calm;
-  av.y+=(-yawKp*yawErr-yawKd*av.y)*h;
-  // 3) Cap pitch/roll rate so a bounce can tilt the word a little, but it cannot tumble edge-on for long.
-  const tiltRate=Math.hypot(av.x,av.z),maxTilt=1.6+2.4*s;
-  if(tiltRate>maxTilt){const k=maxTilt/tiltRate;av.x*=k;av.z*=k}
+  const ha=angle/2,ntw=Math.cos(ha),ntz=Math.sin(ha);
+  q.x=sx*ntw+sy*ntz;q.y=-sx*ntz+sy*ntw;q.z=sw*ntz+sz*ntw;q.w=sw*ntw-sz*ntz;
+  const qn=Math.hypot(q.x,q.y,q.z,q.w)||1;q.x/=qn;q.y/=qn;q.z/=qn;q.w/=qn;
 }
 
 function onWordCollide(o,e){
@@ -255,9 +319,10 @@ function stepOnce(h){
     const b=o.body;
     if(!o.prevP){o.prevP=b.position.clone();o.prevQ=b.quaternion.clone();o.preV=b.velocity.clone()}
     else {o.prevP.copy(b.position);o.prevQ.copy(b.quaternion);o.preV.copy(b.velocity)}
-    o.hit=false;o.hitWall=false;o.clamped=false;
+    o.hit=false;o.hitWall=false;o.clamped=false;o.floorThis=false;
     if(b.type===C.Body.KINEMATIC)continue;
-    b.linearDamping=ld;b.angularDamping=ad;
+    if(o.settling){const landed=(o.floorBounces||0)>=2;b.linearDamping=landed?.9:.22;b.angularDamping=landed?.75:.32}
+    else {b.linearDamping=ld;b.angularDamping=ad}
     b.allowSleep=false;
   }
   world.step(h);
@@ -272,39 +337,56 @@ function stepOnce(h){
   for(const o of round.words){
     if(o.body.type===C.Body.KINEMATIC)continue;
     const b=o.body,v=b.velocity;
-    // Impact-only energy: if this was a real wall hit (approaching with speed), top up the bounce to match the current power.
+    // Floor: one bounce, then settle. Side/glass walls may still add a little energy before that.
+    // The contact normal can point either way, so detect the floor by height + incoming downward speed.
+    const he=worldHalf(o),pre=o.preV,nearFloor=b.position.y<he.y+.75;
+    if(!nearFloor)o.leftFloor=true;
+    if((o.floorBounces||0)>=2&&nearFloor){v.x*=Math.max(0,1-3.5*h);v.z*=Math.max(0,1-2.5*h)}
+    if(o.floorBounces===1&&nearFloor&&o.floorT!=null&&simT-o.floorT>.5&&v.y<1){o.floorBounces=2;if(v.y>0)v.y*=.1;else if(v.y<0)v.y=0}
     if(o.hit&&o.hitWall&&o.hitN){
-      const [nx,ny,nz]=o.hitN,pre=o.preV;
+      const [nx,ny,nz]=o.hitN;
       const preIn=-(pre.x*nx+pre.y*ny+pre.z*nz);
-      if(preIn>1.2){
+      const isFloor=nearFloor&&(Math.abs(ny)>.5||pre.y<-.8);
+      if(isFloor&&pre.y<-.7) registerFloor(o,pre.y);
+      else if(!isFloor&&preIn>1.2&&!o.settling){
         const vn=v.x*nx+v.y*ny+v.z*nz,want=Math.max(preIn*(.2+.85*s),6.5*s);
         if(want>vn){const d=want-vn;v.x+=d*nx;v.y+=d*ny;v.z+=d*nz}
       }
     }
+    if(nearFloor&&pre.y<-.8&&(o.hit||o.clamped)) registerFloor(o,pre.y);
+    if(!o.settling&&simT>2.4&&v.length()<1.6&&o.hit){o.settling=true;if(o.restAng==null)o.restAng=nearestRest(zTwist(b.quaternion))}
     const sp=v.length();if(sp>MAXV)v.scale(MAXV/sp,v);
     const av=b.angularVelocity,aw=av.length();if(aw>MAXW)av.scale(MAXW/aw,av);
-    steerSpin(o,s,h);
-    // Soft depth spring keeps a word near its front or back layer, so the two rows don't pile into each other.
-    if(o.homeZ!=null){const kz=2.0,cz=1.5;v.z+=((o.homeZ-b.position.z)*kz-v.z*cz)*h}
+    constrainSpin(o,s,h);
+    // Soft depth spring with a small grace area, so a collision can nudge a word forward or back a little.
+    if(o.homeZ!=null){
+      const dz=b.position.z-o.homeZ,grace=.85,excess=Math.abs(dz)>grace?dz-Math.sign(dz)*grace:0;
+      v.z+=(-excess*1.2-v.z*1.15)*h;
+    }
     // Mid-air check (linear; the z-spring is excluded so this still flags any stray mid-air kicks).
     if(!o.hit){
       const p=o.preV,ux=v.x-p.x,uy=v.y-(p.y+G*h),err=Math.hypot(ux,uy);
       midAir.samples++;midAir.sumU+=err;if(err>midAir.maxU)midAir.maxU=err;
     }else midAir.hits++;
     const f=faceOf(o);
-    b.allowSleep=s<.1&&f.ok&&f.upright&&sp<0.8&&b.angularVelocity.length()<0.8;
+    b.allowSleep=(o.floorBounces>=2||(o.settling&&sp<.35))&&!!f.rest&&f.ok&&sp<.45&&Math.abs(b.angularVelocity.z)<.45;
   }
   // Safety net: if a word tunnels out, bounce it back in (counts as a wall hit, not a mid-air push).
   const hx=W/2,hz=D/2,rest=.16+.84*s;
   for(const o of round.words){
     if(o.body.type===C.Body.KINEMATIC)continue;
-    const p=o.body.position,v=o.body.velocity;let c=false;
-    if(p.x>hx-o.hw){p.x=hx-o.hw;if(v.x>0)v.x=-v.x*rest;c=true}
-    else if(p.x<-hx+o.hw){p.x=-hx+o.hw;if(v.x<0)v.x=-v.x*rest;c=true}
-    if(p.y>H-o.hh){p.y=H-o.hh;if(v.y>0)v.y=-v.y*rest;c=true}
-    else if(p.y<o.hh){p.y=o.hh;if(v.y<0)v.y=-v.y*rest;c=true}
-    if(p.z>hz-o.hz){p.z=hz-o.hz;if(v.z>0)v.z=-v.z*rest;c=true}
-    else if(p.z<-hz+o.hz){p.z=-hz+o.hz;if(v.z<0)v.z=-v.z*rest;c=true}
+    const p=o.body.position,v=o.body.velocity,he=worldHalf(o);let c=false;
+    if(p.x>hx-he.x){p.x=hx-he.x;if(v.x>0)v.x=-v.x*rest;c=true}
+    else if(p.x<-hx+he.x){p.x=-hx+he.x;if(v.x<0)v.x=-v.x*rest;c=true}
+    if(p.y>H-he.y){p.y=H-he.y;if(v.y>0)v.y=-v.y*rest;c=true}
+    else if(p.y<he.y){
+      p.y=he.y;
+      if(o.preV.y<-.5)registerFloor(o,o.preV.y);
+      else if(v.y<0)v.y=o.settling?0:-v.y*(o.floorBounces>=2?.08:rest);
+      c=true;
+    }
+    if(p.z>hz-he.z){p.z=hz-he.z;if(v.z>0)v.z=-v.z*rest;c=true}
+    else if(p.z<-hz+he.z){p.z=-hz+he.z;if(v.z<0)v.z=-v.z*rest;c=true}
     if(c){o.clamped=true;o.prevP.copy(p)}
   }
 }
@@ -376,8 +458,9 @@ function endShowcase(snap){
   if(snap){const p=show.backP;b.position.set(p.x,p.y,p.z);b.quaternion.copy(show.backQ)}
   b.collisionResponse=true;b.type=C.Body.DYNAMIC;
   if(b.mass!==show.mass){b.mass=show.mass;b.updateMassProperties()}
-  b.velocity.set(rnd(-8,8)*s,(s>.04?s*rnd(5,12):0),rnd(-4,4)*s);
-  b.angularVelocity.set(rnd(-5,5)*s,rnd(-5,5)*s,rnd(-5,5)*s);
+  b.velocity.set(rnd(-8,8)*s,(s>.04?s*rnd(5,12):0),rnd(-1.2,1.2)*s);
+  b.angularVelocity.set(0,0,rnd(-6,6)*s);
+  show.o.floorBounces=0;show.o.settling=false;show.o.restAng=null;show.o.leftFloor=true;show.o.floorT=null;
   if(show.o.prevP){show.o.prevP.copy(b.position);show.o.prevQ.copy(b.quaternion)}
   b.wakeUp();show.o.grp.renderOrder=0;show=null;
 }
@@ -457,7 +540,13 @@ function newSentence(){
 }
 function shake(){
   if(!round)return;endShowcase(true);simT=0;acc=0;
-  round.words.forEach(o=>{o.born=-1;o.body.velocity.set(rnd(-10,10),rnd(6,14),rnd(-5,5));o.body.angularVelocity.set(rnd(-6,6),rnd(-6,6),rnd(-6,6));o.body.wakeUp();if(o.prevP){o.prevP.copy(o.body.position);o.prevQ.copy(o.body.quaternion)}});
+  round.words.forEach(o=>{
+    o.born=-1;o.floorBounces=0;o.settling=false;o.restAng=null;o.leftFloor=true;o.floorT=null;
+    o.body.velocity.set(rnd(-10,10),rnd(6,14),rnd(-1.6,1.6));
+    let wz=rnd(-8,8);if(Math.abs(wz)<1.6)wz=(wz<0?-1:1)*rnd(2.2,5.5);
+    o.body.angularVelocity.set(0,0,wz);o.body.wakeUp();
+    if(o.prevP){o.prevP.copy(o.body.position);o.prevQ.copy(o.body.quaternion)}
+  });
 }
 function inkFor(hex){
   const raw=String(hex||'').replace('#','');
@@ -552,27 +641,41 @@ window.__bw={
   collisions(){return {wordWord:colWW,wordWall:colWF,first:colWW+colWF,contactSteps:midAir.hits}},
   faceOf(o){return faceOf(o)},
   sampleFaces(){
-    const acc={n:0,ok:0,up:0,sumDot:0};
+    const acc={n:0,ok:0,up:0,side:0,sumDot:0,minDot:1,maxTilt:0,maxTiltZ:0,back:0};
     if(!round)return acc;
     for(const o of round.words){
       if(o.body.type===C.Body.KINEMATIC)continue;
-      const f=this.faceOf(o);acc.n++;if(f.ok)acc.ok++;if(f.upright)acc.up++;acc.sumDot+=f.dot;
+      const f=this.faceOf(o);acc.n++;if(f.ok)acc.ok++;if(f.upright)acc.up++;if(f.onSide)acc.side++;if(f.dot<0)acc.back++;
+      acc.sumDot+=f.dot;if(f.dot<acc.minDot)acc.minDot=f.dot;if(f.tilt>acc.maxTilt)acc.maxTilt=f.tilt;if(f.tiltZ>acc.maxTiltZ)acc.maxTiltZ=f.tiltZ;
     }
     return acc;
   },
+  poses(){
+    if(!round)return [];
+    return round.words.map(o=>{
+      const f=faceOf(o),v=o.body.velocity,p=o.body.position;
+      return {text:o.text,dot:+f.dot.toFixed(4),tiltDeg:+(f.tilt*180/Math.PI).toFixed(2),tiltZDeg:+(f.tiltZ*180/Math.PI).toFixed(2),
+        twistDeg:+(wrapPi(f.twist)*180/Math.PI).toFixed(1),rest:f.rest,restAng:f.restAng,ok:f.ok,
+        floorBounces:o.floorBounces||0,settling:!!o.settling,vy:+v.y.toFixed(3),speed:+v.length().toFixed(3),
+        avz:+o.body.angularVelocity.z.toFixed(3),y:+p.y.toFixed(3),z:+p.z.toFixed(3),homeZ:o.homeZ,sleeping:o.body.sleepState===2};
+    });
+  },
   measure(sec){
-    const acc={n:0,ok:0,up:0,sumDot:0},every=4,steps=Math.round(sec/STEP);
+    const acc={n:0,ok:0,up:0,side:0,sumDot:0,minDot:1,maxTilt:0,maxTiltZ:0,back:0},every=4,steps=Math.round(sec/STEP);
     const c0={ww:colWW,wf:colWF,st:midAir.hits};
+    const bounceHist=[];
     for(let i=0;i<steps;i++){
       stepOnce(STEP);
       if(i%every===0){
-        const s=this.sampleFaces();acc.n+=s.n;acc.ok+=s.ok;acc.up+=s.up;acc.sumDot+=s.sumDot;
+        const s=this.sampleFaces();acc.n+=s.n;acc.ok+=s.ok;acc.up+=s.up;acc.side+=s.side;acc.back+=s.back;
+        acc.sumDot+=s.sumDot;if(s.minDot<acc.minDot)acc.minDot=s.minDot;if(s.maxTilt>acc.maxTilt)acc.maxTilt=s.maxTilt;if(s.maxTiltZ>acc.maxTiltZ)acc.maxTiltZ=s.maxTiltZ;
       }
     }
     if(round)round.words.forEach(o=>{if(o.prevP){o.prevP.copy(o.body.position);o.prevQ.copy(o.body.quaternion)}});
     sync(0,1);updatePower();if(renderer)renderer.render(scene,cam);
-    const settle=this.sampleFaces(),pct=a=>({samples:a.n,faceWithin45:a.n?a.ok/a.n:0,upright:a.n?a.up/a.n:0,meanDot:a.n?a.sumDot/a.n:0});
-    return {seconds:sec,D,W,during:pct(acc),settle:pct(settle),collisions:{wordWord:colWW-c0.ww,wordWall:colWF-c0.wf,first:(colWW+colWF)-(c0.ww+c0.wf),contactSteps:midAir.hits-c0.st},strength:strengthAt(simT)};
+    const settle=this.sampleFaces(),pct=a=>({samples:a.n,faceWithin45:a.n?a.ok/a.n:0,faceDot96:a.n?a.ok/a.n:0,upright:a.n?a.up/a.n:0,onSide:a.n?a.side/a.n:0,meanDot:a.n?a.sumDot/a.n:0,minDot:a.minDot,maxTiltDeg:a.maxTilt*180/Math.PI,maxTiltZDeg:a.maxTiltZ*180/Math.PI,backSeen:a.back});
+    const poses=this.poses();
+    return {seconds:sec,D,W,during:pct(acc),settle:pct(settle),poses,bounces:poses.map(p=>({text:p.text,floorBounces:p.floorBounces,rest:p.rest,twistDeg:p.twistDeg})),collisions:{wordWord:colWW-c0.ww,wordWall:colWF-c0.wf,first:(colWW+colWF)-(c0.ww+c0.wf),contactSteps:midAir.hits-c0.st},strength:strengthAt(simT)};
   },
   blocks(){
     if(!round)return [];
@@ -585,8 +688,8 @@ window.__bw={
     if(!round)return null;
     return {level:round.level,text:round.text,simT,strength:strengthAt(simT),W,H,D,revealed:round.revealed,glOK,
       show:show&&{i:show.o.idx,phase:show.phase,t:show.t,text:show.o.text,pos:[show.o.body.position.x,show.o.body.position.y,show.o.body.position.z]},
-      words:round.words.map(o=>{const p=o.body.position,v=o.body.velocity,fz=o.body.quaternion.vmult(new C.Vec3(0,0,1)).z;
-        return {w:o.text,pos:[p.x,p.y,p.z],speed:v.length(),inside:Math.abs(p.x)<=W/2&&p.y>=0&&p.y<=H&&Math.abs(p.z)<=D/2,sleeping:o.body.sleepState===2,hw:o.hw,hh:o.hh,hz:o.hz,k:o.k,vis:o.grp.visible,up:o.body.quaternion.vmult(new C.Vec3(0,1,0)).y,fz,back:fz<0,hit:!!o.hit}})}
+      words:round.words.map(o=>{const p=o.body.position,v=o.body.velocity,f=faceOf(o);
+        return {w:o.text,pos:[p.x,p.y,p.z],speed:v.length(),inside:Math.abs(p.x)<=W/2&&p.y>=0&&p.y<=H&&Math.abs(p.z)<=D/2,sleeping:o.body.sleepState===2,hw:o.hw,hh:o.hh,hz:o.hz,k:o.k,vis:o.grp.visible,up:f.upY,fz:f.face.z,back:f.dot<0,dot:f.dot,tilt:f.tilt,twist:f.twist,rest:f.rest,floorBounces:o.floorBounces||0,hit:!!o.hit}})}
   }
 };
 
